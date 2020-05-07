@@ -2,12 +2,12 @@
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
+/* auto */ import { coalesceIfFalseLike } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { cast } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
-/* auto */ import { ElementObserverVal, UI512Gettable, UI512PublicSettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
-import { cast } from '../../ui512/utils/util512';
+/* auto */ import { ElementObserverVal, UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -57,14 +57,14 @@ export abstract class VpcElBase extends UI512Settable {
      * make this inaccessible from outside - you must use setOnVel instead
      */
     private setImplInternalExposedOnlyInVelBase(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
-        /* the one and only place we're allowed to do this */
+        /* here and productopts are the only places we're allowed to do this */
         super.setImplInternal(undefined as any, s, newVal, undefined, context)
     }
 
     /**
      * can link to all siblings for a bg vel!
      */
-    setOnVel(s: string, newVal: ElementObserverVal, higher:VpcFindByIdInterface, context = ChangeContext.Default) {
+    setOnVel(s: string, newVal: ElementObserverVal, higher:VpcHandleLinkedVels, context = ChangeContext.Default) {
         higher.setOnVelLinked(this, s, newVal, this.setImplInternalExposedOnlyInVelBase)
     }
 
@@ -134,7 +134,7 @@ export abstract class VpcElBase extends UI512Settable {
     /**
      * high-level property set, from a vpc script
      */
-    setProp(propName: string, val: VpcVal, higher:VpcFindByIdInterface): void {
+    setProp(propName: string, val: VpcVal, higher:VpcHandleLinkedVels): void {
         let found = this.setters[propName];
         if (found) {
             let type = found[0];
@@ -209,7 +209,7 @@ export abstract class VpcElBase extends UI512Settable {
         }
     }
 
-    setCardFmTxt(newTxt: FormattedText, h:VpcFindByIdInterface, context = ChangeContext.Default) {
+    setCardFmTxt(newTxt: FormattedText, h:VpcHandleLinkedVels, context = ChangeContext.Default) {
         newTxt.lock();
         if (this.getB('sharedtext')) {
             this.setOnVel('ftxt', newTxt, h)
@@ -235,7 +235,7 @@ export abstract class VpcElSizable extends VpcElBase {
     /**
      * a quick way to set dimensions of an object
      */
-    setDimensions(newX: number, newY: number, newW: number, newH: number, h:VpcFindByIdInterface, context = ChangeContext.Default) {
+    setDimensions(newX: number, newY: number, newW: number, newH: number, h:VpcHandleLinkedVels, context = ChangeContext.Default) {
         checkThrow(newW >= 0, `7H|width must be >= 0 but got ${newW}`);
         checkThrow(newH >= 0, `7G|height must be >= 0 but got ${newH}`);
         this.setOnVel('x', newX, h, context);
@@ -269,36 +269,36 @@ export abstract class VpcElSizable extends VpcElBase {
      */
     static initSizeSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
         setters['script'] = [PrpTyp.Str, 'script'];
-        setters['width'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(me._x, me._y, n, me._h, h)];
-        setters['height'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(me._x, me._y, me._w, n, h)];
-        setters['left'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(n, me._y, me._w, me._h, h)];
-        setters['top'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(me._x, n, me._w, me._h, h)];
-        setters['right'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(n - me._w, me._y, me._w, me._h, h)];
-        setters['bottom'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(me._x, n - me._h, me._w, me._h, h)];
+        setters['width'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcHandleLinkedVels) => me.setDimensions(me._x, me._y, n, me._h, h)];
+        setters['height'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcHandleLinkedVels) => me.setDimensions(me._x, me._y, me._w, n, h)];
+        setters['left'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcHandleLinkedVels) => me.setDimensions(n, me._y, me._w, me._h, h)];
+        setters['top'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcHandleLinkedVels) => me.setDimensions(me._x, n, me._w, me._h, h)];
+        setters['right'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcHandleLinkedVels) => me.setDimensions(n - me._w, me._y, me._w, me._h, h)];
+        setters['bottom'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcHandleLinkedVels) => me.setDimensions(me._x, n - me._h, me._w, me._h, h)];
         setters['topleft'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElSizable, s: string, h:VpcHandleLinkedVels) => {
                 let coords = VpcValS(s).readAsIntegerList(2);
                 me.setDimensions(coords[0], coords[1], me._w, me._h, h);
             }
         ];
         setters['bottomright'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElSizable, s: string, h:VpcHandleLinkedVels) => {
                 let coords = VpcValS(s).readAsIntegerList(2);
                 me.setDimensions(me._x, me._y, coords[0] - me._x, coords[1] - me._y, h);
             }
         ];
         setters['rectangle'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElSizable, s: string, h:VpcHandleLinkedVels) => {
                 let coords = VpcValS(s).readAsIntegerList(4);
                 me.setDimensions(coords[0], coords[1], coords[2] - coords[0], coords[3] - coords[1], h);
             }
         ];
         setters['location'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElSizable, s: string, h:VpcHandleLinkedVels) => {
                 let coords = VpcValS(s).readAsIntegerList(2);
                 let wasLocX = me._x + Math.trunc(me._w / 2);
                 let wasLocY = me._y + Math.trunc(me._h / 2);
@@ -313,9 +313,7 @@ export abstract class VpcElSizable extends VpcElBase {
 /**
  * will currently be a ModelTop
  */
-export interface VpcFindByIdInterface {
-    findByIdUntyped(id: O<string>):O<VpcElBase>
-    getByIdUntyped(id: string):VpcElBase
+export interface VpcHandleLinkedVels {
     setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void
 }
 
@@ -347,5 +345,5 @@ export type PropGetter<T extends UI512Gettable> = [PrpTyp, string | ((me: T) => 
  */
 export type PropSetter<T extends UI512Settable> = [
     PrpTyp,
-    string | ((me: T, v: string | number | boolean, higher: VpcFindByIdInterface) => void)
+    string | ((me: T, v: string | number | boolean, higher: VpcHandleLinkedVels) => void)
 ];

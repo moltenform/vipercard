@@ -70,7 +70,7 @@ export class TextSelModify {
             assertEq(
                 -1,
                 tResult.indexOf(specialCharNumNewline),
-                `2/|fld ${el.getID()} is not multiline but has newline ${tResult.toSerialized()}`
+                `2/|fld is not multiline but has newline ${tResult.toSerialized()}`
             );
         }
 

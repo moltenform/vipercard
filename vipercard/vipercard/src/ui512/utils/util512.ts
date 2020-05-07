@@ -808,6 +808,21 @@ export class OrderedHash<TValue> {
 }
 
 /**
+ * dump ordered hash to a string
+ */
+export function orderedHashSummary<T>(hash:OrderedHash<T>) {
+    let ret = ''
+    for (let k of hash.iterKeys()) {
+        ret += k
+        ret += ':'
+        ret += hash.get(k)
+        ret += '\n'
+    }
+
+    return ret
+}
+
+/**
  * map a key to object, does not allow setting a value twice.
  */
 export class MapKeyToObject<T> {

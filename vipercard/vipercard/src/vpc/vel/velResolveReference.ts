@@ -174,9 +174,9 @@ export class VelResolveReference {
         }
 
         if (found.getType() === VpcElType.Card) {
-            checkThrow(!parentBg || found.parentId555 === parentBg.id, "break, not found, wrong card parent")
+            checkThrow(!parentBg || found.parentId555 === parentBg.id555, "break, not found, wrong card parent")
         } else if (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld) {
-            checkThrow(!parentCard || found.parentId555 === parentCard.id, "break, not found, wrong card parent")
+            checkThrow(!parentCard || found.parentId555 === parentCard.id555, "break, not found, wrong card parent")
             checkThrow(!parentBg, "break, not found, a card element can't belong to a bg")
         }
 
@@ -219,7 +219,7 @@ export class VelResolveReference {
     ): O<VpcElBase> {
         let currentCard = this.model.getCurrentCard()
         let refersTo: O<string>;
-        let fallback = () => currentCard.id;
+        let fallback = () => currentCard.id555;
         let cardExists = (s: string) => {
             let cd = this.model.findByIdUntyped(s);
             return trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card;
@@ -318,7 +318,7 @@ export class VelResolveReference {
         } else if (ref.lookByRelative) {
             /* `the short id of first bg, the short id of next bg` */
             let cur = this.model.getCurrentCard().parentId555
-            let curIndex = arr.findIndex(item => item.id === cur)
+            let curIndex = arr.findIndex(item => item.id555 === cur)
             let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, curIndex, 0, arr.length-1)
             return index === undefined ? undefined : arr[index]
         } else {
@@ -339,7 +339,7 @@ export class VelResolveReference {
             arr = parentBg.cards
         }
 
-        let currCdId = this.model.getCurrentCard().id
+        let currCdId = this.model.getCurrentCard().id555
         if (ref.lookByName) {
             if (ref.cardLookAtMarkedOnly) {
                 arr = arr.filter(cd => cd.getB('marked'))
@@ -355,14 +355,14 @@ export class VelResolveReference {
             return arr[ref.lookByAbsolute - 1];
         } else if (ref.lookByRelative) {
             /* `the short id of first cd, the short id of next cd` */
-            let curId = this.model.getCurrentCard().id
+            let curId = this.model.getCurrentCard().id555
             if (ref.cardLookAtMarkedOnly && (ref.lookByRelative === OrdinalOrPosition.Previous || ref.lookByRelative === OrdinalOrPosition.Next)) {
                 let temparr = arr.filter(cd => cd.getB('marked'))
                 checkThrow(temparr.length, "break, not found, no marked cards")
                 /* add current one to it as a place of comparison */
                 /* we should still use findPositionFromOrdinalOrPosition 
                 since we still want wrap-around behavior */
-                arr = arr.filter(cd => cd.getB('marked') || cd.id === currCdId)
+                arr = arr.filter(cd => cd.getB('marked') || cd.id555 === currCdId)
             } else if (ref.cardLookAtMarkedOnly) {
                 arr = arr.filter(cd => cd.getB('marked'))
                 checkThrow(arr.length, "break, not found, no marked cards")
@@ -371,7 +371,7 @@ export class VelResolveReference {
             /* confirmed in emulator: */
             /* `the short id of this marked cd` should fail if this cd is not marked */
             /* `the short id of this cd of bg 2` should fail if this cd is not in bg 2 */
-            let curIndex = arr.findIndex(item => item.id === curId)
+            let curIndex = arr.findIndex(item => item.id555 === curId)
             checkThrow(!(ref.lookByRelative === OrdinalOrPosition.This && curIndex===-1), "break, not found, 'this' card does not meet criteria")
             let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, curIndex, 0, arr.length-1)
             return index === undefined ? undefined : arr[index]

@@ -249,7 +249,9 @@ ObjectInterpretedFromString:={ <HAnyAllowedVariableName> | <HOldStyleFnNonNullar
 // when you get evaluate a true object, you get its contents!
 //          'me' is a true object. put me into cd fld 1 -- gets contents
 //          'target' is a true object. put target into cd fld 1 -- gets contents
+//          'the hilite of the target' is a true object. answer the hilite of the target -- same as answer the hilite of target
 //          'the target' is a function returning a string. put the target into cd fld 1 -- gets the id of the target
+//              answer the hilite of (the target) -- treats it as a string, if it's in the bg potentially different results as answer the hilite of the target
 //          'the owner of cd 1' is a function returning a string.
 //          the strings returned, though, are the type that a property can read.
 //              so get the name of the target still works. it works the same way get the name of myVar works.

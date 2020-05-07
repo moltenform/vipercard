@@ -24,7 +24,6 @@ export interface GenericTextField {
     isMultiline(): boolean;
     setSel(a: number, b: number): void;
     getSel(): [number, number];
-    getID(): string;
     getHeight(): number;
     getDefaultFont(): string;
     getReadOnlyUI512(): UI512ElTextField;
@@ -64,10 +63,6 @@ export class UI512ElTextFieldAsGeneric implements GenericTextField {
 
     getSel(): [number, number] {
         return [this.el.getN('selcaret'), this.el.getN('selend')];
-    }
-
-    getID(): string {
-        return this.el.id;
     }
 
     getHeight(): number {

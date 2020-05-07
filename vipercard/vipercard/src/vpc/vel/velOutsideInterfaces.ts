@@ -6,7 +6,6 @@
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcModelTop } from './velModelTop';
 /* auto */ import { VpcElField } from './velField';
-/* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
@@ -137,7 +136,7 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     /**
      * resolve reference to a vel
      */
-    ResolveVelRef(ref: RequestedVelRef): [O<VpcElBase>, VpcElCard];
+    ResolveVelRef(ref: RequestedVelRef): O<VpcElBase>;
 
     /**
      * declare a global

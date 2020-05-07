@@ -1,7 +1,7 @@
 
 /* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
 /* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable, VpcFindByIdInterface } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
@@ -105,7 +105,7 @@ export class VpcElButton extends VpcElSizable {
         setters['name'] = [PrpTyp.Str, 'name'];
         setters['textstyle'] = [
             PrpTyp.Str,
-            (me: VpcElButton, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElButton, s: string, h:VpcHandleLinkedVels) => {
                 let list = s.split(',').map(item => item.trim());
                 me.setOnVel('textstyle', SubstringStyleComplex.vpcStyleToInt(list), h);
             }
@@ -113,7 +113,7 @@ export class VpcElButton extends VpcElSizable {
 
         setters['style'] = [
             PrpTyp.Str,
-            (me: VpcElButton, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElButton, s: string, h:VpcHandleLinkedVels) => {
                 let styl = getStrToEnum<VpcBtnStyle>(VpcBtnStyle, 'Button style', s);
                 checkThrow((styl as any) !== VpcBtnStyle.Osboxmodal, '7D|this style is only supported internally');
                 me.setOnVel('style', styl, h);
@@ -122,7 +122,7 @@ export class VpcElButton extends VpcElSizable {
 
         setters['textalign'] = [
             PrpTyp.Str,
-            (me: VpcElButton, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElButton, s: string, h:VpcHandleLinkedVels) => {
                 s = s.toLowerCase().trim();
                 if (s === 'left') {
                     me.setOnVel('textalign', 'left', h);
@@ -136,7 +136,7 @@ export class VpcElButton extends VpcElSizable {
 
         setters['hilite'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, v: boolean, h:VpcFindByIdInterface) => {
+            (me: VpcElButton, v: boolean, h:VpcHandleLinkedVels) => {
                 let p = me.getB('sharedhilite') ?'hilite':'hilite_uniquetocard'
                 me.setOnVel(p, v, h)
             }
@@ -144,7 +144,7 @@ export class VpcElButton extends VpcElSizable {
 
         setters['checkmark'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, v: boolean, h:VpcFindByIdInterface) => {
+            (me: VpcElButton, v: boolean, h:VpcHandleLinkedVels) => {
                 let p = me.getB('sharedhilite') ?'checkmark':'checkmark_uniquetocard'
                 me.setOnVel(p, v, h)
             }

@@ -214,7 +214,7 @@ export class VpcIntroProvider {
             VpcStateSerialize.deserializeAll(fullVci, serVel);
             await this.yieldTime();
             /* load card order if not set */
-            this.rebuildCardOrderIfNeeded(fullVci.getModel());
+            this.patchUpFromPrevVersions(fullVci.getModel());
             await this.yieldTime();
         } else {
             /* only call this *after* the presenter has set up useThisObserverForVpcEls */
@@ -232,7 +232,7 @@ export class VpcIntroProvider {
 
         /* go to the first card (but don't send opencard yet) */
         fullVci.doWithoutAbilityToUndo(() => {
-            let card = vpcState.model.stack.bgs[0].cards[0].id;
+            let card = vpcState.model.stack.bgs[0].cards[0].id555;
             pr.setCurCardNoOpenCardEvt(card);
         });
     }
@@ -240,17 +240,23 @@ export class VpcIntroProvider {
     /**
      * older stacks won't have this set
      */
-    protected rebuildCardOrderIfNeeded(model: VpcModelTop) {
+    protected patchUpFromPrevVersions(model: VpcModelTop) {
+        for (let bg of model.stack.bgs) {
+            if (bg['parts']) {
+                delete bg['parts']
+            }
+        }
+
         if (!model.stack.getS('cardorder')) {
             model.stack.alterCardOrder(current => {
                 let order: string[] = [];
                 for (let bg of model.stack.bgs) {
                     for (let cd of bg.cards) {
-                        order.push(cd.id);
+                        order.push(cd.id555);
                     }
                 }
                 return order;
-            });
+            }, model);
         }
     }
 
@@ -267,7 +273,7 @@ export class VpcIntroProvider {
                     'untitled'
                 );
 
-                vci.model.stack.appendToStackLineage(en);
+                vci.model.stack.appendToStackLineage(en, vci.model);
             });
         }
 

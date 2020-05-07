@@ -4,6 +4,7 @@
 /* auto */ import { checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './velOutsideInterfaces';
 /* auto */ import { VpcElField } from './velField';
+/* auto */ import { VpcHandleLinkedVels } from './velBase';
 /* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 
@@ -90,7 +91,7 @@ export class WritableContainerVar extends ReadableContainerVar implements Writab
  * reading content from a field
  */
 export class ReadableContainerField implements ReadableContainer {
-    constructor(protected fld: VpcElField, protected parentCardId: string) {}
+    constructor(protected fld: VpcElField, protected h: VpcHandleLinkedVels) {}
 
     isDefined() {
         return true;
@@ -98,11 +99,11 @@ export class ReadableContainerField implements ReadableContainer {
 
     len() {
         /* this is fast, it's the reason we have a len() and not just getRawString().length */
-        return this.fld.getCardFmTxt(this.parentCardId).len();
+        return this.fld.getCardFmTxt().len();
     }
 
     getRawString(): string {
-        return this.fld.getCardFmTxt(this.parentCardId).toUnformatted();
+        return this.fld.getCardFmTxt().toUnformatted();
     }
 }
 
@@ -111,21 +112,21 @@ export class ReadableContainerField implements ReadableContainer {
  */
 export class WritableContainerField extends ReadableContainerField implements WritableContainer {
     splice(insertion: number, lenToDelete: number, newstring: string) {
-        let txt = this.fld.getCardFmTxt(this.parentCardId);
+        let txt = this.fld.getCardFmTxt();
         if (insertion === 0 && lenToDelete >= txt.len()) {
             /* follow emulator, there is different behavior
             (lose formatting) when replacing all text */
-            this.fld.setProp('alltext', VpcValS(newstring), this.parentCardId);
+            this.fld.setProp('alltext', VpcValS(newstring), this.h);
         } else {
             let font = insertion >= 0 && insertion < txt.len() ? txt.fontAt(insertion) : this.fld.getDefaultFontAsUi512();
             let newTxt = FormattedText.byInsertion(txt, insertion, lenToDelete, newstring, font);
-            this.fld.setCardFmTxt(this.parentCardId, newTxt);
+            this.fld.setCardFmTxt(newTxt, this.h);
         }
     }
 
     setAll(newText: string) {
         /* follow emulator, there is different behavior (lose formatting) when replacing all text */
-        this.fld.setProp('alltext', VpcValS(newText), this.parentCardId);
+        this.fld.setProp('alltext', VpcValS(newText), this.h);
     }
 
     replaceAll(search: string, replaceWith: string) {

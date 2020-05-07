@@ -2,7 +2,7 @@
 /* auto */ import { VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
 /* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable, VpcFindByIdInterface } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
@@ -103,7 +103,7 @@ export class VpcElField extends VpcElSizable {
     /**
      * for convenience, set entire font
      */
-    protected setEntireFontFromDefaultFont(h:VpcFindByIdInterface) {
+    protected setEntireFontFromDefaultFont(h:VpcHandleLinkedVels) {
         let font = this.getDefaultFontAsUi512();
         let newTxt = this.getCardFmTxt().getUnlockedCopy();
         newTxt.setFontEverywhere(font);
@@ -151,7 +151,7 @@ export class VpcElField extends VpcElSizable {
         setters['name'] = [PrpTyp.Str, 'name'];
         setters['style'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElField, s: string, h:VpcHandleLinkedVels) => {
                 let styl = getStrToEnum<VpcFldStyleInclScroll>(VpcFldStyleInclScroll, 'Field style or "scrolling"', s);
                 me.setOnVel('style', styl, h);
 
@@ -162,7 +162,7 @@ export class VpcElField extends VpcElSizable {
 
         setters['textstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElField, s: string, h:VpcHandleLinkedVels) => {
                 me.setProp('defaulttextstyle', VpcValS(s), h);
                 me.setEntireFontFromDefaultFont(h);
             }
@@ -170,7 +170,7 @@ export class VpcElField extends VpcElSizable {
 
         setters['textfont'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElField, s: string, h:VpcHandleLinkedVels) => {
                 me.setOnVel('defaulttextfont', s,h);
                 me.setEntireFontFromDefaultFont(h);
             }
@@ -178,7 +178,7 @@ export class VpcElField extends VpcElSizable {
 
         setters['textsize'] = [
             PrpTyp.Num,
-            (me: VpcElField, n: number, h:VpcFindByIdInterface) => {
+            (me: VpcElField, n: number, h:VpcHandleLinkedVels) => {
                 me.setOnVel('defaulttextsize', n, h);
                 me.setEntireFontFromDefaultFont(h);
             }
@@ -188,7 +188,7 @@ export class VpcElField extends VpcElSizable {
         or when saying put "abc" into cd fld 1 with no chunk qualifications */
         setters['alltext'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElField, s: string, h:VpcHandleLinkedVels) => {
                 let newTxt = FormattedText.newFromUnformatted(s);
                 newTxt.setFontEverywhere(me.getDefaultFontAsUi512());
                 me.setCardFmTxt(newTxt, h);
@@ -197,7 +197,7 @@ export class VpcElField extends VpcElSizable {
 
         setters['defaulttextstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElField, s: string, h:VpcHandleLinkedVels) => {
                 let list = s.split(',').map(item => item.trim());
                 me.setOnVel('defaulttextstyle', SubstringStyleComplex.vpcStyleToInt(list), h);
             }
@@ -205,7 +205,7 @@ export class VpcElField extends VpcElSizable {
 
         setters['textalign'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
+            (me: VpcElField, s: string, h:VpcHandleLinkedVels) => {
                 s = s.toLowerCase().trim();
                 if (s === 'left') {
                     me.setOnVel('textalign', 'left', h);
@@ -219,7 +219,7 @@ export class VpcElField extends VpcElSizable {
 
         setters['singleline'] = [
             PrpTyp.Bool,
-            (me: VpcElField, b: boolean, h:VpcFindByIdInterface) => {
+            (me: VpcElField, b: boolean, h:VpcHandleLinkedVels) => {
                 me.setOnVel('singleline', b, h);
                 if (b) {
                     let hasNewLine = me.getCardFmTxt().indexOf(specialCharNumNewline);
@@ -234,7 +234,7 @@ export class VpcElField extends VpcElSizable {
 
         setters['scroll'] = [
             PrpTyp.Num,
-            (me: VpcElField, n: number, h:VpcFindByIdInterface) => {
+            (me: VpcElField, n: number, h:VpcHandleLinkedVels) => {
                  me.setOnVel(me.getB('sharedtext') ?'scroll' : 'scroll_uniquetocard', n, h)
             }
         ];
@@ -282,7 +282,7 @@ export class VpcElField extends VpcElSizable {
  * we need to update the _VpcElField_ model first
  */
 export class VpcTextFieldAsGeneric implements GenericTextField {
-    constructor(protected el512: UI512ElTextField, protected impl: VpcElField, protected h:VpcFindByIdInterface) {}
+    constructor(protected el512: UI512ElTextField, protected impl: VpcElField, protected h:VpcHandleLinkedVels) {}
 
     setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
         this.impl.setCardFmTxt(newTxt, this.h, context);
@@ -312,10 +312,6 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
     getSel(): [number, number] {
         return [this.impl.getN('selcaret'), this.impl.getN('selend')];
     }
-
-    //~ getID(): string {
-        //~ return this.impl.id;
-    //~ }
 
     getHeight(): number {
         return this.impl.getN('h');

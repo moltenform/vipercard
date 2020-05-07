@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcElType, checkThrow, checkThrowEq, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBg } from './velBg';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, arLast, slength } from './../../ui512/utils/util512';
 
@@ -54,27 +54,27 @@ export class VpcElStack extends VpcElBase {
     getCardOrder() {
         return this._cardorder ? this._cardorder.split('|') : [];
     }
-    alterCardOrder(fn: (a: string[]) => string[]) {
+    alterCardOrder(fn: (a: string[]) => string[], h:VpcHandleLinkedVels) {
         let got = fn(this.getCardOrder());
         assertTrue(got.length, '');
-        this.set('cardorder', got.join('|'));
+        this.setOnVel('cardorder', got.join('|'), h);
     }
 
     /**
      * get next id for created element
      */
-    getNextId() {
+    getNextId(h:VpcHandleLinkedVels) {
         let ret = this.getN('increasingnumberforid');
-        this.set('increasingnumberforid', ret + 1);
+        this.setOnVel('increasingnumberforid', ret + 1, h);
         return ret.toString();
     }
 
     /**
      * get next number, when you create a button in the ui and it's called "my button 3"
      */
-    getNextNumberForElemName() {
+    getNextNumberForElemName(h:VpcHandleLinkedVels) {
         let ret = this.getN('increasingnumberforelemname');
-        this.set('increasingnumberforelemname', ret + 1);
+        this.setOnVel('increasingnumberforelemname', ret + 1, h);
         return ret.toString();
     }
 
@@ -110,7 +110,7 @@ export class VpcElStack extends VpcElBase {
     /**
      * set latest stack info (server id, username)
      */
-    appendToStackLineage(entryIn: VpcElStackLineageEntry) {
+    appendToStackLineage(entryIn: VpcElStackLineageEntry, h:VpcHandleLinkedVels) {
         /* round-trip to validate it */
         let entry = VpcElStackLineageEntry.fromSerialized(entryIn.serialize());
         let lin = this.getS('stacklineage');
@@ -120,7 +120,7 @@ export class VpcElStack extends VpcElBase {
             lin += entry.serialize();
         }
 
-        this.set('stacklineage', lin);
+        this.setOnVel('stacklineage', lin, h);
     }
 
     /**
@@ -162,10 +162,6 @@ export class VpcElStack extends VpcElBase {
                 for (let pt of cd.parts) {
                     yield pt;
                 }
-            }
-
-            for (let bgpt of bg.parts) {
-                yield bgpt;
             }
         }
     }

@@ -1,5 +1,6 @@
 
 /* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
+/* auto */ import { VpcElBase, VpcHandleLinkedVels } from './../../vpc/vel/velBase';
 /* auto */ import { getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { UI512Lines } from './../../ui512/textedit/ui512TextLines';
@@ -8,7 +9,7 @@
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
-/* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { ElementObserverNoOp, ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { GridLayout, UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { largeArea, specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
@@ -207,7 +208,7 @@ t.test('UI512ElTextFieldAsGeneric', () => {
     assertEq(true, gel.canEdit(), 'AB|');
     assertEq(true, gel.canSelectText(), 'AA|');
     assertEq(true, gel.isMultiline(), 'A9|');
-    assertEq('fld1', gel.getID(), 'A8|');
+    assertEq('fld1', gel['impl'].id, 'A8|');
     assertEq(123, gel.getHeight(), 'A7|');
     assertEq('chicago_12_biuosdce', gel.getDefaultFont(), 'A6|');
     assertEq(el.id, gel.getReadOnlyUI512().id, 'A5|');
@@ -221,13 +222,20 @@ t.test('UI512ElTextFieldAsGeneric', () => {
     assertEq(500, gel.getScrollAmt(), 'A2|');
 });
 t.test('VpcTextFieldAsGeneric', () => {
+    class MockHigher implements VpcHandleLinkedVels {
+        setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void {
+            me['_' + s] = newVal
+        }
+    }
+
     let el = new UI512ElTextField('fld1');
     el.observer = new ElementObserverNoOp();
+    let higher = new MockHigher()
 
     let vel = new VpcElField('12', '34');
     vel.observer = new ElementObserverNoOp();
-    vel.set('h', 123);
-    let gel = new VpcTextFieldAsGeneric(el, vel, vel.parentId);
+    vel.setOnVel('h', 123, higher);
+    let gel = new VpcTextFieldAsGeneric(el, vel, higher);
 
     /* test setFmtTxt */
     let txt = FormattedText.newFromUnformatted('abc');
@@ -243,13 +251,13 @@ t.test('VpcTextFieldAsGeneric', () => {
     assertEq(true, gel.canEdit(), '9~|');
     assertEq(true, gel.canSelectText(), '9}|');
     assertEq(true, gel.isMultiline(), '9||');
-    assertEq('12', gel.getID(), '9{|');
+    assertEq('12', gel['impl'].id555, '9{|');
     assertEq(123, gel.getHeight(), '9`|');
     assertEq('geneva_12_biuosdce', gel.getDefaultFont(), '9_|');
     assertEq(el.id, gel.getReadOnlyUI512().id, '9^|');
 
     /* test scroll amount */
-    vel.set('scroll', 456);
+    vel.setOnVel('scroll', 456, higher);
     assertEq(456, gel.getScrollAmt(), '9]|');
     gel.setScrollAmt(undefined);
     assertEq(456, gel.getScrollAmt(), '9[|');

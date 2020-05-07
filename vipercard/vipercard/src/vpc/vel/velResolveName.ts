@@ -8,8 +8,8 @@
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
-/* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Base';
+/* auto */ import { VpcElBase, VpcElSizable } from './velBase';
+/* auto */ import { cProductName, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, arLast, castVerifyIsStr, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -206,6 +206,14 @@ export class VelResolveId {
     protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective) {
         if (adjective === PropAdjective.Long) {
             if (vel instanceof VpcElButton || vel instanceof VpcElField) {
+                let userFacingId = vel.getUserFacingId()
+                let cdOrBg = vel.getS('is_bg_velement_id').length ? 'bkgnd' : 'card'
+                /* NOTE: this is ambiguous - for a bg btn,
+                it won't precisely identify the object.
+                but this is the way the original product worked.
+                consider the case of "the target" */
+
+
                 let parent = this.model.getOwnerUntyped(vel);
                 if (parent instanceof VpcElBg) {
                     checkThrow(false, `T(|nyi. probably write something like "bg id 123 via cd id 567"`);

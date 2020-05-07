@@ -78,11 +78,12 @@ export class VpcElProductOpts extends VpcElBase {
      * add a check allowSetCurrentTool -- the only place that can set currentTool
      * is the _vpcpresenter_ object, since it has special tool clean-up logic
      */
-    set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
+    setProductOpt(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
         assertWarn(s !== 'currentTool' || this.allowSetCurrentTool, 'Jt|');
         assertWarn(s !== 'currentCardId' || this.allowSetCurrentCard, 'Tr|');
         assertTrue(s !== 'script', "Tq|you can't set script of Vpc");
-        return super.set(s, newVal, context);
+        /* here and velbase are the only places we're allowed to do this */
+        super.setImplInternal(undefined as any, s, newVal, undefined, context)
     }
 
     /**
@@ -123,7 +124,7 @@ export class VpcElProductOpts extends VpcElBase {
             PrpTyp.Str,
             (me: VpcElProductOpts, s: string) => {
                 checkThrowEq(1, s.length, `7C|length of itemDel must be 1`);
-                me.set('itemDel', s);
+                me.setProductOpt('itemDel', s);
             }
         ];
         setters['itemdel'] = setters['itemdelimiter'];
@@ -151,9 +152,9 @@ export class VpcElProductOpts extends VpcElBase {
             PrpTyp.Str,
             (me: VpcElProductOpts, s: string) => {
                 if (s === 'faster') {
-                    me.set('suggestedIdleRate', 'faster');
+                    me.setProductOpt('suggestedIdleRate', 'faster');
                 } else if (!s || s === 'default') {
-                    me.set('suggestedIdleRate', 'default');
+                    me.setProductOpt('suggestedIdleRate', 'default');
                 } else {
                     checkThrow(false, `Js|unsupported idlerate, try "faster" or "default"`);
                 }

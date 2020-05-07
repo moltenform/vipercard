@@ -6,7 +6,7 @@
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
-/* auto */ import { VpcElBase, VpcFindByIdInterface } from './velBase';
+/* auto */ import { VpcElBase, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { AnyParameterCtor, MapKeyToObject, cast } from './../../ui512/utils/util512';
@@ -19,7 +19,7 @@
 /**
  * owner of the stack model and productopts model
  */
-export class VpcModelTop implements VpcFindByIdInterface {
+export class VpcModelTop implements VpcHandleLinkedVels {
     /* initialized by _VpcDocLoader_ which calls ensureModelNotEmpty() */
     stack: VpcElStack;
 

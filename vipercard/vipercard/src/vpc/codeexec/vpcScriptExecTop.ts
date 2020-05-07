@@ -16,7 +16,7 @@
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, ValHolder, lastIfThere, slength } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, ValHolder, lastIfThere, orderedHashSummary, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -166,15 +166,15 @@ export class VpcExecTop {
     sendInitialOpenStackAndOpenCard() {
         {
             /* send openstack */
-            let msg = new VpcScriptMessage(this.outside.Model().stack.id, VpcBuiltinMsg.Openstack);
+            let msg = new VpcScriptMessage(this.outside.Model().stack.id555, VpcBuiltinMsg.Openstack);
             this.scheduleCodeExec(msg);
         }
 
         {
             /* send openbackground */
             let currentCard = this.outside.Model().getCardById(this.outside.GetCurrentCardId());
-            let currentBg = this.outside.Model().getOwner(VpcElBg, currentCard);
-            let msg = new VpcScriptMessage(currentBg.id, VpcBuiltinMsg.Openbackground);
+            let currentBg = this.outside.Model().getOwner555(VpcElBg, currentCard);
+            let msg = new VpcScriptMessage(currentBg.id555, VpcBuiltinMsg.Openbackground);
             this.scheduleCodeExec(msg);
         }
 
@@ -198,7 +198,7 @@ export class VpcExecTop {
 
         this.outside.SetOption('screenLocked', false);
         this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
-        this.outside.Model().productOpts.set('itemDel', ',');
+        this.outside.Model().productOpts.setProductOpt('itemDel', ',');
         this.globals.set('$currentVisEffect', VpcValS(''));
 
         /* nyi: new style ui actions */
@@ -347,15 +347,44 @@ export class VpcExecTop {
      */
     static checkNoRepeatedIds(stack: VpcElStack) {
         let idsSeen = new MapKeyToObjectCanSet<boolean>();
-        idsSeen.set(stack.parentId, true);
+        idsSeen.set(stack.parentId555, true);
         for (let vel of stack.iterEntireStack()) {
-            if (idsSeen.exists(vel.id)) {
+            if (idsSeen.exists(vel.id555)) {
                 /* use assertwarn, not throw, because it's sure to show
-                a dialog, but the user can also ignore subsquent ones */
-                assertWarn(false, 'R?|duplicate id seen: ' + vel.id);
+                a dialog, but the user can also ignore subsequent ones */
+                assertWarn(false, 'R?|duplicate id seen: ' + vel.id555);
             }
 
-            idsSeen.set(vel.id, true);
+            idsSeen.set(vel.id555, true);
+        }
+
+        /* check that each bg element is correctly present on each card */
+        let idsSeenAcrossBgs = new MapKeyToObjectCanSet<boolean>();
+        for (let bg of stack.bgs) {
+            let template = bg.getTemplateCard()
+            let bgParts = template.parts.filter(vel=>vel.getS('is_bg_velement_id').length)
+            let bgIdsSeen = new OrderedHash<VpcElType>()
+            for (let pt of bgParts) {
+                assertWarn(!idsSeenAcrossBgs.exists(pt.getS('is_bg_velement_id')), "bg id seen twice across bgs")
+                idsSeenAcrossBgs.add(pt.getS('is_bg_velement_id'), true)
+                assertWarn(!bgIdsSeen.find(pt.getS('is_bg_velement_id')), "bg id seen twice")
+                bgIdsSeen.insertNew(pt.getS('is_bg_velement_id'), pt.getType())
+            }
+
+            let expect = orderedHashSummary(bgIdsSeen)
+            for (let cd of bg.cards) {
+                if (cd.id555 === template.id555) {
+                    continue
+                }
+
+                let bgIdsSeenThisCd = new OrderedHash<VpcElType>()
+                for (let pt of bgParts) {
+                    assertWarn(!bgIdsSeenThisCd.find(pt.getS('is_bg_velement_id')), "bg id seen twice")
+                    bgIdsSeenThisCd.insertNew(pt.getS('is_bg_velement_id'), pt.getType())
+                }
+
+                assertWarn(expect, orderedHashSummary(bgIdsSeenThisCd), '')
+            }
         }
     }
 }
@@ -428,7 +457,7 @@ export class GuessStackTrace {
 
     renderVelAndLine(actualMeId: string, vel: VpcElBase, handlername: string, origoffset: number): string {
         let s = '';
-        if (vel.id.toString() === actualMeId.toString()) {
+        if (vel.id555.toString() === actualMeId.toString()) {
             /* save space */
         } else if (vel.getType() === VpcElType.Stack) {
             s += 'stack';

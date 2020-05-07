@@ -73,7 +73,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
         if (this.vcstate.runtime.opts.isARuntimeOpt[prop]) {
             return this.vcstate.runtime.opts.set(prop, newVal);
         } else {
-            return this.vcstate.model.productOpts.set(prop, newVal);
+            return this.vcstate.model.productOpts.setProductOpt(prop, newVal);
         }
     }
 
