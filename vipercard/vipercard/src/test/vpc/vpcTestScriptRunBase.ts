@@ -119,6 +119,8 @@ export class TestVpcScriptRunBase {
     simMouseY: number;
     simClickX: number;
     simClickY: number;
+    /* are bg vels supported yet */
+    useBg = false
     readonly customFunc = 'function';
     constructor(protected t: SimpleUtil512TestCollection) {}
 

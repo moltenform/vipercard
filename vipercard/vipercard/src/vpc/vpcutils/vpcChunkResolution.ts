@@ -310,6 +310,28 @@ const ChunkResolution = /* static class */ {
     }
 };
 
+/* don't let scopes go backwards.
+    only char after char seen.
+    only char or word after word seen.
+    original product had weird behavior we don't want to replicate.*/
+class DecreasingScopeChecker {
+    seenWord = false
+    seenChar = false
+    onSeeScope(g:VpcGranularity) {
+        if (g === VpcGranularity.Chars) { 
+            this.seenChar = true
+        } else if (g === VpcGranularity.Words)  {
+            checkThrow(!this.seenChar, "we don't yet support a word being the " +
+            "child of a char, please use an intermediate variable.")
+            this.seenWord = true
+        } else {
+            checkThrow(!this.seenChar && !this.seenWord, "we don't yet support " +
+            "a line or item being the child of a char or word." + 
+            "please use an intermediate variable.")
+        }
+    }
+}
+
 export const ChunkResolutionApplication = /* static class */ {
     applyPut(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, news: string, prep: VpcChunkPreposition): void {
         if (!chunk) {
@@ -336,18 +358,9 @@ export const ChunkResolutionApplication = /* static class */ {
         let resolved = new ResolvedChunk(cont, 0, cont.len());
         chunk.setCanModifyRecurse(true);
         let current: O<RequestedChunk> = chunk;
-        /* a line or item cannot be the child of a char or word
-        the original product had weird behavior here we don't need
-        to replicate */
-        let seenCharOrWord = false
+        let checker = new DecreasingScopeChecker()
         while (current) {
-            if (current.type555 === VpcGranularity.Chars || current.type555 === VpcGranularity.Words) {
-                seenCharOrWord = true
-            } else {
-                checkThrow(!seenCharOrWord, "we don't yet support a line or item being the child of a char or word." + 
-                    "please use an intermediate variable.")
-            }
-
+            checker.onSeeScope(current.type555)
             if (current.child) {
                 /* narrow it down, add extra commas but not the real text */
                 resolved = ensureDefined(
@@ -398,7 +411,9 @@ export const ChunkResolutionApplication = /* static class */ {
 
         chunk.setCanModifyRecurse(false);
         let current: O<RequestedChunk> = chunk;
+        let checker = new DecreasingScopeChecker()
         while (current && resolved) {
+            checker.onSeeScope(current.type555)
             resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into);
             current = current.child;
         }

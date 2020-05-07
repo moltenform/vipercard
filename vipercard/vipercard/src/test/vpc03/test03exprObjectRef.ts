@@ -4,7 +4,7 @@
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
-/* auto */ import { TestVpc03, h3, testCollection03lexer } from './test03lexer';
+/* auto */ import { TestVpc03, h3 } from './test03lexer';
 
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -12,12 +12,10 @@
 
 let t = new SimpleUtil512TestCollection('testCollection03exprObjectRef');
 export let testCollection03exprObjectRef = t;
-//~ enable this when we support bg elements
-let useBg = false
 
 t.atest('--init--testCollection03exprObjectRef', async () => {
     assertTrue(h3, longstr(`forgot to include the
-        testCollection03lexer test? put it below this test in _testTop_.ts`))
+        _testCollection03lexer_ test? put it below this test in _testTop_.ts`))
 });
 t.test('03ObjectSpecial', () => {
     let b = new ScriptTestBatch();
@@ -42,10 +40,11 @@ t.test('03ObjectSpecial', () => {
     map.set(h3.ids.cdA, "cd")
     map.set(h3.ids.bBC1, "cd btn")
     map.set(h3.ids.fBC1, "cd fld")
-    if (useBg) {
+    if (h3.useBg) {
         map.set(h3.ids.bgbB1, "bg btn")
         map.set(h3.ids.bgfB1, "bg fld")
     }
+    
     b = new ScriptTestBatch();
     for (let key of map.getKeys()) {
         for (let val of map.getVals()) {
