@@ -865,7 +865,26 @@ this.SUBRULE1(this.RuleMenu)
 {
 ALT: () => {
 this.SUBRULE1(this.RuleHChunk)
+this.OR2([
+{
+ALT: () => {
 this.SUBRULE1(this.RuleObjectFld)
+}
+},
+{
+ALT: () => {
+this.CONSUME1(tks._me)
+}
+},
+{
+ALT: () => {
+this.OPTION3(() => {
+this.CONSUME2(tks._the)
+});
+this.CONSUME1(tks._target)
+}
+}
+]);
 }
 }
 ]);
@@ -1530,7 +1549,26 @@ this.OR1([
 {
 ALT: () => {
 this.SUBRULE1(this.RuleHChunk)
+this.OR2([
+{
+ALT: () => {
 this.SUBRULE1(this.RuleObjectFld)
+}
+},
+{
+ALT: () => {
+this.CONSUME1(tks._me)
+}
+},
+{
+ALT: () => {
+this.OPTION3(() => {
+this.CONSUME2(tks._the)
+});
+this.CONSUME1(tks._target)
+}
+}
+]);
 }
 },
 {

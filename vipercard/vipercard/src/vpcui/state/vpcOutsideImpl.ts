@@ -299,9 +299,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         checkThrow(vel, `8/|could not set ${prop}, could not find that object.`);
 
         if (chunk) {
-            let fld = vel as VpcElField;
-            checkThrow(fld instanceof VpcElField, `8.|can only say 'set the (prop) of char 1 to 2' on fields.`);
-            new VpcFontSpecialChunk(fld).specialSetPropChunk(this.Model(), prop, chunk, v, this.GetItemDelim());
+            checkThrow(vel instanceof VpcElField, `8.|can only say 'set the (prop) of char 1 to 2' on fields.`);
+            new VpcFontSpecialChunk(vel).specialSetPropChunk(this.Model(), prop, chunk, v, this.GetItemDelim());
         } else {
             vel.setProp(prop, v, this.Model());
         }
@@ -317,9 +316,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         /* handled here are the cases where "adjective" matters */
         if (chunk) {
             /* put the textstyle of char 2 to 4 of fld "myFld" into x */
-            let fld = vel as VpcElField;
-            checkThrow(fld instanceof VpcElField, `8,|can only say 'get the (prop) of char 1 to 2' on fields.`);
-            return new VpcFontSpecialChunk(fld).specialGetPropChunk(this.Model(), prop, chunk, this.GetItemDelim());
+            checkThrow(vel instanceof VpcElField, `8,|can only say 'get the (prop) of char 1 to 2' on fields.`);
+            return new VpcFontSpecialChunk(vel).specialGetPropChunk(this.Model(), prop, chunk, this.GetItemDelim());
         } else if (prop === 'name') {
             /* put the long name of card "myCard" into x */
             let resolver = new VelRenderName(this.vci.getModel());

@@ -174,9 +174,49 @@ stack
     * when the user asks for the "id" of one of these, they won't get its true id.
     * copy/paste/duplicate card is more interesting
 
+## Pseudo-functions that refer to objects
 
+* The original product has subtly complex behavior for these pseudo-functions.
+* consider this:
+    * make a field
+    * type abc into the field
+    * edit script of the fld, `on f answer the target end f`
+    * on card 1, in msg box type `send f to cd fld 1`
+    * the result is a string like `card field "myFld"`
+    * edit script of the fld, `on f answer target end f`
+    * on card 1, in msg box type `send f to cd fld 1`
+    * the result is now `abc`, it's getting the contents
+    * In my terminology, `the target` returns a string, but `target` returns a true object reference.
+* consider this (even subtler):
+    * make a background checkmark button across two cards
+    * set the sharedhilite of the button to false
+    * set the autohilite of the button to true
+    * edit script of the button, `on f answer the hilite of the target end f`
+    * on card 2 make the button checked
+    * on card 1, in msg box type `send f to bg btn 1 of cd 2`
+    * the result is `true`, it's reading as a true object
+    * edit script of the button, `on f answer the hilite of (the target) end f`
+    * on card 1, in msg box type `send f to bg btn 1 of cd 2`
+    * the result is `false` - in this context, the parens cause `(the target)` to be treated as a function call that returns a string, and evaluating that string as an object leads to different results because the current card is still card 1!
+* As far as I can tell, this is the behavior:
+    * `me` returns a true object reference. (`answer me` gets fld contents.)
+    * `target` returns a true object reference. (`answer target` gets fld contents.)
+    * when setting/getting a property, `of the target` returns a true object reference. (`the hilite of the target` refers to the correct object.)
+    * in all other instances, `the target` returns a string. (`answer the target` shows the name of the object. `the hilite of (the target)` disrupts the special case and is the same as saying `put the target into x; get hilite of x`, in which case `x` holds a normal string the same as any other string.)
+    * `the owner of` returns a string. (`answer the owner of this cd` shows the name.)
+* How we implement it:
+    * It's mostly laid out in `bgrammar_01.ccc`
+    * The catch is: how do we know when `the target` should not be a string?
+    * the places I know of where it shouldn't be a string:
+        * prop `get the {propname} of the target`
+        * prop `set the {propname} of the target`
+        * chunk prop `get the textstyle of char 3 of the target`
+        * chunk prop `set the textstyle of char 3 of the target to bold`
+    * implementation:
+        * handle the first two cases in string-rewriting, `vpcRewritesGlobal.ts` to turn `the target` into `target`
+        * handle the second two cases in parsing, see the `RuleHUnaryPropertyGet` visitor and `goSet()` in `execStatement.ts` 
+        * possible alternate approach: special-case `the target` everywhere, so it's not a normal function call like it is now.
 
- 
    
 
 

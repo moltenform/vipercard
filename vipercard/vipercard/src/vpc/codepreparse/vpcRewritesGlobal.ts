@@ -28,17 +28,17 @@ export const VpcRewritesGlobal = /* static class */ {
     },
 
     /**
-     * replace properties.
-     * also go from 'the english date' to 'the long date' for compat.
+     * 1) replace properties.
+     * 2) go from 'the english date' to 'the long date' for compat.
      */
     rewritePropertySynonyms(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[] {
         for (let i = 0; i < line.length - 1; i++) {
-            if (line[i + 1].image === 'of') {
+            if (line[i + 1].tokenType === tks.tkOfOnly) {
                 let mapped = this.mapSynonyms[line[i].image];
                 if (mapped) {
                     line[i] = rw.tokenFromEnglishTerm(mapped, line[i]);
                 }
-            } else if (line[i + 1].image === 'date' && line[i].image === 'english') {
+            } else if (line[i + 1].tokenType === tks.tkIdentifier && line[i + 1].image === 'date' && line[i].image === 'english') {
                 line[i] = rw.tokenFromEnglishTerm('long', line[i]);
             }
         }
@@ -47,33 +47,38 @@ export const VpcRewritesGlobal = /* static class */ {
     },
 
     /**
-     * from "short id of fld 1" to "short id of bg fld 1"
+     * 1) from "short id of fld 1" to "short id of bg fld 1"
      * do this in software, at parse time it is difficult to clear
      * the ambiguity: the name of cd fld 1 could be parsed either way.
+     * 2) go from 'the hilite of the target' to 'the hilite of target' for compat.
+     *      see bgrammar_01.ccc for an explanation of why
      */
-    rewriteSpecifyCdOrBgPart(line: ChvITk[]): ChvITk[] {
+    rewriteSpecifyCdOrBgPart(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[] {
         let ret: ChvITk[] = [];
-        let copyLine = line.slice();
-        copyLine.reverse();
-        for (let i = 0; i < copyLine.length - 1; i++) {
-            let insertIt: O<ChvITkType>;
-            let s = '';
-            if (copyLine[i].tokenType === tks.tkBtn || copyLine[i].tokenType === tks.tkFld) {
-                let next = copyLine[i + 1];
-                if (next.tokenType !== tks.tkCard && next.tokenType !== tks.tkBg) {
-                    insertIt = copyLine[i].tokenType === tks.tkFld ? tks.tkBg : tks.tkCard;
-                    s = copyLine[i].tokenType === tks.tkFld ? 'bg' : 'cd';
+        for (let i = 0; i < line.length - 1; i++) {
+            if (line[i+1].tokenType === tks.tkBtn || line[i+1].tokenType === tks.tkFld) {
+                if (line[i].tokenType !== tks.tkCard && line[i].tokenType !== tks.tkBg) {
+                    /* insert a missing 'bg' or 'cd' */
+                    let s = line[i+1].tokenType === tks.tkFld ? 'bg' : 'cd';
+                    let newTk = rw.tokenFromEnglishTerm(s, line[i])
+                    ret.push(newTk)
                 }
             }
 
-            ret.push(copyLine[i]);
-            if (insertIt) {
-                ret.push(BuildFakeTokens.makeTk(copyLine[i], insertIt, s));
-            }
+            /* omit "the" if it is in "hilite of the target" */
+            /* see "Pseudo-functions that refer to objects" in internaldocs.md */
+            if (!(i >= 2 && (line[i-2].tokenType === tks.tkAllUnaryPropertiesIfNotAlready || 
+                line[i-2].tokenType === tks.tkUnaryVipercardProperties ||
+                line[i-2].tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready) &&
+                line[i-1].tokenType === tks.tkOfOnly &&
+                line[i].tokenType === tks._the &&
+                line[i+1].tokenType === tks._target
+                )) {
+                    ret.push(line[i])
+                }
         }
 
-        ret.push(arLast(copyLine));
-        ret.reverse();
+        ret.push(line[line.length - 1])
         return ret;
     }
 };

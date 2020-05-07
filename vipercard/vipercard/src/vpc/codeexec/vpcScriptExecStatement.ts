@@ -5,7 +5,7 @@
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { MapTermToMilliseconds, OrdinalOrPosition, SortType, VpcChunkPreposition, VpcElType, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, checkThrowNotifyMsg, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
+/* auto */ import { MapTermToMilliseconds, OrdinalOrPosition, SortType, VpcChunkPreposition, VpcElType, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, checkThrowNotifyMsg, getToolCategory, originalToolNumberToTool, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
 /* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
@@ -342,7 +342,6 @@ export class ExecuteStatement {
      */
     goSet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let velRef = this.h.findChildVelRef(vals, tkstr.RuleObject);
-        let velRefFld = this.h.findChildVelRef(vals, tkstr.RuleObjectFld);
         let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk);
         let tk = ensureDefined(vals.vals[tkstr.RuleHCouldBeAPropertyToSet], 'R(|')[0];
         let propName = (tk as ChvITk).image;
@@ -365,7 +364,21 @@ export class ExecuteStatement {
         checkThrow(strings.length > 0, '7L|could not find RuleAnyPropertyVal or its child', nm);
         let combined = VpcValS(strings.join(','));
         if (velRefChunk) {
-            this.outside.SetProp(ensureDefined(velRefFld, '4~|'), propName, combined, velRefChunk);
+            /* see "Pseudo-functions that refer to objects" in internaldocs.md */
+            let ref:RequestedVelRef
+            if (vals.vals[tkstr.RuleObjectFld]) {
+                ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObjectFld), '');
+            } else if (vals.vals[tkstr._target]) {
+                ref = new RequestedVelRef(VpcElType.Unknown)
+                ref.isReferenceToTarget = true
+            } else if (vals.vals[tkstr._me]) {
+                ref = new RequestedVelRef(VpcElType.Unknown)
+                ref.isReferenceToMe = true
+            } else {
+                checkThrowInternal(false, "no branch seen")
+            }
+
+            this.outside.SetProp(cast(RequestedVelRef, ref), propName, combined, velRefChunk);
         } else {
             if (!velRef) {
                 /* no velref? this is a productopts */

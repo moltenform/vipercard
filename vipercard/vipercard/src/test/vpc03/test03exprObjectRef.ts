@@ -19,6 +19,9 @@ t.atest('--init--testCollection03exprObjectRef', async () => {
 });
 t.test('03ObjectSpecial', () => {
     let b = new ScriptTestBatch();
+
+    //~ todo: don't just get fld 1, get all the objects in all possible ways
+
     /* special objects */
     //~ b.t(`the short id of ${cProductName}`, `WILD`)
     //~ b.t(`the short id of ${cAltProductName}`, `WILD`)

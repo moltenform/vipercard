@@ -491,6 +491,27 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return this.outside.CallBuiltinFunction(fnName, args);
         }
 
+        helper$fieldChunkProp(ctx: VisitingContext): [RequestedVelRef, RequestedChunk] {
+            /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
+            let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
+            checkThrow(chunk instanceof RequestedChunk, `9B|internal error, expected RuleHChunk to be a chunk`);
+            let ref:RequestedVelRef
+            if (ctx.RuleObjectFld && ctx.RuleObjectFld[0]) {
+                ref = this.visit(ctx.RuleObjectFld[0]) as RequestedVelRef;
+            } else if (ctx._me && ctx._me[0]) {
+                ref = new RequestedVelRef(VpcElType.Unknown)
+                ref.isReferenceToMe = true
+            } else if (ctx._target && ctx._target[0]) {
+                ref = new RequestedVelRef(VpcElType.Unknown)
+                ref.isReferenceToTarget = true
+            } else {
+                checkThrowInternal(false, "no branch seen")
+            }
+
+            checkThrow(ref instanceof RequestedVelRef, `9A|internal error, expected RuleObjectFld to be a RequestedElRef`);
+            return [ref, chunk]
+        }
+
         RuleHUnaryPropertyGet(ctx: VisitingContext): VpcVal {
             let propName = this.visit(ctx.RuleHAllPropertiesThatCouldBeUnary[0]).image;
             let adjective =
@@ -503,11 +524,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             checkThrow(typeof propName === 'string', `9C|internal error, expected AnyPropertyName to be a string`);
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
                 /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
-                let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
-                checkThrow(chunk instanceof RequestedChunk, `9B|internal error, expected RuleHChunk to be a chunk`);
-                let fld = this.visit(ctx.RuleObjectFld[0]) as RequestedVelRef;
-                checkThrow(fld instanceof RequestedVelRef, `9A|internal error, expected RuleObjectFld to be a RequestedElRef`);
-                return this.outside.GetProp(fld, propName, adjective, chunk);
+                /* see "Pseudo-functions that refer to objects" in internaldocs.md */
+                let [ref, chunk] = this.helper$fieldChunkProp(ctx)
+                return this.outside.GetProp(ref, propName, adjective, chunk);
             } else {
                 /* put the locktext of cd fld "myFld" into x */
                 let velRef = this.visit(ctx.RuleObject[0]) as RequestedVelRef;

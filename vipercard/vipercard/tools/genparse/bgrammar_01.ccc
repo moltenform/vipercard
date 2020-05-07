@@ -241,23 +241,11 @@ ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef
 // support variables, HOldStyleFnNonNullary (basically for the target), and HOldStyleFnNullaryOrNullaryPropGet (basically for the owner of),
 ObjectInterpretedFromString:={ <HAnyAllowedVariableName> | <HOldStyleFnNonNullary> |  <HOldStyleFnNullaryOrNullaryPropGet> | tkStringLiteral | _target | tkLParen <Expr> tkRParen }              --->Custom--->RequestedVelRef
 
-// special terms:
-// selection is treated as the selection
-// 
 // CONFIRMED THIS COMPLEX BEHAVIOR IN EMULATOR:
-// definitions: a true object vs a string referencing an object
-// when you get evaluate a true object, you get its contents!
-//          'me' is a true object. put me into cd fld 1 -- gets contents
-//          'target' is a true object. put target into cd fld 1 -- gets contents
-//          'the hilite of the target' is a true object. answer the hilite of the target -- same as answer the hilite of target
-//          'the target' is a function returning a string. put the target into cd fld 1 -- gets the id of the target
-//              answer the hilite of (the target) -- treats it as a string, if it's in the bg potentially different results as answer the hilite of the target
-//          'the owner of cd 1' is a function returning a string.
-//          the strings returned, though, are the type that a property can read.
-//              so get the name of the target still works. it works the same way get the name of myVar works.
+// "target" and "the target" have subtly different behavior
+// see "Pseudo-functions that refer to objects" in internaldocs.md
 // 
-// 
-// Testing in product:
+// Testing in emulator:
 // This does work:
 // 	answer the name of cd btn fld 1
 // 	answer the name of cd btn -xx
@@ -330,7 +318,7 @@ HChunkBound:= { tkLParen <Expr> tkRParen | tkNumLiteral  | <HSimpleContainer> } 
 HSource:={<HSource_1> | <HGenericFunctionCall> | <HSimpleContainer>}   --->Custom--->VpcVal
 HSource_1:=  {tkStringLiteral | tkNumLiteral}                 --->Custom--->VpcVal
 HFnCallWParens:={ <HAnyFnName> tkLParen MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP tkRParen  }         --->Custom--->VpcVal
-HUnaryPropertyGet:=[_the] [ tkAdjective ] <HAllPropertiesThatCouldBeUnary> tkOfOnly { <Object> | <Window> | <MenuItem> <Of> <Menu> | <HChunk> <ObjectFld>}       --->Custom--->VpcVal
+HUnaryPropertyGet:=[_the] [ tkAdjective ] <HAllPropertiesThatCouldBeUnary> tkOfOnly { <Object> | <Window> | <MenuItem> <Of> <Menu> | <HChunk> { <ObjectFld> | _me | [_the] _target } }       --->Custom--->VpcVal
 HOldStyleFnNonNullary:=_the <HAnyFnName> tkOfOnly <Lvl6Expression>                                                                             --->Custom--->VpcVal
 HOldStyleFnNullaryOrNullaryPropGet:= _the [ tkAdjective ] <HAnyFnNameOrAllPropertiesThatCouldBeNullary>             --->Custom--->VpcVal
 
