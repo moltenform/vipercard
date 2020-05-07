@@ -146,11 +146,11 @@ export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
         if (type === VpcElType.Unknown) {
             return '';
         } else if (type === VpcElType.Btn) {
-            return 'cd btn';
+            return 'btn';
         } else if (type === VpcElType.Fld) {
-            return 'cd fld';
+            return 'fld';
         } else if (type === VpcElType.Card) {
-            return 'card';
+            return 'cd';
         } else if (type === VpcElType.Bg) {
             return 'bg';
         } else if (type === VpcElType.Stack) {

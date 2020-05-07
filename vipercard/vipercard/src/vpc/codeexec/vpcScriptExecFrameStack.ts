@@ -612,7 +612,7 @@ export class VpcExecFrameStack {
 
         let velRef = visited.vals.RuleObject[0] as RequestedVelRef;
         checkThrow(velRef instanceof RequestedVelRef, 'Rq|visitSendStatement expected vel reference.');
-        let vel = ensureDefined(this.outside.ResolveVelRef(velRef)[0], "Rp|target of 'send' not found");
+        let vel = ensureDefined(this.outside.ResolveVelRef(velRef), "Rp|target of 'send' not found");
 
         return [val, vel];
     }

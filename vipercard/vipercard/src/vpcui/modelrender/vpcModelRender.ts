@@ -152,7 +152,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             if (vel.parentId555 === currentCardId) {
                 this.applyOneChange(vel, propName, newVal, fromScratch);
             }
-        } else if (type === VpcElType.Card && vel.id === currentCardId) {
+        } else if (type === VpcElType.Card && vel.id555 === currentCardId) {
             if (propName === 'paint') {
                 this.needUIToolsRedraw = true;
             }
@@ -200,7 +200,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
 
         for (let i = 0, len = currentCard.parts.length; i < len; i++) {
             /* change something on an ui512el to trigger redraw */
-            let target = this.findVelIdToEl(currentCard.parts[0].id);
+            let target = this.findVelIdToEl(currentCard.parts[0].id555);
             if (target) {
                 target.set('x', target.getN('x') + 1);
                 target.set('x', target.getN('x') - 1);
@@ -238,7 +238,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     findElIdToVel(id: string): O<VpcElBase> {
         let card = this.vci.getModel().getCurrentCard();
         let vel = this.vci.getModel().findByIdUntyped(this.elIdToVelId(id));
-        if (vel && vel.parentId555 === card.id) {
+        if (vel && vel.parentId555 === card.id555) {
             return vel;
         } else {
             return undefined;
@@ -270,7 +270,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      * build a button from scratch
      */
     protected buildBtnFromScratch(vel: VpcElButton, currentCardId: string) {
-        let target = new UI512ElButton(this.velIdToElId(vel.id));
+        let target = new UI512ElButton(this.velIdToElId(vel.id555));
         this.grp.addElement(this.vci.UI512App(), target);
         let keys = Util512.getMapKeys(vel);
         for (let i = 0, len = keys.length; i < len; i++) {
@@ -287,7 +287,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      * build a field from scratch
      */
     protected buildFldFromScratch(vel: VpcElField, currentCardId: string) {
-        let target = new UI512ElTextField(this.velIdToElId(vel.id));
+        let target = new UI512ElTextField(this.velIdToElId(vel.id555));
         this.grp.addElement(this.vci.UI512App(), target);
         let keys = Util512.getMapKeys(vel);
         for (let i = 0, len = keys.length; i < len; i++) {
@@ -299,7 +299,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             }
         }
 
-        target.setFmTxt(vel.getCardFmTxt(currentCardId));
+        target.setFmTxt(vel.getCardFmTxt());
     }
 
     /**
@@ -309,7 +309,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     protected applyOneChange(vel: VpcElBase, propName: string, newVal: ElementObserverVal, fromScratch: boolean) {
         assertTrue(vel.getType() === VpcElType.Fld || vel.getType() === VpcElType.Btn, 'KU|');
         let key = vel.getType().toString() + '/' + propName;
-        let target = this.findVelIdToEl(vel.id);
+        let target = this.findVelIdToEl(vel.id555);
         if (target) {
             let fnSetProperty = this.indirectProperty[key];
             let ui512propname = this.directMapProperty[key];
@@ -319,13 +319,13 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
                 target.set(ui512propname, newVal);
             } else if (propName === UI512PublicSettable.fmtTxtVarName) {
                 let newvAsText = newVal as FormattedText;
-                assertTrue(newvAsText instanceof FormattedText, '6)|bad formatted text', vel.id);
+                assertTrue(newvAsText instanceof FormattedText, '6)|bad formatted text', vel.id555);
                 target.setFmTxt(newvAsText);
             } else {
                 /* it's a property that doesn't impact rendering. that's ok. */
             }
         } else if (!this.needFullRedraw && !this.needFullRedrawBecauseScreenWasLocked) {
-            assertWarn(false, `6(|did not find rendered corresponing ${vel.id}`);
+            assertWarn(false, `6(|did not find rendered corresponing ${vel.id555}`);
         }
 
         if (!fromScratch && this.propertiesCouldUnFocus[key]) {
@@ -370,7 +370,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         } else {
             let parent = this.vci.getModel().getCardById(focusedVel.parentId555);
             let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-            if (parent.getType() === VpcElType.Card && parent.id !== currentCardId) {
+            if (parent.getType() === VpcElType.Card && parent.id555 !== currentCardId) {
                 /* field not on the current card */
                 this.vci.setCurrentFocus(undefined);
             }

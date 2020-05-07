@@ -338,7 +338,7 @@ export const VpcPresenterEvents = /* static class */ {
             if (el) {
                 let vel = pr.lyrModelRender.findElIdToVel(el.id);
                 if (vel && vel.getType() === VpcElType.Fld && !vel.getB('locktext')) {
-                    pr.vci.getCodeExec().fieldsRecentlyEdited.val[vel.id] = true;
+                    pr.vci.getCodeExec().fieldsRecentlyEdited.val[vel.id555] = true;
                 }
             }
         }
@@ -592,7 +592,7 @@ export class EditTextBehaviorSendToVel extends UI512TextEvents {
             if (vel) {
                 let velFld = cast(VpcElField, vel);
                 let cardId = pr.vci.getOptionS('currentCardId');
-                return VpcModelRender.canFieldHaveFocus(velFld) ? new VpcTextFieldAsGeneric(el, velFld, cardId) : undefined;
+                return VpcModelRender.canFieldHaveFocus(velFld) ? new VpcTextFieldAsGeneric(el, velFld, pr.vci.getModel()) : undefined;
             } else {
                 return new UI512ElTextFieldAsGeneric(el);
             }

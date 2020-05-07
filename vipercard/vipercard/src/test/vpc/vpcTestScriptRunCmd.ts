@@ -346,7 +346,7 @@ do not change the current card */
     b.t('go third\ngo to stack "other"\\the short id of this cd', `${h.ids.cdBC}`);
     b.t('go third\ngo to stack id 999\\the short id of this cd', `${h.ids.cdBC}`);
     b.t(
-        `go third\ngo to stack id ${h.vcstate.model.stack.id}\\the short id of this cd`,
+        `go third\ngo to stack id ${h.vcstate.model.stack.id555}\\the short id of this cd`,
         `${h.ids.cdBC}`
     );
     b.t('go to card 1 of this stack\\the short id of this cd', `${h.ids.cdA}`);
@@ -1068,7 +1068,7 @@ send code to this stack\\g`,
 
     /* make sure that invalid code is cleaned out after a preparse failure. */
     let stack = h.vcstate.vci.getModel().getById(VpcElStack, h.ids.stack);
-    h.vcstate.vci.undoableAction(() => stack.set('script', ``));
+    h.vcstate.vci.undoableAction(() => stack.setOnVel('script', ``, h.vcstate.model));
     b.t('send "$$$#$%#$" to this stack\\0', 'ERR:4:lex error');
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
@@ -1083,7 +1083,7 @@ send code to this stack\\g`,
     b = new ScriptTestBatch();
 
     /* make sure that code can run after a runtime failure. */
-    h.vcstate.vci.undoableAction(() => stack.set('script', ``));
+    h.vcstate.vci.undoableAction(() => stack.setOnVel('script', ``, h.vcstate.model));
 
     b.t('send "put 1 into cd fld 999" to this stack\\0', 'ERR:4:element not found');
 
@@ -1102,12 +1102,12 @@ send code to this stack\\g`,
     /* calling as a handler, like the original product could do */
     let v = h.vcstate.vci.getModel().getById(VpcElButton, h.ids.bBC1);
     h.vcstate.vci.undoableAction(() =>
-        v.set(
+        v.setOnVel(
             'script',
             `
 on myCompute a, b
 return a * a + b
-end myCompute`
+end myCompute`, h.vcstate.model
         )
     );
 
@@ -1126,12 +1126,12 @@ end myCompute`
 
     /* calling as a function */
     h.vcstate.vci.undoableAction(() =>
-        v.set(
+        v.setOnVel(
             'script',
             `
 function myCompute a, b
 return a * a + b
-end myCompute`
+end myCompute`, h.vcstate.model
         )
     );
 
@@ -1150,7 +1150,7 @@ end myCompute`
 
     /* calling as a function (can access others in that scope) */
     h.vcstate.vci.undoableAction(() =>
-        v.set(
+        v.setOnVel(
             'script',
             `
 function myDouble a
@@ -1159,7 +1159,7 @@ end myDouble
 
 function myCompute a, b
 return myDouble(a) + myDouble(b)
-end myCompute`
+end myCompute`, h.vcstate.model
         )
     );
 
@@ -1211,7 +1211,7 @@ end sometimesSetResult`;
 
     /* sending an event down, it can bubble back up */
     h.vcstate.vci.undoableAction(() =>
-        h.vcstate.model.stack.set(
+        h.vcstate.model.stack.setOnVel(
             'script',
             `
 function myCompute a, b
@@ -1222,7 +1222,7 @@ on doTest
     send "myCompute 3, 4" to cd btn id ${h.ids.go}
     return the result
 end doTest
-`
+`, h.vcstate.model
         )
     );
     got = h.testOneEvaluate('', 'doTest()');
@@ -1238,12 +1238,12 @@ end myCompute`;
 
     /* or it is overridden in the card */
     h.vcstate.vci.undoableAction(() =>
-        h.vcstate.model.getCurrentCard().set(
+        h.vcstate.model.getCurrentCard().setOnVel(
             'script',
             `
 function myCompute a, b
     return 1
-end myCompute`
+end myCompute`, h.vcstate.model
         )
     );
     got = h.testOneEvaluate('', 'doTest()');

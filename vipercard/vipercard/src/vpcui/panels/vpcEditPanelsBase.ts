@@ -47,23 +47,6 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
     lblNamingTip: UI512ElLabel;
 
     /**
-     * helpful text in the lower left, by default showing how to refer to object in a script
-     */
-    protected refreshTip(name: string, id: string) {
-        let shortName = vpcElTypeToString(this.velType, true);
-        let longName = vpcElTypeToString(this.velType, false);
-        let s = lng('lngRefer to this %typ in a script as');
-        s = s.replace(/%typ/g, longName);
-        s += `\n${shortName} id ${id}`;
-        if (name.length) {
-            s += `\nor\n${shortName} "${name}"`;
-        }
-
-        s = UI512DrawText.setFont(s, new TextFontSpec('monaco', 0, 9).toSpecString());
-        this.lblNamingTip.set('labeltext', s);
-    }
-
-    /**
      * initialize layout
      */
     createSpecific(app: UI512Application) {
@@ -216,7 +199,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         }
 
         if (this.leftChoices.length) {
-            let styl = vel.getProp('style', currentCardId).readAsString();
+            let styl = vel.getProp('style').readAsString();
             let el = grp.getEl(this.getElId(`leftchoice`));
             let found = this.leftChoices.findIndex(item => item[1].toLowerCase() === styl.toLowerCase());
             if (found !== -1) {
@@ -233,7 +216,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         for (let lblTxtPts of this.rightOptions) {
             let inId = lblTxtPts[1];
             let el = grp.getEl(this.getElId(`toggle##${inId}`));
-            let val = vel.getProp(inId, currentCardId);
+            let val = vel.getProp(inId);
             el.set('checkmark', val.readAsStrictBoolean());
         }
     }
@@ -242,21 +225,36 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
      * refresh the tip saying how to refer to an object in a script
      */
     fillInValuesTip(app: UI512Application, vel: VpcElBase) {
-        this.refreshTip(vel.getS('name'), vel.id);
+        let prefix = ''
+        if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
+            let isBg = vel.getS('is_bg_velement_id').length > 0
+            prefix = isBg ? vpcElTypeToString(VpcElType.Bg, true) : vpcElTypeToString(VpcElType.Card, true)
+            prefix += ' '
+        }
+
+        let typeName = vpcElTypeToString(this.velType, true);
+        let s = lng('lngRefer to this %typ in a script as');
+        s = s.replace(/%typ/g, vpcElTypeToString(this.velType, false));
+        s += `\n${prefix}${typeName} id ${vel.getUserFacingId()}`;
+        if (vel.getS('name').length) {
+            s += `\nor\n${prefix}${typeName} "${vel.getS('name')}"`;
+        }
+
+        s = UI512DrawText.setFont(s, new TextFontSpec('monaco', 0, 9).toSpecString());
+        this.lblNamingTip.set('labeltext', s);
     }
 
     /**
      * save changes for one property
      */
     protected saveChangesToModelSetProp(vel: VpcElBase, propName: string, newVal: VpcVal, onlyCheckIfDirty: boolean) {
-        let currentCardId = this.vci.getOptionS('currentCardId');
         if (onlyCheckIfDirty) {
-            let current = propName === 'name' ? VpcValS(vel.getS('name')) : vel.getProp(propName, currentCardId);
+            let current = propName === 'name' ? VpcValS(vel.getS('name')) : vel.getProp(propName);
             if (current.readAsString() !== newVal.readAsString()) {
                 checkThrowNotifyMsg(false, VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
-            vel.setProp(propName, newVal, currentCardId);
+            vel.setProp(propName, newVal, this.vci.getModel());
         }
     }
 
@@ -279,14 +277,14 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             let curIcon = vel.getN('icon') ?? 0;
             if (nextIcon === 0 && curIcon !== 0) {
                 /* if you are adding/removing a button's icon, set font as appropriate */
-                vel.set('textfont', 'chicago');
-                vel.set('textstyle', 0);
-                vel.set('textsize', 12);
+                vel.setOnVel('textfont', 'chicago', this.vci.getModel());
+                vel.setOnVel('textstyle', 0, this.vci.getModel());
+                vel.setOnVel('textsize', 12, this.vci.getModel());
             } else if (nextIcon !== 0 && curIcon === 0) {
                 /* if you are adding/removing a button's icon, set font as appropriate */
-                vel.set('textfont', 'geneva');
-                vel.set('textstyle', 0);
-                vel.set('textsize', 9);
+                vel.setOnVel('textfont', 'geneva', this.vci.getModel());
+                vel.setOnVel('textstyle', 0, this.vci.getModel());
+                vel.setOnVel('textsize', 9, this.vci.getModel());
             }
         }
 
@@ -321,7 +319,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             let el = grp.getEl(this.getElId(`toggle##${inId}`));
             if (el.getB('visible')) {
                 let checked = el.getB('checkmark');
-                vel.setProp(inId, VpcValBool(checked), this.vci.getOptionS('currentCardId'));
+                vel.setProp(inId, VpcValBool(checked), this.vci.getModel());
                 this.saveChangesToModelSetProp(vel, inId, VpcValBool(checked), onlyCheckIfDirty);
             }
         }

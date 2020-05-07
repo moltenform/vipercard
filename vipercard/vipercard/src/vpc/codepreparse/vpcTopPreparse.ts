@@ -140,7 +140,7 @@ export const VpcTopPreparse = /* static class */ {
 
     /* apply the 3rd stage of rewriting */
     _stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite): ChvITk[][] {
-        line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line);
+        line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line, rw);
         line = VpcRewritesGlobal.rewritePropertySynonyms(line, rw);
         let outlines = exp.go(line);
         return outlines;

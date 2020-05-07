@@ -15,6 +15,8 @@
 /* auto */ import { largeArea, specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
 
+import { assertTrue } from '../../ui512/utils/util512Assert';
+
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -222,12 +224,6 @@ t.test('UI512ElTextFieldAsGeneric', () => {
     assertEq(500, gel.getScrollAmt(), 'A2|');
 });
 t.test('VpcTextFieldAsGeneric', () => {
-    class MockHigher implements VpcHandleLinkedVels {
-        setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void {
-            me['_' + s] = newVal
-        }
-    }
-
     let el = new UI512ElTextField('fld1');
     el.observer = new ElementObserverNoOp();
     let higher = new MockHigher()
@@ -427,4 +423,13 @@ function listElems(grp: UI512ElGroup) {
     }
 
     return s;
+}
+
+/**
+ * test-only implementation, doesn't support any replication to other elements
+ */
+export class MockHigher implements VpcHandleLinkedVels {
+    setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void {
+        cb(s, newVal, ChangeContext.Default)
+    }
 }

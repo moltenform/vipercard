@@ -44,7 +44,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
             if (handle !== undefined && !this.dragStatus) {
                 let vel = this.lyrPanels.selectedVel('selectedVelId');
                 if (vel && (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld)) {
-                    let targetEl = this.vci.UI512App().findEl('VpcModelRender$$' + vel.id);
+                    let targetEl = this.vci.UI512App().findEl('VpcModelRender$$' + vel.id555);
                     if (targetEl) {
                         /* distance from initial click to center of handle */
                         let distanceFromHandleCenterX =
@@ -118,15 +118,15 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
             let validatedVel = this.lyrPanels.selectedVel('selectedVelId');
             if (
                 validatedVel &&
-                validatedVel.id === this.dragStatus.vel.id &&
+                validatedVel.id555 === this.dragStatus.vel.id555 &&
                 (validatedVel.getType() === VpcElType.Btn || validatedVel.getType() === VpcElType.Fld)
             ) {
                 /* commit the change to the vel */
                 let vel = this.dragStatus.vel;
-                vel.set('x', this.dragStatus.el.x - this.vci.userBounds()[0]);
-                vel.set('y', this.dragStatus.el.y - this.vci.userBounds()[1]);
-                vel.set('w', this.dragStatus.el.w);
-                vel.set('h', this.dragStatus.el.h);
+                vel.setOnVel('x', this.dragStatus.el.x - this.vci.userBounds()[0], this.vci.getModel());
+                vel.setOnVel('y', this.dragStatus.el.y - this.vci.userBounds()[1], this.vci.getModel());
+                vel.setOnVel('w', this.dragStatus.el.w, this.vci.getModel());
+                vel.setOnVel('h', this.dragStatus.el.h, this.vci.getModel());
             }
 
             this.dragStatus = undefined;

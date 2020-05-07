@@ -159,7 +159,7 @@ end if
     /* runs the test */
     async goImpl() {
         let stack = h.vcstate.model.getById(VpcElStack, h.ids.stack);
-        h.vcstate.vci.undoableAction(() => stack.set('script', this.helperCode));
+        h.vcstate.vci.undoableAction(() => stack.setOnVel('script', this.helperCode, h.vcstate.model));
 
         await this.testHelpers();
 
@@ -198,7 +198,7 @@ end if
         }
 
         console.log(`ran verification for ${countTests} tests. ${failures} failures.`);
-        h.vcstate.vci.undoableAction(() => stack.set('script', ''));
+        h.vcstate.vci.undoableAction(() => stack.setOnVel('script', '', h.vcstate.model));
     }
 
     /* not for vipercard, but for the original project

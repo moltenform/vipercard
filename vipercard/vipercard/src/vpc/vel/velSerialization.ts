@@ -1,11 +1,12 @@
 
 /* auto */ import { VpcElType, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElBase, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
-/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512PublicSettable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512PublicSettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { bridgedBase64Js } from './../../bridge/bridgeBase64Js';
 
@@ -48,7 +49,7 @@ export const VpcGettableSerialization = /* static class */ {
     /**
      * deserialize a JS object to a Settable
      */
-    deserializeSettable(vel: UI512PublicSettable, vals: AnyJson) {
+    deserializeSettable(vel: VpcElBase, vals: AnyJson, h:VpcHandleLinkedVels) {
         let savedObserver = vel.observer;
         try {
             vel.observer = new ElementObserverNoOp();
@@ -62,14 +63,14 @@ export const VpcGettableSerialization = /* static class */ {
                 if (VpcGettableSerialization._propNameExpectFormattedText(propName)) {
                     if (typeof v === 'string') {
                         let vAsText = FormattedText.newFromSerialized(v);
-                        VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, vAsText);
+                        VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, vAsText, h);
                     } else {
                         assertTrue(v instanceof FormattedText, 'J`|not a string or FormattedText');
-                        VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, v);
+                        VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, v,h);
                     }
                 } else {
                     let decoded = VpcGettableSerialization.deserializePlain(v);
-                    VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, decoded);
+                    VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, decoded,h);
                 }
             }
 
@@ -83,7 +84,7 @@ export const VpcGettableSerialization = /* static class */ {
                     prp[1] !== '_' &&
                     !VpcGettableSerialization.okNotToSee[prpSliced]
                 ) {
-                    checkThrowInternal(false, `T?|in obj ${vel.id} did not see ${prpSliced}`);
+                    checkThrowInternal(false, `T?|in obj ${vel.id555} did not see ${prpSliced}`);
                 }
             }
         } finally {
@@ -101,23 +102,23 @@ export const VpcGettableSerialization = /* static class */ {
     /**
      * set a property, and set to 2 different values to ensure that the 'change' event is sent
      */
-    _setAnyAndSendChangeNotification(vel: UI512PublicSettable, propName: string, v: ElementObserverVal) {
+    _setAnyAndSendChangeNotification(vel: VpcElBase, propName: string, v: ElementObserverVal, h:VpcHandleLinkedVels) {
         if (typeof v === 'boolean') {
             (vel as any)['_' + propName] = false;
-            vel.set(propName, !v);
-            vel.set(propName, v);
+            vel.setOnVel(propName, !v, h);
+            vel.setOnVel(propName, v, h);
         } else if (typeof v === 'number') {
             (vel as any)['_' + propName] = 0;
-            vel.set(propName, v === 0 ? 1 : 0);
-            vel.set(propName, v);
+            vel.setOnVel(propName, v === 0 ? 1 : 0, h);
+            vel.setOnVel(propName, v, h);
         } else if (typeof v === 'string') {
             (vel as any)['_' + propName] = '';
-            vel.set(propName, v.length === 0 ? ' ' : '');
-            vel.set(propName, v);
+            vel.setOnVel(propName, v.length === 0 ? ' ' : '', h);
+            vel.setOnVel(propName, v, h);
         } else if (v instanceof FormattedText) {
             (vel as any)['_' + propName] = new FormattedText();
-            vel.set(propName, new FormattedText());
-            vel.set(propName, v);
+            vel.setOnVel(propName, new FormattedText(), h);
+            vel.setOnVel(propName, v, h);
         } else {
             assertWarn(false, 'T>|unknown data type for ' + v);
         }
@@ -133,7 +134,7 @@ export const VpcGettableSerialization = /* static class */ {
     /**
      * copy over the prop values of one object onto another object
      */
-    copyPropsOver(getter: UI512Gettable, setter: UI512PublicSettable) {
+    copyPropsOver(getter: UI512Gettable, setter: UI512Settable) {
         checkThrow(false, 'T=|nyi -- use serialization instead');
     },
 

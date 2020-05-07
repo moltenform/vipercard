@@ -897,7 +897,7 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
     provideCustomFnInStackScript(addCode = '') {
         let stack = h.vcstate.model.getById(VpcElStack, h.ids.stack);
         h.vcstate.vci.undoableAction(() =>
-            stack.set(
+            stack.setOnVel(
                 'script',
                 `
     function myMult p1, p2
@@ -905,7 +905,7 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
         add 1 to countCalls
         return p1 * p2
     end myMult
-    ${addCode}`
+    ${addCode}`, h.vcstate.model
             )
         );
     }

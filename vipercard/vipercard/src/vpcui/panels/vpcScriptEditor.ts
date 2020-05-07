@@ -230,7 +230,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
 
         /* clear the encountered error message */
         this.lastErrInfo = undefined;
-        this.needsToBeSaved.remove(vel.id);
+        this.needsToBeSaved.remove(vel.id555);
         this.refreshStatusLabels(this.vci.UI512App());
         this.vci.causeUIRedraw();
     }
@@ -264,7 +264,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             /* make the 'save' button bold since we have unsaved changes */
             let vel = this.cbGetAndValidateSelectedVel('selectedVelId');
             if (vel) {
-                this.needsToBeSaved.set(vel.id, true);
+                this.needsToBeSaved.set(vel.id555, true);
                 this.refreshStatusLabels(this.vci.UI512App());
             }
         }
@@ -290,7 +290,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             open the script editor */
             let validVel = this.cbGetAndValidateSelectedVel('selectedVelId');
             if (validVel) {
-                this.vci.setOption('viewingScriptVelId', validVel.id);
+                this.vci.setOption('viewingScriptVelId', validVel.id555);
 
                 /* reset scroll, in case the last script we saw was really long */
                 this.el.set('scrollamt', 0);
@@ -389,7 +389,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 checkThrowNotifyMsg(false, VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
-            vel.set('script', newscript);
+            vel.setOnVel('script', newscript, this.vci.getModel());
         }
     }
 

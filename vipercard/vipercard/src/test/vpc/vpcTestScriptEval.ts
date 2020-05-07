@@ -9,6 +9,7 @@
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
+/* auto */ import { MockHigher } from './../util512ui/testUI512Elements';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -41,6 +42,7 @@ let t = new SimpleUtil512TestCollection('testCollectionvpcScriptEval');
 export let testCollectionvpcScriptEval = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
+let higher = new MockHigher()
 
 t.atest('--init--vpcTestScriptExprLvl', async () => {
     h = new TestVpcScriptRunBase(t);
@@ -293,9 +295,9 @@ t.test('vpcProperties', () => {
     
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-    h.setScript(h.vcstate.model.stack.id, 'on stackscript\nend stackscript');
-    h.setScript(h.vcstate.model.stack.bgs[1].id, 'on bgscript\nend bgscript');
-    h.setScript(h.vcstate.model.stack.bgs[1].cards[1].id, 'on cdscript\nend cdscript');
+    h.setScript(h.vcstate.model.stack.id555, 'on stackscript\nend stackscript');
+    h.setScript(h.vcstate.model.stack.bgs[1].id555, 'on bgscript\nend bgscript');
+    h.setScript(h.vcstate.model.stack.bgs[1].cards[1].id555, 'on cdscript\nend cdscript');
 
     /* stack get and set */
     b.t('length(the script of this stack) > 1', `true`);
@@ -707,8 +709,8 @@ t.test('vpcProperties', () => {
     );
     h.vcstate.vci.undoableAction(() =>
         fldPerChar.setCardFmTxt(
-            fldPerChar.parentId,
-            FormattedText.newFromSerialized(sfmt)
+            FormattedText.newFromSerialized(sfmt),
+            higher,
         )
     );
 
@@ -745,7 +747,7 @@ t.test('vpcProperties', () => {
     b = new ScriptTestBatch();
 
     /* formatting should have been preserved */
-    let contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
+    let contents = fldPerChar.getCardFmTxt().toSerialized();
     assertWarnEq(sfmt, contents, '1y|');
 
     /* setting per-character formatting */
@@ -814,7 +816,7 @@ t.test('vpcProperties', () => {
     b = new ScriptTestBatch();
 
     /* confirm formatting */
-    contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
+    contents = fldPerChar.getCardFmTxt().toSerialized();
     assertWarnEq(
         longstr(
             `|Courier_24_+biuosdce|a|geneva_24_+biuosdce|b|geneva_18_b+iuo+sdce|
@@ -853,13 +855,13 @@ t.test('vpcProperties', () => {
     for (let [action, expectedFont] of actions) {
         h.vcstate.vci.undoableAction(() =>
             fldPerChar.setCardFmTxt(
-                fldPerChar.parentId,
-                FormattedText.newFromSerialized(sfmt)
+                FormattedText.newFromSerialized(sfmt),
+                higher
             )
         );
         assertEq(
             sfmt,
-            fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized(),
+            fldPerChar.getCardFmTxt().toSerialized(),
             '1w|'
         );
         b.t('set the defaulttextfont of cd fld "p2" to "geneva"\\0', '0');
@@ -870,7 +872,7 @@ t.test('vpcProperties', () => {
         b = new ScriptTestBatch();
 
         /* formatting should have been lost */
-        contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
+        contents = fldPerChar.getCardFmTxt().toSerialized();
         let expected = UI512DrawText.setFont('abcdef', expectedFont.toSpecString());
         assertEq(expected, contents, '1v|');
     }

@@ -186,7 +186,7 @@ export class VpcSave implements VpcSaveInterface {
                 let stack = this.pr.vci.getModel().stack;
                 let newPartialId = getVpcSessionTools().generateStackPartialId();
                 let en = new VpcElStackLineageEntry(ses.username, newPartialId, newName);
-                stack.appendToStackLineage(en);
+                stack.appendToStackLineage(en, this.pr.vci.getModel());
 
                 /* a serialized stack -- with the new lineage */
                 newStackData = this.pr.getSerializedStack();
@@ -195,7 +195,7 @@ export class VpcSave implements VpcSaveInterface {
                 return true;
             } catch (e) {
                 /* something went wrong - revert the changes! */
-                this.pr.vci.getModel().stack.set('stacklineage', lineageBeforeChanges);
+                this.pr.vci.getModel().stack.setOnVel('stacklineage', lineageBeforeChanges,this.pr.vci.getModel());
                 throw e;
             }
         }

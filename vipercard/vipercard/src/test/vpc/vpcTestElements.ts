@@ -13,6 +13,7 @@
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
+/* auto */ import { MockHigher } from './../util512ui/testUI512Elements';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -22,24 +23,25 @@
  */
 let t = new SimpleUtil512TestCollection('testCollectionvpcElements');
 export let testCollectionvpcElements = t;
+let higher = new MockHigher()
 
 t.test('ChangeToSingleLine.Should Preserve Text That Is Already One Line', () => {
     let vel = new VpcElField('id1', 'parentid1');
     vel.observer = new ElementObserverNoOp();
-    vel.setCardFmTxt(fakeCardId, FormattedText.newFromUnformatted('abc'));
-    vel.setProp('singleline', VpcValBool(false), fakeCardId);
-    assertEq('abc', vel.getCardFmTxt(fakeCardId).toUnformatted(), 'F+|');
-    vel.setProp('singleline', VpcValBool(true), fakeCardId);
-    assertEq('abc', vel.getCardFmTxt(fakeCardId).toUnformatted(), 'F*|');
+    vel.setCardFmTxt(FormattedText.newFromUnformatted('abc'), higher);
+    vel.setProp('singleline', VpcValBool(false), higher);
+    assertEq('abc', vel.getCardFmTxt().toUnformatted(), 'F+|');
+    vel.setProp('singleline', VpcValBool(true), higher);
+    assertEq('abc', vel.getCardFmTxt().toUnformatted(), 'F*|');
 });
 t.test('ChangeToSingleLine.making it single line should kill the other line', () => {
     let vel = new VpcElField('id1', 'parentid1');
     vel.observer = new ElementObserverNoOp();
-    vel.setCardFmTxt(fakeCardId, FormattedText.newFromUnformatted('abcd\ndef'));
-    vel.setProp('singleline', VpcValBool(false), fakeCardId);
-    assertEq('abcd\ndef', vel.getCardFmTxt(fakeCardId).toUnformatted(), 'F)|');
-    vel.setProp('singleline', VpcValBool(true), fakeCardId);
-    assertEq('abcd', vel.getCardFmTxt(fakeCardId).toUnformatted(), 'F(|');
+    vel.setCardFmTxt(FormattedText.newFromUnformatted('abcd\ndef'), higher);
+    vel.setProp('singleline', VpcValBool(false), higher);
+    assertEq('abcd\ndef', vel.getCardFmTxt().toUnformatted(), 'F)|');
+    vel.setProp('singleline', VpcValBool(true), higher);
+    assertEq('abcd', vel.getCardFmTxt().toUnformatted(), 'F(|');
 });
 t.test('ChangeToSingleLine1', () => {
     t.say(
@@ -48,23 +50,23 @@ t.test('ChangeToSingleLine1', () => {
     );
     let vel = new VpcElField('id1', 'parentid1');
     vel.observer = new ElementObserverNoOp();
-    vel.setCardFmTxt(fakeCardId, FormattedText.newFromUnformatted('a\nb\nc\nd'));
-    vel.setProp('singleline', VpcValBool(false), fakeCardId);
-    assertEq('a\nb\nc\nd', vel.getCardFmTxt(fakeCardId).toUnformatted(), 'F&|');
-    vel.setProp('singleline', VpcValBool(true), fakeCardId);
-    assertEq('a', vel.getCardFmTxt(fakeCardId).toUnformatted(), 'F%|');
+    vel.setCardFmTxt(FormattedText.newFromUnformatted('a\nb\nc\nd'), higher);
+    vel.setProp('singleline', VpcValBool(false), higher);
+    assertEq('a\nb\nc\nd', vel.getCardFmTxt().toUnformatted(), 'F&|');
+    vel.setProp('singleline', VpcValBool(true), higher);
+    assertEq('a', vel.getCardFmTxt().toUnformatted(), 'F%|');
 });
 t.test('VpcElButton.should translate style names for script', () => {
     let vel = new VpcElButton('id1', 'parentid1');
     vel.observer = new ElementObserverNoOp();
-    vel.set('style', UI512BtnStyle.Rectangle);
-    assertEq('rectangle', vel.getProp('style', fakeCardId).readAsString(), 'F$|');
-    vel.set('style', UI512BtnStyle.Checkbox);
-    assertEq('checkbox', vel.getProp('style', fakeCardId).readAsString(), 'F#|');
-    vel.set('style', UI512BtnStyle.OSStandard);
-    assertEq('standard', vel.getProp('style', fakeCardId).readAsString(), 'F!|');
-    vel.set('style', UI512BtnStyle.OSDefault);
-    assertEq('default', vel.getProp('style', fakeCardId).readAsString(), 'F |');
+    vel.setOnVel('style', UI512BtnStyle.Rectangle, higher);
+    assertEq('rectangle', vel.getProp('style').readAsString(), 'F$|');
+    vel.setOnVel('style', UI512BtnStyle.Checkbox, higher);
+    assertEq('checkbox', vel.getProp('style').readAsString(), 'F#|');
+    vel.setOnVel('style', UI512BtnStyle.OSStandard, higher);
+    assertEq('standard', vel.getProp('style').readAsString(), 'F!|');
+    vel.setOnVel('style', UI512BtnStyle.OSDefault, higher);
+    assertEq('default', vel.getProp('style').readAsString(), 'F |');
 });
 t.test('WritableContainerVar.setAll', () => {
     let world = new MockOutsideWorld();
@@ -177,17 +179,17 @@ t.test('VpcElStackLineage', () => {
     assertEq('', vel.getS('stacklineage'), 'Fm|');
 
     let entry = new VpcElStackLineageEntry('own1', 'gid1', 'nm1');
-    vel.appendToStackLineage(entry);
+    vel.appendToStackLineage(entry, higher);
     assertEq('own1|gid1|nm1', vel.getLatestStackLineage().serialize(), 'Fl|');
     assertEq('own1|gid1|nm1', vel.getS('stacklineage'), 'Fk|');
 
     entry = new VpcElStackLineageEntry('own2', 'gid2', 'nm2');
-    vel.appendToStackLineage(entry);
+    vel.appendToStackLineage(entry, higher);
     assertEq('own2|gid2|nm2', vel.getLatestStackLineage().serialize(), 'K,|');
     assertEq('own1|gid1|nm1||own2|gid2|nm2', vel.getS('stacklineage'), 'Fj|');
 
     entry = new VpcElStackLineageEntry('own3', 'gid3', 'nm3');
-    vel.appendToStackLineage(entry);
+    vel.appendToStackLineage(entry, higher);
     assertEq('own3|gid3|nm3', vel.getLatestStackLineage().serialize(), 'K+|');
     assertEq(
         'own1|gid1|nm1||own2|gid2|nm2||own3|gid3|nm3',
@@ -201,28 +203,28 @@ t.test('SerializeGettable1', () => {
         let vel = new VpcElField('id1', 'parentid1');
         vel.observer = new ElementObserverNoOp();
 
-        vel.setCardFmTxt(fakeCardId, FormattedText.newFromUnformatted('abc'));
-        vel.set('dontwrap', b);
-        vel.set('enabled', !b);
-        vel.set('locktext', b);
-        vel.set('singleline', !b);
-        vel.set('visible', b);
-        vel.set('selcaret', b ? 100 : 200);
-        vel.set('selend', !b ? 100 : 200);
-        vel.set('scroll', b ? 100 : 200);
-        vel.set('style', !b ? 100 : 200);
-        vel.set('script', 'def');
-        vel.set('textalign', 'ghi');
-        vel.set('name', 'jkl');
+        vel.setCardFmTxt(FormattedText.newFromUnformatted('abc'), higher);
+        vel.setOnVel('dontwrap', b, higher);
+        vel.setOnVel('enabled', !b, higher);
+        vel.setOnVel('locktext', b, higher);
+        vel.setOnVel('singleline', !b, higher);
+        vel.setOnVel('visible', b, higher);
+        vel.setOnVel('selcaret', b ? 100 : 200, higher);
+        vel.setOnVel('selend', !b ? 100 : 200, higher);
+        vel.setOnVel('scroll', b ? 100 : 200, higher);
+        vel.setOnVel('style', !b ? 100 : 200, higher);
+        vel.setOnVel('script', 'def', higher);
+        vel.setOnVel('textalign', 'ghi', higher);
+        vel.setOnVel('name', 'jkl', higher);
 
         let serialized = VpcGettableSerialization.serializeGettable(vel);
         let restored = new VpcElField('id1', 'parentid1');
         restored.observer = new ElementObserverNoOp();
         let s = JSON.stringify(serialized);
         let restoredJson = JSON.parse(s);
-        VpcGettableSerialization.deserializeSettable(restored, restoredJson);
+        VpcGettableSerialization.deserializeSettable(restored, restoredJson, higher);
 
-        assertEq('abc', restored.getCardFmTxt(fakeCardId).toUnformatted(), 'Fi|');
+        assertEq('abc', restored.getCardFmTxt().toUnformatted(), 'Fi|');
         assertEq(b, restored.getB('dontwrap'), 'Fh|');
         assertEq(!b, restored.getB('enabled'), 'Fg|');
         assertEq(b, restored.getB('locktext'), 'Ff|');
@@ -289,9 +291,9 @@ t.test('SerializeGettable with nonascii characters', () => {
     let sBinXbb = 'ghi\xbbnonascii';
     let sBinMany =
         'u\u2667c\u3667c\u4667c\u5667c\ud667c\ue667c\uf667c\u0301d\u00e9e\u0065';
-    vel.set('script', sBinX01);
-    vel.set('textalign', sBinXbb);
-    vel.set('name', sBinMany);
+    vel.setOnVel('script', sBinX01, higher);
+    vel.setOnVel('textalign', sBinXbb, higher);
+    vel.setOnVel('name', sBinMany, higher);
     assertTrue(vel.getS('script').includes('\x01'), 'FI|');
     assertTrue(vel.getS('textalign').includes('\xbb'), 'FH|');
     let serialized = VpcGettableSerialization.serializeGettable(vel);
@@ -306,7 +308,7 @@ t.test('SerializeGettable with nonascii characters', () => {
     let restoredJson = JSON.parse(s);
     let restored = new VpcElField('id1', 'parentid1');
     restored.observer = new ElementObserverNoOp();
-    VpcGettableSerialization.deserializeSettable(restored, restoredJson);
+    VpcGettableSerialization.deserializeSettable(restored, restoredJson, higher);
     assertEq(sBinX01, restored.getS('script'), 'FA|');
     assertEq(sBinXbb, restored.getS('textalign'), 'F9|');
     assertEq(sBinMany, restored.getS('name'), 'F8|');

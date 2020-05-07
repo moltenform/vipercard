@@ -91,7 +91,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
      */
     static checkIfCanDelete(vel: VpcElBase, vci: VpcStateInterface) {
         let currentCard = vci.getModel().getByIdUntyped(vci.getModel().productOpts.getS('currentCardId'));
-        assertTrue(bool(vci.getModel().findByIdUntyped(vel.id555)), "6Z|deleting element that doesn't exist?", vel.id55);
+        assertTrue(bool(vci.getModel().findByIdUntyped(vel.id555)), "6Z|deleting element that doesn't exist?", vel.id555);
         if (vel.getType() === VpcElType.Stack || vel.getType() === VpcElType.Product || vel.getType() === VpcElType.Unknown) {
             checkThrow(false, '6Y|Cannot delete this type of element');
         } else if (vel instanceof VpcElCard) {
@@ -128,7 +128,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
     undo(vci: VpcStateInterface) {
         checkThrow(!vci.getCodeExec().isCodeRunning(), "8$|currently can't do this while code is running");
 
-        let vel = VpcStateSerialize.deserializeVelCompressed(vci, this.storedVelData);
+        let vel = VpcStateSerialize.deserializeVelCompressed(vci, this.storedVelData, vci.getModel());
         vci.rawRevive(vel);
     }
 }
@@ -182,7 +182,8 @@ class UndoableActionModifyVelement implements UndoableAction {
         if (this.propName === 'currentTool' && typeof newVal === 'number') {
             vci.setTool(newVal);
         } else {
-            el.set(this.propName, newVal);
+            /* might cause more replication than needed, but that's ok */
+            el.setOnVel(this.propName, newVal, vci.getModel());
         }
     }
 
@@ -202,7 +203,8 @@ class UndoableActionModifyVelement implements UndoableAction {
         if (this.propName === 'currentTool' && typeof prevVal === 'number') {
             vci.setTool(prevVal);
         } else {
-            el.set(this.propName, prevVal);
+            /* might cause more replication than needed, but that's ok */
+            el.setOnVel(this.propName, prevVal, vci.getModel());
         }
     }
 }

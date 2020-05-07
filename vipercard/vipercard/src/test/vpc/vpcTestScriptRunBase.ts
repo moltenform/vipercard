@@ -144,7 +144,7 @@ export class TestVpcScriptRunBase {
 
     setScript(id: string, s: string) {
         let v = this.vcstate.model.getByIdUntyped(id);
-        this.vcstate.vci.doWithoutAbilityToUndo(() => v.set('script', s));
+        this.vcstate.vci.doWithoutAbilityToUndo(() => v.setOnVel('script', s, this.vcstate.model));
     }
 
     populateModel() {
@@ -164,104 +164,104 @@ export class TestVpcScriptRunBase {
         assertEq(1, model.stack.bgs.length, '2f|');
         assertEq(1, model.stack.bgs[0].cards.length, '2e|');
 
-        let bgA = model.stack.bgs[0];
-        let bgB = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
-        let bgC = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
-        let cdA = bgA.cards[0];
-        this.vcstate.vci.setCurCardNoOpenCardEvt(cdA.id);
-        let cdBB = this.vcstate.createVel(bgB.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(cdBB.id);
-        let cdBC = this.vcstate.createVel(bgB.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(cdBC.id);
-        let cdBD = this.vcstate.createVel(bgB.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(cdBD.id);
-        let cdCD = this.vcstate.createVel(bgC.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(cdCD.id);
-        let fBC1 = this.vcstate.createVel(cdBC.id, VpcElType.Fld, -1);
-        let fBC2 = this.vcstate.createVel(cdBC.id, VpcElType.Fld, -1);
-        let fBC3 = this.vcstate.createVel(cdBC.id, VpcElType.Fld, -1);
-        let bBC1 = this.vcstate.createVel(cdBC.id, VpcElType.Btn, -1);
-        let bBC2 = this.vcstate.createVel(cdBC.id, VpcElType.Btn, -1);
-        let fBD1 = this.vcstate.createVel(cdBD.id, VpcElType.Fld, -1);
-        let fBD2 = this.vcstate.createVel(cdBD.id, VpcElType.Fld, -1);
-        let bBD1 = this.vcstate.createVel(cdBD.id, VpcElType.Btn, -1);
-        let fCD1 = this.vcstate.createVel(cdCD.id, VpcElType.Fld, -1);
-        let bCD1 = this.vcstate.createVel(cdCD.id, VpcElType.Btn, -1);
+        //~ let bgA = model.stack.bgs[0];
+        //~ let bgB = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
+        //~ let bgC = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
+        //~ let cdA = bgA.cards[0];
+        //~ this.vcstate.vci.setCurCardNoOpenCardEvt(cdA.id);
+        //~ let cdBB = this.vcstate.createVel(bgB.id, VpcElType.Card, -1);
+        //~ this.vcstate.vci.setCurCardNoOpenCardEvt(cdBB.id);
+        //~ let cdBC = this.vcstate.createVel(bgB.id, VpcElType.Card, -1);
+        //~ this.vcstate.vci.setCurCardNoOpenCardEvt(cdBC.id);
+        //~ let cdBD = this.vcstate.createVel(bgB.id, VpcElType.Card, -1);
+        //~ this.vcstate.vci.setCurCardNoOpenCardEvt(cdBD.id);
+        //~ let cdCD = this.vcstate.createVel(bgC.id, VpcElType.Card, -1);
+        //~ this.vcstate.vci.setCurCardNoOpenCardEvt(cdCD.id);
+        //~ let fBC1 = this.vcstate.createVel(cdBC.id, VpcElType.Fld, -1);
+        //~ let fBC2 = this.vcstate.createVel(cdBC.id, VpcElType.Fld, -1);
+        //~ let fBC3 = this.vcstate.createVel(cdBC.id, VpcElType.Fld, -1);
+        //~ let bBC1 = this.vcstate.createVel(cdBC.id, VpcElType.Btn, -1);
+        //~ let bBC2 = this.vcstate.createVel(cdBC.id, VpcElType.Btn, -1);
+        //~ let fBD1 = this.vcstate.createVel(cdBD.id, VpcElType.Fld, -1);
+        //~ let fBD2 = this.vcstate.createVel(cdBD.id, VpcElType.Fld, -1);
+        //~ let bBD1 = this.vcstate.createVel(cdBD.id, VpcElType.Btn, -1);
+        //~ let fCD1 = this.vcstate.createVel(cdCD.id, VpcElType.Fld, -1);
+        //~ let bCD1 = this.vcstate.createVel(cdCD.id, VpcElType.Btn, -1);
 
-        let bgfB1 = this.vcstate.createVel(bgB.id, VpcElType.Fld, -1);
-        let bgfB2 = this.vcstate.createVel(bgB.id, VpcElType.Fld, -1);
-        let bgfC1 = this.vcstate.createVel(bgC.id, VpcElType.Fld, -1);
-        let bgbB1 = this.vcstate.createVel(bgB.id, VpcElType.Btn, -1);
-        let bgbB2 = this.vcstate.createVel(bgB.id, VpcElType.Btn, -1);
-        let bgbC1 = this.vcstate.createVel(bgC.id, VpcElType.Btn, -1);
-        let go = this.vcstate.createVel(cdA.id, VpcElType.Btn, -1);
+        //~ let bgfB1 = this.vcstate.createVel(bgB.id, VpcElType.Fld, -1);
+        //~ let bgfB2 = this.vcstate.createVel(bgB.id, VpcElType.Fld, -1);
+        //~ let bgfC1 = this.vcstate.createVel(bgC.id, VpcElType.Fld, -1);
+        //~ let bgbB1 = this.vcstate.createVel(bgB.id, VpcElType.Btn, -1);
+        //~ let bgbB2 = this.vcstate.createVel(bgB.id, VpcElType.Btn, -1);
+        //~ let bgbC1 = this.vcstate.createVel(bgC.id, VpcElType.Btn, -1);
+        //~ let go = this.vcstate.createVel(cdA.id, VpcElType.Btn, -1);
 
-        model.stack.set('name', 'teststack');
-        bgA.set('name', 'a');
-        bgB.set('name', 'b');
-        bgC.set('name', 'c');
-        cdA.set('name', 'a');
-        cdBB.set('name', 'b');
-        cdBC.set('name', 'c');
-        cdBD.set('name', 'd');
-        cdCD.set('name', 'd');
-        fBC1.set('name', 'p1');
-        fBC2.set('name', 'p2');
-        fBC3.set('name', 'p3');
-        bBC1.set('name', 'p1');
-        bBC2.set('name', 'p2');
-        fBD1.set('name', 'p1');
-        fBD2.set('name', 'p2');
-        bBD1.set('name', 'p1');
-        fCD1.set('name', 'p1');
-        bCD1.set('name', 'p1');
-        bgfB1.set('name', 'p1');
-        bgfB2.set('name', 'p2');
-        bgfC1.set('name', 'p1');
-        bgbB1.set('name', 'p1');
-        bgbB2.set('name', 'p2');
-        bgbC1.set('name', 'p1');
-        go.set('name', 'go');
+        //~ model.stack.set('name', 'teststack');
+        //~ bgA.set('name', 'a');
+        //~ bgB.set('name', 'b');
+        //~ bgC.set('name', 'c');
+        //~ cdA.set('name', 'a');
+        //~ cdBB.set('name', 'b');
+        //~ cdBC.set('name', 'c');
+        //~ cdBD.set('name', 'd');
+        //~ cdCD.set('name', 'd');
+        //~ fBC1.set('name', 'p1');
+        //~ fBC2.set('name', 'p2');
+        //~ fBC3.set('name', 'p3');
+        //~ bBC1.set('name', 'p1');
+        //~ bBC2.set('name', 'p2');
+        //~ fBD1.set('name', 'p1');
+        //~ fBD2.set('name', 'p2');
+        //~ bBD1.set('name', 'p1');
+        //~ fCD1.set('name', 'p1');
+        //~ bCD1.set('name', 'p1');
+        //~ bgfB1.set('name', 'p1');
+        //~ bgfB2.set('name', 'p2');
+        //~ bgfC1.set('name', 'p1');
+        //~ bgbB1.set('name', 'p1');
+        //~ bgbB2.set('name', 'p2');
+        //~ bgbC1.set('name', 'p1');
+        //~ go.set('name', 'go');
 
-        this.ids = {
-            stack: model.stack.id,
-            bgA: bgA.id,
-            bgB: bgB.id,
-            bgC: bgC.id,
-            cdA: cdA.id,
-            cdBB: cdBB.id,
-            cdBC: cdBC.id,
-            cdBD: cdBD.id,
-            cdCD: cdCD.id,
-            fBC1: fBC1.id,
-            fBC2: fBC2.id,
-            fBC3: fBC3.id,
-            bBC1: bBC1.id,
-            bBC2: bBC2.id,
-            fBD1: fBD1.id,
-            fBD2: fBD2.id,
-            bBD1: bBD1.id,
-            fCD1: fCD1.id,
-            bCD1: bCD1.id,
-            bgfB1: bgfB1.id,
-            bgfB2: bgfB2.id,
-            bgfC1: bgfC1.id,
-            bgbB1: bgbB1.id,
-            bgbB2: bgbB2.id,
-            bgbC1: bgbC1.id,
-            go: go.id
-        };
+        //~ this.ids = {
+            //~ stack: model.stack.id,
+            //~ bgA: bgA.id,
+            //~ bgB: bgB.id,
+            //~ bgC: bgC.id,
+            //~ cdA: cdA.id,
+            //~ cdBB: cdBB.id,
+            //~ cdBC: cdBC.id,
+            //~ cdBD: cdBD.id,
+            //~ cdCD: cdCD.id,
+            //~ fBC1: fBC1.id,
+            //~ fBC2: fBC2.id,
+            //~ fBC3: fBC3.id,
+            //~ bBC1: bBC1.id,
+            //~ bBC2: bBC2.id,
+            //~ fBD1: fBD1.id,
+            //~ fBD2: fBD2.id,
+            //~ bBD1: bBD1.id,
+            //~ fCD1: fCD1.id,
+            //~ bCD1: bCD1.id,
+            //~ bgfB1: bgfB1.id,
+            //~ bgfB2: bgfB2.id,
+            //~ bgfC1: bgfC1.id,
+            //~ bgbB1: bgbB1.id,
+            //~ bgbB2: bgbB2.id,
+            //~ bgbC1: bgbC1.id,
+            //~ go: go.id
+        //~ };
 
-        let b = go as VpcElButton;
-        assertTrue(b instanceof VpcElButton, '2c|not a button');
-        let userBounds = this.pr.userBounds;
+        //~ let b = go as VpcElButton;
+        //~ assertTrue(b instanceof VpcElButton, '2c|not a button');
+        //~ let userBounds = this.pr.userBounds;
 
-        /* make the button location more realistic, it should be within userBounds */
-        b.setDimensions(userBounds[0] + 1, userBounds[1] + 1, 30, 30);
-        this.simMouseX = b.getN('x') + 5;
-        this.simMouseY = b.getN('y') + 6;
-        this.simClickX = b.getN('x') + 7;
-        this.simClickY = b.getN('y') + 8;
+        //~ /* make the button location more realistic, it should be within userBounds */
+        //~ b.setDimensions(userBounds[0] + 1, userBounds[1] + 1, 30, 30, this.vcstate.model);
+        //~ this.simMouseX = b.getN('x') + 5;
+        //~ this.simMouseY = b.getN('y') + 6;
+        //~ this.simClickX = b.getN('x') + 7;
+        //~ this.simClickY = b.getN('y') + 8;
     }
     
     protected onScriptErr(
@@ -373,7 +373,7 @@ export class TestVpcScriptRunBase {
         built = FormattedText.fromExternalCharset(built, BrowserInfo.get().os);
 
         let btnGo = this.vcstate.model.getById(VpcElButton, this.ids.go);
-        this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.set('script', built));
+        this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.setOnVel('script', built, this.vcstate.model));
 
         /* fake a click inside btnGo */
         assertEq(VpcTool.Browse, this.pr.getTool(), 'HY|');
@@ -386,7 +386,7 @@ export class TestVpcScriptRunBase {
             ModifierKeys.None
         );
 
-        VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.id, false);
+        VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.id555, false);
 
         assertTrue(
             !expectPreparseErr || expectErrMsg !== undefined,

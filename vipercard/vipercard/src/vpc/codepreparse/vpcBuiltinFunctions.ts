@@ -591,7 +591,7 @@ export class VpcBuiltinFunctions {
     callSelectedfield(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
-            let container = this.getFullNameById(fld.id, PropAdjective.Abbrev, VpcElType.Fld);
+            let container = this.getFullNameById(fld.id555, PropAdjective.Abbrev, VpcElType.Fld);
             return VpcValS(container);
         } else {
             return VpcVal.Empty;
@@ -607,7 +607,7 @@ export class VpcBuiltinFunctions {
         if (fld) {
             let start = this.toOneBased(fld.getN('selcaret'));
             let end = this.toOneBased(fld.getN('selend'));
-            let container = this.getFullNameById(fld.id, PropAdjective.Abbrev, VpcElType.Fld);
+            let container = this.getFullNameById(fld.id555, PropAdjective.Abbrev, VpcElType.Fld);
             return VpcValS(`char ${start} to ${end} of ${container}`);
         } else {
             return VpcVal.Empty;
@@ -622,7 +622,7 @@ export class VpcBuiltinFunctions {
         if (fld) {
             let start = fld.getN('selcaret');
             let end = fld.getN('selend');
-            let s = fld.getCardFmTxt(this.readoutside.GetCurrentCardId()).toUnformattedSubstr(start, end - start);
+            let s = fld.getCardFmTxt().toUnformattedSubstr(start, end - start);
             return VpcValS(s);
         } else {
             return VpcVal.Empty;
@@ -636,7 +636,7 @@ export class VpcBuiltinFunctions {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
             let start = fld.getN('selcaret');
-            let lines = new UI512Lines(fld.getCardFmTxt(this.readoutside.GetCurrentCardId()));
+            let lines = new UI512Lines(fld.getCardFmTxt());
             return VpcValN(lines.indexToLineNumber(start));
         } else {
             return VpcVal.Empty;

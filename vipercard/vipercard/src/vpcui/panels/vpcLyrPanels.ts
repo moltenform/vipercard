@@ -57,16 +57,16 @@ export class VpcAppLyrPanels extends VpcUILayer {
         /* the selectedVelId could be out of date. */
         let selVel = this.vci.getOptionS(propName);
         let vel = this.vci.getModel().findByIdUntyped(selVel);
-        let currentCardId = this.vci.getModel().getCurrentCard().id;
+        let currentCardId = this.vci.getModel().getCurrentCard().id555;
         if (vel && getToolCategory(this.vci.getTool()) === VpcToolCtg.CtgEdit) {
             /* make sure the parent makes sense */
             if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
-                if (vel.parentId === currentCardId) {
+                if (vel.parentId555 === currentCardId) {
                     return vel;
                 }
             } else if (vel.getType() === VpcElType.Card) {
                 /* make sure it's on the right card */
-                if (vel.id === currentCardId) {
+                if (vel.id555 === currentCardId) {
                     return vel;
                 }
             } else if (vel.getType() === VpcElType.Stack) {
@@ -126,10 +126,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
     showOrHideCheckboxItems(sel: VpcElBase, panel: VpcEditPanels) {
         let isBgPart = false;
         if (sel.getType() === VpcElType.Btn || sel.getType() === VpcElType.Fld) {
-            let parent = this.vci.getModel().findByIdUntyped(sel.parentId);
-            if (parent && parent.getType() === VpcElType.Bg) {
-                isBgPart = true;
-            }
+            isBgPart = sel.getS('is_bg_velement_id').length > 0
         }
 
         panel.showOrHideBgSpecific(this.vci.UI512App(), isBgPart);
