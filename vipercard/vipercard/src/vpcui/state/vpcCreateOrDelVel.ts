@@ -97,6 +97,8 @@ export abstract class UndoableActionCreateOrDelVel {
 
         ar.splice(this.insertIndex, 0, vel);
         if (vel.getType() === VpcElType.Card) {
+            vci.getModel().copyBgVelsOnNewCard(vel)
+
             let order = vci.getModel().stack.getCardOrder();
             let found = order.findIndex(s => s === vci.getCurrentCardId());
             found = found === -1 ? order.length - 1 : found;

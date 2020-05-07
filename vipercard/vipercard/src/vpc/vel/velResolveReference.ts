@@ -2,7 +2,6 @@
 /* auto */ import { RememberHistory } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, findPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
-/* auto */ import { StackOrderHelpers } from './velStackOrderHelpers';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElProductOpts } from './velProductOpts';
 /* auto */ import { VpcModelTop } from './velModelTop';
@@ -11,8 +10,8 @@
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { O, bool, cProductName, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, cast, getEnumToStrOrFallback } from './../../ui512/utils/util512'
+/* auto */ import { O, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { Util512, cast, getEnumToStrOrFallback } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

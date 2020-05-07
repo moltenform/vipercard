@@ -67,10 +67,11 @@ export abstract class UI512Settable extends UI512Gettable {
         assertTrue(!id.includes('|'), '2$|invalid id');
         this.id = id;
         this.observer = observer;
-        UI512Settable.emptyFmTxt.lock();
+        UI512PublicSettable.emptyFmTxt.lock();
     }
 
-    protected setImpl(
+    protected setImplInternal(
+        makeAccessDifficult: MakeAccessDifficult,
         s: string,
         newVal: ElementObserverVal,
         defaultVal: O<ElementObserverVal>,
@@ -106,10 +107,6 @@ export abstract class UI512Settable extends UI512Gettable {
         }
     }
 
-    set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
-        this.setImpl(s, newVal, undefined, context);
-    }
-
     getDirty() {
         return this.dirty;
     }
@@ -119,6 +116,31 @@ export abstract class UI512Settable extends UI512Gettable {
         if (newVal) {
             this.observer.changeSeen(context, this.id, '', '', '');
         }
+    }
+}
+
+/**
+ * don't want people outside this file calling this
+ */
+class MakeAccessDifficult {
+}
+const makeAccessDifficult = new MakeAccessDifficult()
+
+/**
+ * not only settable, but lets anyone set things
+ */
+export abstract class UI512PublicSettable extends UI512Settable {
+    protected setImpl(
+        s: string,
+        newVal: ElementObserverVal,
+        defaultVal: O<ElementObserverVal>,
+        context: ChangeContext
+    ) {
+        this.setImplInternal(makeAccessDifficult, s, newVal, defaultVal, context)
+    }
+    
+    set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
+        this.setImplInternal(makeAccessDifficult, s, newVal, undefined, context);
     }
 }
 

@@ -2,7 +2,7 @@
 /* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
-/* auto */ import { UI512Settable } from './ui512ElementGettable';
+/* auto */ import { UI512PublicSettable } from './ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -10,7 +10,7 @@
 /**
  * base class for UI model classes (button, label, etc)
  */
-export abstract class UI512Element extends UI512Settable {
+export abstract class UI512Element extends UI512PublicSettable {
     readonly typename: string = 'UI512Element';
     transparentToClicks = false;
     protected _visible = true;
@@ -49,7 +49,7 @@ export abstract class UI512Element extends UI512Settable {
     }
 
     getFmTxt(): FormattedText {
-        let got = (this as any)['_' + UI512Settable.fmtTxtVarName] as FormattedText;
+        let got = (this as any)['_' + UI512PublicSettable.fmtTxtVarName] as FormattedText;
         assertTrue(
             got instanceof FormattedText,
             `2&|did not get formatted text as expected`
@@ -63,7 +63,7 @@ export abstract class UI512Element extends UI512Settable {
     }
 
     setFmTxt(newTxt: FormattedText, context = ChangeContext.Default) {
-        this.setImpl(UI512Settable.fmtTxtVarName, newTxt, undefined, context);
+        this.setImpl(UI512PublicSettable.fmtTxtVarName, newTxt, undefined, context);
     }
 
     /* a few getters for convenience */

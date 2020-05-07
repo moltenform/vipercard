@@ -10,7 +10,6 @@
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
-/* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VelResolveReference } from './../../vpc/vel/velResolveReference';
 /* auto */ import { VelResolveId, VelResolveName, VelResolveNumber } from './../../vpc/vel/velResolveName';
 /* auto */ import { ReadableContainerField, ReadableContainerVar, WritableContainerField, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
@@ -20,12 +19,11 @@
 /* auto */ import { VpcFontSpecialChunk } from './../../vpc/vel/velFieldChangeFont';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
-/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, assertEq, longstr, slength } from './../../ui512/utils/util512';
+/* auto */ import { assertEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 

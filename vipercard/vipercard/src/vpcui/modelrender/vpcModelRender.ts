@@ -12,7 +12,7 @@
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
-/* auto */ import { ElementObserver, ElementObserverVal, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { ElementObserver, ElementObserverVal, UI512PublicSettable } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
@@ -317,7 +317,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
                 fnSetProperty(vel, target, newVal);
             } else if (ui512propname !== undefined) {
                 target.set(ui512propname, newVal);
-            } else if (propName === UI512Settable.fmtTxtVarName) {
+            } else if (propName === UI512PublicSettable.fmtTxtVarName) {
                 let newvAsText = newVal as FormattedText;
                 assertTrue(newvAsText instanceof FormattedText, '6)|bad formatted text', vel.id);
                 target.setFmTxt(newvAsText);

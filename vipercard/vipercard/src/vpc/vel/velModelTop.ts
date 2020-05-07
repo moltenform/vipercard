@@ -6,11 +6,12 @@
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
-/* auto */ import { VpcElBase } from './velBase';
+/* auto */ import { VpcElBase, VpcFindByIdInterface } from './velBase';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { AnyParameterCtor, MapKeyToObject, cast } from './../../ui512/utils/util512';
-/* auto */ import { ElementObserverDefault } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
+/* auto */ import { ElementObserverDefault, ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -18,7 +19,7 @@
 /**
  * owner of the stack model and productopts model
  */
-export class VpcModelTop {
+export class VpcModelTop implements VpcFindByIdInterface {
     /* initialized by _VpcDocLoader_ which calls ensureModelNotEmpty() */
     stack: VpcElStack;
 
@@ -154,6 +155,48 @@ export class VpcModelTop {
             return [velAsStack.bgs];
         } else {
             return [];
+        }
+    }
+
+    /**
+     * background elements are linked!
+     */
+    setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void {
+        if (me instanceof VpcElButton || me instanceof VpcElField) {
+            let group = me.getS('is_bg_velement_id')
+            if (group) {
+                /* it's a linked one, we'll need to update everything it is linked to! */
+                let card = this.getById(VpcElCard, me.parentId555)
+                let bg = this.getById(VpcElBg, card.parentId555)
+                for (let card of bg.cards) {
+                    for (let part of card.parts) {
+                        if (part.getS('is_bg_velement_id') === group) {
+                            cb.apply(part, [s, newVal, ChangeContext.Default])
+                            break;
+                        }
+                    }
+                }
+            } else {
+                cb.apply(me, [s, newVal, ChangeContext.Default])
+            }
+        } else {
+            cb.apply(me, [s, newVal, ChangeContext.Default])
+        }
+    }
+
+    /**
+     * we've created a new card. copy over the vels
+     */
+    copyBgVelsOnNewCard(newCard:VpcElBase) {
+        checkThrow(newCard instanceof VpcElCard, "")
+        let bg = this.getById(VpcElBg, newCard.parentId555)
+        /* use the first card in the bg as a template */
+        let templateCard = bg.cards[0]
+        for (let part of templateCard.parts) {
+            let group = part.getS('is_bg_velement_id')
+            if (group) {
+                checkThrow(false, 'nyi')
+            }
         }
     }
 

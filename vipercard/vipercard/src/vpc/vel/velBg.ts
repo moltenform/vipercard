@@ -1,9 +1,7 @@
 
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
-/* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcElCard } from './velCard';
-/* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 
@@ -30,9 +28,6 @@ export class VpcElBg extends VpcElBase {
 
     /* child cards */
     cards: VpcElCard[] = [];
-
-    /* a bg can hold its own buttons and fields, refered to as "bg fld x" instead of "cd fld x" */
-    parts: (VpcElButton | VpcElField)[] = [];
 
     /**
      * type of element

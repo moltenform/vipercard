@@ -1,9 +1,7 @@
 
-/* auto */ import { OrdinalOrPosition, checkThrow, findPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcModelTop } from './velModelTop';
-/* auto */ import { VpcElCard } from './velCard';
-/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */

@@ -168,9 +168,11 @@ stack
     * having prop##cardid was inelegant anyways.
     * does need to change the .set() api, but it can be done easily (changes are mechanical, not thoughtful)
     * might simplify rendering code, since it won't need to listen to both cd and bg vel changes
+        * also only the set() calls need to be changed, not the get() calls
 * CONS:
     * more memory, slower because changes need to be replicated
     * when the user asks for the "id" of one of these, they won't get its true id.
+    * copy/paste/duplicate card is more interesting
 
 
 

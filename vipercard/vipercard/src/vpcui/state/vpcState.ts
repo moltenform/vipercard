@@ -14,7 +14,7 @@
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
-/* auto */ import { ElementObserver, ElementObserverNoOp, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { ElementObserver, ElementObserverNoOp, UI512PublicSettable } from './../../ui512/elements/ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -101,7 +101,7 @@ export class VpcState {
  * VpcRuntimeOpts contains transient options that don't need to be undoable
  * nothing here is persisted as part of the stack
  */
-export class VpcRuntimeOpts extends UI512Settable {
+export class VpcRuntimeOpts extends UI512PublicSettable {
     protected _mimicCurrentTool = VpcTool.Browse;
     protected _screenLocked = false;
     protected _copiedVelId = '';

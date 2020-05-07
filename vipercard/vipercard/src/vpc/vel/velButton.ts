@@ -15,6 +15,8 @@
  * a vipercard "button"
  */
 export class VpcElButton extends VpcElSizable {
+    protected _is_bg_velement_id = ''
+    
     protected _autohilite = true;
     protected _enabled = true;
     protected _hilite = false;
@@ -31,7 +33,6 @@ export class VpcElButton extends VpcElSizable {
     protected _script = '';
     protected _name = '';
 
-    protected _is_bg_velement_id = ''
 
     /* always true if belongs to a card */
     protected _sharedhilite = true;

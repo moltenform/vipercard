@@ -1,14 +1,14 @@
 
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, findPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
-/* auto */ import { bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyParameterCtor, cast, slength } from './../../ui512/utils/util512';
+/* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
-/* auto */ import { ElementObserverVal, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { ElementObserverVal, UI512PublicSettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -26,7 +26,7 @@
  *      apart from vpc; vpc is persisted to disk, so harder to change w/o breaking compat
  */
 export abstract class VpcElBase extends UI512Settable {
-    readonly parentId: string;
+    readonly parentId555: string;
     protected abstract _name: string;
     abstract getType(): VpcElType;
     abstract startGettersSetters(): void;
@@ -45,13 +45,28 @@ export abstract class VpcElBase extends UI512Settable {
     /**
      * construct an element,
      * and set its .getters and .setters
-     * by storing the parentId, this is a good weakreference that
+     * we store the parentId, this is an ok weakreference that
      * allows access to the parent without keeping a reference cycle.
      */
     constructor(id: string, parentId: string) {
         super(id);
-        this.parentId = parentId;
+        this.parentId555 = parentId;
         this.startGettersSetters();
+    }
+
+    /**
+     * make this inaccessible from outside - you must use setOnVel instead
+     */
+    private setImplInternalExposedOnlyInVelBase(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
+        /* the one and only place we're allowed to do this */
+        super.setImplInternal(undefined as any, s, newVal, undefined, context)
+    }
+
+    /**
+     * can link to all siblings for a bg vel!
+     */
+    setOnVel(s: string, newVal: ElementObserverVal, higher:VpcFindByIdInterface, context = ChangeContext.Default) {
+        higher.setOnVelLinked(this, s, newVal, this.setImplInternalExposedOnlyInVelBase.bind(this))
     }
 
     /**
@@ -227,7 +242,7 @@ export abstract class VpcElBase extends UI512Settable {
     }
 
     getCardFmTxt(cardId: string): FormattedText {
-        let got = this.getPossiblyCardSpecific(UI512Settable.fmtTxtVarName, new FormattedText(), cardId);
+        let got = this.getPossiblyCardSpecific(UI512PublicSettable.fmtTxtVarName, new FormattedText(), cardId);
         let gotAsTxt = got as FormattedText;
         checkThrow(gotAsTxt instanceof FormattedText, 'Tn|not FormattedText');
         return gotAsTxt;
@@ -235,7 +250,7 @@ export abstract class VpcElBase extends UI512Settable {
 
     setCardFmTxt(cardId: string, newTxt: FormattedText, context = ChangeContext.Default) {
         newTxt.lock();
-        this.setPossiblyCardSpecific(UI512Settable.fmtTxtVarName, newTxt, new FormattedText(), cardId);
+        this.setPossiblyCardSpecific(UI512PublicSettable.fmtTxtVarName, newTxt, new FormattedText(), cardId);
     }
 }
 
@@ -328,4 +343,10 @@ export abstract class VpcElSizable extends VpcElBase {
             }
         ];
     }
+}
+
+export interface VpcFindByIdInterface {
+    findByIdUntyped(id: O<string>):O<VpcElBase>
+    getByIdUntyped(id: string):VpcElBase
+    setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void
 }

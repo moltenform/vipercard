@@ -4,7 +4,7 @@
 /* auto */ import { RequestedChunk } from './vpcChunkResolution';
 /* auto */ import { O, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { UI512Gettable, UI512PublicSettable } from './../../ui512/elements/ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -100,7 +100,7 @@ export type PropGetter<T extends UI512Gettable> = [PrpTyp, string | ((me: T, car
  * or a
  * function (dynamic code to set the property)
  */
-export type PropSetter<T extends UI512Settable> = [
+export type PropSetter<T extends UI512PublicSettable> = [
     PrpTyp,
     string | ((me: T, v: string | number | boolean, cardId: string) => void)
 ];

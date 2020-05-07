@@ -19,6 +19,8 @@
  * vpc text field class.
  */
 export class VpcElField extends VpcElSizable {
+    protected _is_bg_velement_id = ''
+    
     protected _dontwrap = false;
     protected _enabled = true;
     protected _locktext = false;
@@ -33,7 +35,6 @@ export class VpcElField extends VpcElSizable {
     protected _scroll = 0;
     protected _ftxt = new FormattedText();
 
-    protected _is_bg_velement_id = ''
 
     /* always true if belongs to a card */
     protected _sharedtext = true;

@@ -5,7 +5,7 @@
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
-/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512PublicSettable } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { bridgedBase64Js } from './../../bridge/bridgeBase64Js';
 
@@ -48,7 +48,7 @@ export const VpcGettableSerialization = /* static class */ {
     /**
      * deserialize a JS object to a Settable
      */
-    deserializeSettable(vel: UI512Settable, vals: AnyJson) {
+    deserializeSettable(vel: UI512PublicSettable, vals: AnyJson) {
         let savedObserver = vel.observer;
         try {
             vel.observer = new ElementObserverNoOp();
@@ -101,7 +101,7 @@ export const VpcGettableSerialization = /* static class */ {
     /**
      * set a property, and set to 2 different values to ensure that the 'change' event is sent
      */
-    _setAnyAndSendChangeNotification(vel: UI512Settable, propName: string, v: ElementObserverVal) {
+    _setAnyAndSendChangeNotification(vel: UI512PublicSettable, propName: string, v: ElementObserverVal) {
         if (typeof v === 'boolean') {
             (vel as any)['_' + propName] = false;
             vel.set(propName, !v);
@@ -127,13 +127,13 @@ export const VpcGettableSerialization = /* static class */ {
      * do we expect the type of this property to be a formattedtext
      */
     _propNameExpectFormattedText(propName: string) {
-        return bool(propName === UI512Settable.fmtTxtVarName) || bool(propName.startsWith(UI512Settable.fmtTxtVarName + '_'));
+        return bool(propName === UI512PublicSettable.fmtTxtVarName) || bool(propName.startsWith(UI512PublicSettable.fmtTxtVarName + '_'));
     },
 
     /**
      * copy over the prop values of one object onto another object
      */
-    copyPropsOver(getter: UI512Gettable, setter: UI512Settable) {
+    copyPropsOver(getter: UI512Gettable, setter: UI512PublicSettable) {
         checkThrow(false, 'T=|nyi -- use serialization instead');
     },
 
