@@ -1328,7 +1328,7 @@ this.SUBRULE1(this.RuleHSimpleContainer)
 },
 {
 ALT: () => {
-this.SUBRULE1(this.RuleObjectPart)
+this.SUBRULE1(this.RuleObject)
 }
 }
 ]);
@@ -1345,7 +1345,7 @@ RuleBuiltinCmdDisable = this.RULE('RuleBuiltinCmdDisable', () => {
 this.CONSUME1(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkSyntaxMark)
 this.CONSUME3(tks.tkSyntaxMark)
-this.SUBRULE1(this.RuleObjectBtn)
+this.SUBRULE1(this.RuleObject)
 });
 
 RuleBuiltinCmdDivide = this.RULE('RuleBuiltinCmdDivide', () => {
@@ -1405,7 +1405,7 @@ RuleBuiltinCmdEnable = this.RULE('RuleBuiltinCmdEnable', () => {
 this.CONSUME1(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkSyntaxMark)
 this.CONSUME3(tks.tkSyntaxMark)
-this.SUBRULE1(this.RuleObjectBtn)
+this.SUBRULE1(this.RuleObject)
 });
 
 RuleBuiltinCmdVpccalluntrappableerrordialog = this.RULE('RuleBuiltinCmdVpccalluntrappableerrordialog', () => {
@@ -1419,7 +1419,7 @@ RuleBuiltinCmdHide = this.RULE('RuleBuiltinCmdHide', () => {
 this.CONSUME1(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkSyntaxMark)
 this.CONSUME3(tks.tkSyntaxMark)
-this.SUBRULE1(this.RuleObjectPart)
+this.SUBRULE1(this.RuleObject)
 });
 
 RuleBuiltinCmdLock = this.RULE('RuleBuiltinCmdLock', () => {
@@ -1548,7 +1548,7 @@ RuleBuiltinCmdShow = this.RULE('RuleBuiltinCmdShow', () => {
 this.CONSUME1(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkSyntaxMark)
 this.CONSUME3(tks.tkSyntaxMark)
-this.SUBRULE1(this.RuleObjectPart)
+this.SUBRULE1(this.RuleObject)
 this.OPTION1(() => {
 this.CONSUME1(tks.tkIdentifier)
 this.SUBRULE1(this.RuleLvl4Expression)

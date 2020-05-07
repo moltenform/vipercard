@@ -3,9 +3,9 @@
 /* auto */ import { ChvITk, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
-/* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, checkThrowNotifyMsg, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
+/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, checkThrowNotifyMsg, getToolCategory, originalToolNumberToTool, VpcElType, OrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
 /* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
@@ -143,7 +143,7 @@ export class ExecuteStatement {
      * delete char {i} of {container}
      */
     goDelete(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
+        if (vals.vals.RuleObject && vals.vals.RuleObject.length) {
             checkThrow(false, "5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
             let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer), '5B|');
@@ -220,10 +220,10 @@ export class ExecuteStatement {
         checkThrowNotifyMsg(false, 'aa|' + s);
     }
     /**
-     * hide {button|field}
+     * hide command. hide an object or the menubar
      */
     goHide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let ref = this.h.findChildVelRef(vals, tkstr.RuleObjectPart);
+        let ref = this.h.findChildVelRef(vals, tkstr.RuleObject);
         let identifier = this.h.findChildStr(vals, tkstr.tkIdentifier);
         if (ref) {
             this.outside.SetProp(ref, 'visible', VpcVal.False, undefined);
@@ -365,9 +365,14 @@ export class ExecuteStatement {
         checkThrow(strings.length > 0, '7L|could not find RuleAnyPropertyVal or its child', nm);
         let combined = VpcValS(strings.join(','));
         if (velRefChunk) {
-            ensureDefined(velRefFld, '4~|');
-            this.outside.SetProp(velRefFld, propName, combined, velRefChunk);
+            this.outside.SetProp(ensureDefined(velRefFld, '4~|'), propName, combined, velRefChunk);
         } else {
+            if (!velRef) {
+                /* no velref? this is a productopts */
+                velRef = new RequestedVelRef(VpcElType.Product)
+                velRef.lookByRelative = OrdinalOrPosition.This
+            }
+
             this.outside.SetProp(velRef, propName, combined, undefined);
         }
     }
@@ -479,7 +484,10 @@ export class ExecuteStatement {
      * set if a vel is enabled or not
      */
     protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
-        let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObjectBtn), '59|');
+        let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), '59|');
+        let vel = this.outside.ResolveVelRef(ref)
+        checkThrow(vel, "object not found")
+        checkThrow(vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld, "object not a btn or fld")
         this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
     }
 }

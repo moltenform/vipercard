@@ -40,11 +40,11 @@ BuiltinCmdClick:=... tkIdentifier <HBuiltinCmdDrag_1> [ tkSyntaxMark tkIdentifie
 // create.  show NYI in rewrite. say domenu "new button" to create a button etc.
 // debug. show NYI in rewrite
 // delete. in rewrite error on mention of "menu"
-BuiltinCmdDelete:=... { <HChunk> <HSimpleContainer> | <ObjectPart> }                                   
+BuiltinCmdDelete:=... { <HChunk> <HSimpleContainer> | <Object> }                                   
 // plays a phone dial number
 BuiltinCmdDial:=... <Expr>                                                                           
 // disable a button. in rewrite error on mention of "menu"
-BuiltinCmdDisable:=... <ObjectBtn>                                                                     
+BuiltinCmdDisable:=... <Object>                                                                     
 // divide. rewrite "by" to a  tkSyntaxMark
 // the rewrite isn't really needed, but it's a good idea in case we ever need two consecutive tkidentifiers
 // to be a valid expression
@@ -61,7 +61,7 @@ BuiltinCmdDrag:=... tkIdentifier MANYSEP{{ _to / <HBuiltinCmdDrag_1> }}ENDMANYSE
 HBuiltinCmdDrag_1:=<Lvl4Expression> [tkComma <Lvl4Expression>]                      --->BuildMap
 // edit. show NYI in rewrite
 // enable a button. in rewrite error on mention of "menu"
-BuiltinCmdEnable:=... <ObjectBtn>                
+BuiltinCmdEnable:=... <Object>                
 // enterInField. sent up the message hierarchy, usually does nothing, handled by vipercardstdlib. takes no args
 // enterKey. sent up the message hierarchy, usually does nothing, handled by vipercardstdlib. takes no args
 // export. show NYI in rewrite
@@ -78,7 +78,7 @@ BuiltinCmdVpccalluntrappableerrordialog:=... <Expr>
 // see also internalvpcmessagesdirective -- but it's a keyword, not a command
 // help. sent up the message hierarchy, usually does nothing, handled by vipercardstdlib. takes no args
 // hide. in rewrite error on mention of "menu"
-BuiltinCmdHide:=... <ObjectPart> 
+BuiltinCmdHide:=... <Object>
 // import. show NYI in rewrite
 // keydown. show NYI in rewrite
 // lock. parsed in software, takes no args.
@@ -118,7 +118,7 @@ BuiltinCmdSelect:=...  tkStringLiteral [ <HContainer> ]
 BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> <ObjectFld> | <Object> } ] _to <AnyPropertyVal>    
 // show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
 // we don't yet support show all cards or show 6 cards
-BuiltinCmdShow:=...  <ObjectPart> [ tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>]  ]                                  
+BuiltinCmdShow:=...  <Object> [ tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>]  ]                                  
 // we'll build the sort-by-each part in software. tkStringLiteral1 is "numeric|alphabetic" tkStringLiteral2 is "ascending|descending"
 BuiltinCmdSort:=... tkStringLiteral tkStringLiteral tkChunkGranularity tkOfOnly <HSimpleContainer>
 // start using, currently a no-op

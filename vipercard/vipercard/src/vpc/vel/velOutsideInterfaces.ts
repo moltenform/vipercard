@@ -53,7 +53,7 @@ export interface OutsideWorldRead {
     /**
      * high-level get property of a vel, returns VpcVal
      */
-    GetProp(ref: O<RequestedVelRef>, prop: string, adjective: PropAdjective, chunk: O<RequestedChunk>): VpcVal;
+    GetProp(ref: RequestedVelRef, prop: string, adjective: PropAdjective, chunk: O<RequestedChunk>): VpcVal;
 
     /**
      * is this a runtime property on the 'product' object?
@@ -172,7 +172,7 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     /**
      * high-level property set on a vel
      */
-    SetProp(ref: O<RequestedVelRef>, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void;
+    SetProp(ref: RequestedVelRef, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void;
 
     /**
      * access the model

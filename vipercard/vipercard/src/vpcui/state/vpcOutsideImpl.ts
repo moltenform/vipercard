@@ -294,17 +294,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     /**
      * set a property
      */
-    SetProp(ref: O<RequestedVelRef>, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void {
-        let vel: O<VpcElBase>
-        if (ref) {
-            vel = this.ResolveVelRef(ref);
-        } else {
-            vel = this.vci.getModel().productOpts
-        }
-
-        if (!vel) {
-            checkThrow(false, `8/|could not set ${prop}, could not find that object.`);
-        }
+    SetProp(ref: RequestedVelRef, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void {
+        let vel = this.ResolveVelRef(ref);
+        checkThrow(vel, `8/|could not set ${prop}, could not find that object.`);
 
         if (chunk) {
             let fld = vel as VpcElField;
@@ -318,19 +310,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     /**
      * high-level get property of a vel, returns VpcVal
      */
-    GetProp(ref: O<RequestedVelRef>, prop: string, adjective: PropAdjective, chunk: O<RequestedChunk>): VpcVal {
-        let vel: O<VpcElBase>
-        if (ref) {
-            vel = this.ResolveVelRef(ref);
-        } else {
-            vel = this.vci.getModel().productOpts
-        }
+    GetProp(ref: RequestedVelRef, prop: string, adjective: PropAdjective, chunk: O<RequestedChunk>): VpcVal {
+        let vel = this.ResolveVelRef(ref);
+        checkThrow(vel, `8-|could not get ${prop}, could not find that object.`);
 
-        if (!vel) {
-            checkThrow(false, `8-|could not get ${prop}, could not find that object.`);
-        }
-
-        let resolver = new VelResolveName(this.vci.getModel());
         /* handled here are the cases where "adjective" matters */
         if (chunk) {
             /* put the textstyle of char 2 to 4 of fld "myFld" into x */
@@ -339,6 +322,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             return new VpcFontSpecialChunk(fld).specialGetPropChunk(this.Model(), prop, chunk, this.GetItemDelim());
         } else if (prop === 'name') {
             /* put the long name of card "myCard" into x */
+            let resolver = new VelResolveName(this.vci.getModel());
             adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
             return VpcValS(resolver.go(vel, adjective));
         } else if (prop === 'id') {
