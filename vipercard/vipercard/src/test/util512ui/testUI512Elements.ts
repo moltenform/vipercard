@@ -247,7 +247,7 @@ t.test('VpcTextFieldAsGeneric', () => {
     assertEq(true, gel.canEdit(), '9~|');
     assertEq(true, gel.canSelectText(), '9}|');
     assertEq(true, gel.isMultiline(), '9||');
-    assertEq('12', gel['impl'].id555, '9{|');
+    assertEq('12', gel['impl'].idInternal, '9{|');
     assertEq(123, gel.getHeight(), '9`|');
     assertEq('geneva_12_biuosdce', gel.getDefaultFont(), '9_|');
     assertEq(el.id, gel.getReadOnlyUI512().id, '9^|');

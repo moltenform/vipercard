@@ -56,7 +56,7 @@ export abstract class UI512Gettable {
  */
 export abstract class UI512Settable extends UI512Gettable {
     static readonly fmtTxtVarName = 'ftxt';
-    readonly id555: string;
+    readonly idInternal: string;
     protected dirty = true;
     protected locked = false;
     protected static readonly emptyFmTxt = new FormattedText();
@@ -70,7 +70,7 @@ export abstract class UI512Settable extends UI512Gettable {
         super();
         assertTrue(slength(id), '2%|invalid id');
         assertTrue(!id.includes('|'), '2$|invalid id');
-        this.id555 = id;
+        this.idInternal = id;
         this.observer = observer;
         UI512PublicSettable.emptyFmTxt.lock();
     }
@@ -108,7 +108,7 @@ export abstract class UI512Settable extends UI512Gettable {
                 newVal.lock();
             }
 
-            this.observer.changeSeen(context, this.id555, s, prevVal, newVal);
+            this.observer.changeSeen(context, this.idInternal, s, prevVal, newVal);
         }
     }
 
@@ -119,7 +119,7 @@ export abstract class UI512Settable extends UI512Gettable {
     setDirty(newVal: boolean, context = ChangeContext.Default) {
         this.dirty = newVal;
         if (newVal) {
-            this.observer.changeSeen(context, this.id555, '', '', '');
+            this.observer.changeSeen(context, this.idInternal, '', '', '');
         }
     }
 }
@@ -142,9 +142,8 @@ export abstract class UI512PublicSettable extends UI512Settable {
         this.setImplInternal(makeAccessDifficult, s, newVal, undefined, context);
     }
 
-    //~ // probably delete this later, just using to find places where .id was misused
     get id(): string {
-        return this.id555;
+        return this.idInternal;
     }
 }
 

@@ -2006,7 +2006,7 @@ put 3 into x`,
 });
 t.test('scriptMessagePassing', () => {
     h.pr.setCurCardNoOpenCardEvt(h.ids.cdA);
-    let parents = [h.vcstate.model.stack.id555, h.ids.bgA, h.ids.cdA];
+    let parents = [h.vcstate.model.stack.idInternal, h.ids.bgA, h.ids.cdA];
     for (let parent of parents) {
         /* reset all scripts */
         let hClosure = h;

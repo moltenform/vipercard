@@ -44,7 +44,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
             if (handle !== undefined && !this.dragStatus) {
                 let vel = this.lyrPanels.selectedVel('selectedVelId');
                 if (vel && (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld)) {
-                    let targetEl = this.vci.UI512App().findEl('VpcModelRender$$' + vel.id555);
+                    let targetEl = this.vci.UI512App().findEl('VpcModelRender$$' + vel.idInternal);
                     if (targetEl) {
                         /* distance from initial click to center of handle */
                         let distanceFromHandleCenterX =
@@ -118,7 +118,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
             let validatedVel = this.lyrPanels.selectedVel('selectedVelId');
             if (
                 validatedVel &&
-                validatedVel.id555 === this.dragStatus.vel.id555 &&
+                validatedVel.idInternal === this.dragStatus.vel.idInternal &&
                 (validatedVel.getType() === VpcElType.Btn || validatedVel.getType() === VpcElType.Fld)
             ) {
                 /* commit the change to the vel */

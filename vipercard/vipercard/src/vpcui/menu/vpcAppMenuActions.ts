@@ -205,10 +205,10 @@ export class VpcMenuActions {
     goMnuNewCard() {
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
         let currentCard = this.vci.getModel().getCardById(currentCardId);
-        let currentBg = this.vci.getModel().getById(VpcElBg, currentCard.parentId555);
-        let currentIndex = currentBg.cards.findIndex(cd => cd.id555 === currentCardId);
+        let currentBg = this.vci.getModel().getById(VpcElBg, currentCard.parentIdInternal);
+        let currentIndex = currentBg.cards.findIndex(cd => cd.idInternal === currentCardId);
         let created = this.vci.getOutside().CreateCard(currentIndex === -1 ? 0 : currentIndex + 1);
-        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.id555);
+        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.idInternal);
     }
 
     /**
@@ -245,7 +245,7 @@ export class VpcMenuActions {
     goMnuCopyCardOrVel() {
         let selected = this.fontChanger.cbGetEditToolSelectedFldOrBtn();
         if (selected) {
-            this.vci.setOption('copiedVelId', selected.id555);
+            this.vci.setOption('copiedVelId', selected.idInternal);
         } else {
             this.showModal('lngThis feature has not yet been developed.');
         }
@@ -270,7 +270,7 @@ export class VpcMenuActions {
         first.setOnVel('style', UI512BtnStyle.Transparent, this.vci.getModel());
         first.setOnVel('name', 'sprites_n' + 0, this.vci.getModel());
         first.setOnVel('script', '', this.vci.getModel());
-        let firstidgot = first.id555;
+        let firstidgot = first.idInternal;
         for (let i = 0; i < 200; i++) {
             let v = this.vci.createVel(currentCardId, VpcElType.Btn, 0, undefined);
             v.setOnVel('showlabel', false, this.vci.getModel());
@@ -487,7 +487,7 @@ export class VpcMenuActions {
      * select and edit the stack
      */
     goMnuStackInfo() {
-        let currentstackid = this.vci.getModel().stack.id555;
+        let currentstackid = this.vci.getModel().stack.idInternal;
         this.vci.setTool(VpcTool.Button);
         this.vci.setOption('selectedVelId', currentstackid);
         this.vci.setOption('viewingScriptVelId', '');

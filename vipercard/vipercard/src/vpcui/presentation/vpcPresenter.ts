@@ -168,15 +168,15 @@ export class VpcPresenter extends VpcPresenterInit {
         since people's closeField scripts probably assume we are on the card anyways */
         let prevVel = this.lyrModelRender.findElIdToVel(prevElId);
         if (prevVel && prevVel.getType() === VpcElType.Fld) {
-            if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id555]) {
+            if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.idInternal]) {
                 /* closefield called if changes made in the field */
-                let msg = new VpcScriptMessage(prevVel.id555, VpcBuiltinMsg.Closefield);
+                let msg = new VpcScriptMessage(prevVel.idInternal, VpcBuiltinMsg.Closefield);
                 this.vci.getCodeExec().scheduleCodeExec(msg);
 
-                this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id555] = false;
+                this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.idInternal] = false;
             } else {
                 /* exitfield called if no changes were made in the field */
-                let msg = new VpcScriptMessage(prevVel.id555, VpcBuiltinMsg.Exitfield);
+                let msg = new VpcScriptMessage(prevVel.idInternal, VpcBuiltinMsg.Exitfield);
                 this.vci.getCodeExec().scheduleCodeExec(msg);
             }
         }
@@ -190,7 +190,7 @@ export class VpcPresenter extends VpcPresenterInit {
         since people's openField scripts probably assume we are on the card anyways */
         let vel = this.lyrModelRender.findElIdToVel(nextId);
         if (vel && vel.getType() === VpcElType.Fld) {
-            let msg = new VpcScriptMessage(vel.id555, VpcBuiltinMsg.Openfield);
+            let msg = new VpcScriptMessage(vel.idInternal, VpcBuiltinMsg.Openfield);
             this.vci.getCodeExec().scheduleCodeExec(msg);
         }
     }
@@ -207,7 +207,7 @@ export class VpcPresenter extends VpcPresenterInit {
             /* by leaving browse tool we won't hit other errors / try to run closeCard or openCard */
             this.vci.setTool(VpcTool.Button);
             /* if there wasn't a velid set, use current card */
-            let velId = scriptErr.scriptErrVelid ?? this.vci.getModel().getCurrentCard().id555;
+            let velId = scriptErr.scriptErrVelid ?? this.vci.getModel().getCurrentCard().idInternal;
             let lineNum = scriptErr.scriptErrLine ?? 1;
             let msg = cleanExceptionMsg(scriptErr.clsAsErr());
 
@@ -230,15 +230,15 @@ export class VpcPresenter extends VpcPresenterInit {
                 let vel = this.vci.getModel().findByIdUntyped(velId);
                 if (vel?.getType() === VpcElType.Btn || vel?.getType() === VpcElType.Fld) {
                     let parentCard = this.vci.getModel().getParentCardOfElement(vel);
-                    this.vci.setCurCardNoOpenCardEvt(parentCard.id555);
+                    this.vci.setCurCardNoOpenCardEvt(parentCard.idInternal);
                 } else if (vel?.getType() === VpcElType.Card) {
-                    this.vci.setCurCardNoOpenCardEvt(vel.id555);
+                    this.vci.setCurCardNoOpenCardEvt(vel.idInternal);
                 } else if (vel instanceof VpcElBg) {
                     if (
-                        this.vci.getModel().getByIdUntyped(this.vci.getModel().getCurrentCard().id555).parentId555 !== vel.id555 &&
+                        this.vci.getModel().getByIdUntyped(this.vci.getModel().getCurrentCard().idInternal).parentIdInternal !== vel.idInternal &&
                         vel.cards.length
                     ) {
-                        this.vci.setCurCardNoOpenCardEvt(vel.cards[0].id555);
+                        this.vci.setCurCardNoOpenCardEvt(vel.cards[0].idInternal);
                     }
                 } else if (vel?.getType() !== VpcElType.Stack) {
                     /* for example, error in standardlib,
@@ -247,7 +247,7 @@ export class VpcPresenter extends VpcPresenterInit {
                     console.error(s);
                     callDebuggerIfNotInProduction(s);
                     /* fall back to current card */
-                    velId = this.vci.getModel().getCurrentCard().id555;
+                    velId = this.vci.getModel().getCurrentCard().idInternal;
                     lineNum = 1;
                 }
             }
@@ -546,7 +546,7 @@ export class VpcPresenter extends VpcPresenterInit {
         /* save *before* setting selectedVelId */
         this.lyrPropPanel.saveChangesToModel(false);
         this.lyrPropPanel.updateUI512Els();
-        this.vci.setOption('selectedVelId', vel.id555);
+        this.vci.setOption('selectedVelId', vel.idInternal);
         this.vci.setOption('viewingScriptVelId', '');
 
         /* update before tool is set */
@@ -630,7 +630,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 let currentCard = this.vci.getModel().findById(VpcElCard, currentCardId);
                 if (!currentCard) {
                     assertWarn(false, 'U6|card has been deleted, going to card 1 instead.');
-                    let card = this.vci.getModel().stack.bgs[0].cards[0].id555
+                    let card = this.vci.getModel().stack.bgs[0].cards[0].idInternal
                     this.vci.setCurCardNoOpenCardEvt(card);
                 }
 

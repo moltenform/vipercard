@@ -144,20 +144,20 @@ export class VpcExecFrame {
                 hasSeenProduct = true;
             }
 
-            ret.push(vel.id555);
+            ret.push(vel.idInternal);
             if (!haveUsedStatedParent && statedParent && outside.Model().findByIdUntyped(statedParent)) {
                 vel = outside.Model().findByIdUntyped(statedParent);
                 haveUsedStatedParent = true;
             } else {
-                vel = outside.Model().findByIdUntyped(vel.parentId555);
+                vel = outside.Model().findByIdUntyped(vel.parentIdInternal);
             }
         }
 
         if (!hasSeenStack) {
-            ret.push(outside.Model().stack.id555);
+            ret.push(outside.Model().stack.idInternal);
         }
         if (!hasSeenProduct) {
-            ret.push(outside.Model().productOpts.id555);
+            ret.push(outside.Model().productOpts.idInternal);
         }
 
         return ret;

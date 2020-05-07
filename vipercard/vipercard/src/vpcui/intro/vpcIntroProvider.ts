@@ -232,7 +232,7 @@ export class VpcIntroProvider {
 
         /* go to the first card (but don't send opencard yet) */
         fullVci.doWithoutAbilityToUndo(() => {
-            let card = vpcState.model.stack.bgs[0].cards[0].id555;
+            let card = vpcState.model.stack.bgs[0].cards[0].idInternal;
             pr.setCurCardNoOpenCardEvt(card);
         });
     }
@@ -252,7 +252,7 @@ export class VpcIntroProvider {
                 let order: string[] = [];
                 for (let bg of model.stack.bgs) {
                     for (let cd of bg.cards) {
-                        order.push(cd.id555);
+                        order.push(cd.idInternal);
                     }
                 }
                 return order;

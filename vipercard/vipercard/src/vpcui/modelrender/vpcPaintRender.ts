@@ -324,7 +324,7 @@ export class VpcPaintRender extends VpcUILayer {
 
         for (let queuePerCard of queuesPerCard) {
             let cd = this.vci.getModel().getCardById(queuePerCard[0].cardId);
-            let cvs = this.refreshCachedPaintForCard(cd.id555)[1];
+            let cvs = this.refreshCachedPaintForCard(cd.idInternal)[1];
             let painter = new UI512PainterCvCanvas(cvs, cvs.canvas.width, cvs.canvas.height);
 
             for (let item of queuePerCard) {

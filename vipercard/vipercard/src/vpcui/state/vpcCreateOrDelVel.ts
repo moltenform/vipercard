@@ -62,12 +62,12 @@ export abstract class UndoableActionCreateOrDelVel {
     protected determineIndexInAr(vel: VpcElBase, vci: VpcStateInterface) {
         let ar = UndoableActionCreateOrDelVel.getChildVelsArray(this.parentId, vci, vel.getType());
         for (let i = 0; i < ar.length; i++) {
-            if (ar[i].id555 === vel.id555) {
+            if (ar[i].idInternal === vel.idInternal) {
                 return i;
             }
         }
 
-        checkThrowInternal(false, `6d|could not find place in parent array for ${vel.id555}`);
+        checkThrowInternal(false, `6d|could not find place in parent array for ${vel.idInternal}`);
     }
 
     /**
@@ -96,7 +96,7 @@ export abstract class UndoableActionCreateOrDelVel {
             let order = vci.getModel().stack.getCardOrder();
             let found = order.findIndex(s => s === vci.getCurrentCardId());
             found = found === -1 ? order.length - 1 : found;
-            order.splice(found + 1, 0, vel.id555);
+            order.splice(found + 1, 0, vel.idInternal);
             vci.getModel().stack.alterCardOrder(currentOrder => order, vci.getModel());
         }
     }
@@ -107,13 +107,13 @@ export abstract class UndoableActionCreateOrDelVel {
     protected remove(vci: VpcStateInterface) {
         vci.causeFullRedraw();
         let vel = vci.getModel().getByIdUntyped(this.velId);
-        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId555, vci, vel.getType());
-        assertWarnEq(vel.id555, ar[this.insertIndex].id555, '6b|');
+        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentIdInternal, vci, vel.getType());
+        assertWarnEq(vel.idInternal, ar[this.insertIndex].idInternal, '6b|');
         assertWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
         ar.splice(this.insertIndex, 1);
-        vci.getModel().removeIdFromMapOfElements(vel.id555);
+        vci.getModel().removeIdFromMapOfElements(vel.idInternal);
         if (vel.getType() === VpcElType.Card) {
-            vci.getModel().stack.alterCardOrder(list => list.filter(s => s !== vel.id555), vci.getModel());
+            vci.getModel().stack.alterCardOrder(list => list.filter(s => s !== vel.idInternal), vci.getModel());
         }
     }
 
@@ -135,11 +135,11 @@ export abstract class UndoableActionCreateOrDelVel {
         if (!model.stack) {
             vci.doWithoutAbilityToUndo(() => {
                 /* create a new stack */
-                model.stack = vci.rawCreate(VpcElStack.initStackId, model.productOpts.id555, VpcElStack);
+                model.stack = vci.rawCreate(VpcElStack.initStackId, model.productOpts.idInternal, VpcElStack);
                 model.stack.setOnVel('name', 'my stack', model)
                 if (createFirstCard) {
-                    let firstBg = vci.createVel(model.stack.id555, VpcElType.Bg, -1);
-                    vci.createVel(firstBg.id555, VpcElType.Card, -1);
+                    let firstBg = vci.createVel(model.stack.idInternal, VpcElType.Bg, -1);
+                    vci.createVel(firstBg.idInternal, VpcElType.Card, -1);
                 }
             });
         }

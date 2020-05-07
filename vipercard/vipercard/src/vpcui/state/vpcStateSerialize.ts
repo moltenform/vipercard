@@ -51,8 +51,8 @@ export const VpcStateSerialize = /* static class */ {
     serializeVel(vel: VpcElBase, i: number): SerializedVelStructure {
         let ret = new SerializedVelStructure();
         ret.type = vel.getType();
-        ret.id = vel.id555;
-        ret.parent_id = vel.parentId555;
+        ret.id = vel.idInternal;
+        ret.parent_id = vel.parentIdInternal;
         ret.insertIndex = i;
 
         ret.attrs = VpcGettableSerialization.serializeGettable(vel);
@@ -93,7 +93,7 @@ export const VpcStateSerialize = /* static class */ {
     deserializeVel(building: VpcStateInterface, incoming: SerializedVelStructure, h:VpcHandleLinkedVels) {
         if (incoming.type === VpcElType.Stack) {
             /* the parent of a stack is always the product opts */
-            incoming.parent_id = building.getModel().productOpts.id555;
+            incoming.parent_id = building.getModel().productOpts.idInternal;
             /* don't create a new element, just copy over the attrs */
             VpcGettableSerialization.deserializeSettable(building.getModel().stack, incoming.attrs, h);
         } else if (
@@ -104,7 +104,7 @@ export const VpcStateSerialize = /* static class */ {
         ) {
             /* the parent of a bg is always the stack */
             if (incoming.type === VpcElType.Bg) {
-                incoming.parent_id = building.getModel().stack.id555;
+                incoming.parent_id = building.getModel().stack.idInternal;
             }
 
             let created = building.createVel(incoming.parent_id, incoming.type, -1, incoming.id);

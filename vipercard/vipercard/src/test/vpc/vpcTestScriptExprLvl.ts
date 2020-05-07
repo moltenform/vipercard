@@ -1006,17 +1006,17 @@ t.test('ModelGetById.should throw if not found', () => {
     assertEq(undefined, h.vcstate.model.findByIdUntyped('111'), 'HM|');
     assertEq(
         h.ids.cdA,
-        h.vcstate.model.findByIdUntyped(h.ids.cdA)?.id555,
+        h.vcstate.model.findByIdUntyped(h.ids.cdA)?.idInternal,
         'HL|'
     );
-    assertEq(h.ids.stack, h.vcstate.model.findByIdUntyped(h.ids.stack)?.id555, 'HK|');
+    assertEq(h.ids.stack, h.vcstate.model.findByIdUntyped(h.ids.stack)?.idInternal, 'HK|');
     assertThrows('L=|', 'not found', () => h.vcstate.model.getByIdUntyped('111'));
     assertEq(
         h.ids.cdA,
-        h.vcstate.model.getByIdUntyped(h.ids.cdA).id555,
+        h.vcstate.model.getByIdUntyped(h.ids.cdA).idInternal,
         'HJ|'
     );
-    assertEq(h.ids.stack, h.vcstate.model.getByIdUntyped(h.ids.stack).id555, 'HI|');
+    assertEq(h.ids.stack, h.vcstate.model.getByIdUntyped(h.ids.stack).idInternal, 'HI|');
 });
 t.test('ModelFindById.when exists and given correct type', () => {
     assertEq(
@@ -1259,26 +1259,26 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
      * with correct parents and children in the right order
      */
     testModelHasItAll(newState: VpcState) {
-        assertEq(h.ids.stack, newState.model.stack.id555, 'G,|');
-        let bgParents = newState.model.stack.bgs.map(bg => bg.parentId555).join(',');
+        assertEq(h.ids.stack, newState.model.stack.idInternal, 'G,|');
+        let bgParents = newState.model.stack.bgs.map(bg => bg.parentIdInternal).join(',');
         assertEq(`${h.ids.stack},${h.ids.stack},${h.ids.stack}`, bgParents, 'G+|');
-        let bgIds = newState.model.stack.bgs.map(bg => bg.id555).join(',');
+        let bgIds = newState.model.stack.bgs.map(bg => bg.idInternal).join(',');
         assertEq(`${h.ids.bgA},${h.ids.bgB},${h.ids.bgC}`, bgIds, 'G*|');
         let bgNames = newState.model.stack.bgs.map(bg => bg.getS('name')).join(',');
         assertEq(`a,b,c`, bgNames, 'G)|');
 
         let bgA = newState.model.getById(VpcElBg, h.ids.bgA);
-        let cdParents = bgA.cards.map(cd => cd.parentId555).join(',');
+        let cdParents = bgA.cards.map(cd => cd.parentIdInternal).join(',');
         assertEq(`${h.ids.bgA}`, cdParents, 'G(|');
-        let cdIds = bgA.cards.map(cd => cd.id555).join(',');
+        let cdIds = bgA.cards.map(cd => cd.idInternal).join(',');
         assertEq(`${h.ids.cdA}`, cdIds, 'G&|');
         let cdNames = bgA.cards.map(cd => cd.getS('name')).join(',');
         assertEq(`a`, cdNames, 'G%|');
 
         let bgB = newState.model.getById(VpcElBg, h.ids.bgB);
-        cdParents = bgB.cards.map(cd => cd.parentId555).join(',');
+        cdParents = bgB.cards.map(cd => cd.parentIdInternal).join(',');
         assertEq(`${h.ids.bgB},${h.ids.bgB},${h.ids.bgB}`, cdParents, 'G$|');
-        cdIds = bgB.cards.map(cd => cd.id555).join(',');
+        cdIds = bgB.cards.map(cd => cd.idInternal).join(',');
         assertEq(
             `${h.ids.cdBB},${h.ids.cdBC},${h.ids.cdBD}`,
             cdIds,
@@ -1288,31 +1288,31 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
         assertEq(`b,c,d`, cdNames, 'G!|');
 
         let bgC = newState.model.getById(VpcElBg, h.ids.bgC);
-        cdParents = bgC.cards.map(cd => cd.parentId555).join(',');
+        cdParents = bgC.cards.map(cd => cd.parentIdInternal).join(',');
         assertEq(`${h.ids.bgC}`, cdParents, 'G |');
-        cdIds = bgC.cards.map(cd => cd.id555).join(',');
+        cdIds = bgC.cards.map(cd => cd.idInternal).join(',');
         assertEq(`${h.ids.cdCD}`, cdIds, 'Gz|');
         cdNames = bgC.cards.map(cd => cd.getS('name')).join(',');
         assertEq(`d`, cdNames, 'Gy|');
 
         let cd_a_a = newState.model.getCardById(h.ids.cdA);
-        let ptParents = cd_a_a.parts.map(pt => pt.parentId555).join(',');
+        let ptParents = cd_a_a.parts.map(pt => pt.parentIdInternal).join(',');
         assertEq(`${h.ids.cdA}`, ptParents, 'Gx|');
-        let ptIds = cd_a_a.parts.map(pt => pt.id555).join(',');
+        let ptIds = cd_a_a.parts.map(pt => pt.idInternal).join(',');
         assertEq(`${h.ids.go}`, ptIds, 'Gw|');
         let ptNames = cd_a_a.parts.map(pt => pt.getS('name')).join(',');
         assertEq(`go`, ptNames, 'Gv|');
 
         let cd_b_b = newState.model.getCardById(h.ids.cdBB);
-        ptParents = cd_b_b.parts.map(pt => pt.parentId555).join(',');
+        ptParents = cd_b_b.parts.map(pt => pt.parentIdInternal).join(',');
         assertEq(``, ptParents, 'Gu|');
-        ptIds = cd_b_b.parts.map(pt => pt.id555).join(',');
+        ptIds = cd_b_b.parts.map(pt => pt.idInternal).join(',');
         assertEq(``, ptIds, 'Gt|');
         ptNames = cd_b_b.parts.map(pt => pt.getS('name')).join(',');
         assertEq(``, ptNames, 'Gs|');
 
         let cd_b_c = newState.model.getCardById(h.ids.cdBC);
-        ptParents = cd_b_c.parts.map(pt => pt.parentId555).join(',');
+        ptParents = cd_b_c.parts.map(pt => pt.parentIdInternal).join(',');
         assertEq(
             longstr(
                 `${h.ids.cdBC},${h.ids.cdBC},
@@ -1322,7 +1322,7 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
             ptParents,
             'Gr|'
         );
-        ptIds = cd_b_c.parts.map(pt => pt.id555).join(',');
+        ptIds = cd_b_c.parts.map(pt => pt.idInternal).join(',');
         assertEq(
             longstr(
                 `${h.ids.fBC1},${h.ids.fBC2},
@@ -1336,13 +1336,13 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
         assertEq(`p1,p2,p3,p1,p2`, ptNames, 'Gp|');
 
         let cd_b_d = newState.model.getCardById(h.ids.cdBD);
-        ptParents = cd_b_d.parts.map(pt => pt.parentId555).join(',');
+        ptParents = cd_b_d.parts.map(pt => pt.parentIdInternal).join(',');
         assertEq(
             `${h.ids.cdBD},${h.ids.cdBD},${h.ids.cdBD}`,
             ptParents,
             'Go|'
         );
-        ptIds = cd_b_d.parts.map(pt => pt.id555).join(',');
+        ptIds = cd_b_d.parts.map(pt => pt.idInternal).join(',');
         assertEq(
             `${h.ids.fBD1},${h.ids.fBD2},${h.ids.bBD1}`,
             ptIds,
@@ -1352,9 +1352,9 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
         assertEq(`p1,p2,p1`, ptNames, 'Gm|');
 
         let cd_c_d = newState.model.getCardById(h.ids.cdCD);
-        ptParents = cd_c_d.parts.map(pt => pt.parentId555).join(',');
+        ptParents = cd_c_d.parts.map(pt => pt.parentIdInternal).join(',');
         assertEq(`${h.ids.cdCD},${h.ids.cdCD}`, ptParents, 'Gl|');
-        ptIds = cd_c_d.parts.map(pt => pt.id555).join(',');
+        ptIds = cd_c_d.parts.map(pt => pt.idInternal).join(',');
         assertEq(`${h.ids.fCD1},${h.ids.bCD1}`, ptIds, 'Gk|');
         ptNames = cd_c_d.parts.map(pt => pt.getS('name')).join(',');
         assertEq(`p1,p1`, ptNames, 'Gj|');

@@ -25,7 +25,7 @@
  *      apart from vpc; vpc is persisted to disk, so harder to change w/o breaking compat
  */
 export abstract class VpcElBase extends UI512Settable {
-    readonly parentId555: string;
+    readonly parentIdInternal: string;
     protected abstract _name: string;
     abstract getType(): VpcElType;
     abstract startGettersSetters(): void;
@@ -49,7 +49,7 @@ export abstract class VpcElBase extends UI512Settable {
      */
     constructor(id: string, parentId: string) {
         super(id);
-        this.parentId555 = parentId;
+        this.parentIdInternal = parentId;
         this.startGettersSetters();
     }
 
@@ -73,9 +73,9 @@ export abstract class VpcElBase extends UI512Settable {
      */
     getUserFacingId() {
         if (this.ui512GettableHas('is_bg_velement_id')) {
-            return coalesceIfFalseLike(this.getS('is_bg_velement_id'), this.id555)
+            return coalesceIfFalseLike(this.getS('is_bg_velement_id'), this.idInternal)
         } else {
-            return this.id555
+            return this.idInternal
         }
     }
 
@@ -124,10 +124,10 @@ export abstract class VpcElBase extends UI512Settable {
                     return VpcValBool(this.getB(mappedProp));
                 }
             } else {
-                checkThrow(false, `4)|invalid PrpTyp ${type} for el id ${this.id555}`);
+                checkThrow(false, `4)|invalid PrpTyp ${type} for el id ${this.idInternal}`);
             }
         } else {
-            checkThrow(false, `4(|unknown property ${propName} for el id ${this.id555}`);
+            checkThrow(false, `4(|unknown property ${propName} for el id ${this.idInternal}`);
         }
     }
 
@@ -161,10 +161,10 @@ export abstract class VpcElBase extends UI512Settable {
                     this.setOnVel(mappedProp, val.readAsStrictBoolean(this.tmpArray), higher);
                 }
             } else {
-                checkThrow(false, `4#|invalid PrpTyp ${type} for el id ${this.id555}`);
+                checkThrow(false, `4#|invalid PrpTyp ${type} for el id ${this.idInternal}`);
             }
         } else {
-            checkThrow(false, `4!|unknown property ${propName} for el id ${this.id555}`);
+            checkThrow(false, `4!|unknown property ${propName} for el id ${this.idInternal}`);
         }
     }
 

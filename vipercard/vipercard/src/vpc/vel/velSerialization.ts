@@ -84,7 +84,7 @@ export const VpcGettableSerialization = /* static class */ {
                     prp[1] !== '_' &&
                     !VpcGettableSerialization.okNotToSee[prpSliced]
                 ) {
-                    checkThrowInternal(false, `T?|in obj ${vel.id555} did not see ${prpSliced}`);
+                    checkThrowInternal(false, `T?|in obj ${vel.idInternal} did not see ${prpSliced}`);
                 }
             }
         } finally {

@@ -386,7 +386,7 @@ export class TestVpcScriptRunBase {
             ModifierKeys.None
         );
 
-        VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.id555, false);
+        VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.idInternal, false);
 
         assertTrue(
             !expectPreparseErr || expectErrMsg !== undefined,

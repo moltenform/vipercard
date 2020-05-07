@@ -57,7 +57,7 @@ export class VelRenderName {
         if (name.length) {
             /* name exists, show the name */
             if (adjective === PropAdjective.Long) {
-                let parent = this.model.getCardById(vel.parentId555);
+                let parent = this.model.getCardById(vel.parentIdInternal);
                 return `${cdOrBg} ${typ} "${name}" of ${this.goResolveNameCard(parent, adjective)}`;
             } else if (adjective === PropAdjective.Short) {
                 return `${name}`;
@@ -68,7 +68,7 @@ export class VelRenderName {
             /* no name, fall back to showing the id */
             let userFacingId = vel.getUserFacingId()
             if (adjective === PropAdjective.Long) {
-                let parent = this.model.getCardById(vel.parentId555);
+                let parent = this.model.getCardById(vel.parentIdInternal);
                 return `${cdOrBg} ${typ} id ${userFacingId} of ${this.goResolveNameCard(parent, adjective)}`;
             } else {
                 return `${cdOrBg} ${typ} id ${userFacingId}`;
@@ -363,18 +363,18 @@ export class VelGetNumberProperty {
     goOtherTypes(vel: VpcElBase) {
         let parentList: VpcElBase[] = [];
         if (vel.getType() === VpcElType.Bg) {
-            let parent = this.model.getOwner555(VpcElStack, vel);
+            let parent = this.model.getOwner(VpcElStack, vel);
             parentList = parent.bgs;
         } else if (vel.getType() === VpcElType.Card) {
             parentList = this.model.stack.getCardOrder().map(id=>this.model.getByIdUntyped(id))
         } else if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
-            let parent = this.model.getOwner555(VpcElCard, vel);
+            let parent = this.model.getOwner(VpcElCard, vel);
             let isBg = vel.getS('is_bg_velement_id').length > 0
             parentList = parent.parts.filter(e => e.getType() === vel.getType() && isBg === e.getS('is_bg_velement_id').length > 0);
         }
 
         checkThrow(parentList && parentList.length, 'Tu|parent list not found or empty');
-        let index = parentList.findIndex(e => e.id555 === vel.id555);
+        let index = parentList.findIndex(e => e.idInternal === vel.idInternal);
         checkThrow(index !== -1, 'Tt|object not found belonging to its parent');
         return index + 1; /* one-based indexing */
     }

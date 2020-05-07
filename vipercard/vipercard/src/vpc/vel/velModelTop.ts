@@ -73,7 +73,7 @@ export class VpcModelTop implements VpcHandleLinkedVels {
      * add a vel to our map
      */
     addIdToMapOfElements(vel: VpcElBase) {
-        this.elements.add(vel.id555, vel);
+        this.elements.add(vel.idInternal, vel);
     }
 
     /**
@@ -86,17 +86,17 @@ export class VpcModelTop implements VpcHandleLinkedVels {
     /**
      * a convenient way to go from a vel to its owner
      */
-    getOwnerUntyped555(vel: VpcElBase): VpcElBase {
+    getOwnerUntyped(vel: VpcElBase): VpcElBase {
         if (vel instanceof VpcElStack) {
             return this.productOpts;
         } else if (vel instanceof VpcElProductOpts) {
             checkThrow(false, `4t|cannot get the owner of product`);
         } else {
-            let found = this.findByIdUntyped(vel.parentId555);
+            let found = this.findByIdUntyped(vel.parentIdInternal);
             if (found !== undefined) {
                 return found;
             } else {
-                checkThrow(false, `4s|cannot get the owner of el ${vel.id555}`);
+                checkThrow(false, `4s|cannot get the owner of el ${vel.idInternal}`);
             }
         }
     }
@@ -104,8 +104,8 @@ export class VpcModelTop implements VpcHandleLinkedVels {
     /**
      * a convenient way to go from a vel to its owner, confirm type is as expected
      */
-    getOwner555<T>(ctor: AnyParameterCtor<T>, vel: VpcElBase) {
-        let found = this.getOwnerUntyped555(vel);
+    getOwner<T>(ctor: AnyParameterCtor<T>, vel: VpcElBase) {
+        let found = this.getOwnerUntyped(vel);
         return cast(ctor, found);
     }
 
@@ -117,13 +117,13 @@ export class VpcModelTop implements VpcHandleLinkedVels {
         if (vel instanceof VpcElCard) {
             return vel;
         } else if (vel instanceof VpcElBg) {
-            if (vel.id555 === cur.parentId555) {
+            if (vel.idInternal === cur.parentIdInternal) {
                 return cur;
             } else {
                 return vel.cards[0];
             }
         } else if (vel instanceof VpcElButton || vel instanceof VpcElField) {
-            return this.getCardById(vel.parentId555);
+            return this.getCardById(vel.parentIdInternal);
         } else {
             return cur;
         }
@@ -165,8 +165,8 @@ export class VpcModelTop implements VpcHandleLinkedVels {
             let group = me.getS('is_bg_velement_id')
             if (group && !(s.endsWith('_uniquetocard'))) {
                 /* it's a linked one, we'll need to update everything it is linked to! */
-                let card = this.getById(VpcElCard, me.parentId555)
-                let bg = this.getById(VpcElBg, card.parentId555)
+                let card = this.getById(VpcElCard, me.parentIdInternal)
+                let bg = this.getById(VpcElBg, card.parentIdInternal)
                 for (let card of bg.cards) {
                     for (let part of card.parts) {
                         if (part.getS('is_bg_velement_id') === group) {
@@ -188,7 +188,7 @@ export class VpcModelTop implements VpcHandleLinkedVels {
      */
     copyBgVelsOnNewCard(newCard:VpcElBase) {
         checkThrow(newCard instanceof VpcElCard, "")
-        let bg = this.getById(VpcElBg, newCard.parentId555)
+        let bg = this.getById(VpcElBg, newCard.parentIdInternal)
         /* use the first card in the bg as a template */
         for (let part of bg.getTemplateCard().parts) {
             let group = part.getS('is_bg_velement_id')

@@ -295,9 +295,9 @@ t.test('vpcProperties', () => {
     
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-    h.setScript(h.vcstate.model.stack.id555, 'on stackscript\nend stackscript');
-    h.setScript(h.vcstate.model.stack.bgs[1].id555, 'on bgscript\nend bgscript');
-    h.setScript(h.vcstate.model.stack.bgs[1].cards[1].id555, 'on cdscript\nend cdscript');
+    h.setScript(h.vcstate.model.stack.idInternal, 'on stackscript\nend stackscript');
+    h.setScript(h.vcstate.model.stack.bgs[1].idInternal, 'on bgscript\nend bgscript');
+    h.setScript(h.vcstate.model.stack.bgs[1].cards[1].idInternal, 'on cdscript\nend cdscript');
 
     /* stack get and set */
     b.t('length(the script of this stack) > 1', `true`);

@@ -61,7 +61,7 @@ export class VpcState {
                 .reduce(Util512.add);
             checkThrow(totalCardNum > 1, '8%|Cannot delete the only card of a stack');
             let curCard = this.vci.getOptionS('currentCardId');
-            checkThrow(vel.id555 !== curCard, 'UM|cannot delete the current card');
+            checkThrow(vel.idInternal !== curCard, 'UM|cannot delete the current card');
 
             /* if deleting a card, first delete all of its children */
             let partsToRemove: VpcElBase[] = [];
@@ -79,7 +79,7 @@ export class VpcState {
         this.removeElemImpl(vel);
 
         if (vel.getType() === VpcElType.Card) {
-            let parentBg = this.model.getById(VpcElBg, vel.parentId555);
+            let parentBg = this.model.getById(VpcElBg, vel.parentIdInternal);
             if (parentBg && parentBg.cards.length === 0) {
                 /* if a bg has no remaining cards, let's remove the bg */
                 this.removeElemImpl(parentBg);

@@ -61,7 +61,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     CreateCard(indexRelativeToBg: number) {
         let currentCardId = this.GetOptionS('currentCardId');
         let currentCard = this.vci.getModel().getCardById(currentCardId);
-        return this.vci.createVel(currentCard.parentId555, VpcElType.Card, indexRelativeToBg);
+        return this.vci.createVel(currentCard.parentIdInternal, VpcElType.Card, indexRelativeToBg);
     }
 
     /**
@@ -311,7 +311,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             let bounds = TextSelModify.getSelectedTextBounds(generic);
             if (bounds) {
                 ret.vel = new RequestedVelRef(VpcElType.Fld);
-                ret.vel.lookById = Util512.parseIntStrict(selFld.id555);
+                ret.vel.lookById = Util512.parseIntStrict(selFld.idInternal);
                 checkThrow(ret.vel.lookById, 'S7|');
                 ret.chunk = new RequestedChunk(bounds[0]);
                 ret.chunk.last555 = bounds[1];
@@ -597,10 +597,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let owner:VpcElBase
         if (vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length) {
             /* it's a bg object, so return the bg */
-            let card = this.vci.getModel().getCardById(vel.parentId555);
-            owner = this.vci.getModel().getById(VpcElBg, card.parentId555)
+            let card = this.vci.getModel().getCardById(vel.parentIdInternal);
+            owner = this.vci.getModel().getById(VpcElBg, card.parentIdInternal)
         } else {
-            owner = this.vci.getModel().getByIdUntyped(vel.parentId555);
+            owner = this.vci.getModel().getByIdUntyped(vel.parentIdInternal);
         }
 
         if (adjective === PropAdjective.Short) {

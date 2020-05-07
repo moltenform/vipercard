@@ -53,11 +53,6 @@ export class VpcElButton extends VpcElSizable {
         return VpcElType.Btn;
     }
 
-    //~ /* e.g. a background btn can have a different hilite on every card */
-    //~ isCardSpecificContent(key: string) {
-        //~ return !this.getB('sharedhilite') && (bool(key === 'hilite') || bool(key === 'checkmark'));
-    //~ }
-
     /**
      * re-use cached getters and setter callback functions for better perf
      */

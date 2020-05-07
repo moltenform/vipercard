@@ -57,16 +57,16 @@ export class VpcAppLyrPanels extends VpcUILayer {
         /* the selectedVelId could be out of date. */
         let selVel = this.vci.getOptionS(propName);
         let vel = this.vci.getModel().findByIdUntyped(selVel);
-        let currentCardId = this.vci.getModel().getCurrentCard().id555;
+        let currentCardId = this.vci.getModel().getCurrentCard().idInternal;
         if (vel && getToolCategory(this.vci.getTool()) === VpcToolCtg.CtgEdit) {
             /* make sure the parent makes sense */
             if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
-                if (vel.parentId555 === currentCardId) {
+                if (vel.parentIdInternal === currentCardId) {
                     return vel;
                 }
             } else if (vel.getType() === VpcElType.Card) {
                 /* make sure it's on the right card */
-                if (vel.id555 === currentCardId) {
+                if (vel.idInternal === currentCardId) {
                     return vel;
                 }
             } else if (vel.getType() === VpcElType.Stack) {

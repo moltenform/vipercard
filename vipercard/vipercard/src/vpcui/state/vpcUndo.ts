@@ -80,7 +80,7 @@ export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implem
 export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implements UndoableAction {
     storedVelData = '';
     constructor(vel: VpcElBase, vci: VpcStateInterface) {
-        super(vel.id555, vel.parentId555, vel.getType(), -1);
+        super(vel.idInternal, vel.parentIdInternal, vel.getType(), -1);
         UndoableActionDeleteVel.checkIfCanDelete(vel, vci);
         this.insertIndex = this.determineIndexInAr(vel, vci);
         this.storedVelData = VpcStateSerialize.serializeVelCompressed(vci, vel, this.insertIndex);
@@ -91,14 +91,14 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
      */
     static checkIfCanDelete(vel: VpcElBase, vci: VpcStateInterface) {
         let currentCard = vci.getModel().getByIdUntyped(vci.getModel().productOpts.getS('currentCardId'));
-        assertTrue(bool(vci.getModel().findByIdUntyped(vel.id555)), "6Z|deleting element that doesn't exist?", vel.id555);
+        assertTrue(bool(vci.getModel().findByIdUntyped(vel.idInternal)), "6Z|deleting element that doesn't exist?", vel.idInternal);
         if (vel.getType() === VpcElType.Stack || vel.getType() === VpcElType.Product || vel.getType() === VpcElType.Unknown) {
             checkThrow(false, '6Y|Cannot delete this type of element');
         } else if (vel instanceof VpcElCard) {
             checkThrow(vci.getModel().stack.getCardOrder().length > 1, 'UN|Cannot delete the only card of a stack');
-        } else if (vel.id555 === currentCard.id555) {
+        } else if (vel.idInternal === currentCard.idInternal) {
             checkThrow(false, '6X|Cannot delete the current card');
-        } else if (vel.id555 === currentCard.parentId555) {
+        } else if (vel.idInternal === currentCard.parentIdInternal) {
             checkThrow(false, '6W|Cannot delete the current background');
         }
 

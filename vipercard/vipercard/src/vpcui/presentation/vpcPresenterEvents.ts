@@ -338,7 +338,7 @@ export const VpcPresenterEvents = /* static class */ {
             if (el) {
                 let vel = pr.lyrModelRender.findElIdToVel(el.id);
                 if (vel && vel.getType() === VpcElType.Fld && !vel.getB('locktext')) {
-                    pr.vci.getCodeExec().fieldsRecentlyEdited.val[vel.id555] = true;
+                    pr.vci.getCodeExec().fieldsRecentlyEdited.val[vel.idInternal] = true;
                 }
             }
         }

@@ -61,13 +61,6 @@ export class VpcElField extends VpcElSizable {
     /* cached setters */
     static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
 
-    
-
-    //~ /* e.g. a background field has different content on every card */
-    //~ isCardSpecificContent(key: string): boolean {
-        //~ return !this.getB('sharedtext') && (bool(key === 'scroll') || bool(key === 'ftxt'));
-    //~ }
-
     /**
      * type of element
      */

@@ -308,29 +308,6 @@ const ChunkResolution = /* static class */ {
             return undefined;
         }
     }
-
-    //~ /**
-    //~ * apply a modification like 'add 1 to item 3 of x'
-    //~ */
-    //~ applyModify() {
-    //~ if (chunk) {
-    //~ /* confirmed in original product that modify uses "set" bounds not "get" bounds */
-    //~ /* so "multiply line 300 of x" extends the contents of x if necessary */
-    //~ let s = cont.getRawString();
-    //~ let bounds = this._getBoundsForSet(s, itemDel, chunk);
-    //~ let sInput = s.substring(bounds[0], bounds[1]);
-    //~ let result = bounds[2] + fn(sInput);
-    //~ cont.splice(bounds[0], bounds[1] - bounds[0], result);
-    //~ } else {
-    //~ let s = cont.getRawString();
-    //~ let news = fn(s);
-    //~ cont.splice(0, cont.len(), news);
-    //~ }
-    //~ },
-
-    //~ /**
-    //~ * apply a put like 'put "abc" into line x of y'
-    //~ */
 };
 
 export const ChunkResolutionApplication = /* static class */ {

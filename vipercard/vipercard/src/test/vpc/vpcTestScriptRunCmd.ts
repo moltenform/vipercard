@@ -346,7 +346,7 @@ do not change the current card */
     b.t('go third\ngo to stack "other"\\the short id of this cd', `${h.ids.cdBC}`);
     b.t('go third\ngo to stack id 999\\the short id of this cd', `${h.ids.cdBC}`);
     b.t(
-        `go third\ngo to stack id ${h.vcstate.model.stack.id555}\\the short id of this cd`,
+        `go third\ngo to stack id ${h.vcstate.model.stack.idInternal}\\the short id of this cd`,
         `${h.ids.cdBC}`
     );
     b.t('go to card 1 of this stack\\the short id of this cd', `${h.ids.cdA}`);

@@ -591,7 +591,7 @@ export class VpcBuiltinFunctions {
     callSelectedfield(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
-            let container = this.getFullNameById(fld.id555, PropAdjective.Abbrev, VpcElType.Fld);
+            let container = this.getFullNameById(fld.idInternal, PropAdjective.Abbrev, VpcElType.Fld);
             return VpcValS(container);
         } else {
             return VpcVal.Empty;
@@ -607,7 +607,7 @@ export class VpcBuiltinFunctions {
         if (fld) {
             let start = this.toOneBased(fld.getN('selcaret'));
             let end = this.toOneBased(fld.getN('selend'));
-            let container = this.getFullNameById(fld.id555, PropAdjective.Abbrev, VpcElType.Fld);
+            let container = this.getFullNameById(fld.idInternal, PropAdjective.Abbrev, VpcElType.Fld);
             return VpcValS(`char ${start} to ${end} of ${container}`);
         } else {
             return VpcVal.Empty;

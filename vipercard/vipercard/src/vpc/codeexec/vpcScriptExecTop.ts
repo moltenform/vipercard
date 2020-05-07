@@ -166,15 +166,15 @@ export class VpcExecTop {
     sendInitialOpenStackAndOpenCard() {
         {
             /* send openstack */
-            let msg = new VpcScriptMessage(this.outside.Model().stack.id555, VpcBuiltinMsg.Openstack);
+            let msg = new VpcScriptMessage(this.outside.Model().stack.idInternal, VpcBuiltinMsg.Openstack);
             this.scheduleCodeExec(msg);
         }
 
         {
             /* send openbackground */
             let currentCard = this.outside.Model().getCardById(this.outside.GetCurrentCardId());
-            let currentBg = this.outside.Model().getOwner555(VpcElBg, currentCard);
-            let msg = new VpcScriptMessage(currentBg.id555, VpcBuiltinMsg.Openbackground);
+            let currentBg = this.outside.Model().getOwner(VpcElBg, currentCard);
+            let msg = new VpcScriptMessage(currentBg.idInternal, VpcBuiltinMsg.Openbackground);
             this.scheduleCodeExec(msg);
         }
 
@@ -347,15 +347,15 @@ export class VpcExecTop {
      */
     static checkNoRepeatedIds(stack: VpcElStack) {
         let idsSeen = new MapKeyToObjectCanSet<boolean>();
-        idsSeen.set(stack.parentId555, true);
+        idsSeen.set(stack.parentIdInternal, true);
         for (let vel of stack.iterEntireStack()) {
-            if (idsSeen.exists(vel.id555)) {
+            if (idsSeen.exists(vel.idInternal)) {
                 /* use assertwarn, not throw, because it's sure to show
                 a dialog, but the user can also ignore subsequent ones */
-                assertWarn(false, 'R?|duplicate id seen: ' + vel.id555);
+                assertWarn(false, 'R?|duplicate id seen: ' + vel.idInternal);
             }
 
-            idsSeen.set(vel.id555, true);
+            idsSeen.set(vel.idInternal, true);
         }
 
         /* check that each bg element is correctly present on each card */
@@ -373,7 +373,7 @@ export class VpcExecTop {
 
             let expect = orderedHashSummary(bgIdsSeen)
             for (let cd of bg.cards) {
-                if (cd.id555 === template.id555) {
+                if (cd.idInternal === template.idInternal) {
                     continue
                 }
 
@@ -457,7 +457,7 @@ export class GuessStackTrace {
 
     renderVelAndLine(actualMeId: string, vel: VpcElBase, handlername: string, origoffset: number): string {
         let s = '';
-        if (vel.id555.toString() === actualMeId.toString()) {
+        if (vel.idInternal.toString() === actualMeId.toString()) {
             /* save space */
         } else if (vel.getType() === VpcElType.Stack) {
             s += 'stack';
