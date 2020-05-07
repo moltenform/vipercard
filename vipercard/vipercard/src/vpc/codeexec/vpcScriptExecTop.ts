@@ -10,7 +10,7 @@
 /* auto */ import { PropAdjective, VpcBuiltinMsg, VpcElType, VpcErr, VpcErrStage, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElStack } from './../vel/velStack';
-/* auto */ import { VelResolveName } from './../vel/velResolveName';
+/* auto */ import { VelRenderName } from './../vel/velRenderName';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBg } from './../vel/velBg';
 /* auto */ import { VpcElBase } from './../vel/velBase';
@@ -465,7 +465,7 @@ export class GuessStackTrace {
             s += `"${vel.getS('name')}"`;
         } else {
             /* get the short name of v */
-            let res = new VelResolveName(this.outside.Model());
+            let res = new VelRenderName(this.outside.Model());
             s += res.go(vel, PropAdjective.Short);
         }
 

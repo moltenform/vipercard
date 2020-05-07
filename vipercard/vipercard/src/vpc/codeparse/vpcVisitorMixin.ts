@@ -7,8 +7,8 @@
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../vpcutils/vpcChunkResolution';
-/* auto */ import { VelResolveId } from './../vel/velResolveName';
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
+/* auto */ import { VelRenderId } from './../vel/velRenderName';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcTextFieldAsGeneric } from './../vel/velField';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
@@ -232,7 +232,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             }
 
             checkThrow(val instanceof VpcVal, 'SA|');
-            return VelResolveId.parseFromString(val.readAsString());
+            return VelRenderId.parseFromString(val.readAsString());
         }
 
         RuleObjectPart(ctx: VisitingContext): RequestedVelRef {

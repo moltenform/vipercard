@@ -11,8 +11,8 @@
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
 /* auto */ import { VelResolveReference } from './../../vpc/vel/velResolveReference';
-/* auto */ import { VelResolveId, VelResolveName, VelResolveNumber } from './../../vpc/vel/velResolveName';
 /* auto */ import { ReadableContainerField, ReadableContainerVar, WritableContainerField, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
+/* auto */ import { VelGetNumberProperty, VelRenderId, VelRenderName } from './../../vpc/vel/velRenderName';
 /* auto */ import { VpcElProductOpts } from './../../vpc/vel/velProductOpts';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
@@ -114,7 +114,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     ElementExists(vel: RequestedVelRef): O<string> {
         let found = this.ResolveVelRef(vel);
         if (found) {
-            return new VelResolveId(this.vci.getModel()).go(found, PropAdjective.Long);
+            return new VelRenderId(this.vci.getModel()).go(found, PropAdjective.Long);
         } else {
             return undefined;
         }
@@ -322,17 +322,17 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             return new VpcFontSpecialChunk(fld).specialGetPropChunk(this.Model(), prop, chunk, this.GetItemDelim());
         } else if (prop === 'name') {
             /* put the long name of card "myCard" into x */
-            let resolver = new VelResolveName(this.vci.getModel());
+            let resolver = new VelRenderName(this.vci.getModel());
             adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
             return VpcValS(resolver.go(vel, adjective));
         } else if (prop === 'id') {
             /* put the id of card "myCard" into x */
-            let resolveId = new VelResolveId(this.vci.getModel());
+            let resolveId = new VelRenderId(this.vci.getModel());
             adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
             return VpcValS(resolveId.go(vel, adjective));
         } else if (prop === 'number') {
             /* put the number of card "myCard" into x */
-            let resolveNum = new VelResolveNumber(this.vci.getModel());
+            let resolveNum = new VelGetNumberProperty(this.vci.getModel());
             return VpcValN(resolveNum.go(vel));
         } else if (prop === 'owner') {
             /* put the owner of cd btn 1 into x */
@@ -548,7 +548,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (adjective === PropAdjective.Short) {
             return target.getS('name') ?? '';
         } else {
-            return new VelResolveId(this.vci.getModel()).go(target, PropAdjective.Long);
+            return new VelRenderId(this.vci.getModel()).go(target, PropAdjective.Long);
         }
     }
 
@@ -566,7 +566,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (adjective === PropAdjective.Short) {
             return owner.getS('name') ?? '';
         } else {
-            return new VelResolveId(this.vci.getModel()).go(owner, PropAdjective.Long);
+            return new VelRenderId(this.vci.getModel()).go(owner, PropAdjective.Long);
         }
     }
 
