@@ -206,12 +206,12 @@ t.test('03Identifier', () => {
     b.t('put 9 into a9\\a9', '9')
     b.t('put 9 into a9$\\a9$', '9')
     b.t('put 9 into a9$_\\a9$_', '9')
-    b.t('put 9 into 9\\0', 'PREPARSEERR:')
+    b.t('put 9 into 9\\0', 'ERR:parse')
     b.t('put 9 into 9a\\0', 'PREPARSEERR:')
     b.t('put 9 into $a\\0', 'PREPARSEERR:')
     /* varnames explicitly allowed */
     b.t('put 9 into a\\a', '9')
-    b.t('put 9 into an\\an', '9')
+    b.t('put 9 into an\\an', 'ERR:not allowed')
     b.t('put 9 into number\\number', '9')
     /* properties can be valid var names,
     this is also covered in 02 tests */
@@ -221,7 +221,8 @@ t.test('03Identifier', () => {
     b.t('put 9 into cantdelete\\cantdelete', '9')
     b.t('put 9 into textsize\\textsize', '9')
     b.t('put 9 into textstyle\\textstyle', '9')
-    b.t('put 9 into id\\id', '9')
+    b.t('put 9 into id\\0', 'PREPARSEERR:support')
+    b.batchEvaluate(h3);
 })
 
 /* no customizations yet */

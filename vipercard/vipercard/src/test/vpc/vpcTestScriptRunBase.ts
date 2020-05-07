@@ -528,7 +528,7 @@ put ${s} into testresult`;
             if (pts[0] && pts[1]) {
             /* if it's like "doSomeCode\\0" then it is a line of code */
             assertTrue(pts[1] === 'x' || pts[1] === '0',
-                    "use \\\\0 instead, \\\\x is ignored for preparseerr")
+                    "it looks like this test expects a preparseerr. so it can't have \\\\expression, the first part needs to end with \\\\0, since it is ignored")
                 line = pts[0]
             } else {
                 /* if it's like "doSomeCode" then it is a statement */

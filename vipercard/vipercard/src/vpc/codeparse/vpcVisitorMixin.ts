@@ -233,16 +233,6 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return VelRenderId.parseFromString(val.readAsString());
         }
 
-        RuleObjectPart(ctx: VisitingContext): RequestedVelRef {
-            if (ctx.RuleObjectBtn && ctx.RuleObjectBtn[0]) {
-                return this.visit(ctx.RuleObjectBtn[0]);
-            } else if (ctx.RuleObjectFld && ctx.RuleObjectFld[0]) {
-                return this.visit(ctx.RuleObjectFld[0]);
-            } else {
-                checkThrow(false, "S9|we don't yet support looking up an object by 'part'");
-            }
-        }
-
         /*
         something interesting about Chevtrotain:
             The indices are not tied to the position in the grammar.

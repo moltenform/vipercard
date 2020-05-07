@@ -31,7 +31,7 @@ t.test('03ObjectSpecial', () => {
     b.t(`the short id of 9 me`, `ERR:parse`)
     b.t(`the short id of card card 1`, `ERR:parse`)
     b.t(`the short id of id`, `ERR:parse`)
-    b.t(`the short id of part`, `ERR:parse`)
+    b.t(`the short id of the`, `ERR:parse`)
     b.t(`the short id of button`, `ERR:parse`)
     evaluateForBothShortIdAndThereIs(b, h3)
     /* exists, but wrong type
@@ -53,7 +53,7 @@ t.test('03ObjectSpecial', () => {
             if (isOk) {
                 b.t(`the short id of ${val} id ${key}`, `${key}`)
             } else {
-                b.t(`the short id of ${val} id ${key}`, `ERR:ggggggg`)
+                b.t(`the short id of ${val} id ${key}`, `ERR:could not find`)
             }
         }
     }
@@ -73,7 +73,7 @@ t.test('03ObjectPart', () => {
     b.t(`show cd part 1\\0`, `ERR:parse err`)
     b.t(`show bg part 1\\0`, `ERR:parse err`)
     b.t(`show part 1\\0`, `ERR:parse err`)
-    b.t(`show part (1 + 1)\\0`, `ERR:parse err`)
+    b.t(`show part (1 + 1)\\0`, `ERR:no handler`)
     b.t(`show first part\\0`, `ERR:parse err`)
     b.t(`show first part of this card\\0`, `ERR:parse err`)
     b.batchEvaluate(h3);
@@ -96,7 +96,7 @@ t.test('03ObjectStack', () => {
     b.t(`the short id of stack 999`, `ERR:could not find`)
     b.t(`the short id of stack id 9`, `ERR:could not find`)
     b.t(`the short id of stack id -9`, `ERR:could not find`)
-    b.t(`the short id of stack id "no"`, `ERR:could not find`)
+    b.t(`the short id of stack id "no"`, `ERR:expected a number`)
     /* stack-at-end-of-line is parsed differently*/
     b.t(`the short id of stack`, `ERR:parse`)
     b.t(`get the short id of first stack\\it`, `ERR:parse`)
@@ -106,6 +106,19 @@ t.test('03ObjectStack', () => {
 })
 t.test('03ObjectBg', () => {
     let b = new ScriptTestBatch();
+    b.t(`go cd 1\\1`, `1`)
+    /* by ord/position at end of line */
+    b.t(`get the short id of second bg\\it`, `${h3.ids.bgB}`)
+    b.t(`get the short id of this bg\\it`, `${h3.ids.bgA}`)
+    b.t(`get the short id of next bg\\it`, `${h3.ids.bgB}`)
+    /* not exist, by ord/position at end of line */
+    b.t(`get the short id of tenth bg\\it`, `ERR:could not find`)
+    /* bg-at-end-of-line is parsed differently*/
+    b.t(`put the short id of bg into x\\x`, `ERR:parse`)
+    b.t(`get the short id of 1 bg\\it`, `ERR:parse`)
+    b.t(`get the short id of bg\\it`, `${h3.ids.bgA}`)
+    b.batchEvaluate(h3);
+    b = new ScriptTestBatch();
     /* synonyms */
     b.t(`the short id of this bg`, `${h3.ids.bgA}`)
     b.t(`the short id of this bkgnd`, `${h3.ids.bgA}`)
@@ -126,25 +139,15 @@ t.test('03ObjectBg', () => {
     b.t(`the short id of this bg`, `${h3.ids.bgA}`)
     b.t(`the short id of next bg`, `${h3.ids.bgB}`)
     b.t(`the short id of prev bg`, `${h3.ids.bgC}`)
-    /* by ord/position at end of line */
-    b.t(`get the short id of second bg\\it`, `${h3.ids.bgB}`)
-    b.t(`get the short id of this bg\\it`, `${h3.ids.bgA}`)
-    b.t(`get the short id of next bg\\it`, `${h3.ids.bgB}`)
     /* not exist, by expression */
-    b.t(`the short id of bg id 9`, `ERR:xxxx`)
-    b.t(`the short id of bg 999`, `ERR:xxxx`)
-    b.t(`the short id of bg "xyz"`, `ERR:xxxx`)
+    b.t(`the short id of bg id 9`, `ERR:could not find`)
+    b.t(`the short id of bg 999`, `ERR:could not find`)
+    b.t(`the short id of bg "xyz"`, `ERR:could not find`)
     /* not exist, by ord/position */
-    b.t(`the short id of tenth bg`, `ERR:xxxx`)
-    /* not exist, by ord/position at end of line */
-    b.t(`get the short id of tenth bg\\it`, `ERR:xxxx`)
-    /* bg-at-end-of-line is parsed differently*/
-    b.t(`the short id of bg\\it`, `ERR:parse`)
-    b.t(`get the short id of 1 bg\\it`, `ERR:parse`)
-    b.t(`get the short id of bg\\it`, `${h3.ids.bgA}`)
+    b.t(`the short id of tenth bg`, `ERR:could not find`)
     let savedTests = b.tests
     b.batchEvaluate(h3);
-
+    
     /* run the tests again, specifying the stack */
     b = new ScriptTestBatch();
     b.tests = savedTests.map(item=>[item[0]+' of stack 1', item[1]])
