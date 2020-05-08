@@ -481,8 +481,8 @@ function testGetChunk(
     let reader = new ReadableContainerVar(world.getMock(), 'varName');
     world.result = s;
     let ch = new RequestedChunk(first);
-    ch.last555 = last;
-    ch.type555 = type;
+    ch.last = last;
+    ch.granularity = type;
     let got = ChunkResolutionApplication.applyReadToString(reader, ch, itemDel);
     assertEq(s, world.result, '2l|');
     assertEq(sExpected, got, '2k|');
@@ -504,8 +504,8 @@ function testSetChunk(
     world.result = s;
     const sReplace = '123';
     let ch = new RequestedChunk(first);
-    ch.last555 = last;
-    ch.type555 = type;
+    ch.last = last;
+    ch.granularity = type;
     ChunkResolutionApplication.applyPut(
         writer,
         ch,

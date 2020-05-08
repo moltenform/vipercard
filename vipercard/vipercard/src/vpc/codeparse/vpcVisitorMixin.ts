@@ -321,13 +321,13 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleHChunkOne(ctx: VisitingContext): RequestedChunk {
             let ret = new RequestedChunk(-1);
             checkThrow(ctx.tkChunkGranularity && ctx.tkChunkGranularity[0], 'S3|RuleHChunk');
-            ret.type555 = getStrToEnum<VpcGranularity>(VpcGranularity, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
+            ret.granularity = getStrToEnum<VpcGranularity>(VpcGranularity, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
             if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
-                ret.ordinal555 = this.visit(ctx.RuleOrdinal[0]);
+                ret.ordinal = this.visit(ctx.RuleOrdinal[0]);
             } else {
-                ret.first555 = this.visit(ctx.RuleHChunkBound[0]).readAsStrictInteger(this.tmpArr);
+                ret.first = this.visit(ctx.RuleHChunkBound[0]).readAsStrictInteger(this.tmpArr);
                 if (ctx.RuleHChunkBound[1]) {
-                    ret.last555 = this.visit(ctx.RuleHChunkBound[1]).readAsStrictInteger(this.tmpArr);
+                    ret.last = this.visit(ctx.RuleHChunkBound[1]).readAsStrictInteger(this.tmpArr);
                 }
             }
 

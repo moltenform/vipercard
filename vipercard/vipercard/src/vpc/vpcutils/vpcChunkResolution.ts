@@ -167,11 +167,11 @@ const ChunkResolution = /* static class */ {
      * return semi-inclusive bounds [start, end)
      */
     _getBoundsForGet(s: string, itemDel: string, ch: RequestedChunk): O<[number, number]> {
-        let first = ch.first555;
-        let last = ch.last555;
-        if (ch.ordinal555 !== undefined) {
-            let count = ChunkResolutionApplication.applyCount(s, itemDel, ch.type555, false);
-            let maybeFirst = findPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, count);
+        let first = ch.first;
+        let last = ch.last;
+        if (ch.ordinal !== undefined) {
+            let count = ChunkResolutionApplication.applyCount(s, itemDel, ch.granularity, false);
+            let maybeFirst = findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, count);
             if (maybeFirst === undefined) {
                 return undefined;
             } else {
@@ -182,7 +182,7 @@ const ChunkResolution = /* static class */ {
         }
 
         checkThrow(first >= 0 && (!last || last >= 0), "do not allow negative")
-        if (ch.type555 === VpcGranularity.Chars && last !== undefined && last < first) {
+        if (ch.granularity === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
             return undefined;
         }
@@ -205,16 +205,16 @@ const ChunkResolution = /* static class */ {
         end++;
 
         /* type-specific actions */
-        if (ch.type555 === VpcGranularity.Chars) {
+        if (ch.granularity === VpcGranularity.Chars) {
             return this._charsBoundsForGet(s, start, end);
-        } else if (ch.type555 === VpcGranularity.Items) {
+        } else if (ch.granularity === VpcGranularity.Items) {
             return this._itemsBoundsForGet(s, itemDel, start, end);
-        } else if (ch.type555 === VpcGranularity.Lines) {
+        } else if (ch.granularity === VpcGranularity.Lines) {
             return this._itemsBoundsForGet(s, '\n', start, end);
-        } else if (ch.type555 === VpcGranularity.Words) {
+        } else if (ch.granularity === VpcGranularity.Words) {
             return this._wordsBoundsForGet(s, start, end);
         } else {
-            checkThrow(false, `5<|unknown chunk type ${ch.type555}`);
+            checkThrow(false, `5<|unknown chunk granularity ${ch.granularity}`);
         }
     },
 
@@ -223,22 +223,22 @@ const ChunkResolution = /* static class */ {
      * return semi-inclusive bounds [start, end)
      */
     _getBoundsForSet(sInput: string, itemDel: string, ch: RequestedChunk): [number, number, string] {
-        let first = ch.first555;
-        let last = ch.last555;
-        if (ch.ordinal555 !== undefined) {
+        let first = ch.first;
+        let last = ch.last;
+        if (ch.ordinal !== undefined) {
             let upperBound = largeArea
             if (
-            ch.ordinal555===OrdinalOrPosition.Last||ch.ordinal555===OrdinalOrPosition.Middle||ch.ordinal555===OrdinalOrPosition.Any) {
-                upperBound = ChunkResolutionApplication.applyCount(sInput, itemDel, ch.type555, false);
+            ch.ordinal===OrdinalOrPosition.Last||ch.ordinal===OrdinalOrPosition.Middle||ch.ordinal===OrdinalOrPosition.Any) {
+                upperBound = ChunkResolutionApplication.applyCount(sInput, itemDel, ch.granularity, false);
             }
             
-            first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, upperBound), 'too big an index');
+            first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, upperBound), 'too big an index');
             last = first;
         }
 
         checkThrow(first >= 0 && (!last || last >= 0), "do not allow negative")
         assertTrue(first !== null && first !== undefined && last !== null, '5;|invalid first or last');
-        if (ch.type555 === VpcGranularity.Chars && last !== undefined && last < first) {
+        if (ch.granularity === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
             return [first - 1, first - 1, ''];
         }
@@ -258,16 +258,16 @@ const ChunkResolution = /* static class */ {
         end++;
 
         /* type-specific actions */
-        if (ch.type555 === VpcGranularity.Chars) {
+        if (ch.granularity === VpcGranularity.Chars) {
             return this._charsBoundsForSet(sInput, start, end);
-        } else if (ch.type555 === VpcGranularity.Items) {
+        } else if (ch.granularity === VpcGranularity.Items) {
             return this._itemsBoundsForSet(sInput, itemDel, start, end);
-        } else if (ch.type555 === VpcGranularity.Lines) {
+        } else if (ch.granularity === VpcGranularity.Lines) {
             return this._itemsBoundsForSet(sInput, '\n', start, end);
-        } else if (ch.type555 === VpcGranularity.Words) {
+        } else if (ch.granularity === VpcGranularity.Words) {
             return this._wordsBoundsForSet(sInput, start, end);
         } else {
-            checkThrow(false, `5:|unknown chunk type ${ch.type555}`);
+            checkThrow(false, `5:|unknown chunk type ${ch.granularity}`);
         }
     },
 
@@ -481,7 +481,7 @@ export const ChunkResolutionApplication = /* static class */ {
      * delete, which is a bit different from `put "" into`
      */
     applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string) {
-        if (chunk.type555 === VpcGranularity.Chars) {
+        if (chunk.granularity === VpcGranularity.Chars) {
             this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into)
         }
     },
@@ -506,7 +506,7 @@ export const ChunkResolutionApplication = /* static class */ {
         } else if (type === VpcGranularity.Words) {
             return ChunkResolution._getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
         } else {
-            checkThrow(false, `5-|unknown chunk type ${type}`);
+            checkThrow(false, `5-|unknown chunk granularity ${type}`);
         }
     },
 
@@ -529,7 +529,12 @@ export const ChunkResolutionApplication = /* static class */ {
         /* remember that it's first come, first serve */
         let current:O<RequestedChunk> = chunk
         while (current) {
-            let key = current.sortFirst ? max : current.type555
+            let key = current.granularity
+            if (current.sortFirst) {
+                checkThrowInternal(current.granularity === VpcGranularity.Chars, '')
+                key = max
+            }
+
             arr[key] = current
             current = current.child
         }
@@ -563,26 +568,26 @@ export const ChunkResolutionApplication = /* static class */ {
  * a requested chunk from a script.
  */
 export class RequestedChunk extends VpcIntermedValBase {
-    type555 = VpcGranularity.Chars;
-    first555: number;
-    last555: O<number>;
-    ordinal555: O<OrdinalOrPosition>;
+    granularity = VpcGranularity.Chars;
+    first: number;
+    last: O<number>;
+    ordinal: O<OrdinalOrPosition>;
     sortFirst = false;
     child: O<RequestedChunk>;
     constructor(first: number) {
         super();
-        this.first555 = first;
+        this.first = first;
     }
 
     /**
      * get a copy of this structure
      */
     getClone() {
-        let other = new RequestedChunk(this.first555);
-        other.type555 = this.type555;
-        other.first555 = this.first555;
-        other.last555 = this.last555;
-        other.ordinal555 = this.ordinal555;
+        let other = new RequestedChunk(this.first);
+        other.granularity = this.granularity;
+        other.first = this.first;
+        other.last = this.last;
+        other.ordinal = this.ordinal;
         other.sortFirst = this.sortFirst;
         other.child = this.child?.getClone();
         return other;

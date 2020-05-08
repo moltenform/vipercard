@@ -280,18 +280,18 @@ export class VpcFontSpecialChunk {
     protected resolveChunkBounds(h: VpcHandleLinkedVels, chunk: RequestedChunk, itemDel: string) {
         let newChunk = chunk.getClone();
         if (
-            newChunk.type555 === VpcGranularity.Chars &&
-            !newChunk.ordinal555 &&
-            newChunk.last555 !== undefined &&
-            newChunk.last555 < newChunk.first555
+            newChunk.granularity === VpcGranularity.Chars &&
+            !newChunk.ordinal &&
+            newChunk.last !== undefined &&
+            newChunk.last < newChunk.first
         ) {
             /* for consistency with emulator, interesting behavior for negative intervals */
-            newChunk.first555 = newChunk.first555 - 1;
-            newChunk.last555 = newChunk.first555 + 1;
+            newChunk.first = newChunk.first - 1;
+            newChunk.last = newChunk.first + 1;
         }
 
         let unformatted = this.vel.getCardFmTxt().toUnformatted();
-        newChunk.first555 = fitIntoInclusive(newChunk.first555, 1, unformatted.length);
+        newChunk.first = fitIntoInclusive(newChunk.first, 1, unformatted.length);
 
         /* we've already handled the formattedText.len() === 0 case in getChunkTextAttribute */
         let cont = new ReadableContainerField(this.vel, h);
