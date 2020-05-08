@@ -179,7 +179,6 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             return;
         }
 
-        let currentCardId = this.vci.getOptionS('currentCardId');
         this.fillInValuesTip(app, vel);
         let grp = app.getGroup(this.grpId);
         for (let lblTxtPts of this.topInputs) {

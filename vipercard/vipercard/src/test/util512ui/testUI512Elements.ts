@@ -15,8 +15,6 @@
 /* auto */ import { largeArea, specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
 
-import { assertTrue } from '../../ui512/utils/util512Assert';
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 

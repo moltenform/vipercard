@@ -232,7 +232,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             );
             return new ReadableContainerField(vel, this.Model());
         } else if (container.variable) {
-            return new ReadableContainerVar(this as OutsideWorldRead, container.variable);
+            return new ReadableContainerVar(this, container.variable);
         } else {
             checkThrow(false, `6l|invalid IntermedValContainer, nothing set`);
         }

@@ -1,10 +1,10 @@
 
 /* auto */ import { VpcIntermedValBase, VpcVal } from './vpcVal';
 /* auto */ import { ReadableContainer, WritableContainer, WritableContainerSimpleFmtText } from './vpcUtils';
-/* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, findPositionFromOrdinalOrPosition, checkThrowInternal } from './vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, checkThrowInternal, findPositionFromOrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, longstr, MapKeyToObject } from './../../ui512/utils/util512';
+/* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { largeArea } from './../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -181,6 +181,7 @@ const ChunkResolution = /* static class */ {
             last = first;
         }
 
+        checkThrow(first >= 0 && (!last || last >= 0), "do not allow negative")
         if (ch.type555 === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
             return undefined;
@@ -225,11 +226,17 @@ const ChunkResolution = /* static class */ {
         let first = ch.first555;
         let last = ch.last555;
         if (ch.ordinal555 !== undefined) {
-            let count = ChunkResolutionApplication.applyCount(sInput, itemDel, ch.type555, false);
-            first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, largeArea), 'too big an index');
+            let upperBound = largeArea
+            if (
+            ch.ordinal555===OrdinalOrPosition.Last||ch.ordinal555===OrdinalOrPosition.Middle||ch.ordinal555===OrdinalOrPosition.Any) {
+                upperBound = ChunkResolutionApplication.applyCount(sInput, itemDel, ch.type555, false);
+            }
+            
+            first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, upperBound), 'too big an index');
             last = first;
         }
 
+        checkThrow(first >= 0 && (!last || last >= 0), "do not allow negative")
         assertTrue(first !== null && first !== undefined && last !== null, '5;|invalid first or last');
         if (ch.type555 === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
@@ -304,7 +311,9 @@ const ChunkResolution = /* static class */ {
         }
 
         if (retbounds) {
-            return new ResolvedChunk(parent.container, parent.startPos + retbounds[0], parent.startPos + retbounds[1]);
+            let ret = new ResolvedChunk(parent.container, parent.startPos + retbounds[0], parent.startPos + retbounds[1]);
+            checkThrow(ret.startPos>=0 && ret.endPos>=0, "somehow got a negative")
+            return ret
         } else {
             return undefined;
         }
@@ -429,9 +438,7 @@ export const ChunkResolutionApplication = /* static class */ {
         /* make parent objects */
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         if (!chunk) {
-            chunk = new RequestedChunk(1);
-            chunk.type555 = VpcGranularity.Chars;
-            chunk.last555 = cont.len() - 1;
+            return resolved
         }
 
         let current: O<RequestedChunk> = chunk;
@@ -550,6 +557,7 @@ export class RequestedChunk extends VpcIntermedValBase {
         other.first555 = this.first555;
         other.last555 = this.last555;
         other.ordinal555 = this.ordinal555;
+        other.sortFirst = this.sortFirst;
         other.child = this.child?.getClone();
         return other;
     }

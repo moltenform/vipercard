@@ -17,6 +17,94 @@ t.atest('--init--testCollection03chunkBasic', async () => {
         longstr(`forgot to include the
         _testCollection03lexer_ test? put it below this test in _testTop_.ts`)
     );
+
+    /* go to a cd with at least 2 fields */
+    let b = new ScriptTestBatch();
+    b.t(`go to cd id ${h3.ids.cdBC}\\1`, '1');
+    b.batchEvaluate(h3);
+});
+
+//~ todo: use this everywhere
+function evaluateWithVarAndFld(b:ScriptTestBatch) {
+    let tests = b.tests
+    b.batchEvaluate(h3)
+    b = new ScriptTestBatch();
+    let repl = (s:string) => {
+        s = s.replace(/\bglobal z\b/g, '')
+        s = s.replace(/\b z\b/g, ' cd fld 2')
+        s = s.replace(/\b\\z\b/g, '\\cd fld 2')
+        return s
+    }
+
+    for (let [t0, t1] of tests) {
+        b.t(repl(t0), repl(t1))
+    }
+
+    b.batchEvaluate(h3)
+}
+
+/**
+ * parsing chunk
+ */
+t.test('03HChunkBound', () => {
+    let b = new ScriptTestBatch();
+    /* chunk bounds */
+    b.t('global z\nput "abcde" into z\\1', '1');
+    b.t('char 1 of z', 'a');
+    b.t('char (1) of z', 'a');
+    b.t('char (1+1) of z', 'b');
+    /* var containers */
+    b.t('put 1 into x1\\x1', '1');
+    b.t('put 1 into x1\\char x1 of z', 'a');
+    b.t('put 2 into x1\\char x1 of z', 'b');
+    b.t('put 2 into x1\nput 3 into y1\\char x1 to y1 of z', 'bc');
+    /* with field (it expects to see cd fld 1 of card "parentCard") */
+    b.t('global z\nput 1 into cd fld 1\\char cd fld 1 of z', 'ERR:6:parse err');
+    b.t('global z\nput 1 into cd fld 1\\char cd fld 1 of this cd of this stack of z', 'a');
+    b.t('global z\nput 1 into cd fld 1\\char target of z', 'ERR:6:reading text');
+    /* with field */
+    b.t('put 1 into cd fld 1\\char (cd fld 1) of z', 'a');
+    b.t('put 2 into cd fld 1\\char (cd fld 1) of z', 'b');
+    b.t('put 2 into cd fld 1\\char (cd fld 1) to 3 of z', 'bc');
+    /* non integer bounds */
+    b.t('global z\\char 1.5 of z', 'ERR:5:expected an integer');
+    b.t('global z\\char 1.2 of z', 'ERR:5:expected an integer');
+    b.t('global z\\char 0.001 of z', 'ERR:5:expected an integer');
+    b.t('global z\\char "no" of z', 'ERR:5:parse err');
+    b.t('global z\nput "no" into x\\char x of z', 'ERR:6:expected an integer');
+    b.t('global z\nput -1 into x\\char x of z', 'ERR:6:negative');
+    b.t('global z\nput "" into x\\char x of z', 'ERR:6:integer');
+    b.t('global z\\char -1 of z', 'ERR:5:parse err');
+    b.t('global z\\char 1 to char 2 of z', 'ERR:5:parse err');
+    b.t('global z\\char 1 to word 1 of z', 'ERR:5:parse err');
+    b.t('global z\\char 1 to 2 to 3 of z', 'ERR:5:parse err');
+    /* ordinal bounds */
+    b.t('first char of z', 'a');
+    b.t('third char of z', 'c');
+    b.t('last char of z', 'e');
+    b.t('tenth char of z', '');
+    b.t('global z\\char 1 to fifth char of z', 'ERR:5:parse err');
+    /* ordinal puts */
+    b.t('global z1\nput "abc" into z1\\1', '1');
+    b.t('put z1 into z\nput "AA" into char 1 of z\\z', 'AAbc');
+    b.t('put z1 into z\nput "AA" into char 2 of z\\z', 'aAAc');
+    b.t('put z1 into z\nput "AA" into char 10 of z\\z', 'abcAA');
+    b.t('put z1 into z\nput "AA" into first char of z\\z', 'AAbc');
+    b.t('put z1 into z\nput "AA" into third char of z\\z', 'abAA');
+    b.t('put z1 into z\nput "AA" into last char of z\\z', 'abAA');
+    b.t('put z1 into z\nput "AA" into tenth char of z\\z', 'abcAA');
+    b.t('global z1\nput z1 into z\nput "AA" into char 1 to fifth char of z\\z', 'ERR:6:parse err');
+    /* ordinal puts item */
+    b.t('global z1\nput "ab,cd,ef" into z1\\1', '1');
+    b.t('put z1 into z\nput "AA" into item 1 of z\\z', 'AA,cd,ef');
+    b.t('put z1 into z\nput "AA" into item 2 of z\\z', 'ab,AA,ef');
+    b.t('put z1 into z\nput "AA" into item 5 of z\\z', 'ab,cd,ef,,AA');
+    b.t('put z1 into z\nput "AA" into first item of z\\z', 'AA,cd,ef');
+    b.t('put z1 into z\nput "AA" into third item of z\\z', 'ab,cd,AA');
+    b.t('put z1 into z\nput "AA" into last item of z\\z', 'ab,cd,AA');
+    b.t('put z1 into z\nput "AA" into fifth item of z\\z', 'ab,cd,ef,,AA');
+    b.t('global z1\nput z1 into z\nput "AA" into item 1 to fifth item of z\\z', 'ERR:6:parse err');
+    evaluateWithVarAndFld(b)
 });
 
 /*
@@ -161,13 +249,13 @@ t.test('03chunkexpression_put_empty_word', () => {
     b.t('put z1 into z\nput "" into word 1 to 2 of z\\z', '\ne');
     b.t('put z1 into z\nput "" into word 1 to 3 of z\\z', '');
     b.t('put z1 into z\nput "" into word 2 to 3 of z\\z', 'a.b  ');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\nput "" into word 2 of word 1 to 2 of z\\z', 'a.b  \ne');
-    //~ b.t('put z1 into z\nput "" into word 2 to 3 of word 1 to 3 of z\\z', 'a.b  ');
-    //~ b.t(
-        //~ 'put z1 into z\nput "" into word 2 to 3 of word 2 to 3 of word 1 to 3 of z\\z',
-        //~ 'a.b  '
-    //~ );
+    /* recurse */
+    b.t('put z1 into z\nput "" into word 2 of word 1 to 2 of z\\z', 'a.b  \ne');
+    b.t('put z1 into z\nput "" into word 2 to 3 of word 1 to 3 of z\\z', 'a.b  ');
+    b.t(
+        'put z1 into z\nput "" into word 2 to 3 of word 2 to 3 of word 1 to 3 of z\\z',
+        'a.b  '
+    );
     b.batchEvaluate(h3);
 });
 t.test('03chunkexpression_put_empty_line', () => {
@@ -186,13 +274,13 @@ t.test('03chunkexpression_put_empty_line', () => {
     b.t('put z1 into z\nput "" into line 1 to 2 of z\\z', '\nef');
     b.t('put z1 into z\nput "" into line 1 to 3 of z\\z', '');
     b.t('put z1 into z\nput "" into line 2 to 3 of z\\z', 'ab\n');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\nput "" into line 2 of line 1 to 2 of z\\z', 'ab\n\nef');
-    //~ b.t('put z1 into z\nput "" into line 2 to 3 of line 1 to 3 of z\\z', 'ab\n');
-    //~ b.t(
-        //~ 'put z1 into z\nput "" into line 2 to 3 of line 2 to 3 of line 1 to 3 of z\\z',
-        //~ 'ab\n'
-    //~ );
+    /* recurse */
+    b.t('put z1 into z\nput "" into line 2 of line 1 to 2 of z\\z', 'ab\n\nef');
+    b.t('put z1 into z\nput "" into line 2 to 3 of line 1 to 3 of z\\z', 'ab\n');
+    b.t(
+        'put z1 into z\nput "" into line 2 to 3 of line 2 to 3 of line 1 to 3 of z\\z',
+        'ab\n'
+    );
     b.batchEvaluate(h3);
 });
 t.test('03chunkexpression_put_empty_item', () => {
@@ -212,13 +300,13 @@ t.test('03chunkexpression_put_empty_item', () => {
     b.t('put z1 into z\nput "" into item 1 to 2 of z\\z', ',cd');
     b.t('put z1 into z\nput "" into item 1 to 3 of z\\z', '');
     b.t('put z1 into z\nput "" into item 2 to 3 of z\\z', 'ab,');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\nput "" into item 2 of item 1 to 2 of z\\z', 'ab,,cd');
-    //~ b.t('put z1 into z\nput "" into item 2 to 3 of item 1 to 3 of z\\z', 'ab,');
-    //~ b.t(
-        //~ 'put z1 into z\nput "" into item 2 to 3 of item 2 to 3 of item 1 to 3 of z\\z',
-        //~ 'ab,'
-    //~ );
+    /* recurse */
+    b.t('put z1 into z\nput "" into item 2 of item 1 to 2 of z\\z', 'ab,,cd');
+    b.t('put z1 into z\nput "" into item 2 to 3 of item 1 to 3 of z\\z', 'ab,');
+    b.t(
+        'put z1 into z\nput "" into item 2 to 3 of item 2 to 3 of item 1 to 3 of z\\z',
+        'ab,'
+    );
     b.batchEvaluate(h3);
 });
 
@@ -241,13 +329,13 @@ t.test('03chunkexpression_put_one_char', () => {
     b.t('put z1 into z\nput "A" into char 1 to 2 of z\\z', 'Ac');
     b.t('put z1 into z\nput "A" into char 1 to 3 of z\\z', 'A');
     b.t('put z1 into z\nput "A" into char 2 to 3 of z\\z', 'aA');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\nput "A" into char 2 of char 1 to 2 of z\\z', 'aAc');
-    //~ b.t('put z1 into z\nput "A" into char 2 to 3 of char 1 to 3 of z\\z', 'aA');
-    //~ b.t(
-        //~ 'put z1 into z\nput "A" into char 2 to 3 of char 2 to 3 of char 1 to 3 of z\\z',
-        //~ 'aA'
-    //~ );
+    /* recurse */
+    b.t('put z1 into z\nput "A" into char 2 of char 1 to 2 of z\\z', 'aAc');
+    b.t('put z1 into z\nput "A" into char 2 to 3 of char 1 to 3 of z\\z', 'aA');
+    b.t(
+        'put z1 into z\nput "A" into char 2 to 3 of char 2 to 3 of char 1 to 3 of z\\z',
+        'aA'
+    );
     b.batchEvaluate(h3);
 });
 t.test('03chunkexpression_put_one_word', () => {
@@ -266,13 +354,13 @@ t.test('03chunkexpression_put_one_word', () => {
     b.t('put z1 into z\nput "A" into word 1 to 2 of z\\z', 'A\ne');
     b.t('put z1 into z\nput "A" into word 1 to 3 of z\\z', 'A');
     b.t('put z1 into z\nput "A" into word 2 to 3 of z\\z', 'a.b  A');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\nput "A" into word 2 of word 1 to 2 of z\\z', 'a.b  A\ne');
-    //~ b.t('put z1 into z\nput "A" into word 2 to 3 of word 1 to 3 of z\\z', 'a.b  A');
-    //~ b.t(
-        //~ 'put z1 into z\nput "A" into word 2 to 3 of word 2 to 3 of word 1 to 3 of z\\z',
-        //~ 'a.b  A'
-    //~ );
+    /* recurse */
+    b.t('put z1 into z\nput "A" into word 2 of word 1 to 2 of z\\z', 'a.b  A\ne');
+    b.t('put z1 into z\nput "A" into word 2 to 3 of word 1 to 3 of z\\z', 'a.b  A');
+    b.t(
+        'put z1 into z\nput "A" into word 2 to 3 of word 2 to 3 of word 1 to 3 of z\\z',
+        'a.b  A'
+    );
     b.batchEvaluate(h3);
 });
 t.test('03chunkexpression_put_one_line', () => {
@@ -291,13 +379,13 @@ t.test('03chunkexpression_put_one_line', () => {
     b.t('put z1 into z\nput "A" into line 1 to 2 of z\\z', 'A\nef');
     b.t('put z1 into z\nput "A" into line 1 to 3 of z\\z', 'A');
     b.t('put z1 into z\nput "A" into line 2 to 3 of z\\z', 'ab\nA');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\nput "A" into line 2 of line 1 to 2 of z\\z', 'ab\nA\nef');
-    //~ b.t('put z1 into z\nput "A" into line 2 to 3 of line 1 to 3 of z\\z', 'ab\nA');
-    //~ b.t(
-        //~ 'put z1 into z\nput "A" into line 2 to 3 of line 2 to 3 of line 1 to 3 of z\\z',
-        //~ 'ab\nA'
-    //~ );
+    /* recurse */
+    b.t('put z1 into z\nput "A" into line 2 of line 1 to 2 of z\\z', 'ab\nA\nef');
+    b.t('put z1 into z\nput "A" into line 2 to 3 of line 1 to 3 of z\\z', 'ab\nA');
+    b.t(
+        'put z1 into z\nput "A" into line 2 to 3 of line 2 to 3 of line 1 to 3 of z\\z',
+        'ab\nA'
+    );
     b.batchEvaluate(h3);
 });
 t.test('03chunkexpression_put_one_item', () => {
@@ -317,13 +405,13 @@ t.test('03chunkexpression_put_one_item', () => {
     b.t('put z1 into z\nput "A" into item 1 to 2 of z\\z', 'A,cd');
     b.t('put z1 into z\nput "A" into item 1 to 3 of z\\z', 'A');
     b.t('put z1 into z\nput "A" into item 2 to 3 of z\\z', 'ab,A');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\nput "A" into item 2 of item 1 to 2 of z\\z', 'ab,A,cd');
-    //~ b.t('put z1 into z\nput "A" into item 2 to 3 of item 1 to 3 of z\\z', 'ab,A');
-    //~ b.t(
-        //~ 'put z1 into z\nput "A" into item 2 to 3 of item 2 to 3 of item 1 to 3 of z\\z',
-        //~ 'ab,A'
-    //~ );
+    /* recurse */
+    b.t('put z1 into z\nput "A" into item 2 of item 1 to 2 of z\\z', 'ab,A,cd');
+    b.t('put z1 into z\nput "A" into item 2 to 3 of item 1 to 3 of z\\z', 'ab,A');
+    b.t(
+        'put z1 into z\nput "A" into item 2 to 3 of item 2 to 3 of item 1 to 3 of z\\z',
+        'ab,A'
+    );
     b.batchEvaluate(h3);
 });
 
@@ -482,29 +570,29 @@ t.test('03chunkexpression_put_one_item', () => {
         //~ h3.vcstate.model.stack.setOnVel('script', '', h3.vcstate.model)
 //~ });
 
-//~ t.test('03chunkexpression_recursivescopes', () => {
-    //~ /*
-        //~ item,word,line,char and 3 slots.
-        //~ we disallow line/item after word
-        //~ we disallow everything after char
-        //~ char->char->char, covered by tests
-        //~ item->item->item, covered by tests
-        //~ line->line->line, covered by tests
-        //~ word->word->word, covered by tests
-        //~ char->item->item, covered by tests
-        //~ item->line->line, covered by tests
-        //~ line and item likely have same underlying logic.
-        //~ so test here:
-        //~ char->char->item
-        //~ char->char->word
-        //~ char->word->word
-        //~ char->item->line
-        //~ char->line->item
-        //~ line->item->line
-        //~ item->line->item
-    //~ */
-    //~ /* scopes that should not work */
-    //~ let b = new ScriptTestBatch();
+t.test('03chunkexpression_recursivescopes', () => {
+    /*
+        item,word,line,char and 3 slots.
+        we disallow line/item after word
+        we disallow everything after char
+        char->char->char, covered by tests
+        item->item->item, covered by tests
+        line->line->line, covered by tests
+        word->word->word, covered by tests
+        char->item->item, covered by tests
+        item->line->line, covered by tests
+        line and item likely have same underlying logic.
+        so test here:
+        char->char->item
+        char->char->word
+        char->word->word
+        char->item->line
+        char->line->item
+        line->item->line
+        item->line->item
+    */
+    /* scopes that should not work */
+    let b = new ScriptTestBatch();
     //~ /* get, nothing after a char */
     //~ b.t('item 1 of char 1 of "abc"', 'ERR:the child')
     //~ b.t('word 1 of char 1 of "abc"', 'ERR:the child')
@@ -520,18 +608,18 @@ t.test('03chunkexpression_put_one_item', () => {
     //~ b.t('item 1 of word 1 of char 1 of "abc"', 'ERR:the child')
     //~ b.t('line 1 of word 1 of char 1 of "abc"', 'ERR:the child')
     //~ /* negatives should throw */
-    //~ b.t('char -1 of "abc"', 'ERR:fff')
-    //~ b.t('char -1 to 1 of "abc"', 'ERR:fff')
-    //~ b.t('char 1 to -1 of "abc"', 'ERR:fff')
-    //~ b.t('word -1 of "abc"', 'ERR:fff')
-    //~ b.t('word -1 to 1 of "abc"', 'ERR:fff')
-    //~ b.t('word 1 to -1 of "abc"', 'ERR:fff')
-    //~ b.t('item-1 of "abc"', 'ERR:fff')
-    //~ b.t('item-1 to 1 of "abc"', 'ERR:fff')
-    //~ b.t('item1 to -1 of "abc"', 'ERR:fff')
-    //~ b.t('line -1 of "abc"', 'ERR:fff')
-    //~ b.t('line -1 to 1 of "abc"', 'ERR:fff')
-    //~ b.t('line 1 to -1 of "abc"', 'ERR:fff')
+    b.t('char (-1) of "abc"', 'ERR:negative')
+    //~ b.t('char (-1) to 1 of "abc"', 'ERR:negative')
+    //~ b.t('char 1 to (-1) of "abc"', 'ERR:negative')
+    //~ b.t('word (-1) of "abc"', 'ERR:negative')
+    //~ b.t('word (-1) to 1 of "abc"', 'ERR:negative')
+    //~ b.t('word 1 to (-1) of "abc"', 'ERR:negative')
+    //~ b.t('item(-1) of "abc"', 'ERR:negative')
+    //~ b.t('item(-1) to 1 of "abc"', 'ERR:negative')
+    //~ b.t('item1 to (-1) of "abc"', 'ERR:negative')
+    //~ b.t('line (-1) of "abc"', 'ERR:negative')
+    //~ b.t('line (-1) to 1 of "abc"', 'ERR:negative')
+    //~ b.t('line 1 to (-1) of "abc"', 'ERR:negative')
     //~ /* transform the above into "put" */
     //~ let copy = b.tests.slice()
     //~ b.t('global z\nput "abc" into z\\1', '1');
@@ -540,7 +628,7 @@ t.test('03chunkexpression_put_one_item', () => {
         //~ b.t(t1, t2)
     //~ }
 
-    //~ b.batchEvaluate(h3);
+    b.batchEvaluate(h3);
     //~ b = new ScriptTestBatch();
     //~ b.t('global z\nput "ab cd, ef"&cr&"gh ii,jj,kk"&cr&"mn,op,q"&cr&"r,s" into z1\\1', '1');
     //~ /* get scopes */
@@ -626,7 +714,7 @@ t.test('03chunkexpression_put_one_item', () => {
     //~ b.t('put z1 into z\nput "A" into line 2 to 3 of item 2 to 5 of line 2 to 3 of z\\z', 'ab cd, ef\ngh ii,A\nr,s')
     //~ b.t('put z1 into z\nput "A" into item 2 to 3 of line 2 to 3 of item 2 to 5 of z\\z', 'ab cd, ef\ngh ii,A,op,q\nr,s')
     //~ b.batchEvaluate(h3);
-//~ })
+})
 
 //~ /**
  //~ * math ops

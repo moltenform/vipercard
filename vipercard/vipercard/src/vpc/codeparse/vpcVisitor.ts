@@ -33,26 +33,6 @@ export function createVisitor(parser: chevrotain.CstParser): VpcVisitorInterface
         }
 
         /**
-         * you can optionally rename this method to visit()
-         * to add an additional check
-         */
-        visit$check_array_param(rule: any) {
-            /* the default .visit() accepts arrays and silently only processes the first element, */
-            /* this has a risk of accepting unintended results, let's throw instead */
-            checkThrow(
-                !Array.isArray(rule),
-                longstr(
-                    `9b|internal error, make sure you
-                say this.visit(ctx.RuleX[0]) not this.visit(ctx.RuleX)`,
-                    ''
-                ),
-                rule
-            );
-
-            return super.visit(rule);
-        }
-
-        /**
          * recurse through, and construct an IntermedMapOfIntermedVals
          * note: method name must have a $ so that chevrotain understands it is not a response to a rule.
          */
@@ -559,6 +539,26 @@ export function createVisitor(parser: chevrotain.CstParser): VpcVisitorInterface
                 ret.push(this.visit(ctx.RuleExpr[i]));
             }
             return ret;
+        }
+
+        /**
+         * you can optionally rename this method to visit()
+         * to add an additional check
+         */
+        visit$check_array_param(rule: any) {
+            /* the default .visit() accepts arrays and silently only processes the first element, */
+            /* this has a risk of accepting unintended results, let's throw instead */
+            checkThrow(
+                !Array.isArray(rule),
+                longstr(
+                    `9b|internal error, make sure you
+                say this.visit(ctx.RuleX[0]) not this.visit(ctx.RuleX)`,
+                    ''
+                ),
+                rule
+            );
+
+            return super.visit(rule);
         }
     }
 

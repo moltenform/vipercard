@@ -322,4 +322,3 @@ t.test('vars starting with _', () => {
     /* perhaps add a test, we want assert to fire if an important property on a button is missing */
 });
 
-const fakeCardId = '(fakeCardId)';

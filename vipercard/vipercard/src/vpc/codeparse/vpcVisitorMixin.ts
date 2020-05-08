@@ -44,7 +44,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         Helper$ReadVpcVal(ctx: VisitingContext, subrule: string, context: string): VpcVal {
             let child = ctx[subrule];
             checkThrow(bool(child && child[0]), `9P|expected to have an expression ${context}`);
-            let evaledVpc = this.visit(child[0]) as VpcVal;
+            let evaledVpc = this.visit(child[0]);
             checkThrow(evaledVpc instanceof VpcVal, `9O|expected a vpcval when looking up element id or name`);
             return evaledVpc;
         }
@@ -287,7 +287,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleHContainer(ctx: VisitingContext): RequestedContainerRef {
-            let ret = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
+            let ret = this.visit(ctx.RuleHSimpleContainer[0]);
             checkThrow(ret instanceof RequestedContainerRef, `S5|internal error, expected IntermedValContainer`);
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
                 let newChunk = this.visit(ctx.RuleHChunk[0]);
@@ -325,9 +325,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.ordinal555 = this.visit(ctx.RuleOrdinal[0]);
             } else {
-                ret.first555 = this.visit(ctx.RuleHChunkBound[0]).readAsStrictNumeric(this.tmpArr);
+                ret.first555 = this.visit(ctx.RuleHChunkBound[0]).readAsStrictInteger(this.tmpArr);
                 if (ctx.RuleHChunkBound[1]) {
-                    ret.last555 = this.visit(ctx.RuleHChunkBound[1]).readAsStrictNumeric(this.tmpArr);
+                    ret.last555 = this.visit(ctx.RuleHChunkBound[1]).readAsStrictInteger(this.tmpArr);
                 }
             }
 
@@ -340,7 +340,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.tkNumLiteral && ctx.tkNumLiteral[0]) {
                 return VpcVal.getScientificNotation(ctx.tkNumLiteral[0].image);
             } else if (ctx.RuleHSimpleContainer && ctx.RuleHSimpleContainer[0]) {
-                let container = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
+                let container = this.visit(ctx.RuleHSimpleContainer[0]);
                 checkThrow(container instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
                 return VpcValS(this.outside.ContainerRead(container));
             } else {
@@ -381,7 +381,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleFnCallThereIs(ctx: VisitingContext): VpcVal {
             /* put there is a cd btn "myBtn" into x */
-            let requestRef = this.visit(ctx.RuleObject[0]) as RequestedVelRef;
+            let requestRef = this.visit(ctx.RuleObject[0]);
             checkThrow(requestRef instanceof RequestedVelRef, `98|internal error, expected RuleObject to be a RequestedElRef`);
             let velExists = bool(this.outside.ElementExists(requestRef));
             return VpcValBool(ctx._not && ctx._not.length ? !velExists : velExists);
@@ -466,11 +466,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         helper$fieldChunkProp(ctx: VisitingContext): [RequestedVelRef, RequestedChunk] {
             /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
-            let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
+            let chunk = this.visit(ctx.RuleHChunk[0]);
             checkThrow(chunk instanceof RequestedChunk, `9B|internal error, expected RuleHChunk to be a chunk`);
             let ref: RequestedVelRef;
             if (ctx.RuleObjectFld && ctx.RuleObjectFld[0]) {
-                ref = this.visit(ctx.RuleObjectFld[0]) as RequestedVelRef;
+                ref = this.visit(ctx.RuleObjectFld[0]);
             } else if (ctx._me && ctx._me[0]) {
                 ref = new RequestedVelRef(VpcElType.Unknown);
                 ref.isReferenceToMe = true;
@@ -502,7 +502,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 return this.outside.GetProp(ref, propName, adjective, chunk);
             } else {
                 /* put the locktext of cd fld "myFld" into x */
-                let velRef = this.visit(ctx.RuleObject[0]) as RequestedVelRef;
+                let velRef = this.visit(ctx.RuleObject[0]);
                 checkThrow(velRef instanceof RequestedVelRef, `99|internal error, expected RuleObject to be a RequestedElRef`);
                 return this.outside.GetProp(velRef, propName, adjective, undefined);
             }
@@ -531,7 +531,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleLvl2Expression(ctx: VisitingContext): VpcVal {
-            let total = this.visit(ctx.RuleLvl3Expression[0]) as VpcVal;
+            let total = this.visit(ctx.RuleLvl3Expression[0]);
             checkThrow(total instanceof VpcVal, '|L|');
             if (ctx.RuleIsExpression) {
                 for (let i = 0; i < ctx.RuleIsExpression.length; i++) {
@@ -591,7 +591,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             }
 
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
-                let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
+                let chunk = this.visit(ctx.RuleHChunk[0]);
                 checkThrow(chunk instanceof RequestedChunk, '8_|not a RequestedChunk', chunk);
                 let reader = new ReadableContainerStr(val.readAsString());
                 let result = ChunkResolutionApplication.applyReadToString(reader, chunk, this.outside.GetItemDelim());
