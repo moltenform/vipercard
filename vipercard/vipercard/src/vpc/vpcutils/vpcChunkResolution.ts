@@ -281,26 +281,36 @@ const ChunkResolution = /* static class */ {
         itemDel: string,
         news: O<string>,
         prep: O<VpcChunkPreposition>,
-        isWriteContext:boolean
+        isWriteContext:boolean,
+        okToAppend=true
     ): O<ResolvedChunk> {
         let unformatted = parent.container.getRawString();
         unformatted = unformatted.substring(parent.startPos, parent.endPos);
         let retbounds: O<[number, number]>;
         if (isWriteContext) {
             let bounds = this._getBoundsForSet(unformatted, itemDel, request);
-            news = news ?? '';
             let writeParentContainer = parent.container as WritableContainer;
-            if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
+            if (news === undefined) {
+                /* still add our commas to the end */
+                let fakeNewS = ''
+                let result = fakeNewS + okToAppend ? bounds[2] : '';
+                writeParentContainer.splice(parent.startPos + bounds[0], 0 /* delete nothing */, result);
+                retbounds = [bounds[0],  bounds[1]+ result.length];
+            } else if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
+                if (!okToAppend) {
+                    /* ignore adding the newones */
+                    bounds[2] = ''
+                }
                 /* it's a brand new item, adding 'before' or 'after' isn't applicable */
                 let result = bounds[2] + news;
                 writeParentContainer.splice(parent.startPos + bounds[0], bounds[1] - bounds[0], result);
-                retbounds = [bounds[0], result.length];
+                retbounds = [bounds[0], bounds[0] + result.length];
             } else if (prep === VpcChunkPreposition.After) {
                 writeParentContainer.splice(parent.startPos + bounds[1], 0, news);
                 retbounds = [bounds[1], bounds[1] + news.length];
             } else if (prep === VpcChunkPreposition.Before) {
                 writeParentContainer.splice(parent.startPos + bounds[0], 0, news);
-                retbounds = [0, news.length];
+                retbounds = [bounds[0], bounds[0] + news.length];
             } else {
                 checkThrow(false, `5,|unknown preposition ${prep}`);
             }
@@ -381,20 +391,22 @@ export const ChunkResolutionApplication = /* static class */ {
         /* make parent objects */
         let resolved = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
+        let isTop = true
         //~ let checker = new DecreasingScopeChecker();
         while (current) {
             //~ checker.onSeeScope(current.type555);
             if (current.child) {
-                /* narrow it down, add extra commas but not the real text */
+                /* narrow it down */
                 resolved = ensureDefined(
-                    ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into, true),
+                    ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into, true, true),
                     ''
                 );
             } else {
                 /* insert the real text */
-                resolved = ensureDefined(ChunkResolution.doResolveOne(current, resolved, itemDel, news, prep, true), '');
+                resolved = ensureDefined(ChunkResolution.doResolveOne(current, resolved, itemDel, news, prep, true, isTop), '');
             }
 
+            isTop = false
             current = current.child;
         }
     },
@@ -416,19 +428,24 @@ export const ChunkResolutionApplication = /* static class */ {
         let marker = '\x01\x01~~internalvpcmarker~~\x01\x01'
         let unformatted = cont.getRawString()
         checkThrow(!unformatted.includes(marker), "cannot contain the string " + marker)
-        let fakeContainer = new WritableContainerSimpleFmtText()
-        fakeContainer.setAll(unformatted)
-        this.applyPut(fakeContainer, chunk, itemDel, marker, VpcChunkPreposition.Into)
+        this.applyPut(cont, chunk, itemDel, marker, VpcChunkPreposition.Into)
         
         /* now we look at the results and see where it got put! */
-        let results = fakeContainer.getRawString()
+        let results = cont.getRawString()
         let index = results.indexOf(marker)
-        checkThrow(index !== -1, "applyModify did not find marker")
-        let targetLength = unformatted.length - (results.length - marker.length)
-        checkThrowInternal(targetLength >= 0, "")
-        let targetText = unformatted.substr(index, targetLength)
-        let newTargetText = fn(targetText)
-        cont.splice(index, targetLength, newTargetText)
+        checkThrow(index >= 0, "applyModify did not find marker")
+
+        if (results.length - marker.length > unformatted.length) {
+            /* the case where we had to insert commas and stuff afterwards */
+            let newTxt = fn('')
+            cont.splice(index, marker.length, newTxt)
+        } else {
+            /* go back to the original string and retrieve what was there */
+            let targetLength = unformatted.length - (results.length - marker.length)
+            let sourceText = unformatted.slice(index, index + targetLength) ?? ''
+            let newTxt = fn(sourceText)
+            cont.splice(index, marker.length, newTxt)
+        }
     },
 
     /**
@@ -445,7 +462,7 @@ export const ChunkResolutionApplication = /* static class */ {
         //~ let checker = new DecreasingScopeChecker();
         while (current && resolved) {
             //~ checker.onSeeScope(current.type555);
-            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into, false);
+            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', VpcChunkPreposition.Into, false);
             current = current.child;
         }
 
@@ -455,9 +472,18 @@ export const ChunkResolutionApplication = /* static class */ {
     /**
      * helper that returns an unformatted string
      */
-    applyReadToString(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string) {
+    applyReadToString(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string):string {
         let resolved = this.applyRead(cont, chunk, itemDel);
         return resolved ? resolved.container.getRawString().substring(resolved.startPos, resolved.endPos) : '';
+    },
+
+    /**
+     * delete, which is a bit different from `put "" into`
+     */
+    applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string) {
+        if (chunk.type555 === VpcGranularity.Chars) {
+            this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into)
+        }
     },
 
     /**
@@ -498,13 +524,13 @@ export const ChunkResolutionApplication = /* static class */ {
         /* flatten it! the given order does not matter!!! 
         we'll helpfully use the fact that VpcGranularity #s are already in order,
         and index them into a list*/
-        let max = VpcGranularity.Lines + 1
+        let max = VpcGranularity.__Max + 1
         let arr = Util512.repeat(max, undefined as O<RequestedChunk>)
         /* remember that it's first come, first serve */
         let current:O<RequestedChunk> = chunk
         while (current) {
             let key = current.sortFirst ? max : current.type555
-                arr[key] = current
+            arr[key] = current
             current = current.child
         }
 
@@ -529,7 +555,7 @@ export const ChunkResolutionApplication = /* static class */ {
             currentBuild.child = undefined
         }
 
-        return ret
+        return ensureDefined(ret, "chunk dissapeared")
     }
 };
 

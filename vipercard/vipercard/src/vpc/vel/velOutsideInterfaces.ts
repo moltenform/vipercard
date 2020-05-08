@@ -165,11 +165,6 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     ResolveContainerWritable(contRef: RequestedContainerRef): WritableContainer;
 
     /**
-     * write to a container
-     */
-    ContainerWrite(contRef: RequestedContainerRef, newContent: string, prep: VpcChunkPreposition): void;
-
-    /**
      * modify a container
      */
     ContainerModify(contRef: RequestedContainerRef, fn: (s: string) => string): void;

@@ -150,15 +150,8 @@ export class ExecuteStatement {
             let chunk = ensureDefined(this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk), '5A|');
 
             contRef.chunk = chunk;
-
-            /* it's not as simple as 'put "" into item 2 of x' because */
-            /* delete item 2 of "a,b,c" should be "a,c" not "a,,c" */
-            checkThrow(
-                chunk.type555 === VpcGranularity.Chars,
-                "7Q|not yet supported. 'delete char 1 of x' works but not 'delete item 1 of x'"
-            );
-
-            this.outside.ContainerWrite(contRef, '', VpcChunkPreposition.Into);
+            let cont = this.outside.ResolveContainerWritable(contRef);
+            ChunkResolutionApplication.applyDelete(cont, contRef.chunk, this.outside.GetItemDelim());
         }
     }
     /**

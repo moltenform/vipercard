@@ -82,7 +82,8 @@ export enum VpcGranularity {
     __AlternateForm__Characters = Chars,
     __AlternateForm__Word = Words,
     __AlternateForm__Item = Items,
-    __AlternateForm__Line = Lines
+    __AlternateForm__Line = Lines,
+    __Max
 }
 
 /**

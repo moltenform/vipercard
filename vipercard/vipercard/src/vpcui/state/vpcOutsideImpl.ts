@@ -269,14 +269,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
-     * write to a container
-     */
-    ContainerWrite(contRef: RequestedContainerRef, newContent: string, prep: VpcChunkPreposition) {
-        let cont = this.ResolveContainerWritable(contRef);
-        return ChunkResolutionApplication.applyPut(cont, contRef.chunk, this.GetItemDelim(), newContent, prep);
-    }
-
-    /**
      * modify a container
      */
     ContainerModify(contRef: RequestedContainerRef, fn: (s: string) => string) {
