@@ -583,7 +583,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
 
         let owner: VpcElBase;
         if (vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length) {
-            /* it's a bg object, so return the bg */
+            /* it's a bg object, so return the bg. we can get the card easily. */
             let card = this.vci.getModel().getCardById(vel.parentIdInternal);
             owner = this.vci.getModel().getById(VpcElBg, card.parentIdInternal);
         } else {

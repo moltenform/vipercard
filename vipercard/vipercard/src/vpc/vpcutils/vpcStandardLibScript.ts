@@ -105,6 +105,19 @@ on domenu_changefontsize key, pl, pb
         return false
     end if
 end domenu_changefontsize
+on domenu_changefontstyle key, pl, pb
+    put "|plain|bold|italic|underline|outline|condense|extend|grayed|" into keys
+    if key in keys then
+        if pl == "plain" then
+            set the textfont of the selection to plain
+        else
+            set the textfont of the selection to "toggle-" & pl
+        end if
+        return true
+    else
+        return false
+    end if
+end domenu_changefontstyle
 
 
 

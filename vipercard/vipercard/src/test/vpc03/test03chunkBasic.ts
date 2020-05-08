@@ -415,53 +415,53 @@ t.test('03chunkexpression_put_one_item', () => {
     b.batchEvaluate(h3);
 });
 
-//~ /**
- //~ * delete chunk
- //~ */
-//~ t.test('03chunkexpression_delete_char', () => {
-    //~ let b = new ScriptTestBatch();
-    //~ /* normal char */
-    //~ b.t('global z1\nput "abc" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete char 1 of z\\z', 'bc');
-    //~ b.t('put z1 into z\ndelete char 2 of z\\z', 'ac');
-    //~ b.t('put z1 into z\ndelete char 3 of z\\z', 'ab');
-    //~ /* abnormal char */
-    //~ b.t('put z1 into z\ndelete char 0 of z\\z', 'abc');
-    //~ b.t('put z1 into z\ndelete char 4 of z\\z', 'abc');
-    //~ b.t('put z1 into z\ndelete char 5 of z\\z', 'abc');
-    //~ /* normal ranges */
-    //~ b.t('put z1 into z\ndelete char 1 to 1 of z\\z', 'bc');
-    //~ b.t('put z1 into z\ndelete char 1 to 2 of z\\z', 'c');
-    //~ b.t('put z1 into z\ndelete char 1 to 3 of z\\z', '');
-    //~ b.t('put z1 into z\ndelete char 2 to 3 of z\\z', 'a');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\ndelete char 2 of char 1 to 2 of z\\z', 'ac');
-    //~ b.t('put z1 into z\ndelete char 2 to 3 of char 1 to 3 of z\\z', 'a');
-    //~ b.t('put z1 into z\ndelete char 2 to 3 of char 2 to 3 of char 1 to 3 of z\\z', 'a');
-    //~ b.batchEvaluate(h3);
-//~ });
-//~ t.test('03chunkexpression_delete_word', () => {
-    //~ let b = new ScriptTestBatch();
-    //~ /* normal word */
-    //~ b.t('global z1\nput "a.b  c.d" & cr & "e" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete word 1 of z\\z', 'c.d\ne');
-    //~ b.t('put z1 into z\ndelete word 2 of z\\z', 'a.b  \ne');
-    //~ b.t('put z1 into z\ndelete word 3 of z\\z', 'a.b  c.d\n');
-    //~ /* abnormal word */
-    //~ b.t('put z1 into z\ndelete word 0 of z\\z', 'a.b  c.d\ne');
-    //~ b.t('put z1 into z\ndelete word 4 of z\\z', 'a.b  c.d\ne');
-    //~ b.t('put z1 into z\ndelete word 5 of z\\z', 'a.b  c.d\ne');
-    //~ /* normal ranges */
-    //~ b.t('put z1 into z\ndelete word 1 to 1 of z\\z', 'c.d\ne');
-    //~ b.t('put z1 into z\ndelete word 1 to 2 of z\\z', '\ne');
-    //~ b.t('put z1 into z\ndelete word 1 to 3 of z\\z', '');
-    //~ b.t('put z1 into z\ndelete word 2 to 3 of z\\z', 'a.b');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\ndelete word 2 of word 1 to 2 of z\\z', 'a.b  \ne');
-    //~ b.t('put z1 into z\ndelete word 2 to 3 of word 1 to 3 of z\\z', 'a.b');
-    //~ b.t('put z1 into z\ndelete word 2 to 3 of word 2 to 3 of word 1 to 3 of z\\z', 'a.b');
-    //~ b.batchEvaluate(h3);
-//~ });
+/**
+ * delete chunk
+ */
+t.test('03chunkexpression_delete_char', () => {
+    let b = new ScriptTestBatch();
+    /* normal char */
+    b.t('global z1\nput "abc" into z1\\1', '1');
+    b.t('put z1 into z\ndelete char 1 of z\\z', 'bc');
+    b.t('put z1 into z\ndelete char 2 of z\\z', 'ac');
+    b.t('put z1 into z\ndelete char 3 of z\\z', 'ab');
+    /* abnormal char */
+    b.t('put z1 into z\ndelete char 0 of z\\z', 'abc');
+    b.t('put z1 into z\ndelete char 4 of z\\z', 'abc');
+    b.t('put z1 into z\ndelete char 5 of z\\z', 'abc');
+    /* normal ranges */
+    b.t('put z1 into z\ndelete char 1 to 1 of z\\z', 'bc');
+    b.t('put z1 into z\ndelete char 1 to 2 of z\\z', 'c');
+    b.t('put z1 into z\ndelete char 1 to 3 of z\\z', '');
+    b.t('put z1 into z\ndelete char 2 to 3 of z\\z', 'a');
+    /* recurse */
+    b.t('put z1 into z\ndelete char 2 of char 1 to 2 of z\\z', 'ac');
+    b.t('put z1 into z\ndelete char 2 to 3 of char 1 to 3 of z\\z', 'a');
+    b.t('put z1 into z\ndelete char 2 to 3 of char 2 to 3 of char 1 to 3 of z\\z', 'a');
+    b.batchEvaluate(h3);
+});
+t.test('03chunkexpression_delete_word', () => {
+    let b = new ScriptTestBatch();
+    /* normal word */
+    b.t('global z1\nput "a.b  c.d" & cr & "e" into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 1 of z\\z', 'c.d\ne');
+    b.t('put z1 into z\ndelete word 2 of z\\z', 'a.b  \ne');
+    b.t('put z1 into z\ndelete word 3 of z\\z', 'a.b  c.d\n');
+    /* abnormal word */
+    b.t('put z1 into z\ndelete word 0 of z\\z', 'a.b  c.d\ne');
+    b.t('put z1 into z\ndelete word 4 of z\\z', 'a.b  c.d\ne');
+    b.t('put z1 into z\ndelete word 5 of z\\z', 'a.b  c.d\ne');
+    /* normal ranges */
+    b.t('put z1 into z\ndelete word 1 to 1 of z\\z', 'c.d\ne');
+    b.t('put z1 into z\ndelete word 1 to 2 of z\\z', '\ne');
+    b.t('put z1 into z\ndelete word 1 to 3 of z\\z', '');
+    b.t('put z1 into z\ndelete word 2 to 3 of z\\z', 'a.b');
+    /* recurse */
+    b.t('put z1 into z\ndelete word 2 of word 1 to 2 of z\\z', 'a.b  \ne');
+    b.t('put z1 into z\ndelete word 2 to 3 of word 1 to 3 of z\\z', 'a.b');
+    b.t('put z1 into z\ndelete word 2 to 3 of word 2 to 3 of word 1 to 3 of z\\z', 'a.b');
+    b.batchEvaluate(h3);
+});
 //~ t.test('03chunkexpression_delete_line', () => {
     //~ let b = new ScriptTestBatch();
     //~ /* normal line */
@@ -511,15 +511,15 @@ t.test('03chunkexpression_put_one_item', () => {
     //~ b.batchEvaluate(h3);
 //~ });
 
-//~ /*
-    //~ what's not covered by the extensive test:
-        //~ put "" into char 2 to 4 of z
-        //~ put "A" into char 2 to 4 of z
-        //~ set the textstyle of char 2 to 4 of cd fld 1 to bold
-        //~ ensure disallow going backwards in scope
-        //~ before/after
-        //~ math ops
-//~ */
+/*
+    what's not covered by the extensive test:
+        put "" into char 2 to 4 of z
+        put "A" into char 2 to 4 of z
+        set the textstyle of char 2 to 4 of cd fld 1 to bold
+        ensure disallow going backwards in scope
+        before/after
+        math ops
+*/
 
 t.test('03chunkexpression_set_textstyle', () => {
     h3.vcstate.model.productOpts.setProductOpt('itemDel', ',');
@@ -722,64 +722,64 @@ t.test('03chunkexpression_recursivescopes', () => {
  * math ops
  */
 t.test('03chunkexpression_mathops', () => {
-    //~ let b = new ScriptTestBatch();
-    //~ b.t('global z1\nput "1,2,3" into z1\\1', '1');
-    //~ b.t('put z1 into z\nadd 1 to item 0 of z\\z', '11,2,3');
-    //~ b.t('put z1 into z\nadd 1 to item 1 of z\\z', '2,2,3');
-    //~ b.t('put z1 into z\nadd 1 to item 2 of z\\z', '1,3,3');
-    //~ b.t('put z1 into z\nadd 1 to item 3 of z\\z', '1,2,4');
-    //~ b.t('put z1 into z\nadd 1 to item 4 of z\\z', '1,2,3,1');
-    //~ b.t('put z1 into z\nadd 1 to item 5 of z\\z', '1,2,3,,1');
-    //~ b.t('global z1\nput ",1,2,3," into z1\\1', '1');
-    //~ b.t('put z1 into z\nadd 1 to item 0 of z\\z', '1,1,2,3,');
-    //~ b.t('put z1 into z\nadd 1 to item 1 of z\\z', '1,1,2,3,');
-    //~ b.t('put z1 into z\nadd 1 to item 2 of z\\z', ',2,2,3,');
-    //~ b.t('put z1 into z\nadd 1 to item 3 of z\\z', ',1,3,3,');
-    //~ b.t('put z1 into z\nadd 1 to item 4 of z\\z', ',1,2,4,');
-    //~ b.t('put z1 into z\nadd 1 to item 5 of z\\z', ',1,2,3,1');
-    //~ b.t('global z1\nput "1,2,3" into z1\\1', '1');
-    //~ b.t('put z1 into z\nmultiply item 0 of z by 2\\z', '01,2,3');
-    //~ b.t('put z1 into z\nmultiply item 1 of z by 2\\z', '2,2,3');
-    //~ b.t('put z1 into z\nmultiply item 2 of z by 2\\z', '1,4,3');
-    //~ b.t('put z1 into z\nmultiply item 3 of z by 2\\z', '1,2,6');
-    //~ b.t('put z1 into z\nmultiply item 4 of z by 2\\z', '1,2,3,0');
-    //~ b.t('put z1 into z\nmultiply item 5 of z by 2\\z', '1,2,3,,0');
-    //~ /* has same weird behavior */
-    //~ b.t('global z1\nput "1,2,3"&cr&"4,5,6" into z1\\1', '1');
-    //~ b.t('put z1 into z\nadd 1 to item 2 of item 1 of z\\z', '1,3,3\n4,5,6');
-    //~ b.t('put z1 into z\nadd 1 to item 1 of item 2 of z\\z', '2,2,3\n4,5,6');
-    //~ b.t('put z1 into z\nadd 1 to item 2 of line 2 of z\\z', '2,2,3\n4,6,6');
-    //~ b.t('put z1 into z\nadd 1 to line 2 of item 2 of z\\z', '2,2,3\n4,6,6');
-    //~ b.t('global z1\nput "1,2,3" into z1\\1', '1');
-    //~ b.t('put z1 into z\nadd 100 to item 0 of z\\z', '1001,2,3');
-    //~ b.t('put z1 into z\nadd 100 to item 1 of z\\z', '101,2,3');
-    //~ b.t('put z1 into z\nadd 100 to item 2 of z\\z', '1,102,3');
-    //~ b.t('put z1 into z\nadd 100 to item 3 of z\\z', '1,2,103');
-    //~ b.t('put z1 into z\nadd 100 to item 4 of z\\z', '1,2,3,100');
-    //~ b.t('put z1 into z\nadd 100 to item 5 of z\\z', '1,2,3,,100');
-    //~ b.t('global z1\nput ",1,2,3," into z1\\1', '1');
-    //~ b.t('put z1 into z\nadd 100 to item 0 of z\\z', '100,1,2,3,');
-    //~ b.t('put z1 into z\nadd 100 to item 1 of z\\z', '100,1,2,3,');
-    //~ b.t('put z1 into z\nadd 100 to item 2 of z\\z', ',101,2,3,');
-    //~ b.t('put z1 into z\nadd 100 to item 3 of z\\z', ',1,102,3,');
-    //~ b.t('put z1 into z\nadd 100 to item 4 of z\\z', ',1,2,103,');
-    //~ b.t('put z1 into z\nadd 100 to item 5 of z\\z', ',1,2,3,100');
-    //~ b.t('global z1\nput "1,2,3" into z1\\1', '1');
-    //~ b.t('put z1 into z\nmultiply item 0 of z by 200\\z', '01,2,3');
-    //~ b.t('put z1 into z\nmultiply item 1 of z by 200\\z', '200,2,3');
-    //~ b.t('put z1 into z\nmultiply item 2 of z by 200\\z', '1,400,3');
-    //~ b.t('put z1 into z\nmultiply item 3 of z by 200\\z', '1,2,600');
-    //~ b.t('put z1 into z\nmultiply item 4 of z by 200\\z', '1,2,3,0');
-    //~ b.t('put z1 into z\nmultiply item 5 of z by 200\\z', '1,2,3,,0');
-    //~ /* has same weird behavior */
-    //~ b.t('global z1\nput "1,2,3"&cr&"4,5,6" into z1\\1', '1');
-    //~ b.t('put z1 into z\nadd 100 to item 2 of item 1 of z\\z', '1,102,3\n4,5,6');
-    //~ b.t('put z1 into z\nadd 100 to item 1 of item 2 of z\\z', '101,2,3\n4,5,6');
-    //~ b.t('put z1 into z\nadd 100 to item 2 of line 2 of z\\z', '2,2,3\n4,105,6');
-    //~ b.t('put z1 into z\nadd 100 to line 2 of item 2 of z\\z', '2,2,3\n4,105,6');
-     //~ b.t('global z1\nput "100,200,300" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndivide item 2 of z by 100\\z', '100,2,300');
-    //~ b.batchEvaluate(h3);
+    let b = new ScriptTestBatch();
+    b.t('global z1\nput "1,2,3" into z1\\1', '1');
+    b.t('put z1 into z\nadd 1 to item 0 of z\\z', '11,2,3');
+    b.t('put z1 into z\nadd 1 to item 1 of z\\z', '2,2,3');
+    b.t('put z1 into z\nadd 1 to item 2 of z\\z', '1,3,3');
+    b.t('put z1 into z\nadd 1 to item 3 of z\\z', '1,2,4');
+    b.t('put z1 into z\nadd 1 to item 4 of z\\z', '1,2,3,1');
+    b.t('put z1 into z\nadd 1 to item 5 of z\\z', '1,2,3,,1');
+    b.t('global z1\nput ",1,2,3," into z1\\1', '1');
+    b.t('put z1 into z\nadd 1 to item 0 of z\\z', '1,1,2,3,');
+    b.t('put z1 into z\nadd 1 to item 1 of z\\z', '1,1,2,3,');
+    b.t('put z1 into z\nadd 1 to item 2 of z\\z', ',2,2,3,');
+    b.t('put z1 into z\nadd 1 to item 3 of z\\z', ',1,3,3,');
+    b.t('put z1 into z\nadd 1 to item 4 of z\\z', ',1,2,4,');
+    b.t('put z1 into z\nadd 1 to item 5 of z\\z', ',1,2,3,1');
+    b.t('global z1\nput "1,2,3" into z1\\1', '1');
+    b.t('put z1 into z\nmultiply item 0 of z by 2\\z', '01,2,3');
+    b.t('put z1 into z\nmultiply item 1 of z by 2\\z', '2,2,3');
+    b.t('put z1 into z\nmultiply item 2 of z by 2\\z', '1,4,3');
+    b.t('put z1 into z\nmultiply item 3 of z by 2\\z', '1,2,6');
+    b.t('put z1 into z\nmultiply item 4 of z by 2\\z', '1,2,3,0');
+    b.t('put z1 into z\nmultiply item 5 of z by 2\\z', '1,2,3,,0');
+    /* has same weird behavior */
+    b.t('global z1\nput "1,2,3"&cr&"4,5,6" into z1\\1', '1');
+    b.t('put z1 into z\nadd 1 to item 2 of item 1 of z\\z', '1,3,3\n4,5,6');
+    b.t('put z1 into z\nadd 1 to item 1 of item 2 of z\\z', '2,2,3\n4,5,6');
+    b.t('put z1 into z\nadd 1 to item 2 of line 2 of z\\z', '1,2,3\n4,6,6');
+    b.t('put z1 into z\nadd 1 to line 2 of item 2 of z\\z', '1,2,3\n4,6,6');
+    b.t('global z1\nput "1,2,3" into z1\\1', '1');
+    b.t('put z1 into z\nadd 100 to item 0 of z\\z', '1001,2,3');
+    b.t('put z1 into z\nadd 100 to item 1 of z\\z', '101,2,3');
+    b.t('put z1 into z\nadd 100 to item 2 of z\\z', '1,102,3');
+    b.t('put z1 into z\nadd 100 to item 3 of z\\z', '1,2,103');
+    b.t('put z1 into z\nadd 100 to item 4 of z\\z', '1,2,3,100');
+    b.t('put z1 into z\nadd 100 to item 5 of z\\z', '1,2,3,,100');
+    b.t('global z1\nput ",1,2,3," into z1\\1', '1');
+    b.t('put z1 into z\nadd 100 to item 0 of z\\z', '100,1,2,3,');
+    b.t('put z1 into z\nadd 100 to item 1 of z\\z', '100,1,2,3,');
+    b.t('put z1 into z\nadd 100 to item 2 of z\\z', ',101,2,3,');
+    b.t('put z1 into z\nadd 100 to item 3 of z\\z', ',1,102,3,');
+    b.t('put z1 into z\nadd 100 to item 4 of z\\z', ',1,2,103,');
+    b.t('put z1 into z\nadd 100 to item 5 of z\\z', ',1,2,3,100');
+    b.t('global z1\nput "1,2,3" into z1\\1', '1');
+    b.t('put z1 into z\nmultiply item 0 of z by 200\\z', '01,2,3');
+    b.t('put z1 into z\nmultiply item 1 of z by 200\\z', '200,2,3');
+    b.t('put z1 into z\nmultiply item 2 of z by 200\\z', '1,400,3');
+    b.t('put z1 into z\nmultiply item 3 of z by 200\\z', '1,2,600');
+    b.t('put z1 into z\nmultiply item 4 of z by 200\\z', '1,2,3,0');
+    b.t('put z1 into z\nmultiply item 5 of z by 200\\z', '1,2,3,,0');
+    /* has same weird behavior */
+    b.t('global z1\nput "1,2,3"&cr&"4,5,6" into z1\\1', '1');
+    b.t('put z1 into z\nadd 100 to item 2 of item 1 of z\\z', '1,102,3\n4,5,6');
+    b.t('put z1 into z\nadd 100 to item 1 of item 2 of z\\z', '101,2,3\n4,5,6');
+    b.t('put z1 into z\nadd 100 to item 2 of line 2 of z\\z', '1,2,3\n4,105,6');
+    b.t('put z1 into z\nadd 100 to line 2 of item 2 of z\\z', '1,2,3\n4,105,6');
+     b.t('global z1\nput "100,200,300" into z1\\1', '1');
+    b.t('put z1 into z\ndivide item 2 of z by 100\\z', '100,2,300');
+    b.batchEvaluate(h3);
 })
 
 

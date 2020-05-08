@@ -215,8 +215,41 @@ export const SubstringStyleComplex = /* static class */ {
      * set font style of chunk
      */
     setChunkTextStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, list: string[]) {
+        if (list.length === 1 && list[0].startsWith('toggle-')) {
+            return this.toggleFontStyle(txt, defaultFont, inStart, inLen, list[0].substr('toggle-'.length))
+        }
+
         let snext = SubstringStyleComplex.ui512styleFromVpcStyleList(list);
         let fn = (scurrent: string) => TextFontSpec.setFontStyle(scurrent, snext);
         return SubstringStyleComplex._setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
+    },
+
+    /**
+     * if all bold, goes plain
+     * else bold each
+     */
+    toggleFontStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, whichStyle:string) {
+        let current = this.getChunkTextStyle(txt, defaultFont, inStart, inLen)
+        checkThrow(whichStyle !== 'plain', "doesn't make sense to toggle plain")
+        let makeBold = true
+        if (current.find(item=> item === whichStyle)) {
+            /* it's already all bold. so take away the bold */
+            makeBold = false
+        }
+        
+        let styleInt = this.vpcStyleToInt([whichStyle])
+        for (let i=0; i<txt.len(); i++) {
+            let style = TextFontSpec.getFontStyle(txt.fontAt(i))
+            let number = Number(stringToTextFontStyling(style))
+            if (makeBold) {
+                number |= styleInt
+            } else {
+                number &= ~styleInt
+            }
+
+            let newStyle = textFontStylingToString(number)
+            let newFont = TextFontSpec.setFontStyle(txt.fontAt(i), newStyle)
+            txt.setFontAt(i, newFont)
+        }
     }
 };

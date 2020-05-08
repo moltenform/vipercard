@@ -482,7 +482,39 @@ export const ChunkResolutionApplication = /* static class */ {
      */
     applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string) {
         if (chunk.granularity === VpcGranularity.Chars) {
-            this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into)
+            return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into)
+        }
+
+        /* use a sentinel value to get the same results as a "put" */
+        let marker = '\x01\x01~~internalvpcmarker~~\x01\x01'
+        let unformatted = cont.getRawString()
+        checkThrow(!unformatted.includes(marker), "cannot contain the string " + marker)
+        this.applyPut(cont, chunk, itemDel, marker, VpcChunkPreposition.Into)
+        
+        /* now we look at the results and see where it got put! */
+        let results = cont.getRawString()
+        let index = results.indexOf(marker)
+        checkThrow(index >= 0, "applyModify did not find marker")
+
+        if (results.length - marker.length > unformatted.length) {
+            /* the case where we had to insert commas and stuff afterwards */
+            return unformatted
+        } else {
+            /* go back to the original string and retrieve what was there */
+            if (chunk.granularity === VpcGranularity.Words) {
+                /* delete spaces - but not returns - after the marker */
+                let i = index+marker.length
+                while(i<results.length) {
+                    if (results.charAt(i) !== ' ') {
+                        break
+                    }
+                    i++
+                }
+                
+                cont.splice(index, i - index, "")
+            } else {
+                checkThrow(false, "nyi")
+            }
         }
     },
 

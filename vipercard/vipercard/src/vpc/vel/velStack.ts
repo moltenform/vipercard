@@ -14,6 +14,7 @@
 export class VpcElStack extends VpcElBase {
     protected _script = '';
     protected _name = '';
+    protected _compatibilitymode = false;
     constructor(id: string, parentId: string) {
         super(id, parentId);
     }
@@ -51,9 +52,18 @@ export class VpcElStack extends VpcElBase {
     /* child backgrounds */
     bgs: VpcElBg[] = [];
 
+    /**
+     * convenience for getting card order
+     * fun fact: in the original product, cards aren't always in same order as the backgrounds,
+     * cut card/paste card can make them out of order
+     */
     getCardOrder() {
         return this._cardorder ? this._cardorder.split('|') : [];
     }
+
+    /**
+     * convenience for setting card order
+     */
     alterCardOrder(fn: (a: string[]) => string[], h: VpcHandleLinkedVels) {
         let got = fn(this.getCardOrder());
         assertTrue(got.length, '');
