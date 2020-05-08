@@ -782,7 +782,7 @@ t.test('expand in VpcLineCategory_.GoCardImpl', () => {
     /* in rewrites we currently expand it twice, not perfect but good enough */
     let b = new ScriptTestBatch();
     b.t('global countCalls\\0', '0');
-    
+
     /* go to card */
     b.t(
         `
@@ -905,7 +905,8 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
         add 1 to countCalls
         return p1 * p2
     end myMult
-    ${addCode}`, h.vcstate.model
+    ${addCode}`,
+                h.vcstate.model
             )
         );
     }

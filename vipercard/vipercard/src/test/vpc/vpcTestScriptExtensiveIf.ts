@@ -1,11 +1,11 @@
 
-/* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal';
+/* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velStack';
-/* auto */ import { Util512Higher } from '../../ui512/utils/util512Higher';
-/* auto */ import { UI512ErrorHandling, assertWarn } from '../../ui512/utils/util512Assert';
-/* auto */ import { assertWarnEq, longstr } from '../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from '../testUtils/testUtils';
+/* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
+/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { UI512ErrorHandling, assertWarn } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertWarnEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -28,7 +28,7 @@ t.atest('runConditionalTests', () => {
  * writing a python script to generate thousands of examples,
  * running the examples on the original product in an emulator,
  * then running the script in vipercard and comparing them.
- * 
+ *
  * all tests pass - matches the original product perfectly!
  */
 class RunExtensiveConditionalTests {
@@ -159,7 +159,9 @@ end if
     /* runs the test */
     async goImpl() {
         let stack = h.vcstate.model.getById(VpcElStack, h.ids.stack);
-        h.vcstate.vci.undoableAction(() => stack.setOnVel('script', this.helperCode, h.vcstate.model));
+        h.vcstate.vci.undoableAction(() =>
+            stack.setOnVel('script', this.helperCode, h.vcstate.model)
+        );
 
         await this.testHelpers();
 

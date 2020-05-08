@@ -12,7 +12,7 @@
 /* auto */ import { BrowserInfo } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, Util512, assertEq, assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
@@ -22,7 +22,7 @@
 
 /**
  * run a set of script tests.
- * 
+ *
  * features: use ERR:details or PARSEERR:details
  * to indicate an expected exception
  * use ERR:5:details to indicate line failure
@@ -34,17 +34,19 @@
 export class ScriptTestBatch {
     protected static keepTrackOfPending = new MapKeyToObjectCanSet<string>();
     id: string;
-    locked = false
+    locked = false;
     tests: [string, string][] = [];
     constructor() {
-        let getTraceback = checkIsProductionBuild() ? '(traceback not supported)' : new Error().stack?.toString()
-        getTraceback = getTraceback ?? '(traceback not supported)'
+        let getTraceback = checkIsProductionBuild()
+            ? '(traceback not supported)'
+            : new Error().stack?.toString();
+        getTraceback = getTraceback ?? '(traceback not supported)';
         this.id = Math.random().toString();
         ScriptTestBatch.keepTrackOfPending.add(this.id, getTraceback);
     }
 
     t(s1: string, s2: string) {
-        assertTrue(!this.locked, "forgot to create a new batch after evaluating?")
+        assertTrue(!this.locked, 'forgot to create a new batch after evaluating?');
         this.tests.push([s1, s2]);
     }
 
@@ -80,7 +82,7 @@ export class ScriptTestBatch {
         }
 
         /* prevent you from re-using the object */
-        this.locked = true
+        this.locked = true;
     }
 
     static checkPending() {
@@ -89,8 +91,8 @@ export class ScriptTestBatch {
         for (let val of vals) {
             if (val) {
                 foundSome = true;
-                console.error("Still pending from:")
-                console.error(val)
+                console.error('Still pending from:');
+                console.error(val);
             }
         }
 
@@ -120,7 +122,7 @@ export class TestVpcScriptRunBase {
     simClickX: number;
     simClickY: number;
     /* are bg vels supported yet */
-    useBg = false
+    useBg = false;
     readonly customFunc = 'function';
     constructor(protected t: SimpleUtil512TestCollection) {}
 
@@ -146,7 +148,9 @@ export class TestVpcScriptRunBase {
 
     setScript(id: string, s: string) {
         let v = this.vcstate.model.getByIdUntyped(id);
-        this.vcstate.vci.doWithoutAbilityToUndo(() => v.setOnVel('script', s, this.vcstate.model));
+        this.vcstate.vci.doWithoutAbilityToUndo(() =>
+            v.setOnVel('script', s, this.vcstate.model)
+        );
     }
 
     populateModel() {
@@ -266,14 +270,14 @@ export class TestVpcScriptRunBase {
         this.simClickX = b.getN('x') + 7;
         this.simClickY = b.getN('y') + 8;
     }
-    
+
     protected onScriptErr(
         scriptErr: VpcErr,
         built: string,
         expectErrMsg?: string,
         expectErrLine?: number,
-        expectPreparseErr?: boolean,
-    ){
+        expectPreparseErr?: boolean
+    ) {
         let msg = scriptErr.message;
         let velId = scriptErr.scriptErrVelid ?? 'unknown';
         let line = scriptErr.scriptErrLine ?? -1;
@@ -305,7 +309,7 @@ export class TestVpcScriptRunBase {
                 .replace(/\s+/, ' ')
                 .trim()}>`;
         }
-        
+
         makeWarningUseful = makeWarningUseful.replace(/global testresult; /g, '');
         makeWarningUseful += ` v=${velId} msg=\n${msg}`;
 
@@ -328,12 +332,7 @@ export class TestVpcScriptRunBase {
         }
 
         if (expectErrLine !== undefined) {
-            assertWarnEq(
-                expectErrLine + 1,
-                line + 1,
-                'wrong line',
-                makeWarningUseful
-            );
+            assertWarnEq(expectErrLine + 1, line + 1, 'wrong line', makeWarningUseful);
         }
 
         if (expectPreparseErr) {
@@ -345,12 +344,8 @@ export class TestVpcScriptRunBase {
             );
         }
 
-        assertWarn(
-            expectErrMsg !== undefined,
-            'unexpected failure',
-            makeWarningUseful
-        );
-        return scriptErr
+        assertWarn(expectErrMsg !== undefined, 'unexpected failure', makeWarningUseful);
+        return scriptErr;
     }
 
     runGeneralCode(
@@ -363,7 +358,13 @@ export class TestVpcScriptRunBase {
     ) {
         let caughtErr: O<VpcErr>;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
-            caughtErr = this.onScriptErr(scriptErr, built, expectErrMsg, expectErrLine, expectPreparseErr)
+            caughtErr = this.onScriptErr(
+                scriptErr,
+                built,
+                expectErrMsg,
+                expectErrLine,
+                expectPreparseErr
+            );
         };
 
         let built = addNoHandler
@@ -376,7 +377,9 @@ export class TestVpcScriptRunBase {
         built = FormattedText.fromExternalCharset(built, BrowserInfo.get().os);
 
         let btnGo = this.vcstate.model.getById(VpcElButton, this.ids.go);
-        this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.setOnVel('script', built, this.vcstate.model));
+        this.vcstate.vci.doWithoutAbilityToUndo(() =>
+            btnGo.setOnVel('script', built, this.vcstate.model)
+        );
 
         /* fake a click inside btnGo */
         assertEq(VpcTool.Browse, this.pr.getTool(), 'HY|');
@@ -389,7 +392,12 @@ export class TestVpcScriptRunBase {
             ModifierKeys.None
         );
 
-        VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.idInternal, false);
+        VpcPresenterEvents.scheduleScriptMsgImpl(
+            this.pr,
+            fakeEvent,
+            btnGo.idInternal,
+            false
+        );
 
         assertTrue(
             !expectPreparseErr || expectErrMsg !== undefined,
@@ -474,7 +482,10 @@ put ${s} into testresult`;
             }
         };
 
-        let tests: [string, string][] = testsRaw.map(item => [item[0], item[1].replace(/MARK:/, '')]);
+        let tests: [string, string][] = testsRaw.map(item => [
+            item[0],
+            item[1].replace(/MARK:/, '')
+        ]);
         let testsErr = tests.filter(item => item[1].startsWith('ERR:'));
         let testsPreparseErr = tests.filter(item => item[1].startsWith('PREPARSEERR:'));
         let testsNoErr = tests.filter(
@@ -525,19 +536,23 @@ put ${s} into testresult`;
         }
 
         for (let i = 0; i < testsPreparseErr.length; i++) {
-            let line:string
+            let line: string;
             let pts = getBeforeLine(testsPreparseErr[i][0]);
             if (pts[0] && pts[1]) {
-            /* if it's like "doSomeCode\\0" then it is a line of code */
-            assertTrue(pts[1] === 'x' || pts[1] === '0',
-                    "it looks like this test expects a preparseerr. so it can't have \\\\expression, the first part needs to end with \\\\0, since it is ignored")
-                line = pts[0]
+                /* if it's like "doSomeCode\\0" then it is a line of code */
+                assertTrue(
+                    pts[1] === 'x' || pts[1] === '0',
+                     longstr(`It looks like this test expects a preparseerr.
+                     So, it can't have a \\\\expression, the first part needs
+                     to end with \\\\0, since it is ignored`)
+                );
+                line = pts[0];
             } else {
                 /* if it's like "doSomeCode" then it is a statement */
-                assertTrue(pts[1], "blank?")
-                line = `put ${pts[1]} into testpreparseerr`
+                assertTrue(pts[1], 'blank?');
+                line = `put ${pts[1]} into testpreparseerr`;
             }
-            
+
             let expectErr = testsPreparseErr[i][1].replace(/PREPARSEERR:/g, '');
             let errOnLine = 3;
             let tryLine = Util512.parseInt(expectErr.split(':')[0]);
@@ -732,4 +747,3 @@ export enum BatchType {
     floatingPoint,
     floatingPointCommutative
 }
-

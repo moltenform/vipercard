@@ -96,7 +96,15 @@ export class VpcExecFrameStack {
         let found = this.getHandlerUpwardsOrThrow(this.originalMsg.targetId, chain, this.originalMsg.msgName, false);
         if (found) {
             let [ast, lineRef, vel] = found;
-            this.pushStackFrame(this.originalMsg.msgName, this.originalMsg, ast, lineRef, vel.idInternal, vel.parentIdInternal, undefined);
+            this.pushStackFrame(
+                this.originalMsg.msgName,
+                this.originalMsg,
+                ast,
+                lineRef,
+                vel.idInternal,
+                vel.parentIdInternal,
+                undefined
+            );
         }
     }
 
@@ -426,7 +434,15 @@ export class VpcExecFrameStack {
         let found = this.getHandlerUpwardsOrThrow(curFrame.meId, curFrame.messageChain, curFrame.handlerName, true);
         if (found) {
             let [ast, lineRef, vel] = found;
-            this.pushStackFrame(curFrame.handlerName, curFrame.message, ast, lineRef, vel.idInternal, vel.parentIdInternal, undefined);
+            this.pushStackFrame(
+                curFrame.handlerName,
+                curFrame.message,
+                ast,
+                lineRef,
+                vel.idInternal,
+                vel.parentIdInternal,
+                undefined
+            );
         }
     }
 
@@ -565,7 +581,15 @@ export class VpcExecFrameStack {
         let found = this.getHandlerUpwardsOrThrow(curFrame.meId, curFrame.messageChain, handlerName, false);
         if (found) {
             let [ast, lineRef, vel] = found;
-            let newFrame = this.pushStackFrame(handlerName, curFrame.message, ast, lineRef, vel.idInternal, vel.parentIdInternal, undefined);
+            let newFrame = this.pushStackFrame(
+                handlerName,
+                curFrame.message,
+                ast,
+                lineRef,
+                vel.idInternal,
+                vel.parentIdInternal,
+                undefined
+            );
             newFrame.args = args;
             Util512.freezeRecurse(newFrame.args);
             if (vel.getType() === VpcElType.Product && !curFrame.dynamicCodeOrigin) {
@@ -806,7 +830,17 @@ export class VpcExecFrameStack {
             );
             if (found) {
                 let [ast, lineRef, vel] = found;
-                this.callCodeAtATarget(curFrame, ast, lineRef, sendMsg, vel.idInternal, vel.parentIdInternal, sendMsgTarget, theMsg, undefined);
+                this.callCodeAtATarget(
+                    curFrame,
+                    ast,
+                    lineRef,
+                    sendMsg,
+                    vel.idInternal,
+                    vel.parentIdInternal,
+                    sendMsgTarget,
+                    theMsg,
+                    undefined
+                );
             }
         }
     }

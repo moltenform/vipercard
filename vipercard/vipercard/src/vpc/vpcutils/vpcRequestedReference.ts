@@ -44,21 +44,21 @@ export class RequestedVelRef extends VpcIntermedValBase {
      */
     checkOnlyOneSpecified() {
         if (!checkIsProductionBuild()) {
-            let total = 0
+            let total = 0;
             if (this.lookByAbsolute !== undefined) {
-                total += 1
+                total += 1;
             }
             if (this.lookById !== undefined) {
-                total += 1
+                total += 1;
             }
             if (this.lookByName !== undefined) {
-                total += 1
+                total += 1;
             }
             if (this.lookByRelative !== undefined) {
-                total += 1
+                total += 1;
             }
 
-            assertWarn(total <= 1, "too many specified")
+            assertWarn(total <= 1, 'too many specified');
         }
     }
 }

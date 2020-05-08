@@ -369,26 +369,26 @@ export class TextSelModifyImpl {
             return [t, nCaretRaw, nEndRaw];
         }
 
-        let nCaret = Math.min(nCaretRaw, nEndRaw)
-        let nEnd = Math.max(nCaretRaw, nEndRaw)
-        nCaret = fitIntoInclusive(nCaret, 0, t.len()-1)
-        nEnd = fitIntoInclusive(nEnd, 0, t.len()-1)
-        let unformatted = t.toUnformattedSubstr(nCaret, nEnd-nCaret)
+        let nCaret = Math.min(nCaretRaw, nEndRaw);
+        let nEnd = Math.max(nCaretRaw, nEndRaw);
+        nCaret = fitIntoInclusive(nCaret, 0, t.len() - 1);
+        nEnd = fitIntoInclusive(nEnd, 0, t.len() - 1);
+        let unformatted = t.toUnformattedSubstr(nCaret, nEnd - nCaret);
         if (unformatted.startsWith(startChars) && unformatted.endsWith(endChars)) {
             /* already commented. remove the comment */
-            t.splice(nEnd - endChars.length, endChars.length)
-            t.splice(nCaret, startChars.length)
-            return [t, nCaret, nEnd - (startChars.length + endChars.length)]
+            t.splice(nEnd - endChars.length, endChars.length);
+            t.splice(nCaret, startChars.length);
+            return [t, nCaret, nEnd - (startChars.length + endChars.length)];
         } else {
             /* add the comment */
-            t = FormattedText.byInsertion(t, nEnd, 0, endChars, t.fontAt(nEnd))
-            t = FormattedText.byInsertion(t, nCaret, 0, startChars, t.fontAt(nCaret))
+            t = FormattedText.byInsertion(t, nEnd, 0, endChars, t.fontAt(nEnd));
+            t = FormattedText.byInsertion(t, nCaret, 0, startChars, t.fontAt(nCaret));
             if (nCaret === nEnd) {
                 /* conveniently position the caret */
-                return [t, nCaret + startChars.length, nCaret + startChars.length]
+                return [t, nCaret + startChars.length, nCaret + startChars.length];
             } else {
                 /* leave it selected */
-                return [t, nCaret, nEnd + startChars.length + endChars.length]
+                return [t, nCaret, nEnd + startChars.length + endChars.length];
             }
         }
     }

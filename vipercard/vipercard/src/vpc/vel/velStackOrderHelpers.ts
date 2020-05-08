@@ -44,5 +44,5 @@ export const StackOrderHelpers = /* static class */ {
      */
     getFromCardStackPosition(model: VpcModelTop, pos: number) {
         return ensureDefined(this.findFromCardStackPosition(model, pos), '4u|card number not found', pos);
-    },
+    }
 };

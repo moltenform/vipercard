@@ -211,7 +211,7 @@ export class VpcFontSpecialChunk {
     /**
      * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
      */
-    specialSetPropChunkImpl(h:VpcHandleLinkedVels, prop: string, s: string, charstart: number, charend: number): void {
+    specialSetPropChunkImpl(h: VpcHandleLinkedVels, prop: string, s: string, charstart: number, charend: number): void {
         let newTxt = this.vel.getCardFmTxt().getUnlockedCopy();
         let len = charend - charstart;
         if (prop === 'textstyle') {
@@ -277,7 +277,7 @@ export class VpcFontSpecialChunk {
      * when you say set the textstyle of char 999 to 1000...
      * how do we respond when outside content length
      */
-    protected resolveChunkBounds(h:VpcHandleLinkedVels, chunk: RequestedChunk, itemDel: string) {
+    protected resolveChunkBounds(h: VpcHandleLinkedVels, chunk: RequestedChunk, itemDel: string) {
         let newChunk = chunk.getClone();
         if (
             newChunk.type555 === VpcGranularity.Chars &&
@@ -302,7 +302,7 @@ export class VpcFontSpecialChunk {
     /**
      * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
      */
-    specialSetPropChunk(h:VpcHandleLinkedVels, prop: string, chunk: RequestedChunk, val: VpcVal, itemDel: string) {
+    specialSetPropChunk(h: VpcHandleLinkedVels, prop: string, chunk: RequestedChunk, val: VpcVal, itemDel: string) {
         let [start, end] = this.resolveChunkBounds(h, chunk, itemDel);
         return this.specialSetPropChunkImpl(h, prop, val.readAsString(), start, end);
     }
@@ -310,7 +310,7 @@ export class VpcFontSpecialChunk {
     /**
      * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
      */
-    specialGetPropChunk(h:VpcHandleLinkedVels, prop: string, chunk: RequestedChunk, itemDel: string): VpcVal {
+    specialGetPropChunk(h: VpcHandleLinkedVels, prop: string, chunk: RequestedChunk, itemDel: string): VpcVal {
         let [start, end] = this.resolveChunkBounds(h, chunk, itemDel);
         return VpcValS(this.specialGetPropChunkImpl(prop, start, end));
     }

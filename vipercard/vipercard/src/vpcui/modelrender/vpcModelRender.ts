@@ -374,7 +374,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
                 /* field not on the current card */
                 this.vci.setCurrentFocus(undefined);
             }
-          }
+        }
     }
 
     /**

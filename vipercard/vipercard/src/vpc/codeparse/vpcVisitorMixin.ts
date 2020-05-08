@@ -80,7 +80,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx.tkCard && ctx.tkCard[0]) {
                 isBg = false;
             }
-            
+
             ref.partIsBg = isBg;
             ref.partIsCd = !isBg;
             if (ctx.RuleOrdinal && ctx.RuleOrdinal[0] && ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
@@ -267,7 +267,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.vel = new RequestedVelRef(VpcElType.Unknown);
                 ret.vel.isReferenceToTarget = true;
             } else if (ctx._selection && ctx._selection[0]) {
-                ret = ensureDefined(this.outside.GetSelectedTextChunk(), "nothing is selected")
+                ret = ensureDefined(this.outside.GetSelectedTextChunk(), 'nothing is selected');
             } else if (ctx.RuleObjectBtn && ctx.RuleObjectBtn[0]) {
                 checkThrow(
                     false,
@@ -405,7 +405,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
             /* indicate whether context is cd or bg */
             let parentRef = new RequestedVelRef(contextIsBg ? VpcElType.Bg : VpcElType.Card);
-            parentRef.lookByRelative = OrdinalOrPosition.This
+            parentRef.lookByRelative = OrdinalOrPosition.This;
             return VpcValN(this.outside.CountElements(type, parentRef));
         }
 
@@ -467,21 +467,21 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
             let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
             checkThrow(chunk instanceof RequestedChunk, `9B|internal error, expected RuleHChunk to be a chunk`);
-            let ref:RequestedVelRef
+            let ref: RequestedVelRef;
             if (ctx.RuleObjectFld && ctx.RuleObjectFld[0]) {
                 ref = this.visit(ctx.RuleObjectFld[0]) as RequestedVelRef;
             } else if (ctx._me && ctx._me[0]) {
-                ref = new RequestedVelRef(VpcElType.Unknown)
-                ref.isReferenceToMe = true
+                ref = new RequestedVelRef(VpcElType.Unknown);
+                ref.isReferenceToMe = true;
             } else if (ctx._target && ctx._target[0]) {
-                ref = new RequestedVelRef(VpcElType.Unknown)
-                ref.isReferenceToTarget = true
+                ref = new RequestedVelRef(VpcElType.Unknown);
+                ref.isReferenceToTarget = true;
             } else {
-                checkThrowInternal(false, "no branch seen")
+                checkThrowInternal(false, 'no branch seen');
             }
 
             checkThrow(ref instanceof RequestedVelRef, `9A|internal error, expected RuleObjectFld to be a RequestedElRef`);
-            return [ref, chunk]
+            return [ref, chunk];
         }
 
         RuleHUnaryPropertyGet(ctx: VisitingContext): VpcVal {
@@ -497,7 +497,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
                 /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
                 /* see "Pseudo-functions that refer to objects" in internaldocs.md */
-                let [ref, chunk] = this.helper$fieldChunkProp(ctx)
+                let [ref, chunk] = this.helper$fieldChunkProp(ctx);
                 return this.outside.GetProp(ref, propName, adjective, chunk);
             } else {
                 /* put the locktext of cd fld "myFld" into x */

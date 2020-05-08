@@ -19,8 +19,13 @@
  * create or delete a vel
  */
 export abstract class UndoableActionCreateOrDelVel {
-    constructor(public velId: string, public parentId: string, public type: VpcElType, public isBg:boolean, public insertIndex: number,
-        ) {}
+    constructor(
+        public velId: string,
+        public parentId: string,
+        public type: VpcElType,
+        public isBg: boolean,
+        public insertIndex: number
+    ) {}
 
     /**
      * from VpcElType to class object
@@ -92,12 +97,12 @@ export abstract class UndoableActionCreateOrDelVel {
 
         ar.splice(this.insertIndex, 0, vel);
         //~ if (isBg) {
-            //~ /* create the linked ones */
-            //~ let userFacingId = this.vcstate.model.stack.getNextId(this.vcstate.model)
+        //~ /* create the linked ones */
+        //~ let userFacingId = this.vcstate.model.stack.getNextId(this.vcstate.model)
         //~ }
 
         if (vel.getType() === VpcElType.Card) {
-            vci.getModel().copyBgVelsOnNewCard(vel)
+            vci.getModel().copyBgVelsOnNewCard(vel);
 
             let order = vci.getModel().stack.getCardOrder();
             let found = order.findIndex(s => s === vci.getCurrentCardId());
@@ -133,7 +138,7 @@ export abstract class UndoableActionCreateOrDelVel {
                 model.productOpts = vci.rawCreate(
                     VpcElStack.initProductOptsId,
                     '(VpcElProductOpts has no parent)',
-                    VpcElProductOpts,
+                    VpcElProductOpts
                 );
             });
         }
@@ -142,7 +147,7 @@ export abstract class UndoableActionCreateOrDelVel {
             vci.doWithoutAbilityToUndo(() => {
                 /* create a new stack */
                 model.stack = vci.rawCreate(VpcElStack.initStackId, model.productOpts.idInternal, VpcElStack);
-                model.stack.setOnVel('name', 'my stack', model)
+                model.stack.setOnVel('name', 'my stack', model);
                 if (createFirstCard) {
                     let firstBg = vci.createVel(model.stack.idInternal, VpcElType.Bg, -1);
                     vci.createVel(firstBg.idInternal, VpcElType.Card, -1);

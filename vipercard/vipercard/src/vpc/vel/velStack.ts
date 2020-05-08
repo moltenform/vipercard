@@ -54,7 +54,7 @@ export class VpcElStack extends VpcElBase {
     getCardOrder() {
         return this._cardorder ? this._cardorder.split('|') : [];
     }
-    alterCardOrder(fn: (a: string[]) => string[], h:VpcHandleLinkedVels) {
+    alterCardOrder(fn: (a: string[]) => string[], h: VpcHandleLinkedVels) {
         let got = fn(this.getCardOrder());
         assertTrue(got.length, '');
         this.setOnVel('cardorder', got.join('|'), h);
@@ -63,7 +63,7 @@ export class VpcElStack extends VpcElBase {
     /**
      * get next id for created element
      */
-    getNextId(h:VpcHandleLinkedVels) {
+    getNextId(h: VpcHandleLinkedVels) {
         let ret = this.getN('increasingnumberforid');
         this.setOnVel('increasingnumberforid', ret + 1, h);
         return ret.toString();
@@ -72,7 +72,7 @@ export class VpcElStack extends VpcElBase {
     /**
      * get next number, when you create a button in the ui and it's called "my button 3"
      */
-    getNextNumberForElemName(h:VpcHandleLinkedVels) {
+    getNextNumberForElemName(h: VpcHandleLinkedVels) {
         let ret = this.getN('increasingnumberforelemname');
         this.setOnVel('increasingnumberforelemname', ret + 1, h);
         return ret.toString();
@@ -110,7 +110,7 @@ export class VpcElStack extends VpcElBase {
     /**
      * set latest stack info (server id, username)
      */
-    appendToStackLineage(entryIn: VpcElStackLineageEntry, h:VpcHandleLinkedVels) {
+    appendToStackLineage(entryIn: VpcElStackLineageEntry, h: VpcHandleLinkedVels) {
         /* round-trip to validate it */
         let entry = VpcElStackLineageEntry.fromSerialized(entryIn.serialize());
         let lin = this.getS('stacklineage');

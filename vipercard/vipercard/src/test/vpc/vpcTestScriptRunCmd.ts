@@ -303,14 +303,8 @@ confirmed in emulator  */
     b.t('go card 1\ngo to card "b"\\the short id of this cd', `${h.ids.cdBB}`);
     b.t('go card 1\ngo to card "c"\\the short id of this cd', `${h.ids.cdBC}`);
     b.t('go card 1\ngo to card "d"\\the short id of this cd', `${h.ids.cdBD}`);
-    b.t(
-        'go card 1\ngo to card "d" of bg 2\\the short id of this cd',
-        `${h.ids.cdBD}`
-    );
-    b.t(
-        'go card 1\ngo to card "d" of bg 3\\the short id of this cd',
-        `${h.ids.cdCD}`
-    );
+    b.t('go card 1\ngo to card "d" of bg 2\\the short id of this cd', `${h.ids.cdBD}`);
+    b.t('go card 1\ngo to card "d" of bg 3\\the short id of this cd', `${h.ids.cdCD}`);
 
     /* confirmed in emulator: if there are ambiguous card names,
 use whichever comes first in the stack, regardless of current bg */
@@ -353,14 +347,8 @@ do not change the current card */
     b.t('go to card 4 of this stack\\the short id of this cd', `${h.ids.cdBD}`);
     b.t('go to card 1 of bg 2\\the short id of this cd', `${h.ids.cdBB}`);
     b.t('go to card 1 of bg 3\\the short id of this cd', `${h.ids.cdCD}`);
-    b.t(
-        'go to card 1 of bg 2 of this stack\\the short id of this cd',
-        `${h.ids.cdBB}`
-    );
-    b.t(
-        'go to card 1 of bg 3 of this stack\\the short id of this cd',
-        `${h.ids.cdCD}`
-    );
+    b.t('go to card 1 of bg 2 of this stack\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go to card 1 of bg 3 of this stack\\the short id of this cd', `${h.ids.cdCD}`);
 
     /* go by variable lookup - correct, confirmed in emulator */
     b.t(
@@ -595,7 +583,10 @@ t.test('execCommands put', () => {
     b.t('put "abc" into line 1 to before of cd fld "p1"\\0', 'PREPARSEERR:only see one');
     b.t('put "abc" into line 1 to after of cd fld "p1"\\0', 'PREPARSEERR:only see one');
     b.t('put "abc" before line 1 to into of cd fld "p1"\\0', 'PREPARSEERR:only see one');
-    b.t('put "abc" before line 1 to before of cd fld "p1"\\0', 'PREPARSEERR:only see one');
+    b.t(
+        'put "abc" before line 1 to before of cd fld "p1"\\0',
+        'PREPARSEERR:only see one'
+    );
     b.t('put "abc" before line 1 to after of cd fld "p1"\\0', 'PREPARSEERR:only see one');
     b.t('put "abc" after line 1 to into of cd fld "p1"\\0', 'PREPARSEERR:only see one');
     b.t('put "abc" after line 1 to before of cd fld "p1"\\0', 'PREPARSEERR:only see one');
@@ -1109,7 +1100,8 @@ send code to this stack\\g`,
             `
 on myCompute a, b
 return a * a + b
-end myCompute`, h.vcstate.model
+end myCompute`,
+            h.vcstate.model
         )
     );
 
@@ -1133,7 +1125,8 @@ end myCompute`, h.vcstate.model
             `
 function myCompute a, b
 return a * a + b
-end myCompute`, h.vcstate.model
+end myCompute`,
+            h.vcstate.model
         )
     );
 
@@ -1161,7 +1154,8 @@ end myDouble
 
 function myCompute a, b
 return myDouble(a) + myDouble(b)
-end myCompute`, h.vcstate.model
+end myCompute`,
+            h.vcstate.model
         )
     );
 
@@ -1224,7 +1218,8 @@ on doTest
     send "myCompute 3, 4" to cd btn id ${h.ids.go}
     return the result
 end doTest
-`, h.vcstate.model
+`,
+            h.vcstate.model
         )
     );
     got = h.testOneEvaluate('', 'doTest()');
@@ -1245,7 +1240,8 @@ end myCompute`;
             `
 function myCompute a, b
     return 1
-end myCompute`, h.vcstate.model
+end myCompute`,
+            h.vcstate.model
         )
     );
     got = h.testOneEvaluate('', 'doTest()');

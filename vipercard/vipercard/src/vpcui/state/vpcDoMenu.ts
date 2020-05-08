@@ -1,7 +1,6 @@
 
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -42,10 +41,6 @@ and the set font doesn't need to go through this
 */
 
 export class DoMenuImpl {
-    model:VpcModelTop
-    goBring_Closer() {
-
-    }
-
-
+    model: VpcModelTop;
+    goBring_Closer() {}
 }

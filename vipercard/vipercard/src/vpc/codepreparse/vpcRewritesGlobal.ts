@@ -37,7 +37,11 @@ export const VpcRewritesGlobal = /* static class */ {
                 if (mapped) {
                     line[i] = rw.tokenFromEnglishTerm(mapped, line[i]);
                 }
-            } else if (line[i + 1].tokenType === tks.tkIdentifier && line[i + 1].image === 'date' && line[i].image === 'english') {
+            } else if (
+                line[i + 1].tokenType === tks.tkIdentifier &&
+                line[i + 1].image === 'date' &&
+                line[i].image === 'english'
+            ) {
                 line[i] = rw.tokenFromEnglishTerm('long', line[i]);
             }
         }
@@ -57,27 +61,31 @@ export const VpcRewritesGlobal = /* static class */ {
         for (let i = 0; i < line.length - 1; i++) {
             /* omit "the" if it is in "hilite of the target" */
             /* see "Pseudo-functions that refer to objects" in internaldocs.md */
-            if (!(i >= 2 && (line[i-2].tokenType === tks.tkAllUnaryPropertiesIfNotAlready || 
-                line[i-2].tokenType === tks.tkUnaryVipercardProperties ||
-                line[i-2].tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready) &&
-                line[i-1].tokenType === tks.tkOfOnly &&
-                line[i].tokenType === tks._the &&
-                line[i+1].tokenType === tks._target
-                )) {
-                    ret.push(line[i])
-                }
+            if (
+                !(
+                    i >= 2 &&
+                    (line[i - 2].tokenType === tks.tkAllUnaryPropertiesIfNotAlready ||
+                        line[i - 2].tokenType === tks.tkUnaryVipercardProperties ||
+                        line[i - 2].tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready) &&
+                    line[i - 1].tokenType === tks.tkOfOnly &&
+                    line[i].tokenType === tks._the &&
+                    line[i + 1].tokenType === tks._target
+                )
+            ) {
+                ret.push(line[i]);
+            }
 
-                if (line[i+1].tokenType === tks.tkBtn || line[i+1].tokenType === tks.tkFld) {
-                    if (line[i].tokenType !== tks.tkCard && line[i].tokenType !== tks.tkBg) {
-                        /* insert a missing 'bg' or 'cd' */
-                        let s = line[i+1].tokenType === tks.tkFld ? 'bg' : 'cd';
-                        let newTk = rw.tokenFromEnglishTerm(s, line[i])
-                        ret.push(newTk)
-                    }
+            if (line[i + 1].tokenType === tks.tkBtn || line[i + 1].tokenType === tks.tkFld) {
+                if (line[i].tokenType !== tks.tkCard && line[i].tokenType !== tks.tkBg) {
+                    /* insert a missing 'bg' or 'cd' */
+                    let s = line[i + 1].tokenType === tks.tkFld ? 'bg' : 'cd';
+                    let newTk = rw.tokenFromEnglishTerm(s, line[i]);
+                    ret.push(newTk);
                 }
+            }
         }
 
-        ret.push(line[line.length - 1])
+        ret.push(line[line.length - 1]);
         return ret;
     }
 };

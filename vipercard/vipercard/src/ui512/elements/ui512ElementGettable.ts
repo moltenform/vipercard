@@ -41,9 +41,9 @@ export abstract class UI512Gettable {
         return v;
     }
 
-    ui512GettableHas(s:string): boolean {
+    ui512GettableHas(s: string): boolean {
         let v = (this as any)['_' + s]; /* gettable */
-        return v !== null && v !== undefined
+        return v !== null && v !== undefined;
     }
 }
 
@@ -124,7 +124,6 @@ export abstract class UI512Settable extends UI512Gettable {
     }
 }
 
-
 /**
  * not only settable, but lets anyone set things
  */
@@ -135,9 +134,9 @@ export abstract class UI512PublicSettable extends UI512Settable {
         defaultVal: O<ElementObserverVal>,
         context: ChangeContext
     ) {
-        this.setImplInternal(makeAccessDifficult, s, newVal, defaultVal, context)
+        this.setImplInternal(makeAccessDifficult, s, newVal, defaultVal, context);
     }
-    
+
     set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
         this.setImplInternal(makeAccessDifficult, s, newVal, undefined, context);
     }
@@ -150,9 +149,8 @@ export abstract class UI512PublicSettable extends UI512Settable {
 /**
  * don't want people outside this file calling this
  */
-class MakeAccessDifficult {
-}
-const makeAccessDifficult = new MakeAccessDifficult()
+class MakeAccessDifficult {}
+const makeAccessDifficult = new MakeAccessDifficult();
 
 /**
  * relay an Observer event to two classes.

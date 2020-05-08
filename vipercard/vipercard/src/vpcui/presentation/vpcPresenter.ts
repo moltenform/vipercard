@@ -19,7 +19,7 @@
 /* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, callDebuggerIfNotInProduction, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512 } from './../../ui512/utils/util512';
+/* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
@@ -127,10 +127,10 @@ export class VpcPresenter extends VpcPresenterInit {
      * including sending closecard + opencard events
      */
     beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>) {
-        checkThrow(false, "nyi")
+        checkThrow(false, 'nyi');
         //~ this.vci
-            //~ .getCodeExec()
-            //~ .runMsgBoxCodeOrThrow(`go to card id ${targetCardId}`, tostring(this.getCurrentCardNum()), false);
+        //~ .getCodeExec()
+        //~ .runMsgBoxCodeOrThrow(`go to card id ${targetCardId}`, tostring(this.getCurrentCardNum()), false);
     }
 
     /**
@@ -235,7 +235,8 @@ export class VpcPresenter extends VpcPresenterInit {
                     this.vci.setCurCardNoOpenCardEvt(vel.idInternal);
                 } else if (vel instanceof VpcElBg) {
                     if (
-                        this.vci.getModel().getByIdUntyped(this.vci.getModel().getCurrentCard().idInternal).parentIdInternal !== vel.idInternal &&
+                        this.vci.getModel().getByIdUntyped(this.vci.getModel().getCurrentCard().idInternal).parentIdInternal !==
+                            vel.idInternal &&
                         vel.cards.length
                     ) {
                         this.vci.setCurCardNoOpenCardEvt(vel.cards[0].idInternal);
@@ -523,7 +524,12 @@ export class VpcPresenter extends VpcPresenterInit {
         let newX = this.userBounds[0] + Util512Higher.getRandIntInclusiveWeak(20, 200);
         let newY = this.userBounds[1] + Util512Higher.getRandIntInclusiveWeak(20, 200);
         let vel = this.vci.getOutside().CreatePart(type, newX, newY, w, h);
-        vel.setOnVel('name', `my ${vpcElTypeShowInUI(vel.getType())} ${this.vci.getModel().stack.getNextNumberForElemName(this.vci.getModel())}`, this.vci.getModel());
+        vel.setOnVel(
+            'name',
+             longstr(`my ${vpcElTypeShowInUI(vel.getType())} 
+             ${this.vci.getModel().stack.getNextNumberForElemName(this.vci.getModel())}`),
+            this.vci.getModel()
+        );
 
         if (type === VpcElType.Btn) {
             /* give it a style and initial script */
@@ -630,7 +636,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 let currentCard = this.vci.getModel().findById(VpcElCard, currentCardId);
                 if (!currentCard) {
                     assertWarn(false, 'U6|card has been deleted, going to card 1 instead.');
-                    let card = this.vci.getModel().stack.bgs[0].cards[0].idInternal
+                    let card = this.vci.getModel().stack.bgs[0].cards[0].idInternal;
                     this.vci.setCurCardNoOpenCardEvt(card);
                 }
 

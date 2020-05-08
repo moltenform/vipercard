@@ -13,8 +13,8 @@
  * a vipercard "button"
  */
 export class VpcElButton extends VpcElSizable {
-    protected _is_bg_velement_id = ''
-    
+    protected _is_bg_velement_id = '';
+
     protected _autohilite = true;
     protected _enabled = true;
     protected _hilite = false;
@@ -34,7 +34,7 @@ export class VpcElButton extends VpcElSizable {
     protected _name = '';
 
     protected _sharedhilite = true;
-    
+
     constructor(id: string, parentId: string) {
         super(id, parentId);
     }
@@ -78,16 +78,16 @@ export class VpcElButton extends VpcElSizable {
         getters['hilite'] = [
             PrpTyp.Bool,
             (me: VpcElButton) => {
-                let p = me.getB('sharedhilite') ?'hilite':'hilite_uniquetocard'
-                return  me.getB(p)
+                let p = me.getB('sharedhilite') ? 'hilite' : 'hilite_uniquetocard';
+                return me.getB(p);
             }
         ];
 
         getters['checkmark'] = [
             PrpTyp.Bool,
             (me: VpcElButton) => {
-                let p = me.getB('sharedhilite') ?'checkmark':'checkmark_uniquetocard'
-                return  me.getB(p)
+                let p = me.getB('sharedhilite') ? 'checkmark' : 'checkmark_uniquetocard';
+                return me.getB(p);
             }
         ];
     }
@@ -99,7 +99,7 @@ export class VpcElButton extends VpcElSizable {
         setters['name'] = [PrpTyp.Str, 'name'];
         setters['textstyle'] = [
             PrpTyp.Str,
-            (me: VpcElButton, s: string, h:VpcHandleLinkedVels) => {
+            (me: VpcElButton, s: string, h: VpcHandleLinkedVels) => {
                 let list = s.split(',').map(item => item.trim());
                 me.setOnVel('textstyle', SubstringStyleComplex.vpcStyleToInt(list), h);
             }
@@ -107,7 +107,7 @@ export class VpcElButton extends VpcElSizable {
 
         setters['style'] = [
             PrpTyp.Str,
-            (me: VpcElButton, s: string, h:VpcHandleLinkedVels) => {
+            (me: VpcElButton, s: string, h: VpcHandleLinkedVels) => {
                 let styl = getStrToEnum<VpcBtnStyle>(VpcBtnStyle, 'Button style', s);
                 checkThrow((styl as any) !== VpcBtnStyle.Osboxmodal, '7D|this style is only supported internally');
                 me.setOnVel('style', styl, h);
@@ -116,7 +116,7 @@ export class VpcElButton extends VpcElSizable {
 
         setters['textalign'] = [
             PrpTyp.Str,
-            (me: VpcElButton, s: string, h:VpcHandleLinkedVels) => {
+            (me: VpcElButton, s: string, h: VpcHandleLinkedVels) => {
                 s = s.toLowerCase().trim();
                 if (s === 'left') {
                     me.setOnVel('textalign', 'left', h);
@@ -130,17 +130,17 @@ export class VpcElButton extends VpcElSizable {
 
         setters['hilite'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, v: boolean, h:VpcHandleLinkedVels) => {
-                let p = me.getB('sharedhilite') ?'hilite':'hilite_uniquetocard'
-                me.setOnVel(p, v, h)
+            (me: VpcElButton, v: boolean, h: VpcHandleLinkedVels) => {
+                let p = me.getB('sharedhilite') ? 'hilite' : 'hilite_uniquetocard';
+                me.setOnVel(p, v, h);
             }
         ];
 
         setters['checkmark'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, v: boolean, h:VpcHandleLinkedVels) => {
-                let p = me.getB('sharedhilite') ?'checkmark':'checkmark_uniquetocard'
-                me.setOnVel(p, v, h)
+            (me: VpcElButton, v: boolean, h: VpcHandleLinkedVels) => {
+                let p = me.getB('sharedhilite') ? 'checkmark' : 'checkmark_uniquetocard';
+                me.setOnVel(p, v, h);
             }
         ];
     }

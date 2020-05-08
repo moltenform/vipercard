@@ -84,7 +84,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('false _or_ false', 'false');
 
     b.batchEvaluate(h, BatchType.testBatchEvalCommutative);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* Lvl1Expression greater less, strings */
     b.t('"abc" _>=_ "abc"', 'true');
@@ -116,7 +116,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('"abc" _is_ "abc "', 'false');
 
     b.batchEvaluate(h, BatchType.testBatchEvalInvertAndCommute);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* Lvl1Expression string/number differences */
     b.t('"z11" _>_ "z2"', 'false');
@@ -199,7 +199,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('123 _is_ 0', 'false');
 
     b.batchEvaluate(h, BatchType.testBatchEvalInvertAndCommute);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* test chaining or any other that can't easily be unverted */
     b.t('true and true and true', 'true');
@@ -386,7 +386,7 @@ t.test('evalRuleLvl2', () => {
     b.t('" 12,13,14,15 , " _is_ a rect', 'false');
 
     b.batchEvaluate(h, BatchType.testBatchEvalInvert);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* Lvl2Expression, is within */
     b.t('"" _is_ in "abc"', 'true');
@@ -465,7 +465,7 @@ t.test('evalArithmetic', () => {
     b.t('123 _*_ -0', '0');
 
     b.batchEvaluate(h, BatchType.testBatchEvalCommutative);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* the communitative ones, floating point */
     b.t('12 _+_ 34.1', '46.1');
@@ -485,7 +485,7 @@ t.test('evalArithmetic', () => {
     b.t('123.9 _*_ 0', '0');
     b.t('123.9 _*_ -0', '0');
     b.batchEvaluate(h, BatchType.floatingPointCommutative);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* the non-commutive ones integer */
     b.t('12 - 34', '-22');
@@ -534,7 +534,7 @@ t.test('evalArithmetic', () => {
     b.t('-34 mod -5', '-4');
 
     b.batchEvaluate(h);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* the non-commutive ones floating point */
     b.t('12.1 - 3.4', '8.7');
@@ -573,7 +573,7 @@ t.test('evalArithmetic', () => {
     b.t('12 mod 2.3', '0.5');
 
     b.batchEvaluate(h, BatchType.floatingPoint);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* old-style functions should not eat too much.
     confirmed these in the emulator */
@@ -597,7 +597,7 @@ t.test('evalArithmetic', () => {
     b.t('12 * 34 * 56', '22848');
     b.t('12 * 34 / 56 * 78', '568.285714285714285');
     b.t('12 / 34 / 56 / 78', '0.00008080155');
-    
+
     b.batchEvaluate(h, BatchType.floatingPoint);
     b = new ScriptTestBatch();
 
@@ -885,7 +885,7 @@ t.test('vpcvalnumbers', () => {
     b.t('(2^80 - 5^35)/(2e22)', 'ERR:> 1e18');
 
     b.batchEvaluate(h, BatchType.floatingPoint);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* scientific notation not applied for strings */
     b.t('"12.e0"', '12.e0');
@@ -1004,18 +1004,14 @@ t.test('vpcvalnumbers', () => {
 });
 t.test('ModelGetById.should throw if not found', () => {
     assertEq(undefined, h.vcstate.model.findByIdUntyped('111'), 'HM|');
+    assertEq(h.ids.cdA, h.vcstate.model.findByIdUntyped(h.ids.cdA)?.idInternal, 'HL|');
     assertEq(
-        h.ids.cdA,
-        h.vcstate.model.findByIdUntyped(h.ids.cdA)?.idInternal,
-        'HL|'
+        h.ids.stack,
+        h.vcstate.model.findByIdUntyped(h.ids.stack)?.idInternal,
+        'HK|'
     );
-    assertEq(h.ids.stack, h.vcstate.model.findByIdUntyped(h.ids.stack)?.idInternal, 'HK|');
     assertThrows('L=|', 'not found', () => h.vcstate.model.getByIdUntyped('111'));
-    assertEq(
-        h.ids.cdA,
-        h.vcstate.model.getByIdUntyped(h.ids.cdA).idInternal,
-        'HJ|'
-    );
+    assertEq(h.ids.cdA, h.vcstate.model.getByIdUntyped(h.ids.cdA).idInternal, 'HJ|');
     assertEq(h.ids.stack, h.vcstate.model.getByIdUntyped(h.ids.stack).idInternal, 'HI|');
 });
 t.test('ModelFindById.when exists and given correct type', () => {
@@ -1039,11 +1035,7 @@ t.test('ModelFindById.when exists and given correct type', () => {
         h.vcstate.model.getById(VpcElStack, h.ids.stack).getType(),
         'HE|'
     );
-    assertEq(
-        VpcElType.Card,
-        h.vcstate.model.getCardById(h.ids.cdA).getType(),
-        'HD|'
-    );
+    assertEq(VpcElType.Card, h.vcstate.model.getCardById(h.ids.cdA).getType(), 'HD|');
     assertEq(
         VpcElType.Btn,
         h.vcstate.model.getById(VpcElButton, h.ids.bBC1).getType(),
@@ -1060,9 +1052,7 @@ t.test('ModelFindById.when exists and given incorrect type', () => {
     assertThrows('L:|', 'cast exception', () =>
         h.vcstate.model.findById(VpcElStack, h.ids.bBC1)
     );
-    assertThrows('L/|', 'cast exception', () =>
-        h.vcstate.model.getCardById(h.ids.stack)
-    );
+    assertThrows('L/|', 'cast exception', () => h.vcstate.model.getCardById(h.ids.stack));
     assertThrows('L.|', 'cast exception', () =>
         h.vcstate.model.getById(VpcElButton, h.ids.cdA)
     );
@@ -1163,9 +1153,7 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
 
         /* we'll be setting sharedtext and sharedhilite a few times, so for convenience
         allow setting data throughout */
-        newState.undoManager.doWithoutAbilityToUndo(() => {
-            
-        });
+        newState.undoManager.doWithoutAbilityToUndo(() => {});
     }
 
     /**
@@ -1177,7 +1165,7 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
         h.vcstate.model.productOpts.setProductOpt('optUseHostClipboard', false);
         h.vcstate.model.productOpts.setProductOpt('name', `productname`);
         h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
-        let higher = h.vcstate.model
+        let higher = h.vcstate.model;
 
         /* modify stack */
         h.vcstate.model.stack.setOnVel('script', `on t1\nend t1`, higher);
@@ -1195,24 +1183,24 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
 
         /* modify button */
         let btn = h.vcstate.model.getById(VpcElButton, h.ids.bBC1);
-        btn.setOnVel('checkmark', true,  higher);
-        btn.setOnVel('enabled', false,  higher);
-        btn.setOnVel('icon', 123,  higher);
-        btn.setOnVel('textfont', 'symbol',  higher);
-        btn.setOnVel('script', 'on t4\nend t4',  higher);
+        btn.setOnVel('checkmark', true, higher);
+        btn.setOnVel('enabled', false, higher);
+        btn.setOnVel('icon', 123, higher);
+        btn.setOnVel('textfont', 'symbol', higher);
+        btn.setOnVel('script', 'on t4\nend t4', higher);
 
         /* modify field */
         let fld = h.vcstate.model.getById(VpcElField, h.ids.fBD1);
-        fld.setOnVel('dontwrap', true,  higher);
-        fld.setOnVel('enabled', false,  higher);
-        fld.setOnVel('scroll', 123,  higher);
-        fld.setOnVel('textalign', 'center',  higher);
-        fld.setOnVel('script', 'on t5\nend t5',  higher);
+        fld.setOnVel('dontwrap', true, higher);
+        fld.setOnVel('enabled', false, higher);
+        fld.setOnVel('scroll', 123, higher);
+        fld.setOnVel('textalign', 'center', higher);
+        fld.setOnVel('script', 'on t5\nend t5', higher);
 
         /* set a nontrivial FormattedText */
         let c = specialCharFontChange;
         let txt = FormattedText.newFromSerialized(`${c}f1${c}abc\n${c}f2${c}de`);
-        fld.setCardFmTxt(txt, higher );
+        fld.setCardFmTxt(txt, higher);
 
         //~ /* modify bg field - for card bb */
         //~ let bgfld = h.vcstate.model.getById(VpcElField, h.ids.bgfB1);
@@ -1227,8 +1215,8 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
         //~ /* modify bg field - shared contents */
         //~ bgfld.set('sharedtext', true);
         //~ bgfld.setCardFmTxt(
-            //~ h.ids.cdBC,
-            //~ FormattedText.newFromSerialized(`forshared`)
+        //~ h.ids.cdBC,
+        //~ FormattedText.newFromSerialized(`forshared`)
         //~ );
         //~ bgfld.setProp('scroll', VpcValN(789), h.ids.cdBC);
         //~ bgfld.set('sharedtext', false);
@@ -1279,11 +1267,7 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
         cdParents = bgB.cards.map(cd => cd.parentIdInternal).join(',');
         assertEq(`${h.ids.bgB},${h.ids.bgB},${h.ids.bgB}`, cdParents, 'G$|');
         cdIds = bgB.cards.map(cd => cd.idInternal).join(',');
-        assertEq(
-            `${h.ids.cdBB},${h.ids.cdBC},${h.ids.cdBD}`,
-            cdIds,
-            'G#|'
-        );
+        assertEq(`${h.ids.cdBB},${h.ids.cdBC},${h.ids.cdBD}`, cdIds, 'G#|');
         cdNames = bgB.cards.map(cd => cd.getS('name')).join(',');
         assertEq(`b,c,d`, cdNames, 'G!|');
 
@@ -1337,17 +1321,9 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
 
         let cd_b_d = newState.model.getCardById(h.ids.cdBD);
         ptParents = cd_b_d.parts.map(pt => pt.parentIdInternal).join(',');
-        assertEq(
-            `${h.ids.cdBD},${h.ids.cdBD},${h.ids.cdBD}`,
-            ptParents,
-            'Go|'
-        );
+        assertEq(`${h.ids.cdBD},${h.ids.cdBD},${h.ids.cdBD}`, ptParents, 'Go|');
         ptIds = cd_b_d.parts.map(pt => pt.idInternal).join(',');
-        assertEq(
-            `${h.ids.fBD1},${h.ids.fBD2},${h.ids.bBD1}`,
-            ptIds,
-            'Gn|'
-        );
+        assertEq(`${h.ids.fBD1},${h.ids.fBD2},${h.ids.bBD1}`, ptIds, 'Gn|');
         ptNames = cd_b_d.parts.map(pt => pt.getS('name')).join(',');
         assertEq(`p1,p2,p1`, ptNames, 'Gm|');
 

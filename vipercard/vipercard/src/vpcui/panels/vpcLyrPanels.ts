@@ -126,7 +126,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
     showOrHideCheckboxItems(sel: VpcElBase, panel: VpcEditPanels) {
         let isBgPart = false;
         if (sel.getType() === VpcElType.Btn || sel.getType() === VpcElType.Fld) {
-            isBgPart = sel.getS('is_bg_velement_id').length > 0
+            isBgPart = sel.getS('is_bg_velement_id').length > 0;
         }
 
         panel.showOrHideBgSpecific(this.vci.UI512App(), isBgPart);

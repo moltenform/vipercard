@@ -195,7 +195,7 @@ export class VpcSave implements VpcSaveInterface {
                 return true;
             } catch (e) {
                 /* something went wrong - revert the changes! */
-                this.pr.vci.getModel().stack.setOnVel('stacklineage', lineageBeforeChanges,this.pr.vci.getModel());
+                this.pr.vci.getModel().stack.setOnVel('stacklineage', lineageBeforeChanges, this.pr.vci.getModel());
                 throw e;
             }
         }

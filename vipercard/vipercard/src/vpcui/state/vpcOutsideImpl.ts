@@ -88,7 +88,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let cardHistory = this.vci.getCodeExec().cardHistory;
 
         let resolver = new VelResolveReference(this.vci.getModel());
-        let ret: O<VpcElBase>
+        let ret: O<VpcElBase>;
         try {
             /* for convenience, let's throw exceptions when
             the vel can't be found. means we get less specific messages, though */
@@ -96,16 +96,13 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         } catch (e) {
             let as = e?.typeName?.includes('Vpc') && e?.message?.includes('break, not found');
             if (as) {
-                ret = undefined
+                ret = undefined;
             } else {
                 throw e;
             }
         }
 
-        checkThrow(
-            !ret || !ret.getS('name').includes('$$'),
-            `Kt|names with $$ are reserved for internal ViperCard objects.`
-        );
+        checkThrow(!ret || !ret.getS('name').includes('$$'), `Kt|names with $$ are reserved for internal ViperCard objects.`);
 
         return ret;
     }
@@ -127,7 +124,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * count the number of elements of a certain type
      */
     CountElements(type: VpcElType, parentRef: RequestedVelRef): number {
-        return new VelResolveReference(this.vci.getModel()).countElements(type, parentRef, this.vci.getCodeExec().cardHistory)
+        return new VelResolveReference(this.vci.getModel()).countElements(type, parentRef, this.vci.getCodeExec().cardHistory);
     }
 
     /**
@@ -302,11 +299,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (selFld) {
             let ret = new RequestedContainerRef();
             ret.vel = new RequestedVelRef(VpcElType.Fld);
-            let generic = new VpcTextFieldAsGeneric(
-                undefined as unknown as UI512ElTextField,
-                selFld,
-                this.Model()
-            );
+            let generic = new VpcTextFieldAsGeneric((undefined as unknown) as UI512ElTextField, selFld, this.Model());
 
             let bounds = TextSelModify.getSelectedTextBounds(generic);
             if (bounds) {
@@ -317,9 +310,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
                 ret.chunk.last555 = bounds[1];
             }
 
-            return ret
+            return ret;
         } else {
-            return undefined
+            return undefined;
         }
     }
 
@@ -594,11 +587,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             checkThrow(false, 'UD|Cannot get owner of this type of object.');
         }
 
-        let owner:VpcElBase
+        let owner: VpcElBase;
         if (vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length) {
             /* it's a bg object, so return the bg */
             let card = this.vci.getModel().getCardById(vel.parentIdInternal);
-            owner = this.vci.getModel().getById(VpcElBg, card.parentIdInternal)
+            owner = this.vci.getModel().getById(VpcElBg, card.parentIdInternal);
         } else {
             owner = this.vci.getModel().getByIdUntyped(vel.parentIdInternal);
         }

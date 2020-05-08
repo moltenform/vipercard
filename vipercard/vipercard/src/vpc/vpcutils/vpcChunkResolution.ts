@@ -173,9 +173,9 @@ const ChunkResolution = /* static class */ {
             let count = ChunkResolutionApplication.applyCount(s, itemDel, ch.type555, false);
             let maybeFirst = findPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, count);
             if (maybeFirst === undefined) {
-                return undefined
+                return undefined;
             } else {
-                first = maybeFirst
+                first = maybeFirst;
             }
 
             last = first;
@@ -226,7 +226,7 @@ const ChunkResolution = /* static class */ {
         let last = ch.last555;
         if (ch.ordinal555 !== undefined) {
             let count = ChunkResolutionApplication.applyCount(sInput, itemDel, ch.type555, false);
-            first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, largeArea), "too big an index")
+            first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, largeArea), 'too big an index');
             last = first;
         }
 
@@ -315,19 +315,25 @@ const ChunkResolution = /* static class */ {
     only char or word after word seen.
     original product had weird behavior we don't want to replicate.*/
 class DecreasingScopeChecker {
-    seenWord = false
-    seenChar = false
-    onSeeScope(g:VpcGranularity) {
-        if (g === VpcGranularity.Chars) { 
-            this.seenChar = true
-        } else if (g === VpcGranularity.Words)  {
-            checkThrow(!this.seenChar, "we don't yet support a word being the " +
-            "child of a char, please use an intermediate variable.")
-            this.seenWord = true
+    seenWord = false;
+    seenChar = false;
+    onSeeScope(g: VpcGranularity) {
+        if (g === VpcGranularity.Chars) {
+            this.seenChar = true;
+        } else if (g === VpcGranularity.Words) {
+            checkThrow(
+                !this.seenChar,
+                longstr(`we don't yet support a word being the child
+                of a char, please use an intermediate variable.`)
+            );
+            this.seenWord = true;
         } else {
-            checkThrow(!this.seenChar && !this.seenWord, "we don't yet support " +
-            "a line or item being the child of a char or word." + 
-            "please use an intermediate variable.")
+            checkThrow(
+                !this.seenChar && !this.seenWord,
+                longstr(`we don't yet support 
+                    a line or item being the child of a char or word.
+                    please use an intermediate variable.`)
+            );
         }
     }
 }
@@ -358,9 +364,9 @@ export const ChunkResolutionApplication = /* static class */ {
         let resolved = new ResolvedChunk(cont, 0, cont.len());
         chunk.setCanModifyRecurse(true);
         let current: O<RequestedChunk> = chunk;
-        let checker = new DecreasingScopeChecker()
+        let checker = new DecreasingScopeChecker();
         while (current) {
-            checker.onSeeScope(current.type555)
+            checker.onSeeScope(current.type555);
             if (current.child) {
                 /* narrow it down, add extra commas but not the real text */
                 resolved = ensureDefined(
@@ -411,9 +417,9 @@ export const ChunkResolutionApplication = /* static class */ {
 
         chunk.setCanModifyRecurse(false);
         let current: O<RequestedChunk> = chunk;
-        let checker = new DecreasingScopeChecker()
+        let checker = new DecreasingScopeChecker();
         while (current && resolved) {
-            checker.onSeeScope(current.type555)
+            checker.onSeeScope(current.type555);
             resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into);
             current = current.child;
         }

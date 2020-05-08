@@ -592,7 +592,9 @@ export class EditTextBehaviorSendToVel extends UI512TextEvents {
             if (vel) {
                 let velFld = cast(VpcElField, vel);
                 let cardId = pr.vci.getOptionS('currentCardId');
-                return VpcModelRender.canFieldHaveFocus(velFld) ? new VpcTextFieldAsGeneric(el, velFld, pr.vci.getModel()) : undefined;
+                return VpcModelRender.canFieldHaveFocus(velFld)
+                    ? new VpcTextFieldAsGeneric(el, velFld, pr.vci.getModel())
+                    : undefined;
             } else {
                 return new UI512ElTextFieldAsGeneric(el);
             }

@@ -360,29 +360,29 @@ export class VpcExecTop {
 
         /* check that each bg element is correctly present on each card */
         for (let bg of stack.bgs) {
-            let template = bg.getTemplateCard()
-            let bgParts = template.parts.filter(vel=>vel.getS('is_bg_velement_id').length)
-            let bgIdsSeen = new OrderedHash<VpcElType>()
+            let template = bg.getTemplateCard();
+            let bgParts = template.parts.filter(vel => vel.getS('is_bg_velement_id').length);
+            let bgIdsSeen = new OrderedHash<VpcElType>();
             for (let pt of bgParts) {
-                assertWarn(!idsSeen.exists(pt.getS('is_bg_velement_id')), "bg id seen twice across bgs")
-                idsSeen.add(pt.getS('is_bg_velement_id'), true)
-                assertWarn(!bgIdsSeen.find(pt.getS('is_bg_velement_id')), "bg id seen twice")
-                bgIdsSeen.insertNew(pt.getS('is_bg_velement_id'), pt.getType())
+                assertWarn(!idsSeen.exists(pt.getS('is_bg_velement_id')), 'bg id seen twice across bgs');
+                idsSeen.add(pt.getS('is_bg_velement_id'), true);
+                assertWarn(!bgIdsSeen.find(pt.getS('is_bg_velement_id')), 'bg id seen twice');
+                bgIdsSeen.insertNew(pt.getS('is_bg_velement_id'), pt.getType());
             }
 
-            let expect = orderedHashSummary(bgIdsSeen)
+            let expect = orderedHashSummary(bgIdsSeen);
             for (let cd of bg.cards) {
                 if (cd.idInternal === template.idInternal) {
-                    continue
+                    continue;
                 }
 
-                let bgIdsSeenThisCd = new OrderedHash<VpcElType>()
+                let bgIdsSeenThisCd = new OrderedHash<VpcElType>();
                 for (let pt of bgParts) {
-                    assertWarn(!bgIdsSeenThisCd.find(pt.getS('is_bg_velement_id')), "bg id seen twice")
-                    bgIdsSeenThisCd.insertNew(pt.getS('is_bg_velement_id'), pt.getType())
+                    assertWarn(!bgIdsSeenThisCd.find(pt.getS('is_bg_velement_id')), 'bg id seen twice');
+                    bgIdsSeenThisCd.insertNew(pt.getS('is_bg_velement_id'), pt.getType());
                 }
 
-                assertWarn(expect, orderedHashSummary(bgIdsSeenThisCd), '')
+                assertWarn(expect, orderedHashSummary(bgIdsSeenThisCd), '');
             }
         }
     }

@@ -49,7 +49,7 @@ export const VpcGettableSerialization = /* static class */ {
     /**
      * deserialize a JS object to a Settable
      */
-    deserializeSettable(vel: VpcElBase, vals: AnyJson, h:VpcHandleLinkedVels) {
+    deserializeSettable(vel: VpcElBase, vals: AnyJson, h: VpcHandleLinkedVels) {
         let savedObserver = vel.observer;
         try {
             vel.observer = new ElementObserverNoOp();
@@ -66,11 +66,11 @@ export const VpcGettableSerialization = /* static class */ {
                         VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, vAsText, h);
                     } else {
                         assertTrue(v instanceof FormattedText, 'J`|not a string or FormattedText');
-                        VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, v,h);
+                        VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, v, h);
                     }
                 } else {
                     let decoded = VpcGettableSerialization.deserializePlain(v);
-                    VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, decoded,h);
+                    VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, decoded, h);
                 }
             }
 
@@ -102,7 +102,7 @@ export const VpcGettableSerialization = /* static class */ {
     /**
      * set a property, and set to 2 different values to ensure that the 'change' event is sent
      */
-    _setAnyAndSendChangeNotification(vel: VpcElBase, propName: string, v: ElementObserverVal, h:VpcHandleLinkedVels) {
+    _setAnyAndSendChangeNotification(vel: VpcElBase, propName: string, v: ElementObserverVal, h: VpcHandleLinkedVels) {
         if (typeof v === 'boolean') {
             (vel as any)['_' + propName] = false;
             vel.setOnVel(propName, !v, h);
@@ -128,7 +128,10 @@ export const VpcGettableSerialization = /* static class */ {
      * do we expect the type of this property to be a formattedtext
      */
     _propNameExpectFormattedText(propName: string) {
-        return bool(propName === UI512PublicSettable.fmtTxtVarName) || bool(propName.startsWith(UI512PublicSettable.fmtTxtVarName + '_'));
+        return (
+            bool(propName === UI512PublicSettable.fmtTxtVarName) ||
+            bool(propName.startsWith(UI512PublicSettable.fmtTxtVarName + '_'))
+        );
     },
 
     /**

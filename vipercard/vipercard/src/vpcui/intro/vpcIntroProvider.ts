@@ -243,7 +243,7 @@ export class VpcIntroProvider {
     protected patchUpFromPrevVersions(model: VpcModelTop) {
         for (let bg of model.stack.bgs) {
             if (bg['parts']) {
-                delete bg['parts']
+                delete bg['parts'];
             }
         }
 

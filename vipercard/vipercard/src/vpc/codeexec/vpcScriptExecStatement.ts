@@ -365,25 +365,25 @@ export class ExecuteStatement {
         let combined = VpcValS(strings.join(','));
         if (velRefChunk) {
             /* see "Pseudo-functions that refer to objects" in internaldocs.md */
-            let ref:RequestedVelRef
+            let ref: RequestedVelRef;
             if (vals.vals[tkstr.RuleObjectFld]) {
                 ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObjectFld), '');
             } else if (vals.vals[tkstr._target]) {
-                ref = new RequestedVelRef(VpcElType.Unknown)
-                ref.isReferenceToTarget = true
+                ref = new RequestedVelRef(VpcElType.Unknown);
+                ref.isReferenceToTarget = true;
             } else if (vals.vals[tkstr._me]) {
-                ref = new RequestedVelRef(VpcElType.Unknown)
-                ref.isReferenceToMe = true
+                ref = new RequestedVelRef(VpcElType.Unknown);
+                ref.isReferenceToMe = true;
             } else {
-                checkThrowInternal(false, "no branch seen")
+                checkThrowInternal(false, 'no branch seen');
             }
 
             this.outside.SetProp(cast(RequestedVelRef, ref), propName, combined, velRefChunk);
         } else {
             if (!velRef) {
                 /* no velref? this is a productopts */
-                velRef = new RequestedVelRef(VpcElType.Product)
-                velRef.lookByRelative = OrdinalOrPosition.This
+                velRef = new RequestedVelRef(VpcElType.Product);
+                velRef.lookByRelative = OrdinalOrPosition.This;
             }
 
             this.outside.SetProp(velRef, propName, combined, undefined);
@@ -498,9 +498,9 @@ export class ExecuteStatement {
      */
     protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
         let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), '59|');
-        let vel = this.outside.ResolveVelRef(ref)
-        checkThrow(vel, "could not find this object")
-        checkThrow(vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld, "object not a btn or fld")
+        let vel = this.outside.ResolveVelRef(ref);
+        checkThrow(vel, 'could not find this object');
+        checkThrow(vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld, 'object not a btn or fld');
         this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
     }
 }

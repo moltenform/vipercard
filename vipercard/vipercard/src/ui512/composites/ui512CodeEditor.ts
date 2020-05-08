@@ -107,7 +107,11 @@ export class UI512CompCodeEditor extends UI512CompBase {
                 break;
             case 'Cmd+Shift+Q':
                 /* Note: Ctrl-Shift-Q in older Chrome exits the browser */
-                TextSelModify.changeTextToggleBlockComment(gel, this.blockCommentStart, this.blockCommentEnd);
+                TextSelModify.changeTextToggleBlockComment(
+                    gel,
+                    this.blockCommentStart,
+                    this.blockCommentEnd
+                );
                 break;
             case 'Enter':
                 /* run auto-indent when you hit Enter */

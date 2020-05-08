@@ -34,27 +34,27 @@ t.test('testcompareRewrittenCodeHelper', () => {
     let inp = `if 0 is 1 then\nb\nend if`;
     let expected = `if~0~is~1~then~\nb~\nIfEnd`;
     h.compareRewrittenCode(inp, expected);
-    
+
     /* wrong results */
     assertAsserts('R2|', 'but got', () => {
         inp = `if 0 is 1 then\nb\nend if`;
         expected = `if~0~is~2~then~\nb~\nIfEnd`;
         h.compareRewrittenCode(inp, expected);
     });
-    
+
     /* compile error */
     assertAsserts('R1|', 'unexpected err', () => {
         let inp = `b\nend if`;
         let expected = `b~\nIfEnd`;
         h.compareRewrittenCode(inp, expected);
     });
-    
+
     /* compile error with wrong err message */
     assertAsserts('R0|', 'wrong err message', () => {
         let inp = `b\nend if`;
         h.compareRewrittenCode(inp, 'ERR:(incorrect message)');
     });
-    
+
     /* works when we said it should fail */
     assertAsserts('Q~|', 'expected an err', () => {
         let inp = `if 0 is 1 then\nb\nend if`;

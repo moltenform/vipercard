@@ -23,7 +23,7 @@
  */
 let t = new SimpleUtil512TestCollection('testCollectionvpcElements');
 export let testCollectionvpcElements = t;
-let higher = new HigherNoReplication_TestOnly()
+let higher = new HigherNoReplication_TestOnly();
 
 t.test('ChangeToSingleLine.Should Preserve Text That Is Already One Line', () => {
     let vel = new VpcElField('id1', 'parentid1');

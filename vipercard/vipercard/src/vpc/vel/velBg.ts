@@ -30,7 +30,7 @@ export class VpcElBg extends VpcElBase {
 
     /* get template card, for bg vel replication */
     getTemplateCard() {
-        return this.cards[0]
+        return this.cards[0];
     }
 
     /**

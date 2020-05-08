@@ -203,26 +203,26 @@ t.test('checkLexing', () => {
     b = new ScriptTestBatch();
 
     /* adding a letter or number makes it ok as a var name */
-    b.t('put 9 into ofa\\ofa', '9')
-    b.t('put 9 into lengtha\\lengtha', '9')
-    b.t('put 9 into ifa\\ifa', '9')
-    b.t('put 9 into shorta\\shorta', '9')
-    b.t('put 9 into ida\\ida', '9')
-    b.t('put 9 into ina\\ina', '9')
-    b.t('put 9 into pia\\pia', '9')
-    b.t('put 9 into dialogsa\\dialogsa', '9')
-    b.t('put 9 into exita\\exita', '9')
-    b.t('put 9 into labela\\labela', '9')
-    b.t('put 9 into of1\\ofa', '9')
-    b.t('put 9 into length1\\lengtha', '9')
-    b.t('put 9 into if1\\ifa', '9')
-    b.t('put 9 into short1\\shorta', '9')
-    b.t('put 9 into id1\\ida', '9')
-    b.t('put 9 into in1\\ina', '9')
-    b.t('put 9 into pi1\\pia', '9')
-    b.t('put 9 into dialogs1\\dialogsa', '9')
-    b.t('put 9 into exit1\\exita', '9')
-    b.t('put 9 into label1\\labela', '9')
+    b.t('put 9 into ofa\\ofa', '9');
+    b.t('put 9 into lengtha\\lengtha', '9');
+    b.t('put 9 into ifa\\ifa', '9');
+    b.t('put 9 into shorta\\shorta', '9');
+    b.t('put 9 into ida\\ida', '9');
+    b.t('put 9 into ina\\ina', '9');
+    b.t('put 9 into pia\\pia', '9');
+    b.t('put 9 into dialogsa\\dialogsa', '9');
+    b.t('put 9 into exita\\exita', '9');
+    b.t('put 9 into labela\\labela', '9');
+    b.t('put 9 into of1\\ofa', '9');
+    b.t('put 9 into length1\\lengtha', '9');
+    b.t('put 9 into if1\\ifa', '9');
+    b.t('put 9 into short1\\shorta', '9');
+    b.t('put 9 into id1\\ida', '9');
+    b.t('put 9 into in1\\ina', '9');
+    b.t('put 9 into pi1\\pia', '9');
+    b.t('put 9 into dialogs1\\dialogsa', '9');
+    b.t('put 9 into exit1\\exita', '9');
+    b.t('put 9 into label1\\labela', '9');
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
 

@@ -225,11 +225,11 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
      * refresh the tip saying how to refer to an object in a script
      */
     fillInValuesTip(app: UI512Application, vel: VpcElBase) {
-        let prefix = ''
+        let prefix = '';
         if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
-            let isBg = vel.getS('is_bg_velement_id').length > 0
-            prefix = isBg ? vpcElTypeToString(VpcElType.Bg, true) : vpcElTypeToString(VpcElType.Card, true)
-            prefix += ' '
+            let isBg = vel.getS('is_bg_velement_id').length > 0;
+            prefix = isBg ? vpcElTypeToString(VpcElType.Bg, true) : vpcElTypeToString(VpcElType.Card, true);
+            prefix += ' ';
         }
 
         let typeName = vpcElTypeToString(this.velType, true);

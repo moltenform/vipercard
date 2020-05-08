@@ -191,7 +191,11 @@ export class TextSelModify {
     /**
      * add/remove a block comment
      */
-    static changeTextToggleBlockComment(el: GenericTextField, startChars: string, endChars: string) {
+    static changeTextToggleBlockComment(
+        el: GenericTextField,
+        startChars: string,
+        endChars: string
+    ) {
         TextSelModify.changeTextInField(el, (t, nCaret, nEnd) =>
             TextSelModifyImpl.changeTextToggleBlockComment(
                 t,

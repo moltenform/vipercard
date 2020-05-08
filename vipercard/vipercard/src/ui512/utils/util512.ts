@@ -810,16 +810,16 @@ export class OrderedHash<TValue> {
 /**
  * dump ordered hash to a string
  */
-export function orderedHashSummary<T>(hash:OrderedHash<T>) {
-    let ret = ''
+export function orderedHashSummary<T>(hash: OrderedHash<T>) {
+    let ret = '';
     for (let k of hash.iterKeys()) {
-        ret += k
-        ret += ':'
-        ret += hash.get(k)
-        ret += '\n'
+        ret += k;
+        ret += ':';
+        ret += hash.get(k);
+        ret += '\n';
     }
 
-    return ret
+    return ret;
 }
 
 /**

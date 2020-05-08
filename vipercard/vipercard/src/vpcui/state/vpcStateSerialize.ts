@@ -90,7 +90,7 @@ export const VpcStateSerialize = /* static class */ {
     /**
      * deserialize a vel, from a plain JSON object
      */
-    deserializeVel(building: VpcStateInterface, incoming: SerializedVelStructure, h:VpcHandleLinkedVels) {
+    deserializeVel(building: VpcStateInterface, incoming: SerializedVelStructure, h: VpcHandleLinkedVels) {
         if (incoming.type === VpcElType.Stack) {
             /* the parent of a stack is always the product opts */
             incoming.parent_id = building.getModel().productOpts.idInternal;
@@ -108,7 +108,7 @@ export const VpcStateSerialize = /* static class */ {
             }
 
             let created = building.createVel(incoming.parent_id, incoming.type, -1, incoming.id);
-            VpcGettableSerialization.deserializeSettable(created, incoming.attrs,h);
+            VpcGettableSerialization.deserializeSettable(created, incoming.attrs, h);
         } else {
             assertWarn(false, 'Kx|unsupported type', incoming.type);
         }
@@ -130,7 +130,7 @@ export const VpcStateSerialize = /* static class */ {
     /**
      * deserialize from serializeVelCompressed
      */
-    deserializeVelCompressed(building: VpcStateInterface, s: string, h:VpcHandleLinkedVels): VpcElBase {
+    deserializeVelCompressed(building: VpcStateInterface, s: string, h: VpcHandleLinkedVels): VpcElBase {
         let created: O<VpcElBase>;
         building.doWithoutAbilityToUndo(() => {
             s = UI512Compress.decompressString(s);
@@ -145,7 +145,7 @@ export const VpcStateSerialize = /* static class */ {
             );
 
             created = building.createVel(incoming.parent_id, incoming.type, incoming.insertIndex, incoming.id);
-            VpcGettableSerialization.deserializeSettable(created, incoming.attrs,h);
+            VpcGettableSerialization.deserializeSettable(created, incoming.attrs, h);
         });
 
         return ensureDefined(created, 'Kv|');

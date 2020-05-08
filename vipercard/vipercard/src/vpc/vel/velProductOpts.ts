@@ -83,7 +83,7 @@ export class VpcElProductOpts extends VpcElBase {
         assertWarn(s !== 'currentCardId' || this.allowSetCurrentCard, 'Tr|');
         assertTrue(s !== 'script', "Tq|you can't set script of Vpc");
         /* here and velbase are the only places we're allowed to do this */
-        super.setImplInternal(undefined as any, s, newVal, undefined, context)
+        super.setImplInternal(undefined as any, s, newVal, undefined, context);
     }
 
     /**

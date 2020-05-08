@@ -42,7 +42,7 @@ let t = new SimpleUtil512TestCollection('testCollectionvpcScriptEval');
 export let testCollectionvpcScriptEval = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
-let higher = new HigherNoReplication_TestOnly()
+let higher = new HigherNoReplication_TestOnly();
 
 t.atest('--init--vpcTestScriptExprLvl', async () => {
     h = new TestVpcScriptRunBase(t);
@@ -67,10 +67,7 @@ t.test('getProp', () => {
     b.t(`the short id of target()`, `ERR:parse err`);
     b.t(`the short id of (target())`, `ERR:no such function`);
     /* tries to pull its contents */
-    b.t(
-        `the short id of (target)`,
-        `ERR:only support reading text`
-    ); 
+    b.t(`the short id of (target)`, `ERR:only support reading text`);
     b.t(`the short id of the me`, `ERR:parse err`);
     b.t(`the short id of me()`, `ERR:parse err`);
     b.t(`the short id of (me)`, `ERR:parse err`);
@@ -173,25 +170,16 @@ t.test('getProp', () => {
     b.t(`the short id of cd fld 1`, `${h.ids.fBC1}`);
 
     /* field with parent */
-    b.t(
-        `the short id of cd fld id ${h.ids.fBC1} of this cd`,
-        `${h.ids.fBC1}`
-    );
+    b.t(`the short id of cd fld id ${h.ids.fBC1} of this cd`, `${h.ids.fBC1}`);
     /* can't find even though it exists, wrong card parent */
-    b.t(
-        `the short id of cd fld id ${h.ids.fCD1} of this cd`,
-        `ERR:could not find`
-    );
+    b.t(`the short id of cd fld id ${h.ids.fCD1} of this cd`, `ERR:could not find`);
     b.t(`the short id of cd fld "p1" of cd 1`, `ERR:could not find`);
     b.t(`the short id of cd fld "p1" of this cd`, `${h.ids.fBC1}`);
     b.t(`the short id of cd fld "p1" of fifth cd`, `${h.ids.fCD1}`);
     b.t(`the short id of cd fld "p1" of cd 4`, `${h.ids.fBD1}`);
     b.t(`the short id of cd fld "p1" of cd "d"`, `${h.ids.fBD1}`);
     b.t(`the short id of cd fld "p1" of cd "d" of bg 3`, `${h.ids.fCD1}`);
-    b.t(
-        `the short id of cd fld "p1" of cd "d" of bg 3 of this stack`,
-        `${h.ids.fCD1}`
-    );
+    b.t(`the short id of cd fld "p1" of cd "d" of bg 3 of this stack`, `${h.ids.fCD1}`);
 
     /* button */
     b.t(`the short id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
@@ -205,25 +193,16 @@ t.test('getProp', () => {
     b.t(`the short id of cd btn 1`, `${h.ids.bBC1}`);
 
     /* button with parent */
-    b.t(
-        `the short id of cd btn id ${h.ids.bBC1} of this cd`,
-        `${h.ids.bBC1}`
-    );
+    b.t(`the short id of cd btn id ${h.ids.bBC1} of this cd`, `${h.ids.bBC1}`);
     /* can't find even though it exists, wrong card parent */
-    b.t(
-        `the short id of cd btn id ${h.ids.bCD1} of this cd`,
-        `ERR:could not find`
-    );
+    b.t(`the short id of cd btn id ${h.ids.bCD1} of this cd`, `ERR:could not find`);
     b.t(`the short id of cd btn "p1" of cd 1`, `ERR:could not find`);
     b.t(`the short id of cd btn "p1" of this cd`, `${h.ids.bBC1}`);
     b.t(`the short id of cd btn "p1" of fifth cd`, `${h.ids.bCD1}`);
     b.t(`the short id of cd btn "p1" of cd 4`, `${h.ids.bBD1}`);
     b.t(`the short id of cd btn "p1" of cd "d"`, `${h.ids.bBD1}`);
     b.t(`the short id of cd btn "p1" of cd "d" of bg 3`, `${h.ids.bCD1}`);
-    b.t(
-        `the short id of cd btn "p1" of cd "d" of bg 3 of this stack`,
-        `${h.ids.bCD1}`
-    );
+    b.t(`the short id of cd btn "p1" of cd "d" of bg 3 of this stack`, `${h.ids.bCD1}`);
     b.batchEvaluate(h);
 });
 t.test('vpcProperties', () => {
@@ -269,7 +248,7 @@ t.test('vpcProperties', () => {
     b.t('set the id of cd fld "p1" to 100\\0', 'ERR:unknown property');
     b.t('set the hilite of cd fld "p1" to true\\0', 'ERR:unknown property');
     b.t('set the number of cd fld "p1" to 6\\0', 'ERR:unknown property');
-    
+
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
 
@@ -294,12 +273,15 @@ t.test('vpcProperties', () => {
     b.t('set the itemdelimiter to ",," \\ 0', 'ERR:length of itemDel must be 1');
     b.t('set the cursor to "plus" \\ the cursor', 'plus');
     b.t('set the cursor to "arrow" \\ the cursor', 'arrow');
-    
+
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
     h.setScript(h.vcstate.model.stack.idInternal, 'on stackscript\nend stackscript');
     h.setScript(h.vcstate.model.stack.bgs[1].idInternal, 'on bgscript\nend bgscript');
-    h.setScript(h.vcstate.model.stack.bgs[1].cards[1].idInternal, 'on cdscript\nend cdscript');
+    h.setScript(
+        h.vcstate.model.stack.bgs[1].cards[1].idInternal,
+        'on cdscript\nend cdscript'
+    );
 
     /* stack get and set */
     b.t('length(the script of this stack) > 1', `true`);
@@ -466,7 +448,7 @@ t.test('vpcProperties', () => {
         item[1]
     ]);
     b.batchEvaluate(h);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* btn simple get/set */
     b.t('the autohilite of cd btn "p1"', 'true');
@@ -710,10 +692,7 @@ t.test('vpcProperties', () => {
         new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString()
     );
     h.vcstate.vci.undoableAction(() =>
-        fldPerChar.setCardFmTxt(
-            FormattedText.newFromSerialized(sfmt),
-            higher,
-        )
+        fldPerChar.setCardFmTxt(FormattedText.newFromSerialized(sfmt), higher)
     );
 
     /* non per-character properties */
@@ -856,16 +835,9 @@ t.test('vpcProperties', () => {
 
     for (let [action, expectedFont] of actions) {
         h.vcstate.vci.undoableAction(() =>
-            fldPerChar.setCardFmTxt(
-                FormattedText.newFromSerialized(sfmt),
-                higher
-            )
+            fldPerChar.setCardFmTxt(FormattedText.newFromSerialized(sfmt), higher)
         );
-        assertEq(
-            sfmt,
-            fldPerChar.getCardFmTxt().toSerialized(),
-            '1w|'
-        );
+        assertEq(sfmt, fldPerChar.getCardFmTxt().toSerialized(), '1w|');
         b.t('set the defaulttextfont of cd fld "p2" to "geneva"\\0', '0');
         b.t('set the defaulttextstyle of cd fld "p2" to "plain"\\0', '0');
         b.t('set the defaulttextsize of cd fld "p2" to "12"\\0', '0');
@@ -957,18 +929,9 @@ t.test('vpcProperties', () => {
 
     /* button with no name */
     b.t(`set the name of cd btn id ${h.ids.bBC1} to ""\\0`, '0');
-    b.t(
-        `the name of cd btn id ${h.ids.bBC1}`,
-        `card button id ${h.ids.bBC1}`
-    );
-    b.t(
-        `the abbr name of cd btn id ${h.ids.bBC1}`,
-        `card button id ${h.ids.bBC1}`
-    );
-    b.t(
-        `the short name of cd btn id ${h.ids.bBC1}`,
-        `card button id ${h.ids.bBC1}`
-    );
+    b.t(`the name of cd btn id ${h.ids.bBC1}`, `card button id ${h.ids.bBC1}`);
+    b.t(`the abbr name of cd btn id ${h.ids.bBC1}`, `card button id ${h.ids.bBC1}`);
+    b.t(`the short name of cd btn id ${h.ids.bBC1}`, `card button id ${h.ids.bBC1}`);
     b.t(
         `the long name of cd btn id ${h.ids.bBC1}`,
         `card button id ${h.ids.bBC1} of card "c" of this stack`
@@ -976,10 +939,7 @@ t.test('vpcProperties', () => {
     b.t(`the id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
     b.t(`the abbr id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
     b.t(`the short id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
-    b.t(
-        `the long id of cd btn id ${h.ids.bBC1}`,
-        `card button id ${h.ids.bBC1}`
-    );
+    b.t(`the long id of cd btn id ${h.ids.bBC1}`, `card button id ${h.ids.bBC1}`);
     b.t(`set the name of cd btn id ${h.ids.bBC1} to "p1"\\0`, `0`);
 
     /* field with a name */
@@ -994,18 +954,9 @@ t.test('vpcProperties', () => {
 
     /* field with no name */
     b.t(`set the name of cd fld id ${h.ids.fBC1} to ""\\0`, '0');
-    b.t(
-        `the name of cd fld id ${h.ids.fBC1}`,
-        `card field id ${h.ids.fBC1}`
-    );
-    b.t(
-        `the abbr name of cd fld id ${h.ids.fBC1}`,
-        `card field id ${h.ids.fBC1}`
-    );
-    b.t(
-        `the short name of cd fld id ${h.ids.fBC1}`,
-        `card field id ${h.ids.fBC1}`
-    );
+    b.t(`the name of cd fld id ${h.ids.fBC1}`, `card field id ${h.ids.fBC1}`);
+    b.t(`the abbr name of cd fld id ${h.ids.fBC1}`, `card field id ${h.ids.fBC1}`);
+    b.t(`the short name of cd fld id ${h.ids.fBC1}`, `card field id ${h.ids.fBC1}`);
     b.t(
         `the long name of cd fld id ${h.ids.fBC1}`,
         `card field id ${h.ids.fBC1} of card "c" of this stack`
@@ -1013,10 +964,7 @@ t.test('vpcProperties', () => {
     b.t(`the id of cd fld id ${h.ids.fBC1}`, `${h.ids.fBC1}`);
     b.t(`the abbr id of cd fld id ${h.ids.fBC1}`, `${h.ids.fBC1}`);
     b.t(`the short id of cd fld id ${h.ids.fBC1}`, `${h.ids.fBC1}`);
-    b.t(
-        `the long id of cd fld id ${h.ids.fBC1}`,
-        `card field id ${h.ids.fBC1}`
-    );
+    b.t(`the long id of cd fld id ${h.ids.fBC1}`, `card field id ${h.ids.fBC1}`);
     b.t(`set the name of cd fld id ${h.ids.fBC1} to "p1"\\0`, `0`);
 
     /* when nothing has names, we get different output */
@@ -1024,18 +972,9 @@ t.test('vpcProperties', () => {
     b.t('set the name of this bg to ""\\0', '0');
     b.t('set the name of this card to ""\\0', '0');
     b.t(`set the name of cd btn id ${h.ids.bBC1} to ""\\0`, `0`);
-    b.t(
-        `the name of cd btn id ${h.ids.bBC1}`,
-        `card button id ${h.ids.bBC1}`
-    );
-    b.t(
-        `the abbr name of cd btn id ${h.ids.bBC1}`,
-        `card button id ${h.ids.bBC1}`
-    );
-    b.t(
-        `the short name of cd btn id ${h.ids.bBC1}`,
-        `card button id ${h.ids.bBC1}`
-    );
+    b.t(`the name of cd btn id ${h.ids.bBC1}`, `card button id ${h.ids.bBC1}`);
+    b.t(`the abbr name of cd btn id ${h.ids.bBC1}`, `card button id ${h.ids.bBC1}`);
+    b.t(`the short name of cd btn id ${h.ids.bBC1}`, `card button id ${h.ids.bBC1}`);
     b.t(
         `the long name of cd btn id ${h.ids.bBC1}`,
         `card button id ${h.ids.bBC1} of card id ${h.ids.cdBC} of this stack`
@@ -1242,7 +1181,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a cd fld "p2" of cd "d" of bg 2`, 'true');
     b.t(`there _is_ a cd fld "p2" of cd "d" of bg 3`, 'false');
     b.batchEvaluate(h, BatchType.testBatchEvalInvert);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
     /* fn calls without parens */
     b.t('the paramcount', '0');
@@ -1414,9 +1353,9 @@ t.test('builtinFunctions', () => {
     b.t('exp1(1.9459101490553132)', '6');
     b.t('log2(5)', '2.321928094887362');
     b.t('exp2(2.321928094887362)', '5');
-    
+
     b.batchEvaluate(h, BatchType.floatingPoint);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
     let userBounds = h.pr.userBounds;
 
     /* unknown */

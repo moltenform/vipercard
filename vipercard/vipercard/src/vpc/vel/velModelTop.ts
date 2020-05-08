@@ -160,40 +160,45 @@ export class VpcModelTop implements VpcHandleLinkedVels {
     /**
      * background elements are linked!
      */
-    setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void {
+    setOnVelLinked(
+        me: VpcElBase,
+        s: string,
+        newVal: ElementObserverVal,
+        cb: (s: string, newVal: ElementObserverVal, ctx: ChangeContext) => void
+    ): void {
         if (me instanceof VpcElButton || me instanceof VpcElField) {
-            let group = me.getS('is_bg_velement_id')
-            if (group && !(s.endsWith('_uniquetocard'))) {
+            let group = me.getS('is_bg_velement_id');
+            if (group && !s.endsWith('_uniquetocard')) {
                 /* it's a linked one, we'll need to update everything it is linked to! */
-                let card = this.getById(VpcElCard, me.parentIdInternal)
-                let bg = this.getById(VpcElBg, card.parentIdInternal)
+                let card = this.getById(VpcElCard, me.parentIdInternal);
+                let bg = this.getById(VpcElBg, card.parentIdInternal);
                 for (let card of bg.cards) {
                     for (let part of card.parts) {
                         if (part.getS('is_bg_velement_id') === group) {
-                            cb.apply(part, [s, newVal, ChangeContext.Default])
+                            cb.apply(part, [s, newVal, ChangeContext.Default]);
                             break;
                         }
                     }
                 }
             } else {
-                cb.apply(me, [s, newVal, ChangeContext.Default])
+                cb.apply(me, [s, newVal, ChangeContext.Default]);
             }
         } else {
-            cb.apply(me, [s, newVal, ChangeContext.Default])
+            cb.apply(me, [s, newVal, ChangeContext.Default]);
         }
     }
 
     /**
      * we've created a new card. copy over the vels
      */
-    copyBgVelsOnNewCard(newCard:VpcElBase) {
-        checkThrow(newCard instanceof VpcElCard, "")
-        let bg = this.getById(VpcElBg, newCard.parentIdInternal)
+    copyBgVelsOnNewCard(newCard: VpcElBase) {
+        checkThrow(newCard instanceof VpcElCard, '');
+        let bg = this.getById(VpcElBg, newCard.parentIdInternal);
         /* use the first card in the bg as a template */
         for (let part of bg.getTemplateCard().parts) {
-            let group = part.getS('is_bg_velement_id')
+            let group = part.getS('is_bg_velement_id');
             if (group) {
-                checkThrow(false, 'nyi')
+                checkThrow(false, 'nyi');
             }
         }
     }

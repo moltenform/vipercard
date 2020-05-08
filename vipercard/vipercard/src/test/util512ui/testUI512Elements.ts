@@ -226,7 +226,7 @@ t.test('UI512ElTextFieldAsGeneric', () => {
 t.test('VpcTextFieldAsGeneric', () => {
     let el = new UI512ElTextField('fld1');
     el.observer = new ElementObserverNoOp();
-    let higher = new HigherNoReplication_TestOnly()
+    let higher = new HigherNoReplication_TestOnly();
 
     let vel = new VpcElField('12', '34');
     vel.observer = new ElementObserverNoOp();
@@ -429,7 +429,12 @@ function listElems(grp: UI512ElGroup) {
  * test-only implementation, doesn't support any replication to other elements
  */
 export class HigherNoReplication_TestOnly implements VpcHandleLinkedVels {
-    setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void {
-        cb.apply(me, [s, newVal, ChangeContext.Default])
+    setOnVelLinked(
+        me: VpcElBase,
+        s: string,
+        newVal: ElementObserverVal,
+        cb: (s: string, newVal: ElementObserverVal, ctx: ChangeContext) => void
+    ): void {
+        cb.apply(me, [s, newVal, ChangeContext.Default]);
     }
 }

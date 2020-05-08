@@ -573,9 +573,9 @@ function getPositionUnbounded(rel: OrdinalOrPosition, current: number, min: numb
  * current === -1 is allowed! it will be fit within the bounds.
  */
 export function findPositionFromOrdinalOrPosition(rel: OrdinalOrPosition, current: number, min: number, max: number): O<number> {
-    current = fitIntoInclusive(current, min, max)
+    current = fitIntoInclusive(current, min, max);
     let ret = getPositionUnbounded(rel, current, min, max);
-    return (ret >= min && ret <= max) ? ret : undefined
+    return ret >= min && ret <= max ? ret : undefined;
 }
 
 /**

@@ -54,7 +54,7 @@ export interface UndoableAction {
  * an action creating a vel, thin wrapper around UndoableActionCreateOrDelVel
  */
 export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implements UndoableAction {
-    constructor(id: string, parentId: string, type: VpcElType, isBg:boolean, insertIndex = -1 /* default to add-to-end */) {
+    constructor(id: string, parentId: string, type: VpcElType, isBg: boolean, insertIndex = -1 /* default to add-to-end */) {
         super(id, parentId, type, isBg, insertIndex);
     }
 
@@ -81,7 +81,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
     storedVelData = '';
     constructor(vel: VpcElBase, vci: VpcStateInterface) {
         super(vel.idInternal, vel.parentIdInternal, vel.getType(), false, -1);
-        this.isBg = vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length > 0
+        this.isBg = vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length > 0;
         UndoableActionDeleteVel.checkIfCanDelete(vel, vci);
         this.insertIndex = this.determineIndexInAr(vel, vci);
         this.storedVelData = VpcStateSerialize.serializeVelCompressed(vci, vel, this.insertIndex);
@@ -92,7 +92,11 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
      */
     static checkIfCanDelete(vel: VpcElBase, vci: VpcStateInterface) {
         let currentCard = vci.getModel().getByIdUntyped(vci.getModel().productOpts.getS('currentCardId'));
-        assertTrue(bool(vci.getModel().findByIdUntyped(vel.idInternal)), "6Z|deleting element that doesn't exist?", vel.idInternal);
+        assertTrue(
+            bool(vci.getModel().findByIdUntyped(vel.idInternal)),
+            "6Z|deleting element that doesn't exist?",
+            vel.idInternal
+        );
         if (vel.getType() === VpcElType.Stack || vel.getType() === VpcElType.Product || vel.getType() === VpcElType.Unknown) {
             checkThrow(false, '6Y|Cannot delete this type of element');
         } else if (vel instanceof VpcElCard) {
