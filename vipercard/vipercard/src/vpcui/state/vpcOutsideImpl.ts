@@ -5,7 +5,7 @@
 /* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, checkThrow, toolToDispatchShapes, VpcGranularity } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
@@ -307,7 +307,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
                 ret.vel.lookById = Util512.parseIntStrict(selFld.idInternal);
                 checkThrow(ret.vel.lookById, 'S7|');
                 ret.chunk = new RequestedChunk(bounds[0]);
+                ret.chunk.type555 = VpcGranularity.Chars
                 ret.chunk.last555 = bounds[1];
+                ret.chunk.sortFirst = true
             }
 
             return ret;

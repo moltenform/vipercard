@@ -93,6 +93,27 @@ Part 2: execution
     If the stack of execution frames is empty, we've completed the script.
 ```
 
+## Rendering
+
+* A Model-View-Presenter pattern is used
+* From a thousand-foot perspective:
+    * The models (for example ui512ElementButton) are basically inert buckets of data
+        * The only logic they have is that when a property is changed, it sets a global flag that we need to draw something.
+    * The view classes have methods that take a model and draw it to a canvas.
+    * The presenter manages events and routes them to the correct action, which might cause changes to a model. It uses the view classes to draw the model onto the canvas.
+* ViperCard elements aka Vels are built on top of UI512 elements aka Els. 
+* The pattern is used twice - Vel models cause changes to UI512 models 
+* Example - what happens when you click down onto a button:
+    * mouse event is sent to a Presenter
+    * the Presenter routes the event to mousedown handling
+    * mousedown handling in vipercard sets the hilite on the Vel model to true
+    * listeners on the Vel model record that "the hilite changed" and that we need a redraw
+    * a very short time later, a drawframe tick occurs
+    * the Presenter sees that the redraw flag is set, and goes through the changes. It calls vpcmodelrender, which maps the "hilite" property on the vel model to the "hilite" property on a  corresponding ui512 model, and sets it to true.
+    * listeners on the UI512 model record that we need a full-redraw
+    * a very short time later, a drawframe tick occurs
+    * we notice that the need-full-redraw flag is set, so we draw everything again onto the canvas.
+
 ## Background objects
 
 Background objects are tricky. For say bg fld when sharedtext is off, state (position) is shared, some state (contents) are unique per-card.

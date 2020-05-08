@@ -542,8 +542,59 @@ t.test('03chunkexpression_recursivescopes', () => {
 
     b.batchEvaluate(h3);
     b = new ScriptTestBatch();
-    /* get complicated scopes */
     b.t('global z\nput "ab cd, ef"&cr&"gh ii,jj,kk"&cr&"mn,op,q"&cr&"r,s" into z1\\1', '1');
+    /* get scopes */
+    b.t('char 2 of char 2 of z1', '')
+    b.t('char 2 of word 2 of z1', 'd')
+    b.t('char 2 of item 2 of z1', 'e')
+    b.t('char 2 of line 2 of z1', 'h')
+    b.t('word 2 of char 2 of z1', '')
+    b.t('word 2 of word 2 of z1', '')
+    b.t('word 2 of item 2 of z1', 'gh')
+    b.t('word 2 of line 2 of z1', 'ii,jj,kk')
+    b.t('item 2 of char 2 of z1', '')
+    b.t('item 2 of word 2 of z1', '')
+    b.t('item 2 of item 2 of z1', '')
+    b.t('item 2 of line 2 of z1', 'jj')
+    b.t('line 2 of char 2 of z1', '')
+    b.t('line 2 of word 2 of z1', '')
+    b.t('line 2 of item 2 of z1', 'gh ii')
+    b.t('line 2 of line 2 of z1', '')
+    b.t('char 2 of char 3 of z1', '')
+    b.t('word 2 of word 3 of z1', '')
+    b.t('item 2 of item 3 of z1', '')
+    b.t('line 2 of line 3 of z1', '')
+    b.t('char 3 of char 2 of z1', '')
+    b.t('word 3 of word 2 of z1', '')
+    b.t('item 3 of item 2 of z1', '')
+    b.t('line 3 of line 2 of z1', '')
+    /* set scopes */
+    b.t('put z1 into z\nput "A" into char 2 of char 2 of z\\z', 'aA cd, ef\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into char 2 of word 2 of z\\z', 'ab cA, ef\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into char 2 of item 2 of z\\z', 'ab cd, Af\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into char 2 of line 2 of z\\z', 'ab cd, ef\ngA ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into word 2 of char 2 of z\\z', 'ab cA, ef\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into word 2 of word 2 of z\\z', 'ab A ef\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into word 2 of item 2 of z\\z', 'ab cd, ef\nA ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into word 2 of line 2 of z\\z', 'ab cd, ef\ngh A\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into item 2 of char 2 of z\\z', 'ab cd, Af\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into item 2 of word 2 of z\\z', 'ab cd, ef\nA ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into item 2 of item 2 of z\\z', 'ab cd,A,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into item 2 of line 2 of z\\z', 'ab cd, ef\ngh ii,A,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into line 2 of char 2 of z\\z', 'ab cd, ef\ngA ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into line 2 of word 2 of z\\z', 'ab cd, ef\ngh A\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into line 2 of item 2 of z\\z', 'ab cd, ef\ngh ii,A,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into line 2 of line 2 of z\\z', 'ab cd, ef\nA\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into char 2 of char 3 of z\\z', 'aA cd, ef\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into word 2 of word 3 of z\\z', 'ab A ef\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into item 2 of item 3 of z\\z', 'ab cd,A,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into line 2 of line 3 of z\\z', 'ab cd, ef\nA\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into char 3 of char 2 of z\\z', 'abAcd, ef\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into word 3 of word 2 of z\\z', 'ab cd, A\ngh ii,jj,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into item 3 of item 2 of z\\z', 'ab cd, ef\ngh ii,A,kk\nmn,op,q\nr,s')
+    b.t('put z1 into z\nput "A" into line 3 of line 2 of z\\z', 'ab cd, ef\ngh ii,jj,kk\nA\nr,s')
+    /* get complicated scopes */
+    /* for get, it's as expected. can add parens, happens in logical order */
     b.t('char 2 of char 4 of item 2 of z1', '')
     b.t('char 2 of char 4 of word 2 of z1', '')
     b.t('char 2 of word 2 of word 4 of z1', '')
@@ -559,6 +610,7 @@ t.test('03chunkexpression_recursivescopes', () => {
     b.t('line 2 to 3 of item 2 to 5 of line 2 to 3 of z1', 'mn,op,q')
     b.t('item 2 to 3 of line 2 to 3 of item 2 to 5 of z1', 'jj,kk\nmn')
     /* set complicated scopes */
+    /* for set, it's NOT as expected. */
     b.t('put z1 into z\nput "A" into char 2 of char 4 of item 2 of z\\z', 'ab cd, Af\ngh ii,jj,kk\nmn,op,q\nr,s')
     b.t('put z1 into z\nput "A" into char 2 of char 4 of word 2 of z\\z', 'ab cA, ef\ngh ii,jj,kk\nmn,op,q\nr,s')
     b.t('put z1 into z\nput "A" into char 2 of word 2 of word 4 of z\\z', 'ab cA, ef\ngh ii,jj,kk\nmn,op,q\nr,s')
@@ -602,6 +654,12 @@ t.test('03chunkexpression_mathops', () => {
     b.t('put z1 into z\nmultiply item 3 of z by 2\\z', '1,2,6');
     b.t('put z1 into z\nmultiply item 4 of z by 2\\z', '1,2,3,0');
     b.t('put z1 into z\nmultiply item 5 of z by 2\\z', '1,2,3,,0');
+    /* has same weird behavior */
+    b.t('global z1\nput "1,2,3"&cr&"4,5,6" into z1\\1', '1');
+    b.t('put z1 into z\nadd 1 to item 2 of item 1 of z\\z', '1,3,3\n4,5,6');
+    b.t('put z1 into z\nadd 1 to item 1 of item 2 of z\\z', '2,2,3\n4,5,6');
+    b.t('put z1 into z\nadd 1 to item 2 of line 2 of z\\z', '2,2,3\n4,6,6');
+    b.t('put z1 into z\nadd 1 to line 2 of item 2 of z\\z', '2,2,3\n4,6,6');
 })
 
 
