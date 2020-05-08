@@ -44,11 +44,8 @@
 //      NEW FEATURE: get the number of btns in cd 2
 //      continued lines can use either \ or logical not
 //      you can use != instead of <>, you can use == instead of =
-//     you can't say put "a" into char 1 of the selection
 //      NEW FEATURE: drag from a,b to c,d to e,f
 //      NEW FEATURE: replace "a" with "b" in s
-//      we don't yet support `put "c" into char 2 of item 3 of line 2 of cd fld 1`
-//      or put "c" into char 2 of item 3 to 5 of line 2 of cd fld 1
 //      you can't omit items in a list, like average(1,2,,3)
 //      NEW FEATURE: objectById(id)
 //      NEW FEATURE: owner is more useful
@@ -58,11 +55,12 @@
 //      we are more lenient refering to objects. 
 //          e.g. we allow 'get the name of cd 1 of this stack', why not since 'go to cd 1 of this stack' and 'the number of cards in this stack' is valid
 //          e.g. we allow stack-at-end-of-line in a few more contexts
-//      the string versions of "the target" and "the owner of" look a little different, they return the long id
+//      the string versions of "the target" and "the owner of" look a little different, they return our new long id
 //      we need parens for if the short id of the owner of cd id prevCard is not the short id of the owner of cd id nextCard then answer "j"
 //      we don't support char x + 1 of abc, need char (x + 1) of abc
 //      NEW FEATURE: set the fontstyle to grayed
 //      we don't support "part"
+//      do "code" can't yet read/write local vars
             
             
 // aren't yet supported in software include:
