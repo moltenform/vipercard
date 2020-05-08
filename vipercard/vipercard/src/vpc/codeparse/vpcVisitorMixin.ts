@@ -309,6 +309,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             checkThrow(ctx.RuleHChunkOne && ctx.RuleHChunkOne[0], 'S3|RuleHChunkOne');
             let ret = this.visit(arLast(ctx.RuleHChunkOne));
             let current = ret;
+            /* start with len-2 because we already did the len-1 one */
             for (let i = ctx.RuleHChunkOne.length - 2; i >= 0; i--) {
                 current.child = this.visit(ctx.RuleHChunkOne[i]);
                 current = current.child;

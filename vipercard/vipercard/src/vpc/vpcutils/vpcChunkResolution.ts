@@ -1,10 +1,10 @@
 
 /* auto */ import { VpcIntermedValBase, VpcVal } from './vpcVal';
-/* auto */ import { ReadableContainer, WritableContainer } from './vpcUtils';
-/* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, findPositionFromOrdinalOrPosition } from './vpcEnums';
+/* auto */ import { ReadableContainer, WritableContainer, WritableContainerSimpleFmtText } from './vpcUtils';
+/* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, findPositionFromOrdinalOrPosition, checkThrowInternal } from './vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, longstr, MapKeyToObject } from './../../ui512/utils/util512';
 /* auto */ import { largeArea } from './../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -273,12 +273,13 @@ const ChunkResolution = /* static class */ {
         parent: ResolvedChunk,
         itemDel: string,
         news: O<string>,
-        prep: O<VpcChunkPreposition>
+        prep: O<VpcChunkPreposition>,
+        isWriteContext:boolean
     ): O<ResolvedChunk> {
         let unformatted = parent.container.getRawString();
         unformatted = unformatted.substring(parent.startPos, parent.endPos);
         let retbounds: O<[number, number]>;
-        if (request.canModify) {
+        if (isWriteContext) {
             let bounds = this._getBoundsForSet(unformatted, itemDel, request);
             news = news ?? '';
             let writeParentContainer = parent.container as WritableContainer;
@@ -310,35 +311,41 @@ const ChunkResolution = /* static class */ {
     }
 };
 
-/* don't let scopes go backwards.
-    only char after char seen.
-    only char or word after word seen.
-    original product had weird behavior we don't want to replicate.*/
-class DecreasingScopeChecker {
-    seenWord = false;
-    seenChar = false;
-    onSeeScope(g: VpcGranularity) {
-        if (g === VpcGranularity.Chars) {
-            this.seenChar = true;
-        } else if (g === VpcGranularity.Words) {
-            checkThrow(
-                !this.seenChar,
-                longstr(`we don't yet support a word being the child
-                of a char, please use an intermediate variable.`)
-            );
-            this.seenWord = true;
-        } else {
-            checkThrow(
-                !this.seenChar && !this.seenWord,
-                longstr(`we don't yet support 
-                    a line or item being the child of a char or word.
-                    please use an intermediate variable.`)
-            );
-        }
-    }
-}
+//~ /* don't let scopes go backwards.
+    //~ only char after char seen.
+    //~ only char or word after word seen.
+    //~ original product had weird behavior we don't want to replicate.*/
+//~ class DecreasingScopeChecker {
+    //~ seenWord = false;
+    //~ seenChar = false;
+    //~ onSeeScope(g: VpcGranularity) {
+        //~ if (g === VpcGranularity.Chars) {
+            //~ this.seenChar = true;
+        //~ } else if (g === VpcGranularity.Words) {
+            //~ checkThrow(
+                //~ !this.seenChar,
+                //~ longstr(`we don't yet support a word being the child
+                //~ of a char, please use an intermediate variable.`)
+            //~ );
+            //~ this.seenWord = true;
+        //~ } else {
+            //~ checkThrow(
+                //~ !this.seenChar && !this.seenWord,
+                //~ longstr(`we don't yet support 
+                    //~ a line or item being the child of a char or word.
+                    //~ please use an intermediate variable.`)
+            //~ );
+        //~ }
+    //~ }
+//~ }
 
+/**
+ * public interface for chunk resolution
+ */
 export const ChunkResolutionApplication = /* static class */ {
+    /**
+     * the original product has counter-intuitive behavior for put
+     */
     applyPut(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, news: string, prep: VpcChunkPreposition): void {
         if (!chunk) {
             /* needs to be handled separately,
@@ -360,28 +367,32 @@ export const ChunkResolutionApplication = /* static class */ {
             return;
         }
 
+        chunk = this._rearrangeChunksToMatchOriginalProduct(chunk)
+
         /* make parent objects */
         let resolved = new ResolvedChunk(cont, 0, cont.len());
-        chunk.setCanModifyRecurse(true);
         let current: O<RequestedChunk> = chunk;
-        let checker = new DecreasingScopeChecker();
+        //~ let checker = new DecreasingScopeChecker();
         while (current) {
-            checker.onSeeScope(current.type555);
+            //~ checker.onSeeScope(current.type555);
             if (current.child) {
                 /* narrow it down, add extra commas but not the real text */
                 resolved = ensureDefined(
-                    ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into),
+                    ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into, true),
                     ''
                 );
             } else {
                 /* insert the real text */
-                resolved = ensureDefined(ChunkResolution.doResolveOne(current, resolved, itemDel, news, prep), '');
+                resolved = ensureDefined(ChunkResolution.doResolveOne(current, resolved, itemDel, news, prep, true), '');
             }
 
             current = current.child;
         }
     },
 
+    /**
+     * warning: follows the same funky logic as put.
+     */
     applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, fn: (s: string) => string) {
         if (!chunk) {
             /* needs to be handled separately,
@@ -392,41 +403,51 @@ export const ChunkResolutionApplication = /* static class */ {
             return;
         }
 
-        /* does it exist?
-        if not, make it. (follow emulator) */
-        let found = this.applyRead(cont, chunk, itemDel);
-        if (!found) {
-            this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into);
-            found = this.applyRead(cont, chunk, itemDel);
-        }
-
-        checkThrow(found, 'could not modify');
-        let foundContent = cont.getRawString().substring(found.startPos, found.endPos);
-        let newContent = fn(foundContent);
-        cont.splice(found.startPos, found.endPos - found.startPos, newContent);
+        /* use a sentinel value to ensure we get the same results as a "put" */
+        let marker = '\x01\x01~~internalvpcmarker~~\x01\x01'
+        let unformatted = cont.getRawString()
+        checkThrow(!unformatted.includes(marker), "cannot contain the string " + marker)
+        let fakeContainer = new WritableContainerSimpleFmtText()
+        fakeContainer.setAll(unformatted)
+        this.applyPut(fakeContainer, chunk, itemDel, marker, VpcChunkPreposition.Into)
+        
+        /* now we look at the results and see where it got put! */
+        let results = fakeContainer.getRawString()
+        let index = results.indexOf(marker)
+        checkThrow(index !== -1, "applyModify did not find marker")
+        let targetLength = unformatted.length - (results.length - marker.length)
+        checkThrowInternal(targetLength >= 0, "")
+        let targetText = unformatted.substr(index, targetLength)
+        let newTargetText = fn(targetText)
+        cont.splice(index, targetLength, newTargetText)
     },
 
+    /**
+     * returns a ResolvedChunk, so you can use the bounds for things
+     */
     applyRead(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string): O<ResolvedChunk> {
         /* make parent objects */
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         if (!chunk) {
             chunk = new RequestedChunk(1);
             chunk.type555 = VpcGranularity.Chars;
-            chunk.last555 = cont.len();
+            chunk.last555 = cont.len() - 1;
         }
 
-        chunk.setCanModifyRecurse(false);
         let current: O<RequestedChunk> = chunk;
-        let checker = new DecreasingScopeChecker();
+        //~ let checker = new DecreasingScopeChecker();
         while (current && resolved) {
-            checker.onSeeScope(current.type555);
-            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into);
+            //~ checker.onSeeScope(current.type555);
+            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into, false);
             current = current.child;
         }
 
         return resolved;
     },
 
+    /**
+     * helper that returns an unformatted string
+     */
     applyReadToString(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string) {
         let resolved = this.applyRead(cont, chunk, itemDel);
         return resolved ? resolved.container.getRawString().substring(resolved.startPos, resolved.endPos) : '';
@@ -454,6 +475,54 @@ export const ChunkResolutionApplication = /* static class */ {
         } else {
             checkThrow(false, `5-|unknown chunk type ${type}`);
         }
+    },
+
+    /**
+     * match the really weird behavior seen.
+     * 1) first come, first serve, for each granularity
+     * 2) regardless of order seen, sort in the order seen in enum VpcGranularity
+     */
+    _rearrangeChunksToMatchOriginalProduct(chunk:RequestedChunk) {
+        /* simple case */
+        if (!chunk.child) {
+            return chunk
+        }
+
+        /* flatten it! the given order does not matter!!! 
+        we'll helpfully use the fact that VpcGranularity #s are already in order,
+        and index them into a list*/
+        let max = VpcGranularity.Lines + 1
+        let arr = Util512.repeat(max, undefined as O<RequestedChunk>)
+        /* remember that it's first come, first serve */
+        let current:O<RequestedChunk> = chunk
+        while (current) {
+            let key = current.sortFirst ? max : current.type555
+                arr[key] = current
+            current = current.child
+        }
+
+        /* reverse it so that higher ones are first */
+        arr.reverse()
+
+        let ret:O<RequestedChunk>
+        let currentBuild:O<RequestedChunk>
+        for (let i=0; i<arr.length; i++) {
+            if (arr[i]){
+                if (!currentBuild) {
+                    currentBuild = arr[i]
+                    ret = arr[i]
+                } else {
+                    currentBuild.child = arr[i]
+                    currentBuild = arr[i]
+                }
+            }
+        }
+        /* be sure to overwrite the child here in case it used to have a child */
+        if (currentBuild) {
+            currentBuild.child = undefined
+        }
+
+        return ret
     }
 };
 
@@ -466,7 +535,6 @@ export class RequestedChunk extends VpcIntermedValBase {
     last555: O<number>;
     ordinal555: O<OrdinalOrPosition>;
     sortFirst = false;
-    canModify = false;
     child: O<RequestedChunk>;
     constructor(first: number) {
         super();
@@ -482,21 +550,8 @@ export class RequestedChunk extends VpcIntermedValBase {
         other.first555 = this.first555;
         other.last555 = this.last555;
         other.ordinal555 = this.ordinal555;
-        other.canModify = this.canModify;
         other.child = this.child?.getClone();
         return other;
-    }
-
-    /**
-     * recursive setcanmodify
-     */
-    setCanModifyRecurse(v: boolean) {
-        this.canModify = v;
-        let current = this.child;
-        while (current) {
-            current.canModify = v;
-            current = current.child;
-        }
     }
 
     /**

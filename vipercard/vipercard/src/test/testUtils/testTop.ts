@@ -38,6 +38,7 @@
 /* auto */ import { testCollectionExternalLibs } from './../util512/testExternalLibs';
 /* auto */ import { testCollection03lexer } from './../vpc03/test03lexer';
 /* auto */ import { testCollection03exprObjectRef } from './../vpc03/test03exprObjectRef';
+/* auto */ import { testCollection03chunkBasic } from './../vpc03/test03chunkBasic';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -59,39 +60,40 @@ export const SimpleUtil512Tests = /* static class */ {
         let colls: SimpleUtil512TestCollection[] = [
             /* testCollectionvpcuiServer, */
             /* testCollectionScriptExtensive, */
+            testCollection03chunkBasic,
             testCollection03exprObjectRef,
             testCollection03lexer,
-            testCollectionScriptRewrites,
-            testCollectionScriptRunCustomFns,
-            testCollectionScriptRunCmd,
-            testCollectionvpcScriptEval,
-            testCollectionvpcScriptRunSyntax,
-            testCollectionScriptExprLvl,
-            testCollectionvpcScriptParseCmd,
-            testCollectionvpcScriptParseExpr,
-            testCollectionvpcChunkResolution,
-            testCollectionvpcElements,
-            testCollectionvpcuiMsgBox,
-            testCollectionvpcuiIntroProvider,
-            testCollectionvpcVpcVal,
-            testCollectionUI512CodeEditor,
-            testCollectionUI512Composites,
-            testCollectionUI512DrawText,
-            testCollectionUI512Elements,
-            testCollectionUI512ElementsViewButtons,
-            testCollectionUI512FormattedText,
-            testCollectionUI512MenuRender,
-            testCollectionUI512Paint,
-            testCollectionUI512TextEdit,
-            testCollectionUI512TextModify,
-            testCollectionUI512TextSelectEvents,
-            testCollectionUtilsCanvasWrapper,
-            testCollectionUtilsDraw,
-            testCollectionUtil512Higher,
-            testCollectionUtil512Class,
-            testCollectionUtil512,
-            testCollectionUtil512Assert,
-            testCollectionExternalLibs
+            //~ testCollectionScriptRewrites,
+            //~ testCollectionScriptRunCustomFns,
+            //~ testCollectionScriptRunCmd, 
+            //~ testCollectionvpcScriptEval,
+            //~ testCollectionvpcScriptRunSyntax,
+            //~ testCollectionScriptExprLvl,
+            //~ testCollectionvpcScriptParseCmd,
+            //~ testCollectionvpcScriptParseExpr,
+            //~ testCollectionvpcChunkResolution,
+            //~ testCollectionvpcElements,
+            //~ testCollectionvpcuiMsgBox,
+            //~ testCollectionvpcuiIntroProvider,
+            //~ testCollectionvpcVpcVal,
+            //~ testCollectionUI512CodeEditor,
+            //~ testCollectionUI512Composites,
+            //~ testCollectionUI512DrawText,
+            //~ testCollectionUI512Elements,
+            //~ testCollectionUI512ElementsViewButtons,
+            //~ testCollectionUI512FormattedText,
+            //~ testCollectionUI512MenuRender,
+            //~ testCollectionUI512Paint,
+            //~ testCollectionUI512TextEdit,
+            //~ testCollectionUI512TextModify,
+            //~ testCollectionUI512TextSelectEvents,
+            //~ testCollectionUtilsCanvasWrapper,
+            //~ testCollectionUtilsDraw,
+            //~ testCollectionUtil512Higher,
+            //~ testCollectionUtil512Class,
+            //~ testCollectionUtil512,
+            //~ testCollectionUtil512Assert,
+            //~ testCollectionExternalLibs
         ];
 
         if (!colls || !colls.length) {

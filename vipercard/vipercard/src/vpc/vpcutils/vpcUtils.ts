@@ -1,9 +1,11 @@
 
-/* auto */ import { VpcBuiltinMsg } from './vpcEnums';
+/* auto */ import { VpcBuiltinMsg, checkThrowInternal } from './vpcEnums';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrFallback, slength } from './../../ui512/utils/util512';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
+/* auto */ import { UI512FontRequest } from './../../ui512/drawtext/ui512DrawTextFontRequest';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -28,6 +30,33 @@ export interface WritableContainer extends ReadableContainer {
     setAll(newText: string): void;
     splice(insertion: number, lenToDelete: number, newText: string): void;
     replaceAll(search: string, replaceWith: string): void;
+}
+
+/**
+ * dead-simple WritableContainer
+ * we don't even care about formatted text, we're just using it
+ * for the splice() implementation
+ */
+export class WritableContainerSimpleFmtText implements WritableContainer {
+    txt = new FormattedText()
+    isDefined(): boolean {
+        return true
+    }
+    getRawString(): string {
+        return this.txt.toUnformatted()
+    }
+    len(): number {
+        return this.txt.len()
+    }
+    setAll(newText: string): void {
+        this.txt = FormattedText.newFromUnformatted(newText)
+    }
+    splice(insertion: number, lenToDelete: number, newText: string): void {
+        this.txt = FormattedText.byInsertion(this.txt, insertion, lenToDelete, newText, UI512FontRequest.defaultFont)
+    }
+    replaceAll(search: string, replaceWith: string): void {
+        checkThrowInternal(false, "not yet implemented")
+    }
 }
 
 /**

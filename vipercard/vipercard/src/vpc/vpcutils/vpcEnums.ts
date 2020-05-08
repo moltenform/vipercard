@@ -72,6 +72,7 @@ export enum OrdinalOrPosition {
 export enum VpcGranularity {
     __isUI512Enum = 1,
     __UI512EnumCapitalize,
+    /* DO NOT CHANGE THE ORDER HERE, it's used by chunkresolution */
     Chars,
     Words,
     Items,
