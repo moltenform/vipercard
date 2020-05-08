@@ -33,9 +33,10 @@ export function createVisitor(parser: chevrotain.CstParser): VpcVisitorInterface
         }
 
         /**
-         * visit a node and return a value
+         * you can optionally rename this method to visit()
+         * to add an additional check
          */
-        visit(rule: any) {
+        visit$check_array_param(rule: any) {
             /* the default .visit() accepts arrays and silently only processes the first element, */
             /* this has a risk of accepting unintended results, let's throw instead */
             checkThrow(

@@ -48,6 +48,8 @@ module.exports = {
         new webpack.DefinePlugin({
             /*  note that the plugin does a direct text replacement. */
             WEBPACK_PRODUCTION: true,
+            'VPCCustomVisitor.prototype.VISIT_PLACEHOLDER': 'VPCCustomVisitor.prototype.unused$visit$check',
+            VISIT_PLACEHOLDER: 'unused$visit$check'
         })
     ],
     module: {
