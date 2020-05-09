@@ -485,36 +485,64 @@ export const ChunkResolutionApplication = /* static class */ {
             return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into)
         }
 
-        /* use a sentinel value to get the same results as a "put" */
-        let marker = '\x01\x01~~internalvpcmarker~~\x01\x01'
-        let unformatted = cont.getRawString()
-        checkThrow(!unformatted.includes(marker), "cannot contain the string " + marker)
-        this.applyPut(cont, chunk, itemDel, marker, VpcChunkPreposition.Into)
-        
-        /* now we look at the results and see where it got put! */
-        let results = cont.getRawString()
-        let index = results.indexOf(marker)
-        checkThrow(index >= 0, "applyModify did not find marker")
-
-        if (results.length - marker.length > unformatted.length) {
-            /* the case where we had to insert commas and stuff afterwards */
-            return unformatted
-        } else {
-            /* go back to the original string and retrieve what was there */
-            if (chunk.granularity === VpcGranularity.Words) {
-                /* delete spaces - but not returns - after the marker */
-                let i = index+marker.length
-                while(i<results.length) {
-                    if (results.charAt(i) !== ' ') {
-                        break
-                    }
-                    i++
-                }
-                
-                cont.splice(index, i - index, "")
-            } else {
-                checkThrow(false, "nyi")
+        this._rearrangeChunksToMatchOriginalProduct(chunk)
+        let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
+        let current: O<RequestedChunk> = chunk;
+        //~ let checker = new DecreasingScopeChecker();
+        while (current && resolved) {
+            if (!current.child) {
+                break
             }
+            //~ checker.onSeeScope(current.type555);
+            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', VpcChunkPreposition.Into, false);
+            current = current.child;
+        }
+
+        if (current.granularity === VpcGranularity.Words) {
+            let unf = cont.getRawString()
+            let table = ChunkResolution._getPositionsTable(unf, new RegExp('(\\n| )+', 'g'), true);
+            if (!current.last) {
+                current.last = current.first
+            }
+            current.first -= 1 // to 0 based
+            current.last -= 1 // to 0 based
+            let start:O<number>
+            let end:O<number>
+            if (current.first<0) {
+                start = undefined
+            } else if (current.first === 0) {
+                start = table[current.first]
+                while (unf[start-1]===' ' || unf[start-1]==='\n') {
+                    start = start-1
+                }
+            } else if (current.first >= table.length) {
+                start = undefined
+            } else {
+                start = table[current.first]
+            }
+
+            if (current.last<0) {
+                end = undefined
+            } else if (current.last === 0) {
+                end = table[current.last+1]-1
+            } else if (current.last >= table.length) {
+                end = undefined
+            } else {
+                end = table[current.last]
+            }
+        }
+
+        {
+            let s = new WritableContainerSimpleFmtText()
+            //~ s.setAll(cont.getRawString())
+            s.setAll(" a b c ")
+            let table = ChunkResolution._getPositionsTable(s.getRawString(), new RegExp('(\\n| )+', 'g'), true);
+            let r = table.slice().reverse()
+            for (let index of r) {
+                s.splice(index, 0, '^')
+            }
+            console.log(s.getRawString())
+            console.log(s.getRawString())
         }
     },
 

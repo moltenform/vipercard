@@ -96,7 +96,13 @@ export const VpcGettableSerialization = /* static class */ {
         sharedtext: true,
         sharedhilite: true,
         marked: true,
-        cardorder: true
+        cardorder: true,
+        compatibilitymode: true,
+        is_bg_velement_id: true,
+        ftxt_uniquetocard: true,
+        scroll_uniquetocard: true,
+        hilite_uniquetocard: true,
+        checkmark_uniquetocard: true,
     } as { [key: string]: boolean },
 
     /**

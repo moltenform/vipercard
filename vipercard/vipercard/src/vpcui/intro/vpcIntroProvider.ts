@@ -12,7 +12,7 @@
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
 /* auto */ import { VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { UndoableActionCreateOrDelVel } from './../state/vpcCreateOrDelVel';
-/* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
+/* auto */ import { VpcElStackLineageEntry, VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { RespondToErr, Root, Util512Higher, getRoot, justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, vpcWebsite } from './../../ui512/utils/util512Base';
@@ -22,6 +22,11 @@
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+import { VpcElCard } from '../../vpc/vel/velCard';
+import { VpcElButton } from '../../vpc/vel/velButton';
+import { VpcElField } from '../../vpc/vel/velField';
+import { VpcElBg } from '../../vpc/vel/velBg';
+import { FormattedText } from '../../ui512/drawtext/ui512FormattedText';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -241,22 +246,58 @@ export class VpcIntroProvider {
      * older stacks won't have this set
      */
     protected patchUpFromPrevVersions(model: VpcModelTop) {
-        for (let bg of model.stack.bgs) {
-            if (bg['parts']) {
-                delete bg['parts'];
-            }
-        }
-
-        if (!model.stack.getS('cardorder')) {
-            model.stack.alterCardOrder(current => {
-                let order: string[] = [];
-                for (let bg of model.stack.bgs) {
-                    for (let cd of bg.cards) {
-                        order.push(cd.idInternal);
-                    }
+        for (let vel of model.stack.iterEntireStack()) {
+            if (vel instanceof VpcElStack) {
+                if (vel['_compatibilitymode'] === undefined) {
+                    vel['_compatibilitymode'] = false
                 }
-                return order;
-            }, model);
+                if (vel['_cardorder'] === undefined) {
+                    vel['_cardorder'] = ''
+                    model.stack.alterCardOrder(current => {
+                        let order: string[] = [];
+                        for (let bg of model.stack.bgs) {
+                            for (let cd of bg.cards) {
+                                order.push(cd.idInternal);
+                            }
+                        }
+                        return order;
+                    }, model);
+                }
+            } else if (vel instanceof VpcElBg) {
+                if (vel['parts']) {
+                    delete vel['parts'];
+                }
+            } else if (vel instanceof VpcElCard) {
+                if (vel['_marked'] === undefined) {
+                    vel['_marked'] = false
+                }
+            } else if (vel instanceof VpcElButton) {
+                if (vel['_sharedhilite'] === undefined) {
+                    vel['_sharedhilite'] = false
+                }
+                if (vel['_is_bg_velement_id'] === undefined) {
+                    vel['_is_bg_velement_id'] = ''
+                }
+                if (vel['_hilite_uniquetocard'] === undefined) {
+                    vel['_hilite_uniquetocard'] = false
+                }
+                if (vel['_checkmark_uniquetocard'] === undefined) {
+                    vel['_checkmark_uniquetocard'] = false
+                }
+            } else if (vel instanceof VpcElField) {
+                if (vel['_sharedtext'] === undefined) {
+                    vel['_sharedtext'] = false
+                }
+                if (vel['_is_bg_velement_id'] === undefined) {
+                    vel['_is_bg_velement_id'] = ''
+                }
+                if (vel['_ftxt_uniquetocard'] === undefined) {
+                    vel['_ftxt_uniquetocard'] = new FormattedText()
+                }
+                if (vel['_scroll_uniquetocard'] === undefined) {
+                    vel['_scroll_uniquetocard'] = 0
+                }
+            }
         }
     }
 

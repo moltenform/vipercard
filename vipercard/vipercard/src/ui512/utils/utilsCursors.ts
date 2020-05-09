@@ -122,8 +122,8 @@ isInvert[UI512Cursors.cross] = true;
  * hide cursor when it leaves our canvas, otherwise it looks stuck.
  */
 const enum Constants {
-    HideCursorWhenThisCloseToLeft = 30,
-    HideCursorWhenThisCloseToTop = 30,
+    HideCursorWhenThisCloseToLeft = 40,
+    HideCursorWhenThisCloseToTop = 40,
     HideCursorWhenThisCloseToRight = 5,
     HideCursorWhenThisCloseToBottom = 5
 }

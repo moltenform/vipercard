@@ -16,7 +16,7 @@
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, ValHolder, lastIfThere, orderedHashSummary, slength } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, ValHolder, lastIfThere, orderedHashSummary, slength, assertWarnEq } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -382,7 +382,7 @@ export class VpcExecTop {
                     bgIdsSeenThisCd.insertNew(pt.getS('is_bg_velement_id'), pt.getType());
                 }
 
-                assertWarn(expect, orderedHashSummary(bgIdsSeenThisCd), '');
+                assertWarnEq(expect, orderedHashSummary(bgIdsSeenThisCd), '');
             }
         }
     }
