@@ -141,8 +141,16 @@ export class VpcElProductOpts extends VpcElBase {
                     s = 'plus';
                 } else if (s === '4') {
                     s = 'watch';
+                } else if (s === '5') {
+                    s = 'hand';
+                } else if (s === '6') {
+                    s = 'arrow';
+                } else if (s === '7') {
+                    s = 'busy';
+                } else if (s === '8') {
+                    s = 'none';
                 }
-
+                
                 let n = getStrToEnum<UI512Cursors>(UI512Cursors, `cursor ${s} not supported`, s);
                 UI512CursorAccess.setCursorSupportRotate(n);
             }

@@ -55,28 +55,62 @@
  */
 export enum UI512Cursors {
     __isUI512Enum = -1,
-    /* the following are set to these numbers to be
-    compatible with the original product  */
-    lbeam = 1,
-    cross = 2,
-    plus = 3,
-    watch = 4,
-    hand = 5,
-    arrow = 6,
-    busy = 7,
-    __AlternateForm__none = arrow /* cursor = none would be frustrating */,
-    /* order no longer matters */
-    unknown = 8,
-    paintbrush = 9,
-    painterase,
-    paintlasso,
-    paintpencil,
-    paintrectsel,
-    paintspray,
-    paintbucket,
-    busy2,
-    busy3,
-    busy4
+    /* manually drawn cursors
+    advantage: looks better */
+    /* order here should match order in 0cursors1.png */
+    drawn_lbeam=1,
+    drawn_cross,
+    drawn_plus,
+    drawn_watch,
+    drawn_hand,
+    drawn_arrow,
+    drawn_busy,
+    drawn_unknown,
+    drawn_paintbrush,
+    drawn_painterase,
+    drawn_paintlasso,
+    drawn_paintpencil,
+    drawn_paintrectsel,
+    drawn_paintspray,
+    drawn_paintbucket,
+    drawn_busy2,
+    drawn_busy3,
+    drawn_busy4,
+
+    /* css cursors
+    advantage: still move even when JS is running heavy */
+    css_hand,
+    css_paintbrush,
+    css_paintpencil,
+    css_cross,
+    css_painterase,
+    css_paintspray,
+    css_watch,
+    css_busy,
+    css_busy2,
+    css_busy3,
+    css_busy4,
+
+    /* what is currently chosen */
+    lbeam = drawn_lbeam,
+    cross = css_cross,
+    plus = drawn_plus,
+    watch = css_watch,
+    hand = css_hand,
+    arrow = drawn_arrow,
+    busy = css_busy,
+    busy2 = css_busy2,
+    busy3 = css_busy3,
+    busy4 = css_busy4,
+    unknown = drawn_unknown,
+    paintbrush = css_paintbrush,
+    painterase = drawn_painterase, /* use drawn, otherwise size might not match */
+    paintlasso = drawn_paintlasso,
+    paintpencil = css_paintpencil,
+    paintrectsel = drawn_paintrectsel,
+    paintspray = css_paintspray,
+    paintbucket = drawn_paintbucket,
+    __AlternateForm__none=arrow,
 }
 
 /**
@@ -84,25 +118,67 @@ export enum UI512Cursors {
  */
 const hotCoords = [
     [0, 0] /* placeholder */,
-    [3, 7],
-    [7, 7],
-    [7, 7],
-    [7, 7],
-    [6, 0],
-    [3, 1],
-    [7, 7],
-    [3, 1],
-    [5, 14],
-    [7, 7],
-    [2, 13],
-    [1, 15],
-    [7, 7],
-    [2, 2],
-    [14, 14],
-    [7, 7],
-    [7, 7],
-    [7, 7]
-];
+]
+hotCoords[UI512Cursors.drawn_lbeam]=[3, 7]
+hotCoords[UI512Cursors.drawn_cross]=[7, 7] 
+hotCoords[UI512Cursors.drawn_plus]=[7, 7]
+hotCoords[UI512Cursors.drawn_watch]=[7, 7] 
+hotCoords[UI512Cursors.drawn_hand]=[6, 0]
+hotCoords[UI512Cursors.drawn_arrow]=[3, 1] 
+hotCoords[UI512Cursors.drawn_busy]=[7, 7]
+hotCoords[UI512Cursors.drawn_unknown]=[3, 1]
+hotCoords[UI512Cursors.drawn_paintbrush]=[5, 14 ]
+hotCoords[UI512Cursors.drawn_painterase]=[7, 7]
+hotCoords[UI512Cursors.drawn_paintlasso]=[2, 13 ]
+hotCoords[UI512Cursors.drawn_paintpencil]=[1, 15 ]
+hotCoords[UI512Cursors.drawn_paintrectsel]=[7, 7]
+hotCoords[UI512Cursors.drawn_paintspray]=[2, 2]
+hotCoords[UI512Cursors.drawn_paintbucket]=[14, 14]
+hotCoords[UI512Cursors.drawn_busy2]=[7, 7] 
+hotCoords[UI512Cursors.drawn_busy3]=[7, 7] 
+hotCoords[UI512Cursors.drawn_busy4]=[7, 7] 
+hotCoords[UI512Cursors.css_cross]=[7, 7] 
+hotCoords[UI512Cursors.css_watch]=[7, 7] 
+hotCoords[UI512Cursors.css_hand]=[6, 0]
+hotCoords[UI512Cursors.css_busy]=[7, 7]
+hotCoords[UI512Cursors.css_paintbrush]=[5, 14 ]
+hotCoords[UI512Cursors.css_painterase]=[7, 7]
+hotCoords[UI512Cursors.css_paintpencil]=[1, 15 ]
+hotCoords[UI512Cursors.css_paintspray]=[2, 2]
+hotCoords[UI512Cursors.css_busy2]=[7, 7] 
+hotCoords[UI512Cursors.css_busy3]=[7, 7] 
+hotCoords[UI512Cursors.css_busy4]=[7, 7] 
+
+const cssCursorFilenames:{ [key: number]: string } = {};
+cssCursorFilenames[UI512Cursors.css_paintbrush]='brush5,14.png'
+cssCursorFilenames[UI512Cursors.css_cross]='cross7,7.png'
+cssCursorFilenames[UI512Cursors.css_painterase]='erase7,7.png'
+cssCursorFilenames[UI512Cursors.css_hand]='hand6,0.png'
+cssCursorFilenames[UI512Cursors.css_paintpencil]='pencil1,15.png'
+cssCursorFilenames[UI512Cursors.css_paintspray]='spray2,2.png'
+cssCursorFilenames[UI512Cursors.css_busy]='xtrabusya7,7.png'
+cssCursorFilenames[UI512Cursors.css_busy2]='xtrabusyb7,7.png'
+cssCursorFilenames[UI512Cursors.css_busy3]='xtrabusyc7,7.png'
+cssCursorFilenames[UI512Cursors.css_busy4]='xtrabusyd7,7.png'
+cssCursorFilenames[UI512Cursors.css_watch]='xtrawatch7,7.png'
+
+const cssCursorFallbacks:{ [key: number]: string } = {};
+cssCursorFallbacks[UI512Cursors.css_hand]='pointer'
+cssCursorFallbacks[UI512Cursors.css_watch]='progress'
+cssCursorFallbacks[UI512Cursors.css_busy]='wait'
+cssCursorFallbacks[UI512Cursors.css_busy2]='wait'
+cssCursorFallbacks[UI512Cursors.css_busy3]='wait'
+cssCursorFallbacks[UI512Cursors.css_busy4]='wait'
+cssCursorFallbacks[UI512Cursors.css_cross]='crosshair'
+
+/* cross is slightly different in
+the css version,
+part of what makes the css cursors look terrible
+is that the white-to-transparent transition becomes
+a faint gray line. so add no white pixels
+in the css version */
+const filenames: { [key: number]: boolean } = {};
+
 
 /**
  * certain cursors are neither black nor white,
@@ -113,10 +189,10 @@ const hotCoords = [
  * the effort to implement.
  */
 const isInvert: { [key: number]: boolean } = {};
-isInvert[UI512Cursors.lbeam] = true;
-isInvert[UI512Cursors.paintrectsel] = true;
-isInvert[UI512Cursors.paintlasso] = true;
-isInvert[UI512Cursors.cross] = true;
+isInvert[UI512Cursors.drawn_lbeam] = true;
+isInvert[UI512Cursors.drawn_paintrectsel] = true;
+isInvert[UI512Cursors.drawn_paintlasso] = true;
+isInvert[UI512Cursors.drawn_cross] = true;
 
 /**
  * hide cursor when it leaves our canvas, otherwise it looks stuck.
@@ -143,6 +219,7 @@ export class UI512CursorAccess {
     protected static currentHotY = 0;
     protected static wasCursorLoaded = false;
     protected static curInfo = new IconInfo('0cursors1', UI512Cursors.arrow);
+    protected static multForCssCursor = 1;
 
     /**
      * get the current cursor
@@ -160,18 +237,30 @@ export class UI512CursorAccess {
             return;
         }
 
-        /* hide the real cursor */
         let el = window.document.getElementById('mainDomCanvas');
         if (el) {
-            el.style.cursor = 'none';
+            let fname = cssCursorFilenames[nextCursor]
+            if (fname) {
+                /* show a real cursor */
+                let fullname = `/resources03a/images/cursors/x${UI512CursorAccess.multForCssCursor}${fname}`
+                let [hotsx, hotsy] = hotCoords[nextCursor] ?? [0, 0];
+                hotsx *= UI512CursorAccess.multForCssCursor
+                hotsy *= UI512CursorAccess.multForCssCursor
+                let fallback = cssCursorFallbacks[nextCursor] ?? 'default'
+                el.style.cursor = `url(${fullname}) ${hotsx} ${hotsy}, ${fallback}`
+                console.log(el.style.cursor)
+            } else {
+                /* hide the real cursor */
+                el.style.cursor = 'none';
+                let hots = hotCoords[nextCursor] ?? [0, 0];
+                UI512CursorAccess.currentHotX = hots[0];
+                UI512CursorAccess.currentHotY = hots[1];
+                UI512CursorAccess.curInfo.iconGroup = '0cursors1';
+                UI512CursorAccess.curInfo.iconNumber = nextCursor - 1;
+                UI512CursorAccess.curInfo.centered = false;
+            }
         }
-
-        let hots = hotCoords[nextCursor] ?? [0, 0];
-        UI512CursorAccess.currentHotX = hots[0];
-        UI512CursorAccess.currentHotY = hots[1];
-        UI512CursorAccess.curInfo.iconGroup = '0cursors1';
-        UI512CursorAccess.curInfo.iconNumber = nextCursor - 1;
-        UI512CursorAccess.curInfo.centered = false;
+        
         UI512CursorAccess.currentCursor = nextCursor;
     }
 
@@ -201,8 +290,10 @@ export class UI512CursorAccess {
      * also called on init()
      */
     static notifyScreenMult(mult: number) {
-        /* we don't need to care about mult anymore,
-        but we should still refresh the cursor */
+        UI512CursorAccess.multForCssCursor = mult
+        /* don't actually call setcursor here to 
+        force the refresh because it might flash for a second */
+        UI512CursorAccess.lastDrawnCur = UI512Cursors.busy4;
         UI512CursorAccess.setCursor(UI512CursorAccess.getCursor(), true);
     }
 
@@ -217,6 +308,21 @@ export class UI512CursorAccess {
     }
 
     /**
+     * begin preloading common cursors
+     */
+    static suggestPreloadCursors() {
+        /* preload some cursors we'll probably want */
+        for (let cursor of [UI512Cursors.css_hand, UI512Cursors.css_paintpencil, UI512Cursors.css_cross]) {
+            let preloadLink = window.document.createElement("link");
+            let fname = cssCursorFilenames[cursor]
+            preloadLink.href = `/resources03a/images/cursors/x${UI512CursorAccess.multForCssCursor}${fname}`;
+            preloadLink.rel = "preload";
+            preloadLink.as = "image";
+            document.head.appendChild(preloadLink);
+        }
+    }
+
+    /**
      * draw our virtual cursor onto the screen
      */
     static drawFinalWithCursor(
@@ -224,6 +330,19 @@ export class UI512CursorAccess {
         final: CanvasWrapper,
         drewAnything: boolean
     ) {
+        if (cssCursorFilenames[UI512CursorAccess.currentCursor]) {
+            /* hope to erase a previously drawn one */
+            if (UI512CursorAccess.lastDrawnCur !== UI512CursorAccess.currentCursor ||
+                drewAnything) {
+                final.context.drawImage(buffer.canvas, 0, 0);
+            }
+
+            UI512CursorAccess.lastDrawnMx = UI512CursorAccess.currentMx;
+            UI512CursorAccess.lastDrawnMy = UI512CursorAccess.currentMy;
+            UI512CursorAccess.lastDrawnCur = UI512CursorAccess.currentCursor;
+            return
+        }
+
         if (
             !drewAnything &&
             UI512CursorAccess.currentMx === UI512CursorAccess.lastDrawnMx &&
@@ -305,3 +424,4 @@ export class UI512CursorAccess {
         UI512CursorAccess.lastDrawnCur = UI512CursorAccess.currentCursor;
     }
 }
+

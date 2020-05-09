@@ -93,6 +93,9 @@ export class FullRootUI512 implements RootHigher {
             'Delay-loading external code',
             RespondToErr.Alert
         );
+        
+        showMsgIfExceptionThrown(()=>
+        UI512CursorAccess.suggestPreloadCursors(), 'suggestPreloadCursors')
     }
 
     invalidateAll() {
