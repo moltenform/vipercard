@@ -12,21 +12,21 @@
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
 /* auto */ import { VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { UndoableActionCreateOrDelVel } from './../state/vpcCreateOrDelVel';
-/* auto */ import { VpcElStackLineageEntry, VpcElStack } from './../../vpc/vel/velStack';
+/* auto */ import { VpcElStack, VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
+/* auto */ import { VpcElField } from './../../vpc/vel/velField';
+/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
+/* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
+/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { RespondToErr, Root, Util512Higher, getRoot, justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, vpcWebsite } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, respondUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertWarnEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
-import { VpcElCard } from '../../vpc/vel/velCard';
-import { VpcElButton } from '../../vpc/vel/velButton';
-import { VpcElField } from '../../vpc/vel/velField';
-import { VpcElBg } from '../../vpc/vel/velBg';
-import { FormattedText } from '../../ui512/drawtext/ui512FormattedText';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

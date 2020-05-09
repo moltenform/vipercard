@@ -296,6 +296,13 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     }
 
     /**
+     * show a modal dialog
+     */
+    answerMsgAsync(prompt: string, choice1?: string, choice2?: string, choice3?: string): Promise<number> {
+        return this.pr.answerMsgAsync(prompt, choice1, choice2, choice3)
+    }
+
+    /**
      * get the currently focused vel
      */
     getCurrentFocusVelField() {

@@ -47,6 +47,24 @@
  * Other ppl hitting the same issue:
  * https://stackoverflow.com/questions/35561547/svg-mouse-cursor-blurry-on-retina-display
  * https://jsfiddle.net/jhhbrook/ucuLefut/
+ * 
+ * Another big downside of drawing the cursor manually:
+ *      When javascript is busy, the cursor is stuck.
+ *      For example, commiting a drawn spraypaint to the card takes a few hundred milliseconds,
+ *      and that delay is noticeable when it causes the cursor to stick.
+ *      even worse, if you're running a script that takes a long time,
+ *      the cursor is really laggy.
+ *      so I've decided to 
+ *          1) use drawn cursors as often as possible
+ *          2) use css cursors for potentially long operations (painting)
+ *          3) for the css cursors, try not to have any white-to-transparent borders,
+ *              which is one of the main reasons it looked bad (caused a gray line)
+ * 
+ *      If I know the scale is 125%, should I use an 80% cursor to compensate?
+ *      Prob not because a) still stretched, fewer pixels
+ *          b) devicePixelRatio could be one of 3 things:
+ *              os scaling to 125%, browser scaling, or Retina setting it to 2
+ *             since I don't know which, hard to know the right approach.
  */
 
 /**
@@ -248,7 +266,6 @@ export class UI512CursorAccess {
                 hotsy *= UI512CursorAccess.multForCssCursor
                 let fallback = cssCursorFallbacks[nextCursor] ?? 'default'
                 el.style.cursor = `url(${fullname}) ${hotsx} ${hotsy}, ${fallback}`
-                console.log(el.style.cursor)
             } else {
                 /* hide the real cursor */
                 el.style.cursor = 'none';
@@ -374,6 +391,7 @@ export class UI512CursorAccess {
                 UI512CursorAccess.curInfo.iconGroup,
                 UI512CursorAccess.curInfo.iconNumber
             );
+
             if (!found) {
                 /* we haven't loaded the cursor image yet!
                     in the meantime, hand-draw a little square cursor */

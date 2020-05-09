@@ -16,7 +16,7 @@
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, ValHolder, lastIfThere, orderedHashSummary, slength, assertWarnEq } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, ValHolder, assertWarnEq, lastIfThere, orderedHashSummary, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

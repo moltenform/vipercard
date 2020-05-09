@@ -289,7 +289,8 @@ export class ExecuteStatement {
         let contRef = cast(RequestedContainerRef, ar[2]);
         let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
-        ChunkResolutionApplication.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep);
+        let compatibility = this.outside.Model().stack.getB('compatibilitymode')
+        ChunkResolutionApplication.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep, compatibility);
     }
     /**
      * reset paint/ menubar

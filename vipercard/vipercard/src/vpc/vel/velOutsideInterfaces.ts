@@ -2,7 +2,7 @@
 /* auto */ import { VpcVal } from './../vpcutils/vpcVal';
 /* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcElType, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcModelTop } from './velModelTop';
 /* auto */ import { VpcElField } from './velField';

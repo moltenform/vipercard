@@ -187,6 +187,11 @@ export interface VpcStateInterface {
     setNonModalDialogByStr(form: O<string>): void;
 
     /**
+     * show a modal dialog
+     */
+    answerMsgAsync(prompt: string, choice1?: string, choice2?: string, choice3?: string): Promise<number>;
+
+    /**
      * get the currently focused vel
      */
     getCurrentFocusVelField(): O<VpcElField>;
