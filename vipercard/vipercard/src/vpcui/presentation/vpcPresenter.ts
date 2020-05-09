@@ -417,6 +417,14 @@ export class VpcPresenter extends VpcPresenterInit {
      * note: is a no-op if cursor hasn't changed, so feel free to call this
      */
     refreshCursorElemKnown(el: O<UI512Element>, isDocumentEl: boolean) {
+        if (this.vci.getCodeExec().isCodeRunning()) {
+            /* always set it to hand. why?
+            because currently hand is a css cursor that will never lag slowly
+            if the script is really busy running things. */
+            UI512CursorAccess.setCursor(UI512Cursors.hand);
+            return
+        }
+
         if (isDocumentEl) {
             let tl = this.getTool();
             let curs = this.getToolResponse(tl).whichCursor(tl, el);

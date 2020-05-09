@@ -254,7 +254,7 @@ export class UI512CursorAccess {
             /* for efficiency, exit early */
             return;
         }
-
+        
         let el = window.document.getElementById('mainDomCanvas');
         if (el) {
             let fname = cssCursorFilenames[nextCursor]
@@ -268,13 +268,13 @@ export class UI512CursorAccess {
                 el.style.cursor = `url(${fullname}) ${hotsx} ${hotsy}, ${fallback}`
             } else {
                 /* hide the real cursor */
-                el.style.cursor = 'none';
                 let hots = hotCoords[nextCursor] ?? [0, 0];
                 UI512CursorAccess.currentHotX = hots[0];
                 UI512CursorAccess.currentHotY = hots[1];
                 UI512CursorAccess.curInfo.iconGroup = '0cursors1';
                 UI512CursorAccess.curInfo.iconNumber = nextCursor - 1;
                 UI512CursorAccess.curInfo.centered = false;
+                el.style.cursor = 'none';
             }
         }
         
