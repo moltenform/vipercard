@@ -24,7 +24,7 @@
  * the main preparse (syntax rewriting) logic is here
  */
 export const VpcTopPreparse = /* static class */ {
-    goPreparseOrThrow(code: string, idGen: CountNumericId): VpcParsedCodeCollection {
+    goPreparseOrThrow(code: string, idGen: CountNumericId, compatMode:boolean): VpcParsedCodeCollection {
         /* set current status */
         VpcCurrentScriptStage.currentStage = VpcErrStage.Lex;
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
@@ -94,7 +94,7 @@ export const VpcTopPreparse = /* static class */ {
             let nextLines2 = this._stage2Process(line, rewrites) ?? [line];
             for (let line2 of nextLines2) {
                 VpcCurrentScriptStage.latestSrcLineSeen = line2[0].startLine;
-                let nextLines3 = this._stage3Process(line2, exp, rw);
+                let nextLines3 = this._stage3Process(line2, exp, rw, compatMode);
                 for (let line3 of nextLines3) {
                     VpcCurrentScriptStage.latestSrcLineSeen = line3[0].startLine;
                     /* make it lowercase again, just in case */
@@ -139,8 +139,8 @@ export const VpcTopPreparse = /* static class */ {
     },
 
     /* apply the 3rd stage of rewriting */
-    _stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite): ChvITk[][] {
-        line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line, rw);
+    _stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite, compatMode:boolean): ChvITk[][] {
+        line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line, rw, compatMode);
         line = VpcRewritesGlobal.rewritePropertySynonyms(line, rw);
         let outlines = exp.go(line);
         return outlines;

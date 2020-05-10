@@ -3,7 +3,7 @@
 /* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcEditPanelsBase } from './vpcEditPanelsBase';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { Util512Higher, RespondToErr } from './../../ui512/utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { cAltProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';

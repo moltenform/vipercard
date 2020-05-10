@@ -819,7 +819,7 @@ class VpcCacheParsedASTForTest extends VpcCacheParsedAST {
         let transformedCode: O<VpcParsedCodeCollection>;
         let err: O<Error>;
         try {
-            transformedCode = this.getParsedCodeCollectionOrThrow(script, 'unknown-vel');
+            transformedCode = this.getParsedCodeCollectionOrThrow(script, 'unknown-vel', true /* compatibility mode */);
         } catch (e) {
             /* catch the errors here,
             otherwise the error site will be far away and hard to correlate

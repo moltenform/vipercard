@@ -169,13 +169,13 @@ export class VelRenderId {
     /**
      * get the id
      */
-    go(vel: VpcElBase, adjective: PropAdjective) {
+    go(vel: VpcElBase, adjective: PropAdjective, compatMode:boolean) {
         if (vel instanceof VpcElCard) {
             return this.goCard(vel, adjective);
         } else if (vel instanceof VpcElProductOpts) {
             return this.goProduct(vel, adjective);
         } else {
-            return this.goOtherTypes(vel, adjective);
+            return this.goOtherTypes(vel, adjective, compatMode);
         }
     }
 
@@ -204,7 +204,7 @@ export class VelRenderId {
     /**
      * the long id of a cd btn is the same as the short id of a cd btn
      */
-    protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective) {
+    protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective, compatMode:boolean) {
         let userFacingId = vel.getUserFacingId();
         if (adjective === PropAdjective.Long) {
             if (vel instanceof VpcElButton || vel instanceof VpcElField) {
@@ -212,7 +212,14 @@ export class VelRenderId {
                 /* NOTE: this is ambiguous - for a bg object,
                 it won't precisely identify the object.
                 but this is the way the original product worked. */
-                return `${cdOrBg} ${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`;
+                let s = `${cdOrBg} ${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`;
+                if (!compatMode) {
+                    /* fix the ambiguity */
+                    let parent = this.model.getByIdUntyped(vel.parentIdInternal)
+                    s += ` of cd id ${parent.getUserFacingId()}`
+                }
+                
+                return s
             } else {
                 return `${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`;
             }

@@ -114,7 +114,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     ElementExists(vel: RequestedVelRef): O<string> {
         let found = this.ResolveVelRef(vel);
         if (found) {
-            return new VelRenderId(this.vci.getModel()).go(found, PropAdjective.Long);
+            return new VelRenderId(this.vci.getModel()).go(found, PropAdjective.Long, this.Model().stack.getB('compatibilitymode'));
         } else {
             return undefined;
         }
@@ -346,7 +346,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             /* put the id of card "myCard" into x */
             let renderer = new VelRenderId(this.vci.getModel());
             adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
-            return VpcValS(renderer.go(vel, adjective));
+            return VpcValS(renderer.go(vel, adjective, this.Model().stack.getB('compatibilitymode')));
         } else if (prop === 'number') {
             /* put the number of card "myCard" into x */
             let renderer = new VelGetNumberProperty(this.vci.getModel());
@@ -567,7 +567,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (adjective === PropAdjective.Short) {
             return target.getS('name') ?? '';
         } else {
-            return new VelRenderId(this.vci.getModel()).go(target, PropAdjective.Long);
+            return new VelRenderId(this.vci.getModel()).go(target, PropAdjective.Long, this.Model().stack.getB('compatibilitymode'));
         }
     }
 
@@ -593,7 +593,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (adjective === PropAdjective.Short) {
             return owner.getS('name') ?? '';
         } else {
-            return new VelRenderId(this.vci.getModel()).go(owner, PropAdjective.Long);
+            return new VelRenderId(this.vci.getModel()).go(owner, PropAdjective.Long, this.Model().stack.getB('compatibilitymode'));
         }
     }
 

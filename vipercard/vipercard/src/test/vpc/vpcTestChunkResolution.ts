@@ -511,7 +511,8 @@ function testSetChunk(
         ch,
         itemDel,
         sReplace,
-        VpcChunkPreposition.Into
+        VpcChunkPreposition.Into,
+        true /* compatibility mode */
     );
     assertEq(sExpected, world.result, '2j|');
 }

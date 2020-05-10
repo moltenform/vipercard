@@ -63,14 +63,25 @@ const ChunkResolution = /* static class */ {
     },
 
     /**
-     * if the script has said something like
-     * set the itemDel to "?"
-     * make sure it is one-character and that the regex is escaped
+     * what is regex for this type
      */
-    _regexpForDelim(delim: string) {
-        checkThrowEq(1, delim.length, '8m|delim should be length 1 but got', delim);
-        let escaped = Util512.escapeForRegex(delim);
-        return new RegExp(escaped, 'g');
+    getRegex(type: VpcGranularity, delim: string):RegExp {
+        if (type === VpcGranularity.Items) {
+            /*
+            if the script has said something like
+            set the itemDel to "?"
+            make sure it is one-character and that the regex is escaped
+            */
+            checkThrowEq(1, delim.length, '8m|delim should be length 1 but got', delim);
+            let escaped = Util512.escapeForRegex(delim);
+            return new RegExp(escaped, 'g');
+        } else if (type === VpcGranularity.Lines) {
+            return /\n/g
+        } else if (type === VpcGranularity.Words) {
+            return new RegExp('(\\n| )+', 'g')
+        } else {
+            checkThrowInternal(false, 'no regex for this granularity')
+        }
     },
 
     /**
@@ -91,7 +102,7 @@ const ChunkResolution = /* static class */ {
      * return semi-inclusive bounds [start, end)
      */
     _itemsBoundsForGet(sInput: string, delim: string, start: number, end: number): O<[number, number]> {
-        let table = this._getPositionsTable(sInput, this._regexpForDelim(delim), false);
+        let table = this._getPositionsTable(sInput, this.getRegex(VpcGranularity.Items, delim), false);
         if (start >= table.length) {
             return undefined;
         } else {
@@ -107,7 +118,7 @@ const ChunkResolution = /* static class */ {
      * return semi-inclusive bounds [start, end)
      */
     _wordsBoundsForGet(sInput: string, start: number, end: number): O<[number, number]> {
-        let table = this._getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true);
+        let table = this._getPositionsTable(sInput, this.getRegex(VpcGranularity.Words, ''), true);
         if (start >= table.length) {
             return undefined;
         } else {
@@ -137,7 +148,7 @@ const ChunkResolution = /* static class */ {
      * when you say put "abc" into item x to y of z, which positions should be replaced with "abc"?
      */
     _itemsBoundsForSet(sInput: string, delim: string, start: number, end: number): any {
-        let table = this._getPositionsTable(sInput, this._regexpForDelim(delim), false);
+        let table = this._getPositionsTable(sInput, this.getRegex(VpcGranularity.Items, delim), false);
         if (start >= table.length) {
             /* you can set items beyond current content, add trailing commas! */
             let howmanytoadd = 1 + (start - table.length);
@@ -330,34 +341,6 @@ const ChunkResolution = /* static class */ {
     }
 };
 
-//~ /* don't let scopes go backwards.
-    //~ only char after char seen.
-    //~ only char or word after word seen.
-    //~ original product had weird behavior we don't want to replicate.*/
-//~ class DecreasingScopeChecker {
-    //~ seenWord = false;
-    //~ seenChar = false;
-    //~ onSeeScope(g: VpcGranularity) {
-        //~ if (g === VpcGranularity.Chars) {
-            //~ this.seenChar = true;
-        //~ } else if (g === VpcGranularity.Words) {
-            //~ checkThrow(
-                //~ !this.seenChar,
-                //~ longstr(`we don't yet support a word being the child
-                //~ of a char, please use an intermediate variable.`)
-            //~ );
-            //~ this.seenWord = true;
-        //~ } else {
-            //~ checkThrow(
-                //~ !this.seenChar && !this.seenWord,
-                //~ longstr(`we don't yet support 
-                    //~ a line or item being the child of a char or word.
-                    //~ please use an intermediate variable.`)
-            //~ );
-        //~ }
-    //~ }
-//~ }
-
 /**
  * public interface for chunk resolution
  */
@@ -392,9 +375,7 @@ export const ChunkResolutionApplication = /* static class */ {
         let resolved = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
         let isTop = true
-        //~ let checker = new DecreasingScopeChecker();
         while (current) {
-            //~ checker.onSeeScope(current.type555);
             if (current.child) {
                 /* narrow it down */
                 resolved = ensureDefined(
@@ -459,7 +440,6 @@ export const ChunkResolutionApplication = /* static class */ {
         }
 
         let current: O<RequestedChunk> = chunk;
-        //~ let checker = new DecreasingScopeChecker();
         while (current && resolved) {
             //~ checker.onSeeScope(current.type555);
             resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', VpcChunkPreposition.Into, false);
@@ -488,12 +468,10 @@ export const ChunkResolutionApplication = /* static class */ {
         this._rearrangeChunksToMatchOriginalProduct(chunk, compatibility)
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
-        //~ let checker = new DecreasingScopeChecker();
         while (current && resolved) {
             if (!current.child) {
                 break
             }
-            //~ checker.onSeeScope(current.type555);
             resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', VpcChunkPreposition.Into, false);
             current = current.child;
         }
@@ -503,7 +481,7 @@ export const ChunkResolutionApplication = /* static class */ {
             //~ s.setAll(cont.getRawString())
             //~ s.setAll(" a b c ")
             s.setAll("a b c")
-            let table = ChunkResolution._getPositionsTable(s.getRawString(), new RegExp('(\\n| )+', 'g'), true);
+            let table = ChunkResolution._getPositionsTable(s.getRawString(), ChunkResolution.getRegex(VpcGranularity.Words, ''), true);
             let r = table.slice().reverse()
             for (let index of r) {
                 s.splice(index, 0, '^')
@@ -512,16 +490,27 @@ export const ChunkResolutionApplication = /* static class */ {
             console.log(s.getRawString())
         }
 
+        checkThrow(!current.last || current.first<=current.last, "we don't support backwards bounds")
+        for (let i=current.last ?? current.first; i>=current.first; i--) {
+            let tmp = current.getClone()
+            tmp.first = i
+            tmp.last = i
+            this._applyDeleteHelper(cont, itemDel, compatibility, tmp)
+        }
+    },
+
+    _applyDeleteHelper(cont: WritableContainer, delim: string, compatibility:boolean, current: RequestedChunk) {
+        let unf = cont.getRawString()
+        if (!current.last) {
+            current.last = current.first
+        }
+        current.first -= 1 /* to 0 based */
+        current.last -= 1 /* to 0 based */
+
+        let start:number
+        let end:number
+        let table = ChunkResolution._getPositionsTable(unf, ChunkResolution.getRegex(current.granularity, delim), current.granularity === VpcGranularity.Words);
         if (current.granularity === VpcGranularity.Words) {
-            let unf = cont.getRawString()
-            let table = ChunkResolution._getPositionsTable(unf, new RegExp('(\\n| )+', 'g'), true);
-            if (!current.last) {
-                current.last = current.first
-            }
-            current.first -= 1 /* to 0 based */
-            current.last -= 1 /* to 0 based */
-            let start:number
-            let end:number
             if (current.first === -1) {
                 /* emulator confirms you can say word 0 of x */
                 start = 0
@@ -549,32 +538,48 @@ export const ChunkResolutionApplication = /* static class */ {
                 }
             }
 
-            cont.splice(start, end-start, '')
-
-            //~ if (current.first<0) {
-                //~ start = undefined
-            //~ } else if (current.first === 0) {
-                //~ start = table[current.first]
-                //~ while (unf[start-1]===' ' || unf[start-1]==='\n') {
-                    //~ start = start-1
-                //~ }
-            //~ } else if (current.first >= table.length) {
-                //~ start = undefined
-            //~ } else {
-                //~ start = table[current.first]
-            //~ }
-            //~ if (current.last<0) {
-                //~ end = undefined
-            //~ } else if (current.last === 0) {
-                //~ end = table[current.last+1]-1
-            //~ } else if (current.last >= table.length) {
-                //~ end = undefined
-            //~ } else {
-                //~ end = table[current.last]
-            //~ }
+        } else if (current.granularity === VpcGranularity.Items || current.granularity === VpcGranularity.Lines) {
+            if (current.first === -1) {
+                /* emulator confirms you can say word 0 of x */
+                //~ start = 0
+                //~ end = table[0]
+                if ((current.granularity === VpcGranularity.Items && unf.startsWith(',')) || (current.granularity === VpcGranularity.Lines && unf.startsWith('\n'))) {
+                    start = 0
+                    end = 1
+                } else {
+                    start = 0
+                    end  =0
+                }
+            } else if (current.first === table.length) {
+                /* strip final whitespace */
+                start = unf.length
+                end = unf.length
+                while(unf[start-1] === ',') {
+                    start--
+                }
+            } else if (current.first === table.length - 1) {
+                /* this is a weird case-it deletes spaces both before and after */
+                start = table[table.length - 1]
+                end = unf.length
+                while(unf[start-1] === ',') {
+                    start--
+                }
+            } else if (current.first > table.length -1) {
+                start = 0
+                end = 0
+            } else {
+                start = table[current.first]
+                end = start
+                while (end < table[current.first + 1]) {
+                    if (unf[end] === '\n') { break }
+                    end++
+                }
+            }
+        } else {
+            checkThrowInternal(false, "unknown type")
         }
 
-        
+        cont.splice(start, end-start, '')
     },
 
     /**
@@ -591,15 +596,17 @@ export const ChunkResolutionApplication = /* static class */ {
         if (type === VpcGranularity.Chars) {
             return sInput.length;
         } else if (type === VpcGranularity.Items) {
-            return ChunkResolution._getPositionsTable(sInput, ChunkResolution._regexpForDelim(itemDel), false).length;
+            return ChunkResolution._getPositionsTable(sInput, ChunkResolution.getRegex(type, itemDel), false).length;
         } else if (type === VpcGranularity.Lines) {
-            return ChunkResolution._getPositionsTable(sInput, /\n/g, false).length;
+            return ChunkResolution._getPositionsTable(sInput, ChunkResolution.getRegex(type, itemDel), false).length;
         } else if (type === VpcGranularity.Words) {
-            return ChunkResolution._getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
+            return ChunkResolution._getPositionsTable(sInput, ChunkResolution.getRegex(type, itemDel), true).length;
         } else {
             checkThrow(false, `5-|unknown chunk granularity ${type}`);
         }
     },
+
+    
 
     /**
      * match the really weird behavior seen.

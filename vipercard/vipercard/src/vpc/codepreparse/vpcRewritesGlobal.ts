@@ -2,7 +2,7 @@
 /* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, listOfAllWordLikeTokens, tks } from './../codeparse/vpcTokens';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
-/* auto */ import { Util512, arLast } from './../../ui512/utils/util512';
+/* auto */ import { Util512, arLast, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -56,7 +56,7 @@ export const VpcRewritesGlobal = /* static class */ {
      * 2) go from 'the hilite of the target' to 'the hilite of target' for compat.
      *      see bgrammar_01.ccc for an explanation of why
      */
-    rewriteSpecifyCdOrBgPart(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[] {
+    rewriteSpecifyCdOrBgPart(line: ChvITk[], rw: VpcSuperRewrite, compatMode:boolean): ChvITk[] {
         let ret: ChvITk[] = [];
         for (let i = 0; i < line.length - 1; i++) {
             /* omit "the" if it is in "hilite of the target" */
@@ -77,10 +77,17 @@ export const VpcRewritesGlobal = /* static class */ {
 
             if (line[i + 1].tokenType === tks.tkBtn || line[i + 1].tokenType === tks.tkFld) {
                 if (line[i].tokenType !== tks.tkCard && line[i].tokenType !== tks.tkBg) {
-                    /* insert a missing 'bg' or 'cd' */
-                    let s = line[i + 1].tokenType === tks.tkFld ? 'bg' : 'cd';
-                    let newTk = rw.tokenFromEnglishTerm(s, line[i]);
-                    ret.push(newTk);
+                    if (compatMode) {
+/* insert a missing 'bg' or 'cd' */
+let s = line[i + 1].tokenType === tks.tkFld ? 'bg' : 'cd';
+let newTk = rw.tokenFromEnglishTerm(s, line[i]);
+ret.push(newTk);
+                    } else {
+                        checkThrow(false, longstr(`You should specify 'cd fld "myFld"' or
+                        cd btn "myBtn" instead of just fld "myFld" or btn "myBtn".
+                        If you need this, go Object->Stack Info and turn on compatibility mode.`))
+                    }
+                    
                 }
             }
         }
