@@ -562,13 +562,18 @@ export const ChunkResolutionApplication = /* static class */ {
                 //~ }
             } else if (current.first === table.length - 1) {
                 /* this is a weird case-it deletes spaces both before and after */
-                start = table[table.length - 1]
-                end = unf.length
-                let a=0
-                while(unf[start-1] === activeChar) {
-                    start--
-                    a++
-                    if (a>0) { break }
+                if (current.granularity === VpcGranularity.Items) {
+                    start = table[table.length - 1]
+                    end = unf.length
+                    let a=0
+                    while(unf[start-1] === activeChar) {
+                        start--
+                        a++
+                        if (a>0) { break }
+                    }
+                } else {
+                    start = table[table.length - 1]
+                    end = unf.length
                 }
             } else if (current.first > table.length -1) {
                 start = 0
