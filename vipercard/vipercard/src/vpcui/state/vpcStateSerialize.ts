@@ -74,10 +74,6 @@ export const VpcStateSerialize = /* static class */ {
                 ${incoming.fileformatminor}, my version is
                 ${this.latestMajor}.${this.latestMinor}`
             );
-            console.log(
-                longstr(`opening a document made by
-                buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcVersion}`)
-            );
 
             building.getModel().uuid = incoming.uuid;
             checkThrow(incoming.elements && incoming.elements.length > 0, 'Ky|elements missing or empty');

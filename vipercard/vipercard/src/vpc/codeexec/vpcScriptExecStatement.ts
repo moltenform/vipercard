@@ -151,7 +151,7 @@ export class ExecuteStatement {
 
             contRef.chunk = chunk;
             let cont = this.outside.ResolveContainerWritable(contRef);
-            ChunkResolutionApplication.applyDelete(cont, contRef.chunk, this.outside.GetItemDelim());
+            ChunkResolutionApplication.applyDelete(cont, contRef.chunk, this.outside.GetItemDelim(), this.outside.Model().stack.getB('compatibilitymode'));
         }
     }
     /**

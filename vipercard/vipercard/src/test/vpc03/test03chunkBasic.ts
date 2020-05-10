@@ -22,10 +22,16 @@ t.atest('--init--testCollection03chunkBasic', async () => {
     let b = new ScriptTestBatch();
     b.t(`go to cd id ${h3.ids.cdBC}\\1`, '1');
     b.batchEvaluate(h3);
+
+    /* turn on compat mode */
+    h3.vcstate.vci.undoableAction(()=>
+        h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model))
+    
 });
 
 //~ todo: use this everywhere
 function evaluateWithVarAndFld(b:ScriptTestBatch) {
+    
     let tests = b.tests
     b.batchEvaluate(h3)
     b = new ScriptTestBatch();
@@ -442,6 +448,26 @@ t.test('03chunkexpression_delete_char', () => {
 });
 t.test('03chunkexpression_delete_word', () => {
     let b = new ScriptTestBatch();
+
+    /* normal word */
+    b.t('global z1\nput "a b c" into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
+    b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
+    b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
+    b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
+    b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
+    b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
+    /* normal word 2 */
+    b.t('global z1\nput " a b c " into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
+    b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
+    b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
+    b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
+    b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
+    b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
+    //~ b.batchEvaluate(h3);
+
+
     /* normal word */
     b.t('global z1\nput "a.b  c.d" & cr & "e" into z1\\1', '1');
     b.t('put z1 into z\ndelete word 1 of z\\z', 'c.d\ne');
@@ -453,13 +479,13 @@ t.test('03chunkexpression_delete_word', () => {
     b.t('put z1 into z\ndelete word 5 of z\\z', 'a.b  c.d\ne');
     /* normal ranges */
     b.t('put z1 into z\ndelete word 1 to 1 of z\\z', 'c.d\ne');
-    b.t('put z1 into z\ndelete word 1 to 2 of z\\z', '\ne');
-    b.t('put z1 into z\ndelete word 1 to 3 of z\\z', '');
-    b.t('put z1 into z\ndelete word 2 to 3 of z\\z', 'a.b');
-    /* recurse */
-    b.t('put z1 into z\ndelete word 2 of word 1 to 2 of z\\z', 'a.b  \ne');
-    b.t('put z1 into z\ndelete word 2 to 3 of word 1 to 3 of z\\z', 'a.b');
-    b.t('put z1 into z\ndelete word 2 to 3 of word 2 to 3 of word 1 to 3 of z\\z', 'a.b');
+    //~ b.t('put z1 into z\ndelete word 1 to 2 of z\\z', '\ne');
+    //~ b.t('put z1 into z\ndelete word 1 to 3 of z\\z', '');
+    //~ b.t('put z1 into z\ndelete word 2 to 3 of z\\z', 'a.b');
+    //~ /* recurse */
+    //~ b.t('put z1 into z\ndelete word 2 of word 1 to 2 of z\\z', 'a.b  \ne');
+    //~ b.t('put z1 into z\ndelete word 2 to 3 of word 1 to 3 of z\\z', 'a.b');
+    //~ b.t('put z1 into z\ndelete word 2 to 3 of word 2 to 3 of word 1 to 3 of z\\z', 'a.b');
     b.batchEvaluate(h3);
 });
 //~ t.test('03chunkexpression_delete_line', () => {
@@ -595,20 +621,43 @@ t.test('03chunkexpression_recursivescopes', () => {
     */
     /* scopes that should not work */
     let b = new ScriptTestBatch();
-    //~ /* get, nothing after a char */
-    //~ b.t('item 1 of char 1 of "abc"', 'ERR:the child')
-    //~ b.t('word 1 of char 1 of "abc"', 'ERR:the child')
-    //~ b.t('line 1 of char 1 of "abc"', 'ERR:the child')
-    //~ b.t('item 1 of char 1 of char 1 of "abc"', 'ERR:the child')
-    //~ b.t('word 1 of char 1 of char 1 of "abc"', 'ERR:the child')
-    //~ b.t('line 1 of char 1 of char 1 of "abc"', 'ERR:the child')
-    //~ /* get, nothing after a word except char */
-    //~ b.t('item 1 of word 1 of "abc"', 'ERR:the child')
-    //~ b.t('line 1 of word 1 of "abc"', 'ERR:the child')
-    //~ b.t('item 1 of word 1 of word 1 of "abc"', 'ERR:the child')
-    //~ b.t('line 1 of word 1 of word 1 of "abc"', 'ERR:the child')
-    //~ b.t('item 1 of word 1 of char 1 of "abc"', 'ERR:the child')
-    //~ b.t('line 1 of word 1 of char 1 of "abc"', 'ERR:the child')
+    h3.vcstate.vci.undoableAction(()=>
+        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model))
+    /* put, nothing after a char */
+    b.t('global z1\nput "a.b  c.d" & cr & "e" into z1\\1', '1');
+    b.t('global z1\nput z1 into z\nput "A" into item 1 of char 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into word 1 of char 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into line 1 of char 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into item 1 of char 1 of char 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into word 1 of char 1 of char 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into line 1 of char 1 of char 1 of z\\z', 'ERR:6:compatibility mode')
+    /* put, nothing after a word except char */
+    b.t('global z1\nput z1 into z\nput "A" into item 1 of word 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into line 1 of word 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into item 1 of word 1 of word 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into line 1 of word 1 of word 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into item 1 of word 1 of char 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into line 1 of word 1 of char 1 of z\\z', 'ERR:6:compatibility mode')
+    /* can't double up */
+    b.t('global z1\nput z1 into z\nput "A" into line 1 of line 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into line 2 of line 2 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into line 1 to 2 of line 2 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into line 1 of line 2 to 3 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into line 1 to 2 of line 2 to 3 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into item 1 of item 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into item 2 of item 2 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into item 1 to 2 of item 2 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into item 1 of item 2 to 3 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into item 1 to 2 of item 2 to 3 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into word 1 of word 1 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into word 2 of word 2 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into word 1 to 2 of word 2 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into word 1 of word 2 to 3 of z\\z', 'ERR:6:compatibility mode')
+    b.t('global z1\nput z1 into z\nput "A" into word 1 to 2 of word 2 to 3 of z\\z', 'ERR:6:compatibility mode')
+    b.batchEvaluate(h3)
+    b = new ScriptTestBatch();
+    h3.vcstate.vci.undoableAction(()=>
+        h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model))
     //~ /* negatives should throw */
     b.t('char (-1) of "abc"', 'ERR:negative')
     b.t('char (-1) to 1 of "abc"', 'ERR:negative')
@@ -683,7 +732,7 @@ t.test('03chunkexpression_recursivescopes', () => {
     b.t('put z1 into z\nput "A" into word 3 of word 2 of z\\z', 'ab cd, A\ngh ii,jj,kk\nmn,op,q\nr,s')
     b.t('put z1 into z\nput "A" into item 3 of item 2 of z\\z', 'ab cd, ef\ngh ii,A,kk\nmn,op,q\nr,s')
     b.t('put z1 into z\nput "A" into line 3 of line 2 of z\\z', 'ab cd, ef\ngh ii,jj,kk\nA\nr,s')
-    //~ /* get complicated scopes */
+    /* get complicated scopes */
     /* for get, it's as expected. can add parens, happens in logical order */
     b.t('char 2 of char 4 of item 2 of z1', '')
     b.t('char 2 of char 4 of word 2 of z1', '')

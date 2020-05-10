@@ -365,7 +365,7 @@ export const ChunkResolutionApplication = /* static class */ {
     /**
      * the original product has counter-intuitive behavior for put
      */
-    applyPut(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, news: string, prep: VpcChunkPreposition): void {
+    applyPut(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, news: string, prep: VpcChunkPreposition, compatibility:boolean): void {
         if (!chunk) {
             /* needs to be handled separately,
             since we might be inserting into a never-before-seen variable */
@@ -386,7 +386,7 @@ export const ChunkResolutionApplication = /* static class */ {
             return;
         }
 
-        chunk = this._rearrangeChunksToMatchOriginalProduct(chunk)
+        chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compatibility)
 
         /* make parent objects */
         let resolved = new ResolvedChunk(cont, 0, cont.len());
@@ -414,7 +414,7 @@ export const ChunkResolutionApplication = /* static class */ {
     /**
      * warning: follows the same funky logic as put.
      */
-    applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, fn: (s: string) => string) {
+    applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, compatibility:boolean, fn: (s: string) => string) {
         if (!chunk) {
             /* needs to be handled separately,
             since we might be inserting into a never-before-seen variable */
@@ -428,7 +428,7 @@ export const ChunkResolutionApplication = /* static class */ {
         let marker = '\x01\x01~~internalvpcmarker~~\x01\x01'
         let unformatted = cont.getRawString()
         checkThrow(!unformatted.includes(marker), "cannot contain the string " + marker)
-        this.applyPut(cont, chunk, itemDel, marker, VpcChunkPreposition.Into)
+        this.applyPut(cont, chunk, itemDel, marker, VpcChunkPreposition.Into, compatibility)
         
         /* now we look at the results and see where it got put! */
         let results = cont.getRawString()
@@ -480,12 +480,12 @@ export const ChunkResolutionApplication = /* static class */ {
     /**
      * delete, which is a bit different from `put "" into`
      */
-    applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string) {
+    applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string, compatibility:boolean) {
         if (chunk.granularity === VpcGranularity.Chars) {
-            return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into)
+            return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compatibility)
         }
 
-        this._rearrangeChunksToMatchOriginalProduct(chunk)
+        this._rearrangeChunksToMatchOriginalProduct(chunk, compatibility)
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
         //~ let checker = new DecreasingScopeChecker();
@@ -498,44 +498,11 @@ export const ChunkResolutionApplication = /* static class */ {
             current = current.child;
         }
 
-        if (current.granularity === VpcGranularity.Words) {
-            let unf = cont.getRawString()
-            let table = ChunkResolution._getPositionsTable(unf, new RegExp('(\\n| )+', 'g'), true);
-            if (!current.last) {
-                current.last = current.first
-            }
-            current.first -= 1 // to 0 based
-            current.last -= 1 // to 0 based
-            let start:O<number>
-            let end:O<number>
-            if (current.first<0) {
-                start = undefined
-            } else if (current.first === 0) {
-                start = table[current.first]
-                while (unf[start-1]===' ' || unf[start-1]==='\n') {
-                    start = start-1
-                }
-            } else if (current.first >= table.length) {
-                start = undefined
-            } else {
-                start = table[current.first]
-            }
-
-            if (current.last<0) {
-                end = undefined
-            } else if (current.last === 0) {
-                end = table[current.last+1]-1
-            } else if (current.last >= table.length) {
-                end = undefined
-            } else {
-                end = table[current.last]
-            }
-        }
-
         {
             let s = new WritableContainerSimpleFmtText()
             //~ s.setAll(cont.getRawString())
-            s.setAll(" a b c ")
+            //~ s.setAll(" a b c ")
+            s.setAll("a b c")
             let table = ChunkResolution._getPositionsTable(s.getRawString(), new RegExp('(\\n| )+', 'g'), true);
             let r = table.slice().reverse()
             for (let index of r) {
@@ -544,6 +511,70 @@ export const ChunkResolutionApplication = /* static class */ {
             console.log(s.getRawString())
             console.log(s.getRawString())
         }
+
+        if (current.granularity === VpcGranularity.Words) {
+            let unf = cont.getRawString()
+            let table = ChunkResolution._getPositionsTable(unf, new RegExp('(\\n| )+', 'g'), true);
+            if (!current.last) {
+                current.last = current.first
+            }
+            current.first -= 1 /* to 0 based */
+            current.last -= 1 /* to 0 based */
+            let start:number
+            let end:number
+            if (current.first === -1) {
+                /* emulator confirms you can say word 0 of x */
+                start = 0
+                end = table[0]
+            } else if (current.first > table.length -1) {
+                /* strip final whitespace */
+                start = unf.length
+                end = unf.length
+                while(unf[start-1] === ' ') {
+                    start--
+                }
+            } else if (current.first === table.length - 1) {
+                /* this is a weird case-it deletes spaces both before and after */
+                start = table[table.length - 1]
+                end = unf.length
+                while(unf[start-1] === ' ') {
+                    start--
+                }
+            } else {
+                start = table[current.first]
+                end = start
+                while (end < table[current.first + 1]) {
+                    if (unf[end] === '\n') { break }
+                    end++
+                }
+            }
+
+            cont.splice(start, end-start, '')
+
+            //~ if (current.first<0) {
+                //~ start = undefined
+            //~ } else if (current.first === 0) {
+                //~ start = table[current.first]
+                //~ while (unf[start-1]===' ' || unf[start-1]==='\n') {
+                    //~ start = start-1
+                //~ }
+            //~ } else if (current.first >= table.length) {
+                //~ start = undefined
+            //~ } else {
+                //~ start = table[current.first]
+            //~ }
+            //~ if (current.last<0) {
+                //~ end = undefined
+            //~ } else if (current.last === 0) {
+                //~ end = table[current.last+1]-1
+            //~ } else if (current.last >= table.length) {
+                //~ end = undefined
+            //~ } else {
+                //~ end = table[current.last]
+            //~ }
+        }
+
+        
     },
 
     /**
@@ -575,7 +606,7 @@ export const ChunkResolutionApplication = /* static class */ {
      * 1) first come, first serve, for each granularity
      * 2) regardless of order seen, sort in the order seen in enum VpcGranularity
      */
-    _rearrangeChunksToMatchOriginalProduct(chunk:RequestedChunk) {
+    _rearrangeChunksToMatchOriginalProduct(chunk:RequestedChunk, compat:boolean) {
         /* simple case */
         if (!chunk.child) {
             return chunk
@@ -588,6 +619,7 @@ export const ChunkResolutionApplication = /* static class */ {
         let arr = Util512.repeat(max, undefined as O<RequestedChunk>)
         /* remember that it's first come, first serve */
         let current:O<RequestedChunk> = chunk
+        let lastKey = -1
         while (current) {
             let key = current.granularity
             if (current.sortFirst) {
@@ -595,8 +627,23 @@ export const ChunkResolutionApplication = /* static class */ {
                 key = max
             }
 
+            /* unless we're in compat mode we'll only allow strict ordering */
+            if (!compat) {
+                checkThrow(key <= lastKey, longstr(`you can put something into char 1 of
+                 word 1 of x, but you can't put something into word 1 of char 1 of x.
+                The order must be char, word, item, line. To allow other orders, go to
+                Object->Stack Info and turn on compatibility mode, but be aware that
+                it will ignore your given order - line 2 of item 3 of x is confusingly
+                interpreted to mean item 3 of line 2 of x. `))
+                checkThrow(key < lastKey, longstr(`you can't put something into word 2 of
+                word 1 of x. To allow this, go Object->Stack Info and turn on
+                compatibility mode, be aware though that if you say something like
+                put "" into word 2 of word 1 of x it will disregard the word 1 of x.`))
+            }
+
             arr[key] = current
             current = current.child
+            lastKey = key
         }
 
         /* reverse it so that higher ones are first */
@@ -615,6 +662,7 @@ export const ChunkResolutionApplication = /* static class */ {
                 }
             }
         }
+
         /* be sure to overwrite the child here in case it used to have a child */
         if (currentBuild) {
             currentBuild.child = undefined
