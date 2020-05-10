@@ -426,37 +426,37 @@ t.test('03chunkexpression_put_one_item', () => {
  */
 t.test('03chunkexpression_additional delete tests', () => {
     let b = new ScriptTestBatch();
-    //~ /* normal word */
-    //~ b.t('global z1\nput "a b c" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
-    //~ b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
-    //~ b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
-    //~ b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
-    //~ b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
-    //~ b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
-    //~ /* normal word 2 */
-    //~ b.t('global z1\nput " a b c " into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
-    //~ b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
-    //~ b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
-    //~ b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
-    //~ b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
-    //~ b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
-    //~ /* normal item */
-    //~ b.t('global z1\nput "a,b,c" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
-    //~ b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
-    //~ b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
-    //~ b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
-    //~ b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
-    //~ b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
-    //~ b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
-    //~ /* normal item 2 */
-    //~ b.t('global z1\nput ",a,b,c," into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
-    //~ b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
-    //~ b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
-    //~ b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
+    /* normal word */
+    b.t('global z1\nput "a b c" into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
+    b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
+    b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
+    b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
+    b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
+    b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
+    /* normal word 2 */
+    b.t('global z1\nput " a b c " into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
+    b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
+    b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
+    b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
+    b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
+    b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
+    /* normal item */
+    b.t('global z1\nput "a,b,c" into z1\\1', '1');
+    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
+    b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
+    b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
+    b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
+    b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
+    b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
+    b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
+    /* normal item 2 */
+    b.t('global z1\nput ",a,b,c," into z1\\1', '1');
+    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
+    b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
+    b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
+    b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
     b.t('put z1 into z\ndelete item 4 of z\\z', ',a,b,');
     b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
     b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
@@ -508,54 +508,54 @@ t.test('03chunkexpression_delete_word', () => {
     b.t('put z1 into z\ndelete word 2 to 3 of word 2 to 3 of word 1 to 3 of z\\z', 'a.b');
     b.batchEvaluate(h3);
 });
-//~ t.test('03chunkexpression_delete_line', () => {
-    //~ let b = new ScriptTestBatch();
-    //~ /* normal line */
-    //~ b.t('global z1\nput "ab" & cr & "cd" & cr & "ef" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete line 1 of z\\z', 'cd\nef');
-    //~ b.t('put z1 into z\ndelete line 2 of z\\z', 'ab\nef');
-    //~ b.t('put z1 into z\ndelete line 3 of z\\z', 'ab\ncd\n');
-    //~ /* abnormal line */
-    //~ b.t('put z1 into z\ndelete line 0 of z\\z', 'ab\ncd\nef');
-    //~ b.t('put z1 into z\ndelete line 4 of z\\z', 'ab\ncd\nef');
-    //~ b.t('put z1 into z\ndelete line 5 of z\\z', 'ab\ncd\nef');
-    //~ /* normal ranges */
-    //~ b.t('put z1 into z\ndelete line 1 to 1 of z\\z', 'cd\nef');
-    //~ b.t('put z1 into z\ndelete line 1 to 2 of z\\z', 'ef');
-    //~ b.t('put z1 into z\ndelete line 1 to 3 of z\\z', '');
-    //~ b.t('put z1 into z\ndelete line 2 to 3 of z\\z', 'ab\n');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\ndelete line 2 of line 1 to 2 of z\\z', 'ab\nef');
-    //~ b.t('put z1 into z\ndelete line 2 to 3 of line 1 to 3 of z\\z', 'ab\n');
-    //~ b.t(
-        //~ 'put z1 into z\ndelete line 2 to 3 of line 2 to 3 of line 1 to 3 of z\\z',
-        //~ 'ab\n'
-    //~ );
-    //~ b.batchEvaluate(h3);
-//~ });
-//~ t.test('03chunkexpression_delete_item', () => {
-    //~ h3.vcstate.model.productOpts.setProductOpt('itemDel', ',');
-    //~ let b = new ScriptTestBatch();
-    //~ /* normal item */
-    //~ b.t('global z1\nput "ab,,cd" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete item 1 of z\\z', ',cd');
-    //~ b.t('put z1 into z\ndelete item 2 of z\\z', 'ab,cd');
-    //~ b.t('put z1 into z\ndelete item 3 of z\\z', 'ab,');
-    //~ /* abnormal item */
-    //~ b.t('put z1 into z\ndelete item 0 of z\\z', 'ab,,cd');
-    //~ b.t('put z1 into z\ndelete item 4 of z\\z', 'ab,,cd');
-    //~ b.t('put z1 into z\ndelete item 5 of z\\z', 'ab,,cd');
-    //~ /* normal ranges */
-    //~ b.t('put z1 into z\ndelete item 1 to 1 of z\\z', ',cd');
-    //~ b.t('put z1 into z\ndelete item 1 to 2 of z\\z', 'cd');
-    //~ b.t('put z1 into z\ndelete item 1 to 3 of z\\z', '');
-    //~ b.t('put z1 into z\ndelete item 2 to 3 of z\\z', 'ab');
-    //~ /* recurse */
-    //~ b.t('put z1 into z\ndelete item 2 of item 1 to 2 of z\\z', 'ab,cd');
-    //~ b.t('put z1 into z\ndelete item 2 to 3 of item 1 to 3 of z\\z', 'ab');
-    //~ b.t('put z1 into z\ndelete item 2 to 3 of item 2 to 3 of item 1 to 3 of z\\z', 'ab');
-    //~ b.batchEvaluate(h3);
-//~ });
+t.test('03chunkexpression_delete_line', () => {
+    let b = new ScriptTestBatch();
+    /* normal line */
+    b.t('global z1\nput "ab" & cr & "cd" & cr & "ef" into z1\\1', '1');
+    b.t('put z1 into z\ndelete line 1 of z\\z', 'cd\nef');
+    b.t('put z1 into z\ndelete line 2 of z\\z', 'ab\nef');
+    b.t('put z1 into z\ndelete line 3 of z\\z', 'ab\ncd\n');
+    /* abnormal line */
+    b.t('put z1 into z\ndelete line 0 of z\\z', 'ab\ncd\nef');
+    b.t('put z1 into z\ndelete line 4 of z\\z', 'ab\ncd\nef');
+    b.t('put z1 into z\ndelete line 5 of z\\z', 'ab\ncd\nef');
+    /* normal ranges */
+    b.t('put z1 into z\ndelete line 1 to 1 of z\\z', 'cd\nef');
+    b.t('put z1 into z\ndelete line 1 to 2 of z\\z', 'ef');
+    b.t('put z1 into z\ndelete line 1 to 3 of z\\z', '');
+    b.t('put z1 into z\ndelete line 2 to 3 of z\\z', 'ab\n');
+    /* recurse */
+    b.t('put z1 into z\ndelete line 2 of line 1 to 2 of z\\z', 'ab\nef');
+    b.t('put z1 into z\ndelete line 2 to 3 of line 1 to 3 of z\\z', 'ab\n');
+    b.t(
+        'put z1 into z\ndelete line 2 to 3 of line 2 to 3 of line 1 to 3 of z\\z',
+        'ab\n'
+    );
+    b.batchEvaluate(h3);
+});
+t.test('03chunkexpression_delete_item', () => {
+    h3.vcstate.model.productOpts.setProductOpt('itemDel', ',');
+    let b = new ScriptTestBatch();
+    /* normal item */
+    b.t('global z1\nput "ab,,cd" into z1\\1', '1');
+    b.t('put z1 into z\ndelete item 1 of z\\z', ',cd');
+    b.t('put z1 into z\ndelete item 2 of z\\z', 'ab,cd');
+    b.t('put z1 into z\ndelete item 3 of z\\z', 'ab,');
+    /* abnormal item */
+    b.t('put z1 into z\ndelete item 0 of z\\z', 'ab,,cd');
+    b.t('put z1 into z\ndelete item 4 of z\\z', 'ab,,cd');
+    b.t('put z1 into z\ndelete item 5 of z\\z', 'ab,,cd');
+    /* normal ranges */
+    b.t('put z1 into z\ndelete item 1 to 1 of z\\z', ',cd');
+    b.t('put z1 into z\ndelete item 1 to 2 of z\\z', 'cd');
+    b.t('put z1 into z\ndelete item 1 to 3 of z\\z', '');
+    b.t('put z1 into z\ndelete item 2 to 3 of z\\z', 'ab');
+    /* recurse */
+    b.t('put z1 into z\ndelete item 2 of item 1 to 2 of z\\z', 'ab,cd');
+    b.t('put z1 into z\ndelete item 2 to 3 of item 1 to 3 of z\\z', 'ab');
+    b.t('put z1 into z\ndelete item 2 to 3 of item 2 to 3 of item 1 to 3 of z\\z', 'ab');
+    b.batchEvaluate(h3);
+});
 
 /*
     what's not covered by the extensive test:

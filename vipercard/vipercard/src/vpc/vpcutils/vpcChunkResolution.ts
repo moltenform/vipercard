@@ -477,17 +477,17 @@ export const ChunkResolutionApplication = /* static class */ {
         }
 
         {
-            let s = new WritableContainerSimpleFmtText()
+            //~ let s = new WritableContainerSimpleFmtText()
             //~ s.setAll(cont.getRawString())
             //~ s.setAll(" a b c ")
-            s.setAll("a b c")
-            let table = ChunkResolution._getPositionsTable(s.getRawString(), ChunkResolution.getRegex(VpcGranularity.Words, ''), true);
-            let r = table.slice().reverse()
-            for (let index of r) {
-                s.splice(index, 0, '^')
-            }
-            console.log(s.getRawString())
-            console.log(s.getRawString())
+            //~ s.setAll("a b c")
+            //~ let table = ChunkResolution._getPositionsTable(s.getRawString(), ChunkResolution.getRegex(VpcGranularity.Words, ''), true);
+            //~ let r = table.slice().reverse()
+            //~ for (let index of r) {
+                //~ s.splice(index, 0, '^')
+            //~ }
+            //~ console.log(s.getRawString())
+            //~ console.log(s.getRawString())
         }
 
         checkThrow(!current.last || current.first<=current.last, "we don't support backwards bounds")
@@ -539,11 +539,12 @@ export const ChunkResolutionApplication = /* static class */ {
             }
 
         } else if (current.granularity === VpcGranularity.Items || current.granularity === VpcGranularity.Lines) {
+            let activeChar = current.granularity === VpcGranularity.Items ? delim : '\n'
             if (current.first === -1) {
                 /* emulator confirms you can say word 0 of x */
                 //~ start = 0
                 //~ end = table[0]
-                if ((current.granularity === VpcGranularity.Items && unf.startsWith(',')) || (current.granularity === VpcGranularity.Lines && unf.startsWith('\n'))) {
+                if ((current.granularity === VpcGranularity.Items && unf.startsWith(activeChar)) || (current.granularity === VpcGranularity.Lines && unf.startsWith(activeChar))) {
                     start = 0
                     end = 1
                 } else {
@@ -551,18 +552,23 @@ export const ChunkResolutionApplication = /* static class */ {
                     end  =0
                 }
             } else if (current.first === table.length) {
-                /* strip final whitespace */
-                start = unf.length
-                end = unf.length
-                while(unf[start-1] === ',') {
-                    start--
-                }
+                start = 0
+                end = 0
+                //~ /* strip final whitespace */
+                //~ start = unf.length
+                //~ end = unf.length
+                //~ while(unf[start-1] === activeChar) {
+                    //~ start--
+                //~ }
             } else if (current.first === table.length - 1) {
                 /* this is a weird case-it deletes spaces both before and after */
                 start = table[table.length - 1]
                 end = unf.length
-                while(unf[start-1] === ',') {
+                let a=0
+                while(unf[start-1] === activeChar) {
                     start--
+                    a++
+                    if (a>0) { break }
                 }
             } else if (current.first > table.length -1) {
                 start = 0
@@ -571,7 +577,7 @@ export const ChunkResolutionApplication = /* static class */ {
                 start = table[current.first]
                 end = start
                 while (end < table[current.first + 1]) {
-                    if (unf[end] === '\n') { break }
+                    //~ if (unf[end] === '\n') { break }
                     end++
                 }
             }

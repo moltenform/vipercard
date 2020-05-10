@@ -32,7 +32,8 @@ t.test('03ObjectSpecial', () => {
     b.t(`the short id of card card 1`, `ERR:parse`);
     b.t(`the short id of id`, `ERR:parse`);
     b.t(`the short id of the`, `ERR:parse`);
-    b.t(`the short id of button`, `ERR:parse`);
+    b.t(`the short id of stack`, `ERR:parse`);
+    b.t(`the short id of button`, `PREPARSEERR:compatibility`);
     evaluateForBothShortIdAndThereIs(b, h3);
     /* exists, but wrong type
     test every combination! */
