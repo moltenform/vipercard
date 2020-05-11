@@ -59,6 +59,7 @@
 //      we need parens for if the short id of the owner of cd id prevCard is not the short id of the owner of cd id nextCard then answer "j"
 //      we don't support char x + 1 of abc, need char (x + 1) of abc
 //      NEW FEATURE: set the fontstyle to grayed
+//      NEW FEATURE: set the fontstyle to toggle-bold
 //      we don't support "part"
 //      do "code" can't yet read/write local vars
             

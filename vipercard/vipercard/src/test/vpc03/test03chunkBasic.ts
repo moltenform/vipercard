@@ -461,6 +461,9 @@ t.test('03chunkexpression_additional delete tests', () => {
     b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
     b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
     b.t('put z1 into z\ndelete item 7 of z\\z', ',a,b,c,');
+    /* corner cases */
+    b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 3 to 3 of z\\z', '  \n ab  \n bc  \n \n ');
     b.batchEvaluate(h3);
 })
 t.test('03chunkexpression_delete_char', () => {

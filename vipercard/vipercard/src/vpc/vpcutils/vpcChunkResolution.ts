@@ -441,7 +441,6 @@ export const ChunkResolutionApplication = /* static class */ {
 
         let current: O<RequestedChunk> = chunk;
         while (current && resolved) {
-            //~ checker.onSeeScope(current.type555);
             resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', VpcChunkPreposition.Into, false);
             current = current.child;
         }
@@ -465,7 +464,7 @@ export const ChunkResolutionApplication = /* static class */ {
             return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compatibility)
         }
 
-        this._rearrangeChunksToMatchOriginalProduct(chunk, compatibility)
+        //~ this._rearrangeChunksToMatchOriginalProduct(chunk, compatibility)
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
         while (current && resolved) {
@@ -475,6 +474,24 @@ export const ChunkResolutionApplication = /* static class */ {
             resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', VpcChunkPreposition.Into, false);
             current = current.child;
         }
+
+        checkThrow(!current.last || current.first<=current.last, "we don't support backwards bounds")
+        let allstart = Number.POSITIVE_INFINITY
+        let allend = Number.NEGATIVE_INFINITY
+        let isLastOfRange = true
+        for (let i=current.last ?? current.first; i>=current.first; i--) {
+            let tmp = current.getClone()
+            tmp.first = i
+            tmp.last = i
+            let [start, end] = this._applyDeleteHelper(cont, itemDel, compatibility, tmp, isLastOfRange)
+            cont.splice(start, end-start, '')
+            isLastOfRange = false
+            //~ allstart = Math.min(allstart, start)
+            //~ allend = Math.max(allend, end)
+        }
+        
+        
+
 
         {
             //~ let s = new WritableContainerSimpleFmtText()
@@ -489,17 +506,9 @@ export const ChunkResolutionApplication = /* static class */ {
             //~ console.log(s.getRawString())
             //~ console.log(s.getRawString())
         }
-
-        checkThrow(!current.last || current.first<=current.last, "we don't support backwards bounds")
-        for (let i=current.last ?? current.first; i>=current.first; i--) {
-            let tmp = current.getClone()
-            tmp.first = i
-            tmp.last = i
-            this._applyDeleteHelper(cont, itemDel, compatibility, tmp)
-        }
     },
 
-    _applyDeleteHelper(cont: WritableContainer, delim: string, compatibility:boolean, current: RequestedChunk) {
+    _applyDeleteHelper(cont: WritableContainer, delim: string, compatibility:boolean, current: RequestedChunk, isLastOfRange:boolean):[number, number] {
         let unf = cont.getRawString()
         if (!current.last) {
             current.last = current.first
@@ -514,7 +523,11 @@ export const ChunkResolutionApplication = /* static class */ {
             if (current.first === -1) {
                 /* emulator confirms you can say word 0 of x */
                 start = 0
-                end = table[0]
+                end = start
+                while (end < table[0]) {
+                    if (unf[end] === '\n') { break }
+                    end++
+                }
             } else if (current.first > table.length -1) {
                 /* strip final whitespace */
                 start = unf.length
@@ -525,10 +538,17 @@ export const ChunkResolutionApplication = /* static class */ {
             } else if (current.first === table.length - 1) {
                 /* this is a weird case-it deletes spaces both before and after */
                 start = table[table.length - 1]
-                end = unf.length
-                while(unf[start-1] === ' ') {
-                    start--
+                end =table[table.length - 1]
+                while (end < unf.length) {
+                    if (unf[end] === '\n' && isLastOfRange) { break }
+                    end++
                 }
+                if ((end >= unf.length -1)) {
+                    while(unf[start-1] === ' ') {
+                        start--
+                    }
+                }
+                
             } else {
                 start = table[current.first]
                 end = start
@@ -590,7 +610,7 @@ export const ChunkResolutionApplication = /* static class */ {
             checkThrowInternal(false, "unknown type")
         }
 
-        cont.splice(start, end-start, '')
+        return [start, end]
     },
 
     /**

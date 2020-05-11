@@ -9,6 +9,7 @@
 /* auto */ import { testCollectionScriptRewrites } from './../vpc/vpcTestScriptRewrites';
 /* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
 /* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
+/* auto */ import { testCollectionScriptExtensiveChunk } from './../vpc/vpcTestScriptExtensiveChunk';
 /* auto */ import { testCollectionScriptExprLvl } from './../vpc/vpcTestScriptExprLvl';
 /* auto */ import { testCollectionvpcScriptEval } from './../vpc/vpcTestScriptEval';
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
@@ -64,6 +65,7 @@ export const SimpleUtil512Tests = /* static class */ {
         let colls: SimpleUtil512TestCollection[] = [
             /* testCollectionvpcuiServer, */
             /* testCollectionScriptExtensive, */
+            testCollectionScriptExtensiveChunk,
             testCollection03chunkBasic,
             testCollection03exprObjectRef,
             testCollection03lexer,

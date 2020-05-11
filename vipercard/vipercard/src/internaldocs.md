@@ -195,6 +195,10 @@ stack
     * when the user asks for the "id" of one of these, they won't get its true id.
     * copy/paste/duplicate card is more interesting
 
+* note that in original product, a bg item can call script in current card,
+* leading more support to my design where "bg" items do in a sense live on the current card
+* in my "ownerOf" function, though, I'll still say that bg items belong to the bg because that's more useful.
+
 ## Pseudo-functions that refer to objects
 
 * The original product has subtly complex behavior for these pseudo-functions.

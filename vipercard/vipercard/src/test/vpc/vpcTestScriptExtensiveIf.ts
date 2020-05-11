@@ -140,13 +140,9 @@ end if
     }
 
     /*
-
     by turning on silenceAssertMsgs, this makes assertWarns throw,
       which is useful because we can catch the exception and not show
-     any dialogs. */
-    /**
-     * Many of the tests here throw.
-     */
+     any dialogs. Many of the tests here throw. */
     async go() {
         UI512ErrorHandling.silenceAssertMsgs = true;
         try {
@@ -205,6 +201,10 @@ end if
 
     /* not for vipercard, but for the original project
     running in an emulator.
+    
+    we use on idle since capturing on errorDialog, while
+    silencing the error, still stops the current script from executing
+    
     1) optional: use genconditionaltests.py to generate
         testScriptExtensiveConditionalsCollateral.txt
     2) change lineendings in that file to \r

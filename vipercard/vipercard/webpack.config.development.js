@@ -37,9 +37,7 @@ module.exports = {
         new webpack.DefinePlugin({
             /*  note that the plugin does a direct text replacement. */
             WEBPACK_PRODUCTION: false,
-            DBGPLACEHOLDER: 'debugger',
-            'VPCCustomVisitor.prototype.VISIT_PLACEHOLDER': 'VPCCustomVisitor.prototype.visit',
-            VISIT_PLACEHOLDER: 'visit'
+            DBGPLACEHOLDER: 'debugger'
         }),
     ],
     module: {

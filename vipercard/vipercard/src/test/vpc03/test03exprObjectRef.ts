@@ -20,6 +20,8 @@ t.atest('--init--testCollection03exprObjectRef', async () => {
     );
 });
 t.test('03ObjectSpecial', () => {
+    h3.vcstate.vci.undoableAction(()=>
+        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model))
     let b = new ScriptTestBatch();
     /* special objects */
     b.t(`the short id of ${cProductName}`, `WILD`);
