@@ -592,7 +592,7 @@ put ${s} into testresult`;
             ) {
                 if (!UI512ErrorHandling.silenceAssertMsgs) {
                     console.error(
-                        ` input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`
+                        ` input=${testsNoErr[i][0].replace(/\n/g, '|')} expected=`
                     );
                     console.error(`${expectString} output=`);
                     console.error(`${got.readAsString()}`);
@@ -607,7 +607,7 @@ put ${s} into testresult`;
                     console.error(
                         `DIFF RESULT input=${testsNoErr[i][0].replace(
                             /\n/g,
-                            '; '
+                            '|'
                         )} expected=`
                     );
                     console.error(`${expt.replace(/\n/g, '; ')} output=`);

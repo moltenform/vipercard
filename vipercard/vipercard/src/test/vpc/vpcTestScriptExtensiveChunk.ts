@@ -62,7 +62,8 @@ class RunExtensiveChunkTests {
             for (let i=0; i<batchSize; i++) {
                 let last = data.pop()
                 if (last && last.length) {
-                    if (last.split('of').length === 2 && !last.includes(' to')) {
+                    //~ if (!last.includes(' to')) {
+                    if (last.split('of').length === 2) {
                         batch.push(last)
                         count += 1
                     }

@@ -622,6 +622,8 @@ export const ChunkResolutionApplication = /* static class */ {
           closer (still not 100% match) to emulator */
         if (isPublicCall && sInput === '' && (type === VpcGranularity.Items || VpcGranularity.Lines)) {
             return 0;
+        } else if (isPublicCall && type === VpcGranularity.Items && !sInput.includes(itemDel) && sInput.trim() === '') {
+            return 0
         }
 
         if (type === VpcGranularity.Chars) {

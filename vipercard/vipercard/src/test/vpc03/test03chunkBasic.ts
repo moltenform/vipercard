@@ -119,6 +119,56 @@ t.test('03HChunkBound', () => {
 */
 
 /**
+ * count number
+ */
+t.test('03countnumber', () => {
+    let b = new ScriptTestBatch();
+    b.t('the number of chars in ""', '0');
+    b.t('the number of chars in "a"', '1');
+    b.t('the number of chars in "   "', '3');
+    b.t('the number of chars in "ab cd, ef"&cr&"gh ii,jj,kk"&cr&"mn,op,q"&cr&"r,s"', '33');
+    b.t('the number of chars in " ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}"', '84');
+    b.t('the number of items in ""', '0');
+    b.t('the number of items in "a"', '1');
+    b.t('the number of items in "   "', '0');
+    b.t('the number of items in "ab cd, ef"&cr&"gh ii,jj,kk"&cr&"mn,op,q"&cr&"r,s"', '7');
+    b.t('the number of items in " ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}"', '11');
+    b.t('the number of lines in ""', '0');
+    b.t('the number of lines in "a"', '1');
+    b.t('the number of lines in "   "', '1');
+    b.t('the number of lines in "ab cd, ef"&cr&"gh ii,jj,kk"&cr&"mn,op,q"&cr&"r,s"', '4');
+    b.t('the number of lines in " ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}"', '15');
+    b.t('the number of words in ""', '0');
+    b.t('the number of words in "a"', '1');
+    b.t('the number of words in "   "', '0');
+    b.t('the number of words in "ab cd, ef"&cr&"gh ii,jj,kk"&cr&"mn,op,q"&cr&"r,s"', '7');
+    b.t('the number of words in " ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}"', '18');
+    /* more words tests */
+    b.t('the number of words in " a b c "', '3');
+    b.t('the number of words in "" & "ab "&cr&"bc "&cr&"de" & ""', '3');
+    b.t('the number of words in "" & " "&cr&"ab "&cr&"bc "&cr&"de "&cr&"" & ""', '3');
+    b.t('the number of words in "" & "ab  "&cr&"bc  "&cr&"de" & ""', '3');
+    b.t('the number of words in "" & "  "&cr&"ab  "&cr&"bc  "&cr&"de  "&cr&"" & ""', '3');
+    b.t('the number of words in "" & "ab"&cr&" bc"&cr&" de" & ""', '3');
+    b.t('the number of words in "" & ""&cr&" ab"&cr&" bc"&cr&" de"&cr&" " & ""', '3');
+    b.t('the number of words in "" & "ab"&cr&"  bc"&cr&"  de" & ""', '3');
+    b.t('the number of words in "" & ""&cr&"  ab"&cr&"  bc"&cr&"  de"&cr&"  " & ""', '3');
+    b.t('the number of words in "" & "ab "&cr&" bc "&cr&" de" & ""', '3');
+    b.t('the number of words in "" & " "&cr&" ab "&cr&" bc "&cr&" de "&cr&" " & ""', '3');
+    b.t('the number of words in "" & "ab"&cr&" "&cr&"bc"&cr&" "&cr&"de" & ""', '3');
+    b.t('the number of words in "" & ""&cr&" "&cr&"ab"&cr&" "&cr&"bc"&cr&" "&cr&"de"&cr&" "&cr&"" & ""', '3');
+    b.t('the number of words in "" & "ab"&cr&" "&cr&""&cr&"bc"&cr&" "&cr&""&cr&"de" & ""', '3');
+    b.t('the number of words in "" & ""&cr&" "&cr&""&cr&"ab"&cr&" "&cr&""&cr&"bc"&cr&" "&cr&""&cr&"de"&cr&" "&cr&""&cr&"" & ""', '3');
+    b.t('the number of words in "" & "ab"&cr&""&cr&" "&cr&"bc"&cr&""&cr&" "&cr&"de" & ""', '3');
+    b.t('the number of words in "" & ""&cr&""&cr&" "&cr&"ab"&cr&""&cr&" "&cr&"bc"&cr&""&cr&" "&cr&"de"&cr&""&cr&" "&cr&"" & ""', '3');
+    b.t('the number of words in "" & "ab "&cr&"  bc "&cr&"  de" & ""', '3');
+    b.t('the number of words in "" & " "&cr&"  ab "&cr&"  bc "&cr&"  de "&cr&"  " & ""', '3');
+    b.t('the number of words in "" & "ab  "&cr&" bc  "&cr&" de" & ""', '3');
+    b.t('the number of words in "" & "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " & ""', '3');
+    b.batchEvaluate(h3);
+})
+
+/**
  * get chunk
  */
 t.test('03chunkexpression_get_char', () => {
@@ -425,46 +475,48 @@ t.test('03chunkexpression_put_one_item', () => {
  * delete chunk
  */
 t.test('03chunkexpression_additional delete tests', () => {
-    let b = new ScriptTestBatch();
-    /* normal word */
-    b.t('global z1\nput "a b c" into z1\\1', '1');
-    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
-    b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
-    b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
-    b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
-    b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
-    b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
-    /* normal word 2 */
-    b.t('global z1\nput " a b c " into z1\\1', '1');
-    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
-    b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
-    b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
-    b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
-    b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
-    b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
-    /* normal item */
-    b.t('global z1\nput "a,b,c" into z1\\1', '1');
-    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
-    b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
-    b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
-    b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
-    b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
-    b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
-    b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
-    /* normal item 2 */
-    b.t('global z1\nput ",a,b,c," into z1\\1', '1');
-    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
-    b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
-    b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
-    b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
-    b.t('put z1 into z\ndelete item 4 of z\\z', ',a,b,');
-    b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
-    b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
-    b.t('put z1 into z\ndelete item 7 of z\\z', ',a,b,c,');
-    /* corner cases */
-    b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
-    b.t('put z1 into z\ndelete word 3 to 3 of z\\z', '  \n ab  \n bc  \n \n ');
-    b.batchEvaluate(h3);
+    //~ let b = new ScriptTestBatch();
+    //~ /* normal word */
+    //~ b.t('global z1\nput "a b c" into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
+    //~ b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
+    //~ b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
+    //~ b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
+    //~ b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
+    //~ b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
+    //~ /* normal word 2 */
+    //~ b.t('global z1\nput " a b c " into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
+    //~ b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
+    //~ b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
+    //~ b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
+    //~ b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
+    //~ b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
+    //~ /* normal item */
+    //~ b.t('global z1\nput "a,b,c" into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
+    //~ b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
+    //~ b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
+    //~ b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
+    //~ b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
+    //~ b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
+    //~ b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
+    //~ /* normal item 2 */
+    //~ b.t('global z1\nput ",a,b,c," into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
+    //~ b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
+    //~ b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
+    //~ b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
+    //~ b.t('put z1 into z\ndelete item 4 of z\\z', ',a,b,');
+    //~ b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
+    //~ b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
+    //~ b.t('put z1 into z\ndelete item 7 of z\\z', ',a,b,c,');
+    //~ /* corner cases */
+    //~ b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete word 3 of z\\z', '  \n ab  \n bc  \n \n ');
+    //~ b.t('global z1\nput "ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}" into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete word 3 to 4 of z\\z', 'ab\ncd,ef\n\n\nkl\nmn,op\nqr\nst,uv,wx\n01 23\n45 \n67 89,/.\n#$,;: &*,(),-=\n~+, <>\n[],{}');
+    //~ b.batchEvaluate(h3);
 })
 t.test('03chunkexpression_delete_char', () => {
     let b = new ScriptTestBatch();
