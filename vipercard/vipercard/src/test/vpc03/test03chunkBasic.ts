@@ -54,6 +54,12 @@ t.test('03chunkexpression_additional chunk tests', () => {
     b.t('put ""&"ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}"&"" into z1\\1', '1')
     b.t('put z1 into z\nput "ABCDE" into line 3 to 4 of item 3 to 3 of z\\z', 'ab\ncd,ef\n\ngh,,ABCDE\nij\nkl\nmn,op\nqr\nst,uv,wx\n01 23\n45 \n67 89,/.\n#$,;: &*,(),-=\n~+, <>\n[],{}')
    /* seems to contradict if (!okToAppend) { */
+    /* apparently it can add the bounds[2] info after all */
+    b.t('put ""&"ab"&cr&"cd,ef  gh ij"&cr&"kl mn op qr,st,uv"&cr&"wx,01,23,45 ,67,89"&cr&"/.,#$ ;:"&cr&"&*"&cr&"()"&cr&"-="&cr&"~+, <>,[]"&cr&"{}"&"" into z1\\1', '1')
+    b.t('put z1 into z\nput "ABCDE" into line 2 of word 3 of item 3 of z\\z', 'ab\ncd,ef  gh ij,ABCDE\nkl mn op qr,st,uv\nwx,01,23,45 ,67,89\n/.,#$ ;:\n&*\n()\n-=\n~+, <>,[]\n{}')
+    /* apparently it can add the bounds[2] info after all */
+    b.t('put ""&"ab"&cr&"cd,ef  gh ij"&cr&"kl mn op qr,st,uv"&cr&"wx,01,23,45 ,67,89"&cr&"/.,#$ ;:"&cr&"&*"&cr&"()"&cr&"-="&cr&"~+, <>,[]"&cr&"{}"&"" into z1\\1', '1')
+b.t('put z1 into z\nput "ABCDE" into line 1 of word 1 of item 3 of z\\z', 'ab,,ABCDE\ncd,ef  gh ij\nkl mn op qr,st,uv\nwx,01,23,45 ,67,89\n/.,#$ ;:\n&*\n()\n-=\n~+, <>,[]\n{}')
 
     b.batchEvaluate(h3);
 

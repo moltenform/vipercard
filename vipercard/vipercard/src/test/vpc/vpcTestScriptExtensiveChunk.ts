@@ -38,6 +38,7 @@ class RunExtensiveChunkTests {
         let url = '/resources03a/test/testScriptExtensiveChunkTests.txt';
         let txt = await Util512Higher.asyncLoadJsonString(url);
         let data = txt.trim().replace(/\r\n/g, '\n').split('\n');
+        //~ confirm("note: getting second half")
         return data;
     }
 
@@ -60,6 +61,11 @@ class RunExtensiveChunkTests {
             }
 
             let enableThisTest = (s:string)=> {
+                if (s.includes("ab\\ncd,ef\\n\\ngh\\nij\\nkl\\nmn,op\\nqr\\nst,") ||
+                s.includes("ab\\ncd,ef__gh_ij\\nkl_mn_op_qr,st,uv\\nwx,01,23,45_,67,89") || 
+                s.includes("fff")   ) {
+                    return false
+                }
                 return s.startsWith('READ|') || s.startsWith('WRITE|')
             }
 

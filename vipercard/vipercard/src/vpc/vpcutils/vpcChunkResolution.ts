@@ -306,9 +306,19 @@ const ChunkResolution = /* static class */ {
             if (news === undefined) {
                 /* still add our commas to the end */
                 let fakeNewS = ''
+                //~ let result = fakeNewS + okToAppend ? bounds[2] : '';
+                okToAppend = true
                 let result = fakeNewS + okToAppend ? bounds[2] : '';
-                writeParentContainer.splice(parent.startPos + bounds[0], 0 /* delete nothing */, result);
-                retbounds = [bounds[0],  bounds[1]+ result.length];
+                let insertionPoint = parent.startPos + bounds[0]
+                if (bounds[2]) {
+                    insertionPoint = Math.min(parent.endPos, insertionPoint)
+                }
+                writeParentContainer.splice(insertionPoint, 0 /* delete nothing */, result);
+                if (bounds[2]) {
+                    retbounds = [-parent.startPos + insertionPoint + result.length, -parent.startPos + insertionPoint + result.length];
+                } else {
+                    retbounds = [-parent.startPos + insertionPoint, bounds[1]+ result.length];
+                }
             } else if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
                 //~ if (!okToAppend) {
                     //~ /* ignore adding the newones */
