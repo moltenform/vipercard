@@ -2,6 +2,7 @@
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { callDebuggerIfNotInProduction } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
@@ -48,7 +49,7 @@ class RunExtensiveChunkTests {
         let data = await this.loadTestData();
         while(true) {
             /* release our timeslice for a bit so the ui doesn't freeze */
-            if (count % batchSize*5 === 0) {
+            if (count % batchSize*4 === 0) {
                 await Util512Higher.sleep(10);
                 console.log(count, '...');
             }
@@ -58,12 +59,15 @@ class RunExtensiveChunkTests {
                 return
             }
 
+            let enableThisTest = (s:string)=> {
+                return s.startsWith('READ|') || s.startsWith('WRITE|')
+            }
+
             let batch:string[] = []
             for (let i=0; i<batchSize; i++) {
                 let last = data.pop()
                 if (last && last.length) {
-                    //~ if (!last.includes(' to')) {
-                    if (last.split('of').length === 2) {
+                    if (enableThisTest(last)) {
                         batch.push(last)
                         count += 1
                     }
@@ -114,10 +118,29 @@ class RunExtensiveChunkTests {
                     console.error("| refers to a newline and _ is a space in this output.")
                 }
 
-                console.error(`FAILURE near test # ${count}`)
-                console.error('Test: ' + batch[i].split('|').join('\n').replace(/\\n/g, '|').replace(/ /g, '_'))
+                console.error(`\n\n\nFAILURE near test # ${count+i}`)
+                console.error('Test: ' + batch[i].replace(/\|/g, '\n').replace(/\\n/g, '|').replace(/ /g, '_'))
                 console.error('Got: \n' + got.replace(/\\n/g, '|').replace(/ /g, '_'))
+                let pts = batch[i].split('|')
+                let input = pts[2]
+                let expected = pts[3]
+                input = `""&"${input.replace(/\\n/g, '"&cr&"')}&""`
+                if (pts[0] === 'WRITE') {
+                    /* write a helpful demo test case */
+                    console.log('demo test case:')
+                    console.log(`b.t('put ${input} into z1\\\\1', '1')`);
+                    console.log(`b.t('put z1 into z\\nput "ABCDE" into ${pts[2]} z\\\\z', '${expected}')`);
+                } else if (pts[1] === 'DELETE') {
+                    /* write a helpful demo test case */
+                    console.log('demo test case:')
+                    console.log(`b.t('put ${input} into z1\\\\1', '1')`);
+                    console.log(`b.t('put z1 into z\\ndelete ${pts[2]} z\\\\z', '${expected}')`);
+                }
+
                 this.failures+=1
+                if (this.failures > 40) {
+                    callDebuggerIfNotInProduction()
+                }
             }
         }
     }

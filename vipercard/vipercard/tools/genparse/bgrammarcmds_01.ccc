@@ -49,9 +49,9 @@ BuiltinCmdDisable:=... <Object>
 // the rewrite isn't really needed, but it's a good idea in case we ever need two consecutive tkidentifiers
 // to be a valid expression
 BuiltinCmdDivide:=... <HContainer> tkSyntaxMark <Lvl1Expression>                                                              
-// domenu. currently supports New Card, Delete Card, Back, First, Prev, Next, Last, New Button, New Field, New Background 
-// and also support doMenu "New Card", "Object" like in the product
-// note that cards can override the domenu message. and that in the product you can omit quotes, domenu new button works
+// domenu. 
+// we should also support doMenu "New Card", "Object" like in the product
+// note that cards can override the domenu message. note that in the product you can omit quotes, domenu new button works
 // in rewrite syntax say we don't support "without dialog" or "with keys"
 BuiltinCmdVpccalluntrappabledomenu:=... <Expr> [tkComma <Expr>]       
 // drag, simulate mouse drag

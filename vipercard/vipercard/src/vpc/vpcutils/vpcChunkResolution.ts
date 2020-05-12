@@ -1,5 +1,5 @@
 
-/* auto */ import { VpcIntermedValBase, VpcVal } from './vpcVal';
+/* auto */ import { VpcIntermedValBase } from './vpcVal';
 /* auto */ import { ReadableContainer, WritableContainer, WritableContainerSimpleFmtText } from './vpcUtils';
 /* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, checkThrowInternal, findPositionFromOrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
@@ -462,6 +462,10 @@ export const ChunkResolutionApplication = /* static class */ {
      * delete, which is a bit different from `put "" into`
      */
     applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string, compatibility:boolean) {
+        /* don't allow backwards bounds. only have to check the first one since
+        there's a check in vpcVisitorMixin for recursive scopes. covered in tests. */
+        checkThrow(!chunk || !chunk.hasBackwardsBounds(), "backwards bounds - don't allow delete item 3 to 2 of x.")
+
         if (chunk.granularity === VpcGranularity.Chars) {
             return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compatibility)
         }
@@ -751,21 +755,9 @@ export class RequestedChunk extends VpcIntermedValBase {
         return other;
     }
 
-    /**
-     * an index must be a valid integer
-     */
-    confirmValidIndex(v: VpcVal, granularity: string, tmpArr: [boolean, any]) {
-        checkThrow(v instanceof VpcVal, `8p|internal error in RuleHChunk`);
-        checkThrow(v.isItInteger(), `8o|when getting ${granularity}, need to provide an integer but got ${v.readAsString()}`);
-
-        let asInt = v.readAsStrictInteger(tmpArr);
-        checkThrow(
-            asInt >= 0,
-            longstr(`8n|when getting ${granularity}, need to provide
-             a number >= 0 but got ${v.readAsString()}`)
-        );
-
-        return asInt;
+    /** are bounds backwards? we sometimes support this */
+    hasBackwardsBounds():boolean {
+        return this.last !== undefined && this.last < this.first
     }
 }
 

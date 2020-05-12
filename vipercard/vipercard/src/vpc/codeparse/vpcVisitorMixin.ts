@@ -12,7 +12,7 @@
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { arLast, castVerifyIsStr, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { arLast, cast, castVerifyIsStr, getStrToEnum } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -307,14 +307,19 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
             checkThrow(ctx.RuleHChunkOne && ctx.RuleHChunkOne[0], 'S3|RuleHChunkOne');
-            let ret = this.visit(arLast(ctx.RuleHChunkOne));
+            let ret = cast(RequestedChunk, this.visit(arLast(ctx.RuleHChunkOne)));
+            let hasBackwards =  ret.hasBackwardsBounds()
             let current = ret;
             /* start with len-2 because we already did the len-1 one */
             for (let i = ctx.RuleHChunkOne.length - 2; i >= 0; i--) {
-                current.child = this.visit(ctx.RuleHChunkOne[i]);
+                current.child = cast(RequestedChunk,this.visit(ctx.RuleHChunkOne[i]));
+                hasBackwards = hasBackwards || current.child.hasBackwardsBounds()
                 current = current.child;
             }
 
+            checkThrow(current === ret || !hasBackwards, `backwards bounds in a recursive chunk.
+            you can't do 'put item 3 to 2 of line 2 of "abc" into x', if you need to you can do
+            'put line 2 of "abc"' into x1' and 'put item 3 to 2 of x1 into x'`)
             return ret;
         }
 

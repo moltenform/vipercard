@@ -84,6 +84,40 @@ t.test('03HChunkBound', () => {
     b.t('global z\\char 1 to char 2 of z', 'ERR:5:parse err');
     b.t('global z\\char 1 to word 1 of z', 'ERR:5:parse err');
     b.t('global z\\char 1 to 2 to 3 of z', 'ERR:5:parse err');
+    /* backwards bounds (more in vpcTestChunkResolution.ts) */
+    b.t('item 3 to 1 of ",,cd,"', 'cd');
+    b.t('word 2 to 1 of "  abc  .def gh.i   "', '.def');
+    b.t('char 1 to 0 of "abc"', '');
+    /* we only allow backwards ranges if non-recursive and not a delete 
+    (i.e. those covered by vpcTestChunkResolution.ts) */
+    b.t('global z\\char 3 to 2 of line 2 of z', 'ERR:5:backwards');
+    b.t('global z\\item 3 to 2 of line 2 of z', 'ERR:5:backwards');
+    b.t('global z\\line 3 to 2 of line 2 of z', 'ERR:5:backwards');
+    b.t('global z\\word 3 to 2 of line 2 of z', 'ERR:5:backwards');
+    b.t('global z\\line 2 of char 3 to 2 of z', 'ERR:5:backwards');
+    b.t('global z\\line 2 of item 3 to 2 of z', 'ERR:5:backwards');
+    b.t('global z\\line 2 of line 3 to 2 of z', 'ERR:5:backwards');
+    b.t('global z\\line 2 of word 3 to 2 of z', 'ERR:5:backwards');
+    b.t('global z\nput "A" into char 3 to 2 of line 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\nput "A" into item 3 to 2 of line 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\nput "A" into line 3 to 2 of line 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\nput "A" into word 3 to 2 of line 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\nput "A" into line 2 of char 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\nput "A" into line 2 of item 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\nput "A" into line 2 of line 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\nput "A" into line 2 of word 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete line 2 of char 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete line 2 of item 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete line 2 of line 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete line 2 of word 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete char 3 to 2 of line 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete item 3 to 2 of line 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete line 3 to 2 of line 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete word 3 to 2 of line 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete char 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete item 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete line 3 to 2 of z\\1', 'ERR:5:backwards');
+    b.t('global z\ndelete word 3 to 2 of z\\1', 'ERR:5:backwards');
     /* ordinal bounds */
     b.t('first char of z', 'a');
     b.t('third char of z', 'c');
@@ -973,48 +1007,48 @@ t.test('03chunkexpression_put_one_item', () => {
  * delete chunk
  */
 t.test('03chunkexpression_additional delete tests', () => {
-    //~ let b = new ScriptTestBatch();
-    //~ /* normal word */
-    //~ b.t('global z1\nput "a b c" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
-    //~ b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
-    //~ b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
-    //~ b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
-    //~ b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
-    //~ b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
-    //~ /* normal word 2 */
-    //~ b.t('global z1\nput " a b c " into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
-    //~ b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
-    //~ b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
-    //~ b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
-    //~ b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
-    //~ b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
-    //~ /* normal item */
-    //~ b.t('global z1\nput "a,b,c" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
-    //~ b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
-    //~ b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
-    //~ b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
-    //~ b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
-    //~ b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
-    //~ b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
-    //~ /* normal item 2 */
-    //~ b.t('global z1\nput ",a,b,c," into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
-    //~ b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
-    //~ b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
-    //~ b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
-    //~ b.t('put z1 into z\ndelete item 4 of z\\z', ',a,b,');
-    //~ b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
-    //~ b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
-    //~ b.t('put z1 into z\ndelete item 7 of z\\z', ',a,b,c,');
-    //~ /* corner cases */
+    let b = new ScriptTestBatch();
+    /* normal word */
+    b.t('global z1\nput "a b c" into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
+    b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
+    b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
+    b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
+    b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
+    b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
+    /* normal word 2 */
+    b.t('global z1\nput " a b c " into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
+    b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
+    b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
+    b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
+    b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
+    b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
+    /* normal item */
+    b.t('global z1\nput "a,b,c" into z1\\1', '1');
+    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
+    b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
+    b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
+    b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
+    b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
+    b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
+    b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
+    /* normal item 2 */
+    b.t('global z1\nput ",a,b,c," into z1\\1', '1');
+    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
+    b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
+    b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
+    b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
+    b.t('put z1 into z\ndelete item 4 of z\\z', ',a,b,');
+    b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
+    b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
+    b.t('put z1 into z\ndelete item 7 of z\\z', ',a,b,c,');
+    /* corner cases */
     //~ b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
     //~ b.t('put z1 into z\ndelete word 3 of z\\z', '  \n ab  \n bc  \n \n ');
     //~ b.t('global z1\nput "ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}" into z1\\1', '1');
     //~ b.t('put z1 into z\ndelete word 3 to 4 of z\\z', 'ab\ncd,ef\n\n\nkl\nmn,op\nqr\nst,uv,wx\n01 23\n45 \n67 89,/.\n#$,;: &*,(),-=\n~+, <>\n[],{}');
-    //~ b.batchEvaluate(h3);
+    b.batchEvaluate(h3);
 })
 t.test('03chunkexpression_delete_char', () => {
     let b = new ScriptTestBatch();
@@ -1115,7 +1149,8 @@ t.test('03chunkexpression_delete_item', () => {
         put "" into char 2 to 4 of z
         put "A" into char 2 to 4 of z
         set the textstyle of char 2 to 4 of cd fld 1 to bold
-        ensure disallow going backwards in scope
+        doing it to a field
+        ensure disallow going backwards in granularity scope order
         before/after
         math ops
 */
