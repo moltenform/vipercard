@@ -310,14 +310,18 @@ const ChunkResolution = /* static class */ {
                 writeParentContainer.splice(parent.startPos + bounds[0], 0 /* delete nothing */, result);
                 retbounds = [bounds[0],  bounds[1]+ result.length];
             } else if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
-                if (!okToAppend) {
-                    /* ignore adding the newones */
-                    bounds[2] = ''
-                }
+                //~ if (!okToAppend) {
+                    //~ /* ignore adding the newones */
+                    //~ bounds[2] = ''
+                //~ }
                 /* it's a brand new item, adding 'before' or 'after' isn't applicable */
                 let result = bounds[2] + news;
-                writeParentContainer.splice(parent.startPos + bounds[0], bounds[1] - bounds[0], result);
-                retbounds = [bounds[0], bounds[0] + result.length];
+                let insertionPoint = parent.startPos + bounds[0]
+                if (bounds[2] && !okToAppend) {
+                    insertionPoint = Math.min(parent.endPos, insertionPoint)
+                }
+                writeParentContainer.splice(insertionPoint, bounds[1] - bounds[0], result);
+                retbounds = [insertionPoint, insertionPoint + result.length];
             } else if (prep === VpcChunkPreposition.After) {
                 writeParentContainer.splice(parent.startPos + bounds[1], 0, news);
                 retbounds = [bounds[1], bounds[1] + news.length];

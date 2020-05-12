@@ -49,6 +49,16 @@ function evaluateWithVarAndFld(b:ScriptTestBatch) {
     b.batchEvaluate(h3)
 }
 
+t.test('03chunkexpression_additional chunk tests', () => {
+    let b = new ScriptTestBatch();
+    b.t('put ""&"ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}"&"" into z1\\1', '1')
+    b.t('put z1 into z\nput "ABCDE" into line 3 to 4 of item 3 to 3 of z\\z', 'ab\ncd,ef\n\ngh,,ABCDE\nij\nkl\nmn,op\nqr\nst,uv,wx\n01 23\n45 \n67 89,/.\n#$,;: &*,(),-=\n~+, <>\n[],{}')
+   /* seems to contradict if (!okToAppend) { */
+
+    b.batchEvaluate(h3);
+
+})
+
 /**
  * parsing chunk
  */
@@ -1006,50 +1016,6 @@ t.test('03chunkexpression_put_one_item', () => {
 /**
  * delete chunk
  */
-t.test('03chunkexpression_additional delete tests', () => {
-    let b = new ScriptTestBatch();
-    /* normal word */
-    b.t('global z1\nput "a b c" into z1\\1', '1');
-    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
-    b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
-    b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
-    b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
-    b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
-    b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
-    /* normal word 2 */
-    b.t('global z1\nput " a b c " into z1\\1', '1');
-    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
-    b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
-    b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
-    b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
-    b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
-    b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
-    /* normal item */
-    b.t('global z1\nput "a,b,c" into z1\\1', '1');
-    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
-    b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
-    b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
-    b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
-    b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
-    b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
-    b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
-    /* normal item 2 */
-    b.t('global z1\nput ",a,b,c," into z1\\1', '1');
-    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
-    b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
-    b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
-    b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
-    b.t('put z1 into z\ndelete item 4 of z\\z', ',a,b,');
-    b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
-    b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
-    b.t('put z1 into z\ndelete item 7 of z\\z', ',a,b,c,');
-    /* corner cases */
-    //~ b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete word 3 of z\\z', '  \n ab  \n bc  \n \n ');
-    //~ b.t('global z1\nput "ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}" into z1\\1', '1');
-    //~ b.t('put z1 into z\ndelete word 3 to 4 of z\\z', 'ab\ncd,ef\n\n\nkl\nmn,op\nqr\nst,uv,wx\n01 23\n45 \n67 89,/.\n#$,;: &*,(),-=\n~+, <>\n[],{}');
-    b.batchEvaluate(h3);
-})
 t.test('03chunkexpression_delete_char', () => {
     let b = new ScriptTestBatch();
     /* normal char */
@@ -1438,6 +1404,52 @@ t.test('03chunkexpression_mathops', () => {
     b.t('put z1 into z\ndivide item 2 of z by 100\\z', '100,2,300');
     b.batchEvaluate(h3);
 })
+
+t.test('03chunkexpression_additional delete tests', () => {
+    let b = new ScriptTestBatch();
+    /* normal word */
+    b.t('global z1\nput "a b c" into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
+    b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
+    b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
+    b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
+    b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
+    b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
+    /* normal word 2 */
+    b.t('global z1\nput " a b c " into z1\\1', '1');
+    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
+    b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
+    b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
+    b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
+    b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
+    b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
+    /* normal item */
+    b.t('global z1\nput "a,b,c" into z1\\1', '1');
+    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
+    b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
+    b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
+    b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
+    b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
+    b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
+    b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
+    /* normal item 2 */
+    b.t('global z1\nput ",a,b,c," into z1\\1', '1');
+    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
+    b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
+    b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
+    b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
+    b.t('put z1 into z\ndelete item 4 of z\\z', ',a,b,');
+    b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
+    b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
+    b.t('put z1 into z\ndelete item 7 of z\\z', ',a,b,c,');
+    /* corner cases */
+    //~ b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete word 3 of z\\z', '  \n ab  \n bc  \n \n ');
+    //~ b.t('global z1\nput "ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}" into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete word 3 to 4 of z\\z', 'ab\ncd,ef\n\n\nkl\nmn,op\nqr\nst,uv,wx\n01 23\n45 \n67 89,/.\n#$,;: &*,(),-=\n~+, <>\n[],{}');
+    b.batchEvaluate(h3);
+})
+
 
 
 /**

@@ -124,17 +124,17 @@ class RunExtensiveChunkTests {
                 let pts = batch[i].split('|')
                 let input = pts[2]
                 let expected = pts[3]
-                input = `""&"${input.replace(/\\n/g, '"&cr&"')}&""`
+                input = `""&"${input.replace(/\\n/g, '"&cr&"')}"&""`
                 if (pts[0] === 'WRITE') {
                     /* write a helpful demo test case */
                     console.log('demo test case:')
                     console.log(`b.t('put ${input} into z1\\\\1', '1')`);
-                    console.log(`b.t('put z1 into z\\nput "ABCDE" into ${pts[2]} z\\\\z', '${expected}')`);
+                    console.log(`b.t('put z1 into z\\nput "ABCDE" into ${pts[1]} z\\\\z', '${expected}')`);
                 } else if (pts[1] === 'DELETE') {
                     /* write a helpful demo test case */
                     console.log('demo test case:')
                     console.log(`b.t('put ${input} into z1\\\\1', '1')`);
-                    console.log(`b.t('put z1 into z\\ndelete ${pts[2]} z\\\\z', '${expected}')`);
+                    console.log(`b.t('put z1 into z\\ndelete ${pts[1]} z\\\\z', '${expected}')`);
                 }
 
                 this.failures+=1
