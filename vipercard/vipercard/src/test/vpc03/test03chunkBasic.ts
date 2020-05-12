@@ -270,7 +270,8 @@ b.t('the number of words in (""&"  "&cr&" "&"")', '0');
 b.t('the number of words in (""&"   a"&"")', '1');
 b.t('the number of words in (""&"   "&cr&""&"")', '0');
 b.t('the number of words in (""&"    "&"")', '0');
-
+b.batchEvaluate(h3);
+    b = new ScriptTestBatch();
 b.t('the number of items in (""&""&"")', '0');
 b.t('the number of items in (""&"a"&"")', '1');
 b.t('the number of items in (""&","&"")', '1');
@@ -430,6 +431,8 @@ b.t('the number of items in (""&", ,"&cr&""&"")', '2');
 b.t('the number of items in (""&",  a"&"")', '2');
 b.t('the number of items in (""&",  ,"&"")', '2');
 b.t('the number of items in (""&",   "&"")', '1');
+b.batchEvaluate(h3);
+b = new ScriptTestBatch();
 b.t('the number of items in (""&",  "&cr&""&"")', '1');
 b.t('the number of items in (""&", "&cr&"a"&"")', '2');
 b.t('the number of items in (""&", "&cr&","&"")', '2');
@@ -564,7 +567,8 @@ b.t('the number of items in (""&""&cr&""&cr&""&cr&"a"&"")', '1');
 b.t('the number of items in (""&""&cr&""&cr&""&cr&","&"")', '1');
 b.t('the number of items in (""&""&cr&""&cr&""&cr&" "&"")', '0');
 b.t('the number of items in (""&""&cr&""&cr&""&cr&""&cr&""&"")', '0');
-
+b.batchEvaluate(h3);
+    b = new ScriptTestBatch();
 b.t('the number of lines in (""&""&"")', '0');
 b.t('the number of lines in (""&"a"&"")', '1');
 b.t('the number of lines in (""&" "&"")', '1');

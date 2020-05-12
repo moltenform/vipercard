@@ -619,29 +619,35 @@ export const ChunkResolutionApplication = /* static class */ {
      */
     applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
         /* in the public interface, change behavior to match original product */
+        let adjust = 0
         if (isPublicCall && sInput === '' && (type === VpcGranularity.Items || VpcGranularity.Lines)) {
             return 0;
         } else if (isPublicCall && type === VpcGranularity.Items && !sInput.includes(itemDel) && sInput.trim() === '') {
             return 0
-        } else if (isPublicCall && type === VpcGranularity.Lines && sInput.endsWith('\n')) {
-            sInput = sInput.slice(1, -1)
-        } else if (isPublicCall && type === VpcGranularity.Items && sInput.endsWith(',')) {
-            sInput = sInput.slice(1, -1)
+        }  else if (isPublicCall && type === VpcGranularity.Lines && sInput.endsWith('\n')) {
+            adjust = -1
+        }   /* else if (isPublicCall && type === VpcGranularity.Items && sInput.startsWith(',')) {
+            sInput = sInput.substr(1)
+            if (!sInput) { return 1 }
+        }  */ else if (isPublicCall && type === VpcGranularity.Items && sInput.trim().endsWith(',')) {
+            adjust = -1
             if (!sInput) { return 1 }
         } 
 
         if (type === VpcGranularity.Chars) {
-            return sInput.length;
+            return sInput.length + adjust;
         } else if (type === VpcGranularity.Items) {
-            return ChunkResolution._getPositionsTable(sInput, type, itemDel).length;
+            return ChunkResolution._getPositionsTable(sInput, type, itemDel).length + adjust;
         } else if (type === VpcGranularity.Lines) {
-            return ChunkResolution._getPositionsTable(sInput, type, itemDel).length;
+            return ChunkResolution._getPositionsTable(sInput, type, itemDel).length + adjust;
         } else if (type === VpcGranularity.Words) {
-            return ChunkResolution._getPositionsTable(sInput, type, itemDel).length;
+            return ChunkResolution._getPositionsTable(sInput, type, itemDel).length + adjust;
         } else {
             checkThrow(false, `5-|unknown chunk granularity ${type}`);
         }
     },
+
+
 
     
 
