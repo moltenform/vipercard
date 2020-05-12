@@ -41,7 +41,9 @@ const ChunkResolution = /* static class */ {
      * positions are 0-based
      * "a,bb,c" -> [0, 2, 5]
      */
-    _getPositionsTable(s: string, re: RegExp, isWords: boolean): number[] {
+    _getPositionsTable(s: string, type:VpcGranularity, itemDel:string): number[] {
+        let re = ChunkResolution.getRegex(type, itemDel)
+        let isWords = type===VpcGranularity.Words
         let positions: number[] = [];
         if (!isWords || (!s.startsWith(' ') && !s.startsWith('\n'))) {
             positions.push(0);
@@ -102,7 +104,7 @@ const ChunkResolution = /* static class */ {
      * return semi-inclusive bounds [start, end)
      */
     _itemsBoundsForGet(sInput: string, delim: string, start: number, end: number): O<[number, number]> {
-        let table = this._getPositionsTable(sInput, this.getRegex(VpcGranularity.Items, delim), false);
+        let table = this._getPositionsTable(sInput, VpcGranularity.Items, delim);
         if (start >= table.length) {
             return undefined;
         } else {
@@ -117,8 +119,8 @@ const ChunkResolution = /* static class */ {
      * confirmed in emulator: only spaces and newlines separate words, not punctuation.
      * return semi-inclusive bounds [start, end)
      */
-    _wordsBoundsForGet(sInput: string, start: number, end: number): O<[number, number]> {
-        let table = this._getPositionsTable(sInput, this.getRegex(VpcGranularity.Words, ''), true);
+    _wordsBoundsForGet(sInput: string, start: number, end: number, itemDel:string): O<[number, number]> {
+        let table = this._getPositionsTable(sInput, VpcGranularity.Words, itemDel);
         if (start >= table.length) {
             return undefined;
         } else {
@@ -148,7 +150,7 @@ const ChunkResolution = /* static class */ {
      * when you say put "abc" into item x to y of z, which positions should be replaced with "abc"?
      */
     _itemsBoundsForSet(sInput: string, delim: string, start: number, end: number): any {
-        let table = this._getPositionsTable(sInput, this.getRegex(VpcGranularity.Items, delim), false);
+        let table = this._getPositionsTable(sInput, VpcGranularity.Items, delim);
         if (start >= table.length) {
             /* you can set items beyond current content, add trailing commas! */
             let howmanytoadd = 1 + (start - table.length);
@@ -164,8 +166,8 @@ const ChunkResolution = /* static class */ {
     /**
      * when you say put "abc" into word x to y of z, which positions should be replaced with "abc"?
      */
-    _wordsBoundsForSet(sInput: string, start: number, end: number): any {
-        let boundsGet = this._wordsBoundsForGet(sInput, start, end);
+    _wordsBoundsForSet(sInput: string, start: number, end: number, itemDel:string): any {
+        let boundsGet = this._wordsBoundsForGet(sInput, start, end, itemDel);
         if (boundsGet === undefined) {
             return [sInput.length, sInput.length, ''];
         } else {
@@ -223,7 +225,7 @@ const ChunkResolution = /* static class */ {
         } else if (ch.granularity === VpcGranularity.Lines) {
             return this._itemsBoundsForGet(s, '\n', start, end);
         } else if (ch.granularity === VpcGranularity.Words) {
-            return this._wordsBoundsForGet(s, start, end);
+            return this._wordsBoundsForGet(s, start, end, itemDel);
         } else {
             checkThrow(false, `5<|unknown chunk granularity ${ch.granularity}`);
         }
@@ -276,7 +278,7 @@ const ChunkResolution = /* static class */ {
         } else if (ch.granularity === VpcGranularity.Lines) {
             return this._itemsBoundsForSet(sInput, '\n', start, end);
         } else if (ch.granularity === VpcGranularity.Words) {
-            return this._wordsBoundsForSet(sInput, start, end);
+            return this._wordsBoundsForSet(sInput, start, end, itemDel);
         } else {
             checkThrow(false, `5:|unknown chunk type ${ch.granularity}`);
         }
@@ -518,7 +520,7 @@ export const ChunkResolutionApplication = /* static class */ {
 
         let start:number
         let end:number
-        let table = ChunkResolution._getPositionsTable(unf, ChunkResolution.getRegex(current.granularity, delim), current.granularity === VpcGranularity.Words);
+        let table = ChunkResolution._getPositionsTable(unf, current.granularity, delim);
         if (current.granularity === VpcGranularity.Words) {
             if (current.first === -1) {
                 /* emulator confirms you can say word 0 of x */
@@ -562,8 +564,6 @@ export const ChunkResolutionApplication = /* static class */ {
             let activeChar = current.granularity === VpcGranularity.Items ? delim : '\n'
             if (current.first === -1) {
                 /* emulator confirms you can say word 0 of x */
-                //~ start = 0
-                //~ end = table[0]
                 if ((current.granularity === VpcGranularity.Items && unf.startsWith(activeChar)) || (current.granularity === VpcGranularity.Lines && unf.startsWith(activeChar))) {
                     start = 0
                     end = 1
@@ -618,22 +618,26 @@ export const ChunkResolutionApplication = /* static class */ {
      * 'put the number of words in x into y'
      */
     applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
-        /* in the public interface, change behavior to be
-          closer (still not 100% match) to emulator */
+        /* in the public interface, change behavior to match original product */
         if (isPublicCall && sInput === '' && (type === VpcGranularity.Items || VpcGranularity.Lines)) {
             return 0;
         } else if (isPublicCall && type === VpcGranularity.Items && !sInput.includes(itemDel) && sInput.trim() === '') {
             return 0
-        }
+        } else if (isPublicCall && type === VpcGranularity.Lines && sInput.endsWith('\n')) {
+            sInput = sInput.slice(1, -1)
+        } else if (isPublicCall && type === VpcGranularity.Items && sInput.endsWith(',')) {
+            sInput = sInput.slice(1, -1)
+            if (!sInput) { return 1 }
+        } 
 
         if (type === VpcGranularity.Chars) {
             return sInput.length;
         } else if (type === VpcGranularity.Items) {
-            return ChunkResolution._getPositionsTable(sInput, ChunkResolution.getRegex(type, itemDel), false).length;
+            return ChunkResolution._getPositionsTable(sInput, type, itemDel).length;
         } else if (type === VpcGranularity.Lines) {
-            return ChunkResolution._getPositionsTable(sInput, ChunkResolution.getRegex(type, itemDel), false).length;
+            return ChunkResolution._getPositionsTable(sInput, type, itemDel).length;
         } else if (type === VpcGranularity.Words) {
-            return ChunkResolution._getPositionsTable(sInput, ChunkResolution.getRegex(type, itemDel), true).length;
+            return ChunkResolution._getPositionsTable(sInput, type, itemDel).length;
         } else {
             checkThrow(false, `5-|unknown chunk granularity ${type}`);
         }
