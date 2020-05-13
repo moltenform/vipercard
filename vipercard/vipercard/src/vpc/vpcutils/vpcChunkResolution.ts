@@ -511,8 +511,8 @@ export const ChunkResolutionApplication = /* static class */ {
             let tmp = current.getClone()
             tmp.first = i
             tmp.last = i
-            let maxLen = unfFull.length - resolved.startPos
-            let [start, end] = this._applyDeleteHelper(unf, itemDel, compatibility, tmp, isLastOfRange, maxLen)
+            let unfAndAfter = unfFull.substring(resolved.startPos)
+            let [start, end] = this._applyDeleteHelper(unf, itemDel, compatibility, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
             cont.splice(resolved.startPos + start, end-start, '')
             isLastOfRange = false
             //~ allstart = Math.min(allstart, start)
@@ -537,7 +537,7 @@ export const ChunkResolutionApplication = /* static class */ {
         }
     },
 
-    _applyDeleteHelper(unf: string, delim: string, compatibility:boolean, current: RequestedChunk, isLastOfRange:boolean, maxLen:number):[number, number] {
+    _applyDeleteHelper(unf: string, delim: string, compatibility:boolean, current: RequestedChunk, isLastOfRange:boolean, unfAndAfter:string, parentStartPos:number):[number, number] {
         if (!current.last) {
             current.last = current.first
         }
@@ -560,7 +560,7 @@ export const ChunkResolutionApplication = /* static class */ {
                 /* strip final whitespace */
                 start = unf.length
                 end = unf.length
-                if (end === maxLen) {
+                if (end === unfAndAfter.length) {
                     /* 
                 this special case only applies to the true end of the string */
                     while(unf[start-1] === ' ') {
@@ -575,9 +575,9 @@ export const ChunkResolutionApplication = /* static class */ {
                     if (unf[end] === '\n' && isLastOfRange) { break }
                     end++
                 }
-                /* use maxlen not unf.length here,
+                /* use unfAndAfter.length not unf.length here,
                 this special case only applies to the true end of the string */
-                if ((end >= maxLen -1)) {
+                if ((end >= unfAndAfter.length -1)) {
                     while(unf[start-1] === ' ') {
                         start--
                     }
@@ -594,7 +594,11 @@ export const ChunkResolutionApplication = /* static class */ {
 
         } else if (current.granularity === VpcGranularity.Items || current.granularity === VpcGranularity.Lines) {
             let activeChar = current.granularity === VpcGranularity.Items ? delim : '\n'
-            if (current.first === -1) {
+            if (current.first === 0 && parentStartPos>0 && !unf.includes(delim) && unf.length && unf.length !== unfAndAfter.length && unfAndAfter[unf.length]==='\n' ) {
+                /* weird corner case: delete more than normal */
+                start = 0
+                end = unf.length + 1
+            } else if (current.first === -1) {
                 /* emulator confirms you can say word 0 of x */
                 if ((current.granularity === VpcGranularity.Items && unf.startsWith(activeChar)) || (current.granularity === VpcGranularity.Lines && unf.startsWith(activeChar))) {
                     start = 0

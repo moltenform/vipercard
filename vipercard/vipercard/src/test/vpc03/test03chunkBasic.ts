@@ -69,7 +69,13 @@ t.test('03chunkexpression_additional chunk tests', () => {
     /* shouldn't have the strip-last-whitespace behavior if not actually by end of string */
     b.t('put ""&"ab cd,ef ,gh,ij kl mn,op"&cr&"qr"&cr&"st,uv,wx 01 23 45,"&cr&"67,89"&cr&"/. #$ ;: &*,() -="&cr&"~+, <> [],{}"&"" into z1\\1', '1')
 b.t('put z1 into z\ndelete line 1 of word 3 of item 2 of z\\z', 'ab cd,ef ,gh,ij kl mn,op\nqr\nst,uv,wx 01 23 45,\n67,89\n/. #$ ;: &*,() -=\n~+, <> [],{}')
-    
+/* deleting item might delete a lot */
+b.t('put ""&"ab cd,ef ,gh,ij kl mn,op"&cr&"qr"&cr&"st,uv,wx 01 23 45,"&cr&"67,89"&cr&"/. #$ ;: &*,() -="&cr&"~+, <> [],{}"&"" into z1\\1', '1')
+b.t('put z1 into z\ndelete line 2 of item 1 of line 3 of z\\z', 'ab cd,ef ,gh,ij kl mn,op\nst,uv,wx 01 23 45,\n67,89\n/. #$ ;: &*,() -=\n~+, <> [],{}')
+/* deleting item might delete a lot, unless line is empty */
+b.t('put ""&"ab cd,ef ,gh,ij kl mn,op"&cr&""&cr&"st,uv,wx 01 23 45,"&cr&"67,89"&cr&"/. #$ ;: &*,() -="&cr&"~+, <> [],{}"&"" into z1\\1', '1')
+b.t('put z1 into z\ndelete line 2 of item 1 of line 3 of z\\z', 'ab cd,ef ,gh,ij kl mn,op\n\nst,uv,wx 01 23 45,\n67,89\n/. #$ ;: &*,() -=\n~+, <> [],{}')
+
     b.batchEvaluate(h3);
 })
 
