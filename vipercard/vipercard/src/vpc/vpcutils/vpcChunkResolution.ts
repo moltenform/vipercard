@@ -513,6 +513,7 @@ export const ChunkResolutionApplication = /* static class */ {
         let current: O<RequestedChunk> = chunk;
         let isChildOfAddedLine = false /* doesn't matter for reads */
         let okToAppend = true
+        let isChild = false
         while (current && resolved) {
             if (!current.child) {
                 break
@@ -520,6 +521,7 @@ export const ChunkResolutionApplication = /* static class */ {
             //~ checkThrow(!current.last || current.first===current.last, "we don't yet support deleting ranges")
             resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', compat,VpcChunkPreposition.Into, false, isChildOfAddedLine, okToAppend );
             current = current.child;
+            isChild = true
         }
 
         checkThrow(!current.last || current.first===current.last, "we don't yet support deleting ranges")
@@ -551,7 +553,7 @@ export const ChunkResolutionApplication = /* static class */ {
             tmp.first = current.first
             tmp.last = current.last ?? current.first
             isLastOfRange = true
-            let [start, end_unused] = this._applyDeleteHelper(unf, itemDel, compat, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
+            let [start, end_unused] = this._applyDeleteHelper(unf, itemDel, compat, tmp, isLastOfRange, unfAndAfter, unfFull, isChild ? resolved.startPos: -1)
             let end:number
             if (tmp.first === tmp.last) {
                 end = end_unused
@@ -560,7 +562,7 @@ export const ChunkResolutionApplication = /* static class */ {
                 tmp.first = current.last ?? current.first
                 tmp.last = current.last ?? current.first
                 isLastOfRange = true //?
-                let gt = this._applyDeleteHelper(unf, itemDel, compat, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
+                let gt = this._applyDeleteHelper(unf, itemDel, compat, tmp, isLastOfRange, unfAndAfter, unfFull, isChild ? resolved.startPos: -1)
                 end = gt[1]
             }
 
@@ -570,7 +572,7 @@ export const ChunkResolutionApplication = /* static class */ {
         }
     },
 
-    _applyDeleteHelper(unf: string, delim: string, compat:boolean, current: RequestedChunk, isLastOfRange:boolean, unfAndAfter:string, parentStartPos:number):[number, number] {
+    _applyDeleteHelper(unf: string, delim: string, compat:boolean, current: RequestedChunk, isLastOfRange:boolean, unfAndAfter:string, unfFull:string, parentStartPos:number):[number, number] {
         if (!current.last) {
             current.last = current.first
         }
@@ -628,10 +630,13 @@ export const ChunkResolutionApplication = /* static class */ {
 
         } else if (current.granularity === VpcGranularity.Items || current.granularity === VpcGranularity.Lines) {
             let activeChar = current.granularity === VpcGranularity.Items ? delim : '\n'
-            if (current.granularity === VpcGranularity.Items && current.first === 0 && parentStartPos>0 && !unf.includes(delim) && unf.length && unf.length !== unfAndAfter.length && unfAndAfter[unf.length]==='\n' ) {
-                /* weird corner case: delete more than normal */
-                start = 0
-                end = unf.length + 1
+            if (current.granularity === VpcGranularity.Items && current.first === 0 && parentStartPos>0 && !unf.includes(delim) && unfFull[parentStartPos-1]==='\n' && (unf.length|| 
+                /* is at end of string */
+                parentStartPos+unf.length === unfFull.length
+            )) {
+                /* weird corner case: delete more than normal - note it deletes backwards */
+                start = -1
+                end = unf.length
             } else if (current.first === -1) {
                 /* emulator confirms you can say word 0 of x */
                 if ((current.granularity === VpcGranularity.Items && unf.startsWith(activeChar)) || (current.granularity === VpcGranularity.Lines && unf.startsWith(activeChar))) {

@@ -47,12 +47,23 @@ class EvaluateWithVarAndFld extends TestMultiplier {
 
 t.test('03chunkexpression_additional chunk tests', () => {
     let b = new ScriptTestBatch();
+    /* line aggressive delete */
+    b.t('put "a"&cr&"b"&cr&"c" into z1\\1', '1')
+    b.t('put z1 into z\ndelete item 1 of line 0 of z\\z', 'a\nb\nc')
+    b.t('put z1 into z\ndelete item 1 of line 1 of z\\z', '\nb\nc')
+    b.t('put z1 into z\ndelete item 1 of line 2 of z\\z', 'a\nc')
+    b.t('put z1 into z\ndelete item 1 of line 3 of z\\z', 'a\nb')
+    b.t('put z1 into z\ndelete item 1 of line 4 of z\\z', 'a\nb\nc')
+    b.t('put z1 into z\ndelete item 1 of line 5 of z\\z', 'a\nb\nc')
+
     /* aggressive delete */
     b.t('put ",, " into z1\\1', '1')
 b.t('put z1 into z\ndelete item 3 of z\\z', ',')
-    //~ /* aggressive delete in a line */
+    /* aggressive delete in a line */
     b.t('put ",, "&cr into z1\\1', '1')
 b.t('put z1 into z\ndelete item 3 of line 1 of z\\z', ',\n')
+
+
 
     /* leave the space */
     b.t('put ""&""&cr&" ,"&cr&""&"" into z1\\1', '1')
