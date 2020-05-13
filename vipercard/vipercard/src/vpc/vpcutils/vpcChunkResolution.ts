@@ -645,8 +645,8 @@ export const ChunkResolutionApplication = /* static class */ {
                 start = 0
                 end = 0
             } else if (current.first === table.length - 1) {
-                /* this is a weird case-it deletes spaces both before and after */
-                if (current.granularity === VpcGranularity.Items && unf.length === unfAndAfter.length) {
+                /* this is a weird case-it deletes commas both before and after */
+                if (current.granularity === VpcGranularity.Items && (unf.length === unfAndAfter.length||(unfAndAfter[unf.length]==='\n') && !unf.endsWith(activeChar) )) {
                     start = table[table.length - 1]
                     end = unf.length
                     let a=0
