@@ -611,7 +611,7 @@ export const ChunkResolutionApplication = /* static class */ {
                 }
                 /* use unfAndAfter.length not unf.length here,
                 this special case only applies to the true end of the string */
-                if ((end >= unfAndAfter.length -1) && !sawReturn) {
+                if ((end >= unfAndAfter.length -1) && !sawReturn && unf.length === unfAndAfter.length) {
                     while(unf[start-1] === ' ') {
                         start--
                     }
@@ -646,7 +646,7 @@ export const ChunkResolutionApplication = /* static class */ {
                 end = 0
             } else if (current.first === table.length - 1) {
                 /* this is a weird case-it deletes spaces both before and after */
-                if (current.granularity === VpcGranularity.Items) {
+                if (current.granularity === VpcGranularity.Items && unf.length === unfAndAfter.length) {
                     start = table[table.length - 1]
                     end = unf.length
                     let a=0

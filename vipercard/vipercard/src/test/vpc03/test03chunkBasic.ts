@@ -47,6 +47,12 @@ class EvaluateWithVarAndFld extends TestMultiplier {
 
 t.test('03chunkexpression_additional chunk tests', () => {
     let b = new ScriptTestBatch();
+    /* leave the space */
+    b.t('put ""&""&cr&" ,"&cr&""&"" into z1\\1', '1')
+b.t('put z1 into z\ndelete word 1 to 1 of line 2 to 2 of z\\z', '\n \n')
+    /* don't delete the comma */
+    b.t('put ""&","&cr&""&"" into z1\\1', '1')
+    b.t('put z1 into z\ndelete item 2 to 2 of line 1 to 1 of z\\z', ',\n')
     /* don't delete the space */
     b.t('put ""&" ,"&cr&""&"" into z1\\1', '1')
     b.t('put z1 into z\ndelete word 1 to 1 of z\\z', ' \n')

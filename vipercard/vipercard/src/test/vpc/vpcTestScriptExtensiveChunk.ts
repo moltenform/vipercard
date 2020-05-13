@@ -158,7 +158,7 @@ class RunExtensiveChunkTests {
                 console.error('Got: \n' + got.replace(/ /g, '_'))
                 let pts = batch[i].split('\t')
                 let input = pts[2]
-                let expected = pts[3].replace(/\|/, '\\n')
+                let expected = pts[3].replace(/\|/g, '\\n')
                 input = `""&"${input.replace(/\|/g, '"&cr&"')}"&""`
                 if (pts[0] === 'WRITE') {
                     /* write a helpful demo test case */
