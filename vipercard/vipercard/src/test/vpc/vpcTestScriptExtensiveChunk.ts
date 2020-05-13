@@ -5,8 +5,7 @@
 /* auto */ import { callDebuggerIfNotInProduction } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
-
-import { EmbeddedActionsParser } from '../../../external/chevrotain-6.5.0/chevrotaintyping';
+import { assertWarnEq } from '../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -66,17 +65,20 @@ class RunExtensiveChunkTests {
             }
 
             let enableThisTest = (s:string)=> {
-                //~ return true
-                if (s.startsWith('READ|') || s.startsWith('WRITE|')) {
+                if (s.startsWith("COUNT")) {
                     return true
                 }
-                if (s.includes(' to ')) {
-                    return false
-                }
+                return false
+                //~ if (s.startsWith('READ\t') || s.startsWith('WRITE\t')) {
+                    //~ return true
+                //~ }
+                //~ if (s.includes(' to ')) {
+                    //~ return false
+                //~ }
                 //~ if (s.split(' of ').length > 1) {
                     //~ return false
                 //~ }
-                return true
+                //~ return true
             }
 
             let batch:string[] = []
@@ -102,12 +104,13 @@ class RunExtensiveChunkTests {
     protected expandTestData(data: string[]): string[] {
         let ret:string[] = []
         for (let item of data) {
-            let pts = item.split('|')
+            let pts = item.split('\t')
             if (pts[0] === 'R+W+D') {
-                let [type, ch, target, placeholder, resread, reswrite, resdelete] = pts
-                ret.push(['READ', ch, target, resread ].join('|'))
-                ret.push(['WRITE', ch, target, reswrite ].join('|'))
-                ret.push(['DELETE', ch, target, resdelete ].join('|'))
+                assertWarnEq(6, pts.length, item)
+                let [type, ch, target, resread, reswrite, resdelete] = pts
+                ret.push(['READ', ch, target, resread ].join('\t'))
+                ret.push(['WRITE', ch, target, reswrite ].join('\t'))
+                ret.push(['DELETE', ch, target, resdelete ].join('\t'))
             } else {
                 ret.push(item)
             }
@@ -125,13 +128,13 @@ class RunExtensiveChunkTests {
         let i = 0
         for (let entry of batch) {
             i++
-            let pts = entry.split('|')
+            let pts = entry.split('\t')
             assertTrue(pts.length === 4, "not 4 parts?", entry)
             expecteds.push(pts[3])
             let targetStringForInput = `"${pts[2]}"`
-            targetStringForInput = targetStringForInput.replace(/"\\n/, 'return & "')
-            targetStringForInput = targetStringForInput.replace(/\\n"/, '" & return')
-            targetStringForInput = targetStringForInput.replace(/\\n/g, '" & return & "')
+            targetStringForInput = targetStringForInput.replace(/"\|/, 'return & "')
+            targetStringForInput = targetStringForInput.replace(/\|n"/, '" & return')
+            targetStringForInput = targetStringForInput.replace(/\|/g, '" & return & "')
             code += `\nglobal results${i}`
             if (pts[0]==='READ') {
                 code += `\nput ${targetStringForInput} into z`
@@ -142,15 +145,15 @@ class RunExtensiveChunkTests {
             } else if (pts[0]==='DELETE') {
                 code += `\nput ${targetStringForInput} into results${i}`
                 code += `\ndelete ${pts[1]} results${i}`
-            } else if (pts[0]==='COUNTITEMS') {
+            } else if (pts[0]==='COUNTITEM') {
                 assertWarn(!pts[1].length, '')
-                code += `put the number of items in (${targetStringForInput}) into results${i}`
-            } else if (pts[0]==='COUNTWORDS') {
+                code += `\nput the number of items in (${targetStringForInput}) into results${i}`
+            } else if (pts[0]==='COUNTWORD') {
                 assertWarn(!pts[1].length, '')
-                code += `put the number of words in (${targetStringForInput}) into results${i}`
-            } else if (pts[0]==='COUNTLINES') {
+                code += `\nput the number of words in (${targetStringForInput}) into results${i}`
+            } else if (pts[0]==='COUNTLINE') {
                 assertWarn(!pts[1].length, '')
-                code += `put the number of lines in (${targetStringForInput}) into results${i}`
+                code += `\nput the number of lines in (${targetStringForInput}) into results${i}`
             } else {
                 checkThrowInternal(false, "unknown test")
             }
@@ -159,19 +162,19 @@ class RunExtensiveChunkTests {
         h.runGeneralCode('', code);
         for (let i=0; i<expecteds.length; i++) {
             let got = h.vcstate.runtime.codeExec.globals.get(`results${i + 1}`).readAsString();
-            got = got.replace(/\n/g, "\\n")
+            got = got.replace(/\n/g, "|")
             if (got !== expecteds[i]) {
                 if (this.failures === 0) {
                     console.error("| refers to a newline and _ is a space in this output.")
                 }
 
                 console.error(`\n\n\nFAILURE near test # ${count+i}`)
-                console.error('Test: ' + batch[i].replace(/\|/g, '\n').replace(/\\n/g, '|').replace(/ /g, '_'))
-                console.error('Got: \n' + got.replace(/\\n/g, '|').replace(/ /g, '_'))
-                let pts = batch[i].split('|')
+                console.error('Test: ' + batch[i].replace(/\t/g, '\n').replace(/ /g, '_'))
+                console.error('Got: \n' + got.replace(/ /g, '_'))
+                let pts = batch[i].split('\t')
                 let input = pts[2]
-                let expected = pts[3]
-                input = `""&"${input.replace(/\\n/g, '"&cr&"')}"&""`
+                let expected = pts[3].replace(/\|/, '\\n')
+                input = `""&"${input.replace(/\|/g, '"&cr&"')}"&""`
                 if (pts[0] === 'WRITE') {
                     /* write a helpful demo test case */
                     console.log('demo test case:')
