@@ -38,7 +38,6 @@ class RunExtensiveChunkTests {
         let url = '/resources03a/test/testScriptExtensiveChunkTests.txt';
         let txt = await Util512Higher.asyncLoadJsonString(url);
         let data = txt.trim().replace(/\r\n/g, '\n').split('\n');
-        //~ confirm("note: getting second half")
         return data;
     }
 
@@ -61,12 +60,17 @@ class RunExtensiveChunkTests {
             }
 
             let enableThisTest = (s:string)=> {
-                if (s.includes("ab\\ncd,ef\\n\\ngh\\nij\\nkl\\nmn,op\\nqr\\nst,") ||
-                s.includes("ab\\ncd,ef__gh_ij\\nkl_mn_op_qr,st,uv\\nwx,01,23,45_,67,89") || 
-                s.includes("fff")   ) {
+                //~ return true
+                if (s.startsWith('READ|') || s.startsWith('WRITE|')) {
+                    return true
+                }
+                if (s.includes(' to ')) {
                     return false
                 }
-                return s.startsWith('READ|') || s.startsWith('WRITE|')
+                //~ if (s.split(' of ').length > 1) {
+                    //~ return false
+                //~ }
+                return true
             }
 
             let batch:string[] = []
@@ -136,7 +140,7 @@ class RunExtensiveChunkTests {
                     console.log('demo test case:')
                     console.log(`b.t('put ${input} into z1\\\\1', '1')`);
                     console.log(`b.t('put z1 into z\\nput "ABCDE" into ${pts[1]} z\\\\z', '${expected}')`);
-                } else if (pts[1] === 'DELETE') {
+                } else if (pts[0] === 'DELETE') {
                     /* write a helpful demo test case */
                     console.log('demo test case:')
                     console.log(`b.t('put ${input} into z1\\\\1', '1')`);
@@ -144,7 +148,7 @@ class RunExtensiveChunkTests {
                 }
 
                 this.failures+=1
-                if (this.failures > 40) {
+                if (this.failures % 20 === 0) {
                     callDebuggerIfNotInProduction()
                 }
             }

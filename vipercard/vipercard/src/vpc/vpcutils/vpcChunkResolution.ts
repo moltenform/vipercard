@@ -484,7 +484,7 @@ export const ChunkResolutionApplication = /* static class */ {
             return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compatibility)
         }
 
-        //~ this._rearrangeChunksToMatchOriginalProduct(chunk, compatibility)
+        chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compatibility)
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
         while (current && resolved) {
@@ -496,15 +496,24 @@ export const ChunkResolutionApplication = /* static class */ {
         }
 
         checkThrow(!current.last || current.first<=current.last, "we don't support backwards bounds")
-        let allstart = Number.POSITIVE_INFINITY
-        let allend = Number.NEGATIVE_INFINITY
+        if (!resolved) {
+            /* delete something that isn't found is a no-op */
+            return
+        }
+
+        //~ let allstart = Number.POSITIVE_INFINITY
+        //~ let allend = Number.NEGATIVE_INFINITY
         let isLastOfRange = true
+        let unfFull = cont.getRawString()
+        //~ unf = unf.substring(resolved.startPos) /* this will let you strip whitespace after, but we don't want that special case */
+        let unf = unfFull.substring(resolved.startPos, resolved.endPos)
         for (let i=current.last ?? current.first; i>=current.first; i--) {
             let tmp = current.getClone()
             tmp.first = i
             tmp.last = i
-            let [start, end] = this._applyDeleteHelper(cont, itemDel, compatibility, tmp, isLastOfRange)
-            cont.splice(start, end-start, '')
+            let maxLen = unfFull.length - resolved.startPos
+            let [start, end] = this._applyDeleteHelper(unf, itemDel, compatibility, tmp, isLastOfRange, maxLen)
+            cont.splice(resolved.startPos + start, end-start, '')
             isLastOfRange = false
             //~ allstart = Math.min(allstart, start)
             //~ allend = Math.max(allend, end)
@@ -528,8 +537,7 @@ export const ChunkResolutionApplication = /* static class */ {
         }
     },
 
-    _applyDeleteHelper(cont: WritableContainer, delim: string, compatibility:boolean, current: RequestedChunk, isLastOfRange:boolean):[number, number] {
-        let unf = cont.getRawString()
+    _applyDeleteHelper(unf: string, delim: string, compatibility:boolean, current: RequestedChunk, isLastOfRange:boolean, maxLen:number):[number, number] {
         if (!current.last) {
             current.last = current.first
         }
@@ -552,8 +560,12 @@ export const ChunkResolutionApplication = /* static class */ {
                 /* strip final whitespace */
                 start = unf.length
                 end = unf.length
-                while(unf[start-1] === ' ') {
-                    start--
+                if (end === maxLen) {
+                    /* 
+                this special case only applies to the true end of the string */
+                    while(unf[start-1] === ' ') {
+                        start--
+                    }
                 }
             } else if (current.first === table.length - 1) {
                 /* this is a weird case-it deletes spaces both before and after */
@@ -563,7 +575,9 @@ export const ChunkResolutionApplication = /* static class */ {
                     if (unf[end] === '\n' && isLastOfRange) { break }
                     end++
                 }
-                if ((end >= unf.length -1)) {
+                /* use maxlen not unf.length here,
+                this special case only applies to the true end of the string */
+                if ((end >= maxLen -1)) {
                     while(unf[start-1] === ' ') {
                         start--
                     }

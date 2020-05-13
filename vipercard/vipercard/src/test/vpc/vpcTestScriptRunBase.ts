@@ -610,8 +610,8 @@ put ${s} into testresult`;
                             '|'
                         )} expected=`
                     );
-                    console.error(`${expt.replace(/\n/g, '; ')} output=`);
-                    console.error(`${gt.replace(/\n/g, '; ')}`);
+                    console.error(`${expt.replace(/\n/g, '|')} output=`);
+                    console.error(`${gt.replace(/\n/g, '|')}`);
                 }
                 assertWarn(false, 'R3|DIFF RESULT');
             }
