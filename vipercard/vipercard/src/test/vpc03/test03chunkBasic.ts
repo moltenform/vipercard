@@ -65,6 +65,15 @@ t.test('03chunkexpression_additional chunk tests', () => {
     /* shouldn't have the strip-last-whitespace behavior if not actually by end of string */
     b.t('put ""&"ab cd,ef ,gh,ij kl mn,op"&cr&"qr"&cr&"st,uv,wx 01 23 45,"&cr&"67,89"&cr&"/. #$ ;: &*,() -="&cr&"~+, <> [],{}"&"" into z1\\1', '1')
 b.t('put z1 into z\ndelete line 1 of word 3 of item 2 of z\\z', 'ab cd,ef ,gh,ij kl mn,op\nqr\nst,uv,wx 01 23 45,\n67,89\n/. #$ ;: &*,() -=\n~+, <> [],{}')
+/* don't add commas. not intuitive, so disabled in compat mode */
+b.t('put ""&" ,"&"" into z1\\1', '1')
+b.t('put z1 into z\nput "ABCDE" into item 2 to 2 of line 2 to 2 of z\\z', ' ,\nABCDE')
+b.t('put ""&" ,"&"" into z1\\1', '1')
+b.t('put z1 into z\nput "ABCDE" into char 1 of item 2 of line 2 of z\\z', ' ,\nABCDE')
+b.t('put ""&" ,"&"" into z1\\1', '1')
+b.t('put z1 into z\nput "ABCDE" into char 7 of item 2 of line 2 of z\\z', ' ,\nABCDE')
+
+
 /* deleting item might delete a lot */
 b.t('put ""&"ab cd,ef ,gh,ij kl mn,op"&cr&"qr"&cr&"st,uv,wx 01 23 45,"&cr&"67,89"&cr&"/. #$ ;: &*,() -="&cr&"~+, <> [],{}"&"" into z1\\1', '1')
 b.t('put z1 into z\ndelete line 2 of item 1 of line 3 of z\\z', 'ab cd,ef ,gh,ij kl mn,op\nst,uv,wx 01 23 45,\n67,89\n/. #$ ;: &*,() -=\n~+, <> [],{}')
@@ -215,6 +224,7 @@ t.test('03countnumber', () => {
     b.t('the number of words in " "&cr&" "', '0');
     b.t('the number of words in "ab cd, ef"&cr&"gh ii,jj,kk"&cr&"mn,op,q"&cr&"r,s"', '7');
     b.t('the number of words in " ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}"', '18');
+    b.batchEvaluate(h3)
 })
 
 /**
@@ -954,8 +964,8 @@ t.test('03chunkexpression_additional delete tests', () => {
     //~ /* shows that just doing this in a loop is not sufficient. */
     b.t('global z1\nput "a.b  c.d" & cr & "e" into z1\\1', '1');
     //~ b.t('put z1 into z\ndelete word 3 of z\\z', 'a.b  c.d\n');
-    b.t('put z1 into z\ndelete word 3 of z\ndelete word 2 of z\\z', 'a.b \n');
-    b.t('put z1 into z\ndelete word 3 of z\ndelete word 2 of z\ndelete word 1 of z\\z', '\n');
+    //~ b.t('put z1 into z\ndelete word 3 of z\ndelete word 2 of z\\z', 'a.b \n');
+    //~ b.t('put z1 into z\ndelete word 3 of z\ndelete word 2 of z\ndelete word 1 of z\\z', '\n');
     /* corner cases */
     //~ b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
     //~ b.t('put z1 into z\ndelete word 3 of z\\z', '  \n ab  \n bc  \n \n ');
@@ -965,24 +975,27 @@ t.test('03chunkexpression_additional delete tests', () => {
 })
 
 t.test('03chunk, recommended use scenarios', () => {
+    h3.vcstate.vci.undoableAction(()=>
+        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model))
     let b = new ScriptTestBatch();
     /* use as a 1-d array */
-    b.t('put "" into arrayLike\n1', '1');
-    b.t('put 9 into item 5 of arrayLike\narrayLike && the number of items in arrayLike', ',,,,9 5');
-    b.t('put 10 into item 3 of arrayLike\narrayLike && the number of items in arrayLike', ',,10,,9 5');
-    b.t('put 11 into item 1 of arrayLike\narrayLike && the number of items in arrayLike', '11,,10,,9 5');
-    b.t('put 12 into item 7 of arrayLike\narrayLike && the number of items in arrayLike', '11,,10,,9,,12 7');
-    b.t('put "" into item 3 of arrayLike\narrayLike && the number of items in arrayLike', '11,,,,9,,12 7');
+    b.t('global arrayLike\nput "" into arrayLike\\1', '1');
+    b.t('put 9 into item 5 of arrayLike\\arrayLike && the number of items in arrayLike', ',,,,9 5');
+    b.t('put 10 into item 3 of arrayLike\\arrayLike && the number of items in arrayLike', ',,10,,9 5');
+    b.t('put 11 into item 1 of arrayLike\\arrayLike && the number of items in arrayLike', '11,,10,,9 5');
+    b.t('put 12 into item 7 of arrayLike\\arrayLike && the number of items in arrayLike', '11,,10,,9,,12 7');
+    b.t('put "" into item 3 of arrayLike\\arrayLike && the number of items in arrayLike', '11,,,,9,,12 7');
     b.t('item 1 of arrayLike && item 3 of arrayLike && item 7 of arrayLike', '11  12');
     /* use as a 2-d array */
-    b.t('put "" into arr2d\n1', '1');
-    b.t('put 9 into item 5 of line 3 of arr2d\narr2d && the number of lines in arr2d', '\n\n,,,,9 3');
-    b.t('put 10 into item 3 of line 5 of arr2d\narr2d && the number of lines in arr2d', '\n\n,,,,9\n\n,,10 5');
-    b.t('put 11 into item 1 of line 3 of arr2d\narr2d && the number of lines in arr2d', '\n\n11,,,,9\n\n,,10 5');
-    b.t('put 12 into item 2 of line 1 of arr2d\narr2d && the number of lines in arr2d', ',12\n\n11,,,,9\n\n,,10 5');
-    b.t('put 14 into item 2 of line 3 of arr2d\narr2d && the number of lines in arr2d', ',12\n\n11,,14,,9\n\n,,10 5');
-    b.t('put "" into item 1 of line 3 of arr2d\narr2d && the number of lines in arr2d', ',12\n\n,,14,,9\n\n,,10 5');
-    b.t('put "" into item 3 of line 5 of arr2d\narr2d && the number of lines in arr2d', ',12\n\n,,14,,9\n\n,, 5');
+    b.t('global arr2d\nput "" into arr2d\\1', '1');
+    b.t('put 9 into item 5 of line 3 of arr2d\\arr2d && the number of lines in arr2d', '\n\n,,,,9 3');
+    b.t('put 10 into item 3 of line 5 of arr2d\\arr2d && the number of lines in arr2d', '\n\n,,,,9\n\n,,10 5');
+    b.t('put 11 into item 1 of line 3 of arr2d\\arr2d && the number of lines in arr2d', '\n\n11,,,,9\n\n,,10 5');
+    b.t('put 12 into item 2 of line 1 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n11,,,,9\n\n,,10 5');
+    b.t('put 14 into item 2 of line 3 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n11,14,,,9\n\n,,10 5');
+    b.t('put "" into item 1 of line 3 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n,14,,,9\n\n,,10 5');
+    b.t('put "" into item 3 of line 5 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n,14,,,9\n\n,, 5');
+    b.batchEvaluate(h3);
     /* loops */
     const code = `
 function sum1d arr
@@ -1009,13 +1022,14 @@ end sum2d
     h3.runGeneralCode(code, 'global testresult1\nput sum1d("") into testresult1')
     let got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
     assertWarnEq("0", got, "")
-    h3.runGeneralCode(code, 'global testresult1\nput sum1d(arrayLike) into testresult1')
+    h3.runGeneralCode(code, 'global testresult1, arrayLike\nput sum1d(arrayLike) into testresult1')
     got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
     assertWarnEq((11+9+12).toString(), got, "")
-    h3.runGeneralCode(code, 'global testresult1\nput sum2d(arr2d) into testresult1')
+    h3.runGeneralCode(code, 'global testresult1, arr2d\nput sum2d(arr2d) into testresult1')
     got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
     assertWarnEq((12+14+9).toString(), got, "")
-    b.batchEvaluate(h3);
+    h3.vcstate.vci.undoableAction(()=>
+        h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model))
 })
 
 

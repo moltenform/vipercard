@@ -4,7 +4,7 @@
 /* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, checkThrowInternal, findPositionFromOrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, longstr, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { largeArea } from './../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -293,9 +293,12 @@ const ChunkResolution = /* static class */ {
         parent: ResolvedChunk,
         itemDel: string,
         news: O<string>,
+        compat:boolean,
         prep: O<VpcChunkPreposition>,
         isWriteContext:boolean,
-        okToAppend=true
+        isChildOfAddedLine:boolean,
+        okToAppend:boolean,
+        addedExtra?:ValHolder<boolean>
     ): O<ResolvedChunk> {
         let unformatted = parent.container.getRawString();
         unformatted = unformatted.substring(parent.startPos, parent.endPos);
@@ -304,12 +307,19 @@ const ChunkResolution = /* static class */ {
             let bounds = this._getBoundsForSet(unformatted, itemDel, request);
             let writeParentContainer = parent.container as WritableContainer;
             if (news === undefined) {
+                if (compat && parent.startPos === parent.endPos && isChildOfAddedLine && bounds[2]) {
+                    bounds[2] = ''
+                }
+
                 /* still add our commas to the end */
                 let fakeNewS = ''
                 //~ let result = fakeNewS + okToAppend ? bounds[2] : '';
                 okToAppend = true
                 let result = fakeNewS + okToAppend ? bounds[2] : '';
                 let insertionPoint = parent.startPos + bounds[0]
+                if (bounds[2] && addedExtra) {
+                    addedExtra.val = true
+                }
                 if (bounds[2]) {
                     insertionPoint = Math.min(parent.endPos, insertionPoint)
                 }
@@ -324,9 +334,15 @@ const ChunkResolution = /* static class */ {
                     //~ /* ignore adding the newones */
                     //~ bounds[2] = ''
                 //~ }
+                if (compat && parent.startPos === parent.endPos && isChildOfAddedLine && bounds[2]) {
+                    bounds[2] = ''
+                }
                 /* it's a brand new item, adding 'before' or 'after' isn't applicable */
                 let result = bounds[2] + news;
                 let insertionPoint = parent.startPos + bounds[0]
+                if (bounds[2] && addedExtra) {
+                    addedExtra.val = true
+                }
                 if (bounds[2] && !okToAppend) {
                     insertionPoint = Math.min(parent.endPos, insertionPoint)
                 }
@@ -364,7 +380,7 @@ export const ChunkResolutionApplication = /* static class */ {
     /**
      * the original product has counter-intuitive behavior for put
      */
-    applyPut(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, news: string, prep: VpcChunkPreposition, compatibility:boolean): void {
+    applyPut(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, news: string, prep: VpcChunkPreposition, compat:boolean): void {
         if (!chunk) {
             /* needs to be handled separately,
             since we might be inserting into a never-before-seen variable */
@@ -385,22 +401,27 @@ export const ChunkResolutionApplication = /* static class */ {
             return;
         }
 
-        chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compatibility)
+        chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compat)
 
         /* make parent objects */
         let resolved = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
         let isTop = true
+        let isChildOfAddedLine = false
         while (current) {
             if (current.child) {
                 /* narrow it down */
+                let addedExtra = new ValHolder<boolean>(false)
                 resolved = ensureDefined(
-                    ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into, true, true),
+                    ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, compat, VpcChunkPreposition.Into, true, isChildOfAddedLine, true, addedExtra),
                     ''
                 );
+                if (addedExtra.val) {
+                    isChildOfAddedLine = true
+                }
             } else {
                 /* insert the real text */
-                resolved = ensureDefined(ChunkResolution.doResolveOne(current, resolved, itemDel, news, prep, true, isTop), '');
+                resolved = ensureDefined(ChunkResolution.doResolveOne(current, resolved, itemDel, news, compat, prep, true, isChildOfAddedLine, isTop), '');
             }
 
             isTop = false
@@ -411,7 +432,7 @@ export const ChunkResolutionApplication = /* static class */ {
     /**
      * warning: follows the same funky logic as put.
      */
-    applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, compatibility:boolean, fn: (s: string) => string) {
+    applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, compat:boolean, fn: (s: string) => string) {
         if (!chunk) {
             /* needs to be handled separately,
             since we might be inserting into a never-before-seen variable */
@@ -425,7 +446,7 @@ export const ChunkResolutionApplication = /* static class */ {
         let marker = '\x01\x01~~internalvpcmarker~~\x01\x01'
         let unformatted = cont.getRawString()
         checkThrow(!unformatted.includes(marker), "cannot contain the string " + marker)
-        this.applyPut(cont, chunk, itemDel, marker, VpcChunkPreposition.Into, compatibility)
+        this.applyPut(cont, chunk, itemDel, marker, VpcChunkPreposition.Into, compat)
         
         /* now we look at the results and see where it got put! */
         let results = cont.getRawString()
@@ -456,8 +477,11 @@ export const ChunkResolutionApplication = /* static class */ {
         }
 
         let current: O<RequestedChunk> = chunk;
+        let compat = true /* doesn't matter for reads */
+        let isChildOfAddedLine = false /* doesn't matter for reads */
+        let okToAppend = true
         while (current && resolved) {
-            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', VpcChunkPreposition.Into, false);
+            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', compat, VpcChunkPreposition.Into, false, isChildOfAddedLine, okToAppend);
             current = current.child;
         }
 
@@ -475,23 +499,25 @@ export const ChunkResolutionApplication = /* static class */ {
     /**
      * delete, which is a bit different from `put "" into`
      */
-    applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string, compatibility:boolean) {
+    applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string, compat:boolean) {
         /* don't allow backwards bounds. only have to check the first one since
         there's a check in vpcVisitorMixin for recursive scopes. covered in tests. */
         checkThrow(!chunk || !chunk.hasBackwardsBounds(), "backwards bounds - don't allow delete item 3 to 2 of x.")
 
         if (chunk.granularity === VpcGranularity.Chars) {
-            return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compatibility)
+            return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compat)
         }
 
-        chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compatibility)
+        chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compat)
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
+        let isChildOfAddedLine = false /* doesn't matter for reads */
+        let okToAppend = true
         while (current && resolved) {
             if (!current.child) {
                 break
             }
-            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', VpcChunkPreposition.Into, false);
+            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', compat,VpcChunkPreposition.Into, false, isChildOfAddedLine, okToAppend );
             current = current.child;
         }
 
@@ -513,7 +539,7 @@ export const ChunkResolutionApplication = /* static class */ {
             tmp.first = current.first
             tmp.last = current.last ?? current.first
             isLastOfRange = true
-            let [start, end_unused] = this._applyDeleteHelper(unf, itemDel, compatibility, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
+            let [start, end_unused] = this._applyDeleteHelper(unf, itemDel, compat, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
             let end:number
             if (tmp.first === tmp.last) {
                 end = end_unused
@@ -522,7 +548,7 @@ export const ChunkResolutionApplication = /* static class */ {
                 tmp.first = current.last ?? current.first
                 tmp.last = current.last ?? current.first
                 isLastOfRange = true //?
-                let gt = this._applyDeleteHelper(unf, itemDel, compatibility, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
+                let gt = this._applyDeleteHelper(unf, itemDel, compat, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
                 end = gt[1]
             }
 
@@ -548,7 +574,7 @@ export const ChunkResolutionApplication = /* static class */ {
         }
     },
 
-    _applyDeleteHelper(unf: string, delim: string, compatibility:boolean, current: RequestedChunk, isLastOfRange:boolean, unfAndAfter:string, parentStartPos:number):[number, number] {
+    _applyDeleteHelper(unf: string, delim: string, compat:boolean, current: RequestedChunk, isLastOfRange:boolean, unfAndAfter:string, parentStartPos:number):[number, number] {
         if (!current.last) {
             current.last = current.first
         }
@@ -719,13 +745,13 @@ export const ChunkResolutionApplication = /* static class */ {
 
             /* unless we're in compat mode we'll only allow strict ordering */
             if (!compat) {
-                checkThrow(key <= lastKey, longstr(`you can put something into char 1 of
+                checkThrow(lastKey===-1 || key <= lastKey, longstr(`you can put something into char 1 of
                  word 1 of x, but you can't put something into word 1 of char 1 of x.
                 The order must be char, word, item, line. To allow other orders, go to
                 Object->Stack Info and turn on compatibility mode, but be aware that
                 it will ignore your given order - line 2 of item 3 of x is confusingly
                 interpreted to mean item 3 of line 2 of x. `))
-                checkThrow(key < lastKey, longstr(`you can't put something into word 2 of
+                checkThrow(lastKey===-1 || key < lastKey, longstr(`you can't put something into word 2 of
                 word 1 of x. To allow this, go Object->Stack Info and turn on
                 compatibility mode, be aware though that if you say something like
                 put "" into word 2 of word 1 of x it will disregard the word 1 of x.`))

@@ -63,7 +63,7 @@ export const SimpleUtil512Tests = /* static class */ {
             /* testCollectionvpcuiServer, */
             /* testCollectionScriptExtensive, */
             testCollectionScriptExtensiveChunk,
-            //~ testCollection03chunkBasic,
+            testCollection03chunkBasic,
             testCollection03exprObjectRef,
             testCollection03lexer,
             //~ testCollectionScriptRewrites,

@@ -68,10 +68,16 @@ class RunExtensiveChunkTests {
                 if (s.startsWith("COUNT")) {
                     return true
                 }
-                return false
+                if (s.startsWith("READ\t")) {
+                    return true
+                }
+                if (s.startsWith("WRITE\t")) {
+                    return true
+                }
                 //~ if (s.startsWith('READ\t') || s.startsWith('WRITE\t')) {
                     //~ return true
                 //~ }
+                return false
                 //~ if (s.includes(' to ')) {
                     //~ return false
                 //~ }
