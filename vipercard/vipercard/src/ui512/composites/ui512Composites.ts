@@ -1,6 +1,6 @@
 
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { assertEq } from './../utils/util512';
+/* auto */ import { AnyParameterCtor, assertEq } from './../utils/util512';
 /* auto */ import { UI512PresenterBase } from './../presentation/ui512PresenterBase';
 /* auto */ import { UI512ElLabel } from './../elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../elements/ui512ElementGroup';
@@ -86,7 +86,7 @@ export abstract class UI512CompBase {
         app: UI512Application,
         grp: UI512ElGroup,
         shortId: string,
-        ctor: { new (...args: any[]): T }
+        ctor: AnyParameterCtor<T>
     ): T {
         let el = new ctor(this.getElId(shortId));
         grp.addElement(app, el);

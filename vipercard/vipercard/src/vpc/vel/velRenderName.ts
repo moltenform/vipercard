@@ -213,7 +213,7 @@ export class VelRenderId {
                 it won't precisely identify the object.
                 but this is the way the original product worked. */
                 let s = `${cdOrBg} ${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`;
-                if (!compatMode) {
+                if (!compatMode && vel.getS('is_bg_velement_id').length) {
                     /* fix the ambiguity */
                     let parent = this.model.getByIdUntyped(vel.parentIdInternal)
                     s += ` of cd id ${parent.getUserFacingId()}`

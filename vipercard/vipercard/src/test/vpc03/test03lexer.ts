@@ -197,7 +197,7 @@ t.test('03NumLiteral', () => {
     b.t('1+1', '2');
     b.t('1+(1)', '2');
     b.t('there is a cd btn1234', 'ERR:no variable');
-    b.batchEvaluate(h3, BatchType.floatingPoint);
+    b.batchEvaluate(h3, [], BatchType.floatingPoint);
 });
 t.test('03Identifier', () => {
     let b = new ScriptTestBatch();

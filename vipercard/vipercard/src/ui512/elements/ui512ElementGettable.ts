@@ -91,7 +91,7 @@ export abstract class UI512Settable extends UI512Gettable {
         if (prevVal !== newVal) {
             if (defaultVal === undefined) {
                 /* type check mandatory */
-                assertEq(
+                assertWarnEq(
                     typeof prevVal,
                     typeof newVal,
                     `2#|property ${s} type mismatch, did you misspell a prop name?`

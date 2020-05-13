@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcValBool, VpcValN } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { BatchType, ScriptTestBatch, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
+/* auto */ import { BatchType, ScriptTestBatch, TestMultiplierCommutative, TestMultiplierInvert, TestMultiplierInvertLeaveUnderscores, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcStateSerialize } from './../../vpcui/state/vpcStateSerialize';
 /* auto */ import { VpcState } from './../../vpcui/state/vpcState';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
@@ -83,7 +83,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('true _or_ false', 'true');
     b.t('false _or_ false', 'false');
 
-    b.batchEvaluate(h, BatchType.testBatchEvalCommutative);
+    b.batchEvaluate(h, [TestMultiplierCommutative]);
     b = new ScriptTestBatch();
 
     /* Lvl1Expression greater less, strings */
@@ -115,7 +115,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('"abc" _is_ "abb"', 'false');
     b.t('"abc" _is_ "abc "', 'false');
 
-    b.batchEvaluate(h, BatchType.testBatchEvalInvertAndCommute);
+    b.batchEvaluate(h, [TestMultiplierInvertLeaveUnderscores, TestMultiplierCommutative]);
     b = new ScriptTestBatch();
 
     /* Lvl1Expression string/number differences */
@@ -198,7 +198,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('123 _is_ " 123 "', 'true');
     b.t('123 _is_ 0', 'false');
 
-    b.batchEvaluate(h, BatchType.testBatchEvalInvertAndCommute);
+    b.batchEvaluate(h, [TestMultiplierInvertLeaveUnderscores, TestMultiplierCommutative]);
     b = new ScriptTestBatch();
 
     /* test chaining or any other that can't easily be unverted */
@@ -385,7 +385,7 @@ t.test('evalRuleLvl2', () => {
     b.t('" , 12,13,14,15 " _is_ a rect', 'false');
     b.t('" 12,13,14,15 , " _is_ a rect', 'false');
 
-    b.batchEvaluate(h, BatchType.testBatchEvalInvert);
+    b.batchEvaluate(h, [TestMultiplierInvert]);
     b = new ScriptTestBatch();
 
     /* Lvl2Expression, is within */
@@ -412,7 +412,7 @@ t.test('evalRuleLvl2', () => {
     b.t('"abcd" _is_ within "abc"', 'false');
     b.t('"abdd" _is_ within "abc"', 'false');
 
-    b.batchEvaluate(h, BatchType.testBatchEvalInvert);
+    b.batchEvaluate(h, [TestMultiplierInvert]);
 });
 t.test('evalRuleLvl3', () => {
     /* lvl3 expressions */
@@ -464,7 +464,7 @@ t.test('evalArithmetic', () => {
     b.t('123 _*_ 0', '0');
     b.t('123 _*_ -0', '0');
 
-    b.batchEvaluate(h, BatchType.testBatchEvalCommutative);
+    b.batchEvaluate(h, [TestMultiplierCommutative]);
     b = new ScriptTestBatch();
 
     /* the communitative ones, floating point */
@@ -484,7 +484,7 @@ t.test('evalArithmetic', () => {
     b.t('1.1 _*_ -1', '-1.1');
     b.t('123.9 _*_ 0', '0');
     b.t('123.9 _*_ -0', '0');
-    b.batchEvaluate(h, BatchType.floatingPointCommutative);
+    b.batchEvaluate(h, [TestMultiplierCommutative], BatchType.floatingPoint);
     b = new ScriptTestBatch();
 
     /* the non-commutive ones integer */
@@ -572,7 +572,7 @@ t.test('evalArithmetic', () => {
     b.t('12 div 2.3', '5');
     b.t('12 mod 2.3', '0.5');
 
-    b.batchEvaluate(h, BatchType.floatingPoint);
+    b.batchEvaluate(h,[], BatchType.floatingPoint);
     b = new ScriptTestBatch();
 
     /* old-style functions should not eat too much.
@@ -598,7 +598,7 @@ t.test('evalArithmetic', () => {
     b.t('12 * 34 / 56 * 78', '568.285714285714285');
     b.t('12 / 34 / 56 / 78', '0.00008080155');
 
-    b.batchEvaluate(h, BatchType.floatingPoint);
+    b.batchEvaluate(h,[], BatchType.floatingPoint);
     b = new ScriptTestBatch();
 
     /* test wrong types given (commutative works) */
@@ -624,7 +624,7 @@ t.test('evalArithmetic', () => {
     b.t('12 _mod_ "12 a"', 'ERR:expected a number');
     b.t('12 _mod_ "12.3."', 'ERR:expected a number');
 
-    b.batchEvaluate(h, BatchType.testBatchEvalCommutative);
+    b.batchEvaluate(h, [TestMultiplierCommutative]);
 });
 t.test('evalRuleLvl6', () => {
     let b = new ScriptTestBatch();
@@ -884,7 +884,7 @@ t.test('vpcvalnumbers', () => {
     b.t('(2e20 + 3e10)/(4e17)', 'ERR:> 1e18');
     b.t('(2^80 - 5^35)/(2e22)', 'ERR:> 1e18');
 
-    b.batchEvaluate(h, BatchType.floatingPoint);
+    b.batchEvaluate(h, [], BatchType.floatingPoint);
     b = new ScriptTestBatch();
 
     /* scientific notation not applied for strings */
@@ -1000,7 +1000,7 @@ t.test('vpcvalnumbers', () => {
     b.t('strToNumber(3.3456e2) = "334.56"', 'true');
     b.t('strToNumber(3.3456e2) = 334.56', 'true');
 
-    b.batchEvaluate(h, BatchType.default);
+    b.batchEvaluate(h, [], BatchType.default);
 });
 t.test('ModelGetById.should throw if not found', () => {
     assertEq(undefined, h.vcstate.model.findByIdUntyped('111'), 'HM|');

@@ -1,7 +1,8 @@
 
-/* auto */ import { ScriptTestBatch } from './../vpc/vpcTestScriptRunBase';
+/* auto */ import { ScriptTestBatch, TestMultiplier } from './../vpc/vpcTestScriptRunBase';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { longstr, assertWarnEq } from './../../ui512/utils/util512';
+/* auto */ import { assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { h3 } from './test03lexer';
 
@@ -30,24 +31,19 @@ t.atest('--init--testCollection03chunkBasic', async () => {
 });
 
 //~ todo: use this everywhere
-function evaluateWithVarAndFld(b:ScriptTestBatch) {
-    
-    let tests = b.tests
-    b.batchEvaluate(h3)
-    b = new ScriptTestBatch();
-    let repl = (s:string) => {
+class EvaluateWithVarAndFld extends TestMultiplier {
+    secondTransformation(code:string, expected:string):O<[string, string]> {
+        return [this.doReplace(code), this.doReplace(expected)]
+    }
+    protected doReplace(s:string) {
         s = s.replace(/\bglobal z\b/g, '')
         s = s.replace(/\b z\b/g, ' cd fld 2')
         s = s.replace(/\b\\z\b/g, '\\cd fld 2')
         return s
     }
-
-    for (let [t0, t1] of tests) {
-        b.t(repl(t0), repl(t1))
-    }
-
-    b.batchEvaluate(h3)
 }
+
+
 
 t.test('03chunkexpression_additional chunk tests', () => {
     let b = new ScriptTestBatch();
@@ -178,7 +174,7 @@ t.test('03HChunkBound', () => {
     b.t('put z1 into z\nput "AA" into last item of z\\z', 'ab,cd,AA');
     b.t('put z1 into z\nput "AA" into fifth item of z\\z', 'ab,cd,ef,,AA');
     b.t('global z1\nput z1 into z\nput "AA" into item 1 to fifth item of z\\z', 'ERR:6:parse err');
-    evaluateWithVarAndFld(b)
+    b.batchEvaluate(h3, [EvaluateWithVarAndFld])
 });
 
 /*
@@ -757,14 +753,14 @@ t.test('03chunkexpression_recursivescopes', () => {
     b.t('line (-1) to 1 of "abc"', 'ERR:negative')
     b.t('line 1 to (-1) of "abc"', 'ERR:negative')
     /* transform the above into "put" */
-    let copy = b.tests.slice()
-    b.t('global z\nput "abc" into z\\1', '1');
-    for (let [t1, t2] of copy) {
-        t1 = 'global z\nput "A" into ' + t1.replace(/"abc"/, 'z\\1')
-        b.t(t1, t2.replace(/ERR:/, 'ERR:5:'))
+    class MakePutCmd extends TestMultiplier {
+        secondTransformation(code:string, expected:string):O<[string, string]> {
+            code = 'global z\nput "A" into ' + code.replace(/"abc"/, 'z\\1')
+            expected = expected.replace(/ERR:/, 'ERR:5:')
+            return [code, expected]
+        }
     }
-
-    evaluateWithVarAndFld(b)
+    b.batchEvaluate(h3, [MakePutCmd, EvaluateWithVarAndFld])
     b = new ScriptTestBatch();
     b.t('global z\nput "ab cd, ef"&cr&"gh ii,jj,kk"&cr&"mn,op,q"&cr&"r,s" into z1\\1', '1');
     /* get scopes */

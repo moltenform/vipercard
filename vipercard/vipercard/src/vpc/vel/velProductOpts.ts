@@ -111,6 +111,12 @@ export class VpcElProductOpts extends VpcElBase {
             (me: VpcElProductOpts) => {
                 let curs = UI512CursorAccess.getCursor();
                 let ret = getEnumToStrOrFallback(UI512Cursors, curs);
+                if (ret.startsWith('drawn_')) {
+                    ret = ret.substr('drawn_'.length)
+                }
+                if (ret.startsWith('css_')) {
+                    ret = ret.substr('css_'.length)
+                }
                 return ret.toLowerCase();
             }
         ];

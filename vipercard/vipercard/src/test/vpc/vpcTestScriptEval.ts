@@ -1,8 +1,8 @@
 
-/* auto */ import { BatchType, ScriptTestBatch, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
+/* auto */ import { BatchType, ScriptTestBatch, TestMultiplier, TestMultiplierInvert, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
-/* auto */ import { cAltProductName, cProductName, vpcVersion } from './../../ui512/utils/util512Base';
+/* auto */ import { O, cAltProductName, cProductName, vpcVersion } from './../../ui512/utils/util512Base';
 /* auto */ import { assertEq, assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
@@ -438,16 +438,15 @@ t.test('vpcProperties', () => {
     b.t('set the left of cd btn "p1" to "10.1"\\0', 'ERR:expected an integer');
 
     /* run the tests again with fld instead of btn */
-    let savedTests = b.tests;
-    b.batchEvaluate(h);
-    b = new ScriptTestBatch();
-    b.tests = savedTests.map((item): [string, string] => [
-        item[0]
-            .replace(/ cd btn /g, ' cd fld ')
-            .replace(new RegExp(`${h.ids.bBC1}`, 'g'), `${h.ids.fBC1}`),
-        item[1]
-    ]);
-    b.batchEvaluate(h);
+    class UseFldInsteadOfBtn extends TestMultiplier {
+        secondTransformation(code:string, expected:string):O<[string, string]> {
+            code = code.replace(/ cd btn /g, ' cd fld ')
+            .replace(new RegExp(`${h.ids.bBC1}`, 'g'), `${h.ids.fBC1}`)
+            return [code, expected]
+        }
+    }
+
+    b.batchEvaluate(h, [UseFldInsteadOfBtn]);
     b = new ScriptTestBatch();
 
     /* btn simple get/set */
@@ -1071,7 +1070,7 @@ t.test('builtinFunctions', () => {
     b.t('the number of chars in 12', '2');
     b.t('the number of chars in true', '4');
     b.t('the number of items in ""', '0');
-    b.t('the number of items in "  "', '1');
+    b.t('the number of items in "  "', '0');
     b.t('the number of items in "a"', '1');
     b.t('the number of items in "a,b,c"', '3');
     b.t('the number of lines in ""', '0');
@@ -1180,7 +1179,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a cd fld "p2" of cd "d" of bg 1`, 'false');
     b.t(`there _is_ a cd fld "p2" of cd "d" of bg 2`, 'true');
     b.t(`there _is_ a cd fld "p2" of cd "d" of bg 3`, 'false');
-    b.batchEvaluate(h, BatchType.testBatchEvalInvert);
+    b.batchEvaluate(h, [TestMultiplierInvert]);
     b = new ScriptTestBatch();
 
     /* fn calls without parens */
@@ -1354,7 +1353,7 @@ t.test('builtinFunctions', () => {
     b.t('log2(5)', '2.321928094887362');
     b.t('exp2(2.321928094887362)', '5');
 
-    b.batchEvaluate(h, BatchType.floatingPoint);
+    b.batchEvaluate(h, [], BatchType.floatingPoint);
     b = new ScriptTestBatch();
     let userBounds = h.pr.userBounds;
 

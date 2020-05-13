@@ -1,10 +1,10 @@
 
-/* auto */ import { ScriptTestBatch } from './../vpc/vpcTestScriptRunBase';
-/* auto */ import { cAltProductName, cProductName } from './../../ui512/utils/util512Base';
+/* auto */ import { ScriptTestBatch, TestMultiplier } from './../vpc/vpcTestScriptRunBase';
+/* auto */ import { O, cAltProductName, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
-/* auto */ import { TestVpc03, h3 } from './test03lexer';
+/* auto */ import { h3 } from './test03lexer';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -36,7 +36,8 @@ t.test('03ObjectSpecial', () => {
     b.t(`the short id of the`, `ERR:parse`);
     b.t(`the short id of stack`, `ERR:parse`);
     b.t(`the short id of button`, `PREPARSEERR:compatibility`);
-    evaluateForBothShortIdAndThereIs(b, h3);
+
+    b.batchEvaluate(h3, [EvaluateForBothShortIdAndThereIs]);
     /* exists, but wrong type
     test every combination! */
     let map = new MapKeyToObjectCanSet<string>();
@@ -149,26 +150,38 @@ t.test('03ObjectBg', () => {
     b.t(`the short id of bg "xyz"`, `ERR:could not find`);
     /* not exist, by ord/position */
     b.t(`the short id of tenth bg`, `ERR:could not find`);
-    let savedTests = b.tests;
-    b.batchEvaluate(h3);
 
     /* run the tests again, specifying the stack */
-    b = new ScriptTestBatch();
-    b.tests = savedTests.map(item => [item[0] + ' of stack 1', item[1]]);
-    b.batchEvaluate(h3);
+    class AppendOfThisStack extends TestMultiplier {
+        secondTransformation(code:string, expected:string):O<[string, string]> {
+            code = code + ' of stack 1'
+            return [code, expected]
+        }
+    }
+
+    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateForBothShortIdAndThereIs]);
 });
 //~ todo: don't just get fld 1, get all the objects in all possible ways
 
-function evaluateForBothShortIdAndThereIs(b: ScriptTestBatch, h3: TestVpc03) {
-    let savedTests = b.tests;
-    b.batchEvaluate(h3);
-    let convert1 = (s: string) => {
+/**
+ * transform it from "the short id" to "there is a"
+ */
+//~ todo: use this everywhere
+class EvaluateForBothShortIdAndThereIs extends TestMultiplier {
+    secondTransformation(code:string, expected:string):O<[string, string]> {
+        if (!code.startsWith('the short id of')) {
+            /* might be testing a command, or going to a card */
+            return undefined
+        } else {
+            return [this.convertCode(code), this.convertExpected(expected)]
+        }
+    }
+    protected convertCode(s:string) {
         assertTrue(s.startsWith('the short id of'), '');
         assertTrue(!s.includes('\\'), '');
         return s.replace(/the short id of/, 'there is a');
-    };
-
-    let convert2 = (s: string) => {
+    }
+    protected convertExpected(s:string) {
         if (s.startsWith('ERR:could not find')) {
             return 'false';
         } else if (s.startsWith('ERR:') || s.startsWith('PREPARSEERR:')) {
@@ -177,10 +190,6 @@ function evaluateForBothShortIdAndThereIs(b: ScriptTestBatch, h3: TestVpc03) {
             assertTrue(s === 'WILD' || Util512.parseIntStrict(s) !== undefined, '');
             return 'true';
         }
-    };
-
-    /* convert it from "the short id" to "there is a" */
-    b = new ScriptTestBatch();
-    b.tests = savedTests.map(item => [convert1(item[0]), convert2(item[1])]);
-    b.batchEvaluate(h3);
+    }
 }
+

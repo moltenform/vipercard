@@ -6,13 +6,13 @@
 /* auto */ import { VpcPresenterEvents } from './../../vpcui/presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
-/* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrow, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { BrowserInfo } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, Util512, assertEq, assertWarnEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, NoParameterCtor, Util512, assertEq, assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
@@ -28,7 +28,6 @@
  * use ERR:5:details to indicate line failure
  * use MARK: to point to a line, is ignored
  * specify BatchType.floatingPoint to allow small differences
- * specify BatchType.testBatchEvalCommutative to test both orders
  * use "onlyTestsWithPrefix" to enable only certain tests, for debugging
  */
 export class ScriptTestBatch {
@@ -52,7 +51,7 @@ export class ScriptTestBatch {
 
     batchEvaluate(
         runner: TestVpcScriptRunBase,
-        multipliers: TestMultiplier[],
+        multipliers?: NoParameterCtor<TestMultiplier>[],
         typ = BatchType.default,
         onlyTestsWithPrefix = ''
     ) {
@@ -62,35 +61,36 @@ export class ScriptTestBatch {
 
         let isFloatingPt = false;
         if (typ === BatchType.floatingPoint) {
-            typ = BatchType.default;
-            isFloatingPt = true;
-        } else if (typ === BatchType.floatingPointCommutative) {
-            typ = BatchType.testBatchEvalCommutative;
             isFloatingPt = true;
         }
 
         let whichTests = this.tests.filter(t => t[1].startsWith(onlyTestsWithPrefix));
-        if (typ === BatchType.default) {
-            runner.testBatchEvaluate(whichTests, isFloatingPt);
-        } else if (typ === BatchType.testBatchEvalCommutative) {
-            runner.testBatchEvalCommutative(whichTests, isFloatingPt);
-        } else if (typ === BatchType.testBatchEvalInvert) {
-            runner.testBatchEvalInvert(whichTests);
-        } else if (typ === BatchType.testBatchEvalInvertAndCommute) {
-            runner.testBatchEvalInvertAndCommute(whichTests);
-        } else {
-            checkThrow(false, 'unknown batchtype ' + typ);
+        if (multipliers && multipliers.length) {
+            whichTests = this.multiplyTests(whichTests, multipliers)
         }
+        
+        runner.testBatchEvaluate(whichTests, isFloatingPt);
 
         /* prevent you from re-using the object */
         this.locked = true;
     }
 
-    multiplyTests(input:[string, string][], multipliers: TestMultiplier[]):[string, string][] {
+    /**
+     * multiply tests, allowing you to either make changes to tests,
+     * or to turn each test case into several test cases.
+     *   canonical example: turn a == b comparisons into new b == a comparisons
+     * note that transformations will always be done in the same order,
+     * which can be helpful, since earlier multipliers can add markers that
+     * later multipliers can remove.
+     */
+    multiplyTests(input:[string, string][], multipliers: NoParameterCtor<TestMultiplier>[]):[string, string][] {
+        /* should we first run through all original tests in order, before multiplying?  
+        no, some tests might be setup like global vars/go to card that we should keep in order */
         let ret: [string, string][] = []
+        let ms = multipliers.map(cls=>new cls())
         for (let item of input) {
             let curItems = [item]
-            for (let multiplier of multipliers) {
+            for (let multiplier of ms) {
                 let first = curItems.map((item)=>multiplier.firstTransformation(item[0], item[1]))
                 let second = curItems.map((item)=>multiplier.secondTransformation(item[0], item[1]))
                 let third = curItems.map((item)=>multiplier.thirdTransformation(item[0], item[1]))
@@ -100,8 +100,10 @@ export class ScriptTestBatch {
                 Util512.extendArray(nextCurItems, third)
                 curItems = nextCurItems.filter((item) => item !== undefined)
             }
+
             Util512.extendArray(ret, curItems)
         }
+
         return ret
     }
 
@@ -637,139 +639,26 @@ put ${s} into testresult`;
             }
         }
     }
-
-    protected flipBool(s: string) {
-        if (s === 'true') {
-            return 'false';
-        } else if (s === 'false') {
-            return 'true';
-        } else if (s.startsWith('ERR:')) {
-            return s;
-        } else {
-            checkThrowInternal(false, '2J|could not flip ' + s);
-        }
-    }
-
-    testBatchEvalCommutative(tests: [string, string][], floatingPoint = false) {
-        tests = tests.map(item => [item[0], item[1].replace(/MARK:/, '')]);
-        let testsSameorder = tests.map((item): [string, string] => {
-            return [item[0].replace(/_/g, ''), item[1]];
-        });
-
-        let testsDifferentOrder = tests.map((item): [string, string] => {
-            let pts = item[0].split('_');
-            assertEq(3, pts.length, '2I|');
-            return [pts[2] + ' ' + pts[1] + ' ' + pts[0], item[1]];
-        });
-
-        this.testBatchEvaluate(testsSameorder, floatingPoint);
-        this.testBatchEvaluate(testsDifferentOrder, floatingPoint);
-    }
-
-    testBatchEvalInvert(tests: [string, string][]) {
-        tests = tests.map(item => [item[0], item[1].replace(/MARK:/, '')]);
-        let flipOperation = (op: string): [string, boolean] => {
-            if (op === 'is') {
-                return ['is not', false];
-            } else {
-                checkThrowInternal(false, '2H|unknown op ' + op);
-            }
-        };
-
-        let same = tests.map((item): [string, string] => {
-            return [item[0].replace(/_/g, ''), item[1]];
-        });
-
-        let invert = tests.map((item): [string, string] => {
-            let expected = item[1];
-            let pts = item[0].split('_');
-            assertEq(3, pts.length, '2G|');
-            let op = flipOperation(pts[1])[0];
-            return [pts[0] + ' ' + op + ' ' + pts[2], this.flipBool(expected)];
-        });
-
-        this.testBatchEvaluate(same);
-        this.testBatchEvaluate(invert);
-    }
-
-    testBatchEvalInvertAndCommute(tests: [string, string][]) {
-        tests = tests.map(item => [item[0], item[1].replace(/MARK:/, '')]);
-        let flipOperation = (op: string): [string, string] => {
-            /* first is the op when order is reversed */
-            /* second is the op that is logical inverse */
-            if (op === '==') {
-                return ['==', '!='];
-            } else if (op === '=') {
-                return ['=', '<>'];
-            } else if (op === 'is') {
-                return ['is', 'is not'];
-            } else if (op === '!=') {
-                return ['!=', '=='];
-            } else if (op === '<>') {
-                return ['<>', '='];
-            } else if (op === 'is not') {
-                return ['is not', 'is'];
-            } else if (op === '<') {
-                return ['>', '>='];
-            } else if (op === '<=') {
-                return ['>=', '>'];
-            } else if (op === '>') {
-                return ['<', '<='];
-            } else if (op === '>=') {
-                return ['<=', '<'];
-            } else {
-                checkThrowInternal(false, '2F|unknown op ' + op);
-            }
-        };
-
-        let sameOrder = tests.map((item): [string, string] => {
-            return [item[0].replace(/_/g, ''), item[1]];
-        });
-
-        let testsDifferentOrder = tests.map((item): [string, string] => {
-            let expected = item[1];
-            let pts = item[0].split('_');
-            assertEq(3, pts.length, '2E|');
-            return [pts[2] + ' ' + flipOperation(pts[1])[0] + ' ' + pts[0], expected];
-        });
-
-        let testsInvert = tests.map((item): [string, string] => {
-            let expected = item[1];
-            let pts = item[0].split('_');
-            assertEq(3, pts.length, '2D|');
-            return [
-                pts[0] + ' ' + flipOperation(pts[1])[1] + ' ' + pts[2],
-                this.flipBool(expected)
-            ];
-        });
-
-        let testsInvertAndOrder = tests.map((item): [string, string] => {
-            let expected = item[1];
-            let pts = item[0].split('_');
-            assertEq(3, pts.length, '2C|');
-            let invertedOp = flipOperation(pts[1])[1];
-            let reversedOp = flipOperation(invertedOp)[0];
-            return [pts[2] + ' ' + reversedOp + ' ' + pts[0], this.flipBool(expected)];
-        });
-
-        this.testBatchEvaluate(sameOrder);
-        this.testBatchEvaluate(testsDifferentOrder);
-        this.testBatchEvaluate(testsInvert);
-        this.testBatchEvaluate(testsInvertAndOrder);
-    }
 }
 
 export enum BatchType {
     default = 1,
-    testBatchEvalInvertAndCommute,
-    testBatchEvalInvert,
-    testBatchEvalCommutative,
     floatingPoint,
-    floatingPointCommutative
 }
 
+/**
+ * why three different methods?
+ * by overriding only firstTransformation, you are modifying each test
+ * without creating any new tests.
+ * by overriding only secondTransformation, you are multiplying the number
+ * of tests by two.
+ * each transformation can elect to skip a test, just return undefined
+ * you can also override both,  
+ */
 export abstract class TestMultiplier {
-    abstract firstTransformation(code:string, expected:string):[string, string];
+    firstTransformation(code:string, expected:string):O<[string, string]> {
+        return [code, expected]
+    }
     secondTransformation(code:string, expected:string):O<[string, string]> {
         return undefined
     }
@@ -785,12 +674,13 @@ export class TestMultiplierCommutative extends TestMultiplier {
     secondTransformation(code:string, expected:string):[string, string] {
         let pts = code.split('_');
         assertEq(3, pts.length, '2I|');
-        return [pts[2] + ' ' + pts[1] + ' ' + pts[0], expected];
+        let op = TestMultiplierInvert.flipOperationCommute(pts[1]);
+        return [pts[2] + ' ' + op + ' ' + pts[0], expected];
     }
 }
 
 export class TestMultiplierInvert extends TestMultiplier {
-    constructor(protected leaveUnderscores:boolean) { super() }
+    leaveUnderscores = false
     firstTransformation(code:string, expected:string):[string, string] {
         if (this.leaveUnderscores) {
             return [code, expected]
@@ -801,12 +691,12 @@ export class TestMultiplierInvert extends TestMultiplier {
     secondTransformation(code:string, expected:string):[string, string] {
         let pts = code.split('_');
         assertEq(3, pts.length, '2G|');
-        let op = this.flipOperation(pts[1])[0];
+        let op = TestMultiplierInvert.flipOperationInvert(pts[1]);
         let delim = this.leaveUnderscores ? '_' : ''
-        return [pts[0] + ` ${delim}` + op + `${delim} ` + pts[2], this.flipBool(expected)];
+        return [pts[0] + ` ${delim}` + op + `${delim} ` + pts[2], TestMultiplierInvert.flipBool(expected)];
     
     }
-    protected flipOperation (op: string): [string, string] {
+    protected static flipOperation (op: string): O<[string, string]> {
         /* first is the op when order is reversed */
         /* second is the op that is logical inverse */
         if (op === '==') {
@@ -830,10 +720,19 @@ export class TestMultiplierInvert extends TestMultiplier {
         } else if (op === '>=') {
             return ['<=', '<'];
         } else {
-            checkThrowInternal(false, '2F|unknown op ' + op);
+            return undefined
         }
     }
-    protected flipBool(s: string) {
+    static flipOperationCommute (op: string): string {
+        let ret = TestMultiplierInvert.flipOperation(op)
+        return ret ? ret[0] : op
+    }
+    static flipOperationInvert (op: string): string {
+        let ret = TestMultiplierInvert.flipOperation(op)
+        checkThrowInternal(ret, '2F|unknown op ' + op);
+        return ret[1]
+    }
+    static flipBool(s: string) {
         if (s === 'true') {
             return 'false';
         } else if (s === 'false') {
@@ -846,6 +745,7 @@ export class TestMultiplierInvert extends TestMultiplier {
     }
 }
 
-export function evalInvertAndCommute() {
-    return [new TestMultiplierInvert(true), new TestMultiplierCommutative()]
+export class TestMultiplierInvertLeaveUnderscores extends TestMultiplierInvert {
+    leaveUnderscores = true
 }
+

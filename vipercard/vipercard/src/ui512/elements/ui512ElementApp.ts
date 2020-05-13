@@ -2,7 +2,7 @@
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { O, tostring } from './../utils/util512Base';
 /* auto */ import { ensureDefined } from './../utils/util512Assert';
-/* auto */ import { OrderedHash } from './../utils/util512';
+/* auto */ import { AnyParameterCtor, OrderedHash } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { UI512ApplicationInterface, UI512ElGroup } from './ui512ElementGroup';
 /* auto */ import { ElementObserver, elementObserverDefault } from './ui512ElementGettable';
@@ -227,7 +227,7 @@ export class GridLayout<RowType, ColType> {
         app: UI512Application,
         grp: UI512ElGroup,
         idPrefix: string,
-        ctor: { new (...args: any[]): T },
+        ctor: AnyParameterCtor<T>,
         fn: (a: ColType, b: RowType, el: T) => void,
         idBasedOnCol = false,
         labelBasedOnCol = false

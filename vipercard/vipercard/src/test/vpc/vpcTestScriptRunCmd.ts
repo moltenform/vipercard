@@ -221,7 +221,7 @@ t.test('execCommands arithmetic valid', () => {
     b.t('put 22 into x\n divide x by 1+1\\x', '11');
     b.t('put 22 into x\n divide x by 1*1\\x', '22');
 
-    b.batchEvaluate(h, BatchType.floatingPoint);
+    b.batchEvaluate(h, [], BatchType.floatingPoint);
 });
 t.test('execCommands go to card', () => {
     /* changing current card */
@@ -525,31 +525,7 @@ t.test('execCommands delete', () => {
     b.t('delete cd fld "a1"\\0', 'ERR:not yet supported');
     b.t('delete cd 1\\0', 'ERR:not yet supported');
     b.t('put "a" into x\ndelete x\\0', 'ERR:5:expected something like');
-    b.t('put "abcdef,123,456" into x\ndelete item 2 of x\\x', 'ERR:5:not yet supported');
-    b.t(
-        'put "abcdef,123,456" into x\ndelete item 1 to 2 of x\\x',
-        'ERR:5:not yet supported'
-    );
-    b.t(
-        'put "abcdef,123,456" into x\ndelete item 999 of x\\x',
-        'ERR:5:not yet supported'
-    );
-    b.t(
-        'put "abcdef,123,456" into x\ndelete word 999 of x\\x',
-        'ERR:5:not yet supported'
-    );
-    b.t(
-        'put "abcdef,123,456" into x\ndelete line 999 of x\\x',
-        'ERR:5:not yet supported'
-    );
-    b.t(
-        'put "abcdef,123,456" into x\ndelete item 1 to 999 of x\\x',
-        'ERR:5:not yet supported'
-    );
-    b.t(
-        'put "abcdef,123,456" into x\ndelete item 2 to 999 of x\\x',
-        'ERR:5:not yet supported'
-    );
+    
 
     /* normal chunks */
     b.t('put "abcdef,123,456" into initlist\\0', '0');
@@ -559,6 +535,7 @@ t.test('execCommands delete', () => {
     b.t('delete char 2 of x\\x', 'acdef,123,456');
     b.t('put initlist into x\\0', '0');
     b.t('delete char 2 to 5 of x\\x', 'af,123,456');
+    b.t('put "abcdef,123,456" into x\ndelete item 2 of x\\x', 'abcdef,456');
 
     /* big numbers */
     b.t('put initlist into x\\0', '0');
