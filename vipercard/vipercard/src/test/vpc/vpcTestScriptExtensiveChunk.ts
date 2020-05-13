@@ -78,9 +78,12 @@ class RunExtensiveChunkTests {
                     //~ return true
                 //~ }
                 //~ return false
+                /* collapse identical ranges */
+                s = s.replace(/(\b[0-9]+\b) to \1 of\b/g, '$1 of')
                 if (s.includes(' to ')) {
                     return false
                 }
+
                 //~ if (s.split(' of ').length > 1) {
                     //~ return false
                 //~ }
@@ -128,41 +131,17 @@ class RunExtensiveChunkTests {
      * run a batch of tests
      */
     doTests(batch:string[], count:number) {
-        /* placeholder text so that an empty batch is ok */
-        let code = 'put 1 into x'
+        let code = ''
         let expecteds:string[] = []
         let i = 0
         for (let entry of batch) {
-            i++
-            let pts = entry.split('\t')
-            assertTrue(pts.length === 4, "not 4 parts?", entry)
-            expecteds.push(pts[3])
-            let targetStringForInput = `"${pts[2]}"`
-            targetStringForInput = targetStringForInput.replace(/"\|/, 'return & "')
-            targetStringForInput = targetStringForInput.replace(/\|n"/, '" & return')
-            targetStringForInput = targetStringForInput.replace(/\|/g, '" & return & "')
-            code += `\nglobal results${i}`
-            if (pts[0]==='READ') {
-                code += `\nput ${targetStringForInput} into z`
-                code += `\nput ${pts[1]} z into results${i}`
-            } else if (pts[0]==='WRITE') {
-                code += `\nput ${targetStringForInput} into results${i}`
-                code += `\nput "ABCDE" into ${pts[1]} results${i}`
-            } else if (pts[0]==='DELETE') {
-                code += `\nput ${targetStringForInput} into results${i}`
-                code += `\ndelete ${pts[1]} results${i}`
-            } else if (pts[0]==='COUNTITEM') {
-                assertWarn(!pts[1].length, '')
-                code += `\nput the number of items in (${targetStringForInput}) into results${i}`
-            } else if (pts[0]==='COUNTWORD') {
-                assertWarn(!pts[1].length, '')
-                code += `\nput the number of words in (${targetStringForInput}) into results${i}`
-            } else if (pts[0]==='COUNTLINE') {
-                assertWarn(!pts[1].length, '')
-                code += `\nput the number of lines in (${targetStringForInput}) into results${i}`
-            } else {
-                checkThrowInternal(false, "unknown test")
+            if (entry.startsWith('DELETE')) {
+                /* we don't support deleting ranges */
+                //~ dgdfg
             }
+
+            i++
+            code += this.genTestCode(entry, expecteds, i);
         }
 
         h.runGeneralCode('', code);
@@ -199,5 +178,45 @@ class RunExtensiveChunkTests {
                 }
             }
         }
+    }
+
+    private genTestCode(entry: string, expecteds: string[],  i: number) {
+        let code = ''
+        let pts = entry.split('\t');
+        assertTrue(pts.length === 4, "not 4 parts?", entry);
+        expecteds.push(pts[3]);
+        let targetStringForInput = `"${pts[2]}"`;
+        targetStringForInput = targetStringForInput.replace(/"\|/, 'return & "');
+        targetStringForInput = targetStringForInput.replace(/\|n"/, '" & return');
+        targetStringForInput = targetStringForInput.replace(/\|/g, '" & return & "');
+        code += `\nglobal results${i}`;
+        if (pts[0] === 'READ') {
+            code += `\nput ${targetStringForInput} into z`;
+            code += `\nput ${pts[1]} z into results${i}`;
+        }
+        else if (pts[0] === 'WRITE') {
+            code += `\nput ${targetStringForInput} into results${i}`;
+            code += `\nput "ABCDE" into ${pts[1]} results${i}`;
+        }
+        else if (pts[0] === 'DELETE') {
+            code += `\nput ${targetStringForInput} into results${i}`;
+            code += `\ndelete ${pts[1]} results${i}`;
+        }
+        else if (pts[0] === 'COUNTITEM') {
+            assertWarn(!pts[1].length, '');
+            code += `\nput the number of items in (${targetStringForInput}) into results${i}`;
+        }
+        else if (pts[0] === 'COUNTWORD') {
+            assertWarn(!pts[1].length, '');
+            code += `\nput the number of words in (${targetStringForInput}) into results${i}`;
+        }
+        else if (pts[0] === 'COUNTLINE') {
+            assertWarn(!pts[1].length, '');
+            code += `\nput the number of lines in (${targetStringForInput}) into results${i}`;
+        }
+        else {
+            checkThrowInternal(false, "unknown test");
+        }
+        return code;
     }
 }

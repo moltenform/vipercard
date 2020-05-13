@@ -517,15 +517,27 @@ export const ChunkResolutionApplication = /* static class */ {
             if (!current.child) {
                 break
             }
+            //~ checkThrow(!current.last || current.first===current.last, "we don't yet support deleting ranges")
             resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, '', compat,VpcChunkPreposition.Into, false, isChildOfAddedLine, okToAppend );
             current = current.child;
         }
 
+        checkThrow(!current.last || current.first===current.last, "we don't yet support deleting ranges")
         checkThrow(!current.last || current.first<=current.last, "we don't support backwards bounds")
         if (!resolved) {
             /* delete something that isn't found is a no-op */
             return
         }
+
+        /*
+        we don't yet support deleting ranges.
+        we tried doing:
+            delete word 1 to 3 === delete word 3; delete word 2; delete word 1
+            and
+            delete word 1 to 3
+                get bounds of delete word 1 and bounds of delete word 3
+                and put them together
+        */
 
         //~ let allstart = Number.POSITIVE_INFINITY
         //~ let allend = Number.NEGATIVE_INFINITY
@@ -555,22 +567,6 @@ export const ChunkResolutionApplication = /* static class */ {
             cont.splice(resolved.startPos + start, end-start, '')
             //~ allstart = Math.min(allstart, start)
             //~ allend = Math.max(allend, end)
-        }
-
-            
-
-        {
-            //~ let s = new WritableContainerSimpleFmtText()
-            //~ s.setAll(cont.getRawString())
-            //~ s.setAll(" a b c ")
-            //~ s.setAll("a b c")
-            //~ let table = ChunkResolution._getPositionsTable(s.getRawString(), ChunkResolution.getRegex(VpcGranularity.Words, ''), true);
-            //~ let r = table.slice().reverse()
-            //~ for (let index of r) {
-                //~ s.splice(index, 0, '^')
-            //~ }
-            //~ console.log(s.getRawString())
-            //~ console.log(s.getRawString())
         }
     },
 
@@ -608,13 +604,14 @@ export const ChunkResolutionApplication = /* static class */ {
                 /* this is a weird case-it deletes spaces both before and after */
                 start = table[table.length - 1]
                 end =table[table.length - 1]
+                let sawReturn = false
                 while (end < unf.length) {
-                    if (unf[end] === '\n' && isLastOfRange) { break }
+                    if (unf[end] === '\n' && isLastOfRange) { sawReturn=true; break }
                     end++
                 }
                 /* use unfAndAfter.length not unf.length here,
                 this special case only applies to the true end of the string */
-                if ((end >= unfAndAfter.length -1)) {
+                if ((end >= unfAndAfter.length -1) && !sawReturn) {
                     while(unf[start-1] === ' ') {
                         start--
                     }
