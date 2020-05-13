@@ -992,9 +992,13 @@ t.test('03chunk, recommended use scenarios', () => {
     b.t('put 10 into item 3 of line 5 of arr2d\\arr2d && the number of lines in arr2d', '\n\n,,,,9\n\n,,10 5');
     b.t('put 11 into item 1 of line 3 of arr2d\\arr2d && the number of lines in arr2d', '\n\n11,,,,9\n\n,,10 5');
     b.t('put 12 into item 2 of line 1 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n11,,,,9\n\n,,10 5');
+    b.t('put 13 into item 2 of line 3 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n11,13,,,9\n\n,,10 5');
     b.t('put 14 into item 2 of line 3 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n11,14,,,9\n\n,,10 5');
-    b.t('put "" into item 1 of line 3 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n,14,,,9\n\n,,10 5');
-    b.t('put "" into item 3 of line 5 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n,14,,,9\n\n,, 5');
+    b.t('put 20 into item 7 of line 3 of arr2d\\arr2d && the number of lines in arr2d', ',12\n\n11,14,,,9,,20\n\n,,10 5');
+    b.t('put 21 into item 3 of line 1 of arr2d\\arr2d && the number of lines in arr2d', ',12,21\n\n11,14,,,9,,20\n\n,,10 5');
+    b.t('put 22 into item 5 of line 5 of arr2d\\arr2d && the number of lines in arr2d', ',12,21\n\n11,14,,,9,,20\n\n,,10,,22 5');
+    b.t('put "" into item 1 of line 3 of arr2d\\arr2d && the number of lines in arr2d', ',12,21\n\n,14,,,9,,20\n\n,,10,,22 5');
+    b.t('put "" into item 3 of line 5 of arr2d\\arr2d && the number of lines in arr2d', ',12,21\n\n,14,,,9,,20\n\n,,,,22 5');
     b.batchEvaluate(h3);
     /* loops */
     const code = `
@@ -1027,7 +1031,7 @@ end sum2d
     assertWarnEq((11+9+12).toString(), got, "")
     h3.runGeneralCode(code, 'global testresult1, arr2d\nput sum2d(arr2d) into testresult1')
     got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
-    assertWarnEq((12+14+9).toString(), got, "")
+    assertWarnEq((12+21+14+9+20+22).toString(), got, "")
     h3.vcstate.vci.undoableAction(()=>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model))
 })

@@ -14,11 +14,11 @@ let t = new SimpleUtil512TestCollection('testCollectionScriptExtensiveChunk', tr
 export let testCollectionScriptExtensiveChunk = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
-t.atest('--init--testCollectionScriptExtensive', async () => {
+t.atest('--init--testCollectionScriptExtensiveChunk', async () => {
     h = new TestVpcScriptRunBase(t);
     return h.initEnvironment();
 });
-t.atest('runConditionalTests', async () => {
+t.atest('ScriptExtensiveChunk', async () => {
     h.vcstate.vci.undoableAction(()=>
         h.vcstate.model.stack.setOnVel('compatibilitymode', true, h.vcstate.model))
     let test = new RunExtensiveChunkTests();
@@ -77,14 +77,14 @@ class RunExtensiveChunkTests {
                 //~ if (s.startsWith('READ\t') || s.startsWith('WRITE\t')) {
                     //~ return true
                 //~ }
-                return false
-                //~ if (s.includes(' to ')) {
-                    //~ return false
-                //~ }
+                //~ return false
+                if (s.includes(' to ')) {
+                    return false
+                }
                 //~ if (s.split(' of ').length > 1) {
                     //~ return false
                 //~ }
-                //~ return true
+                return true
             }
 
             let batch:string[] = []
