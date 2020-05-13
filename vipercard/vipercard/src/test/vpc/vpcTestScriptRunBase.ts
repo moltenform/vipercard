@@ -52,6 +52,7 @@ export class ScriptTestBatch {
 
     batchEvaluate(
         runner: TestVpcScriptRunBase,
+        multipliers: TestMultiplier[],
         typ = BatchType.default,
         onlyTestsWithPrefix = ''
     ) {
@@ -83,6 +84,25 @@ export class ScriptTestBatch {
 
         /* prevent you from re-using the object */
         this.locked = true;
+    }
+
+    multiplyTests(input:[string, string][], multipliers: TestMultiplier[]):[string, string][] {
+        let ret: [string, string][] = []
+        for (let item of input) {
+            let curItems = [item]
+            for (let multiplier of multipliers) {
+                let first = curItems.map((item)=>multiplier.firstTransformation(item[0], item[1]))
+                let second = curItems.map((item)=>multiplier.secondTransformation(item[0], item[1]))
+                let third = curItems.map((item)=>multiplier.thirdTransformation(item[0], item[1]))
+                let nextCurItems: [string, string][] = []
+                Util512.extendArray(nextCurItems, first)
+                Util512.extendArray(nextCurItems, second)
+                Util512.extendArray(nextCurItems, third)
+                curItems = nextCurItems.filter((item) => item !== undefined)
+            }
+            Util512.extendArray(ret, curItems)
+        }
+        return ret
     }
 
     static checkPending() {
@@ -746,4 +766,86 @@ export enum BatchType {
     testBatchEvalCommutative,
     floatingPoint,
     floatingPointCommutative
+}
+
+export abstract class TestMultiplier {
+    abstract firstTransformation(code:string, expected:string):[string, string];
+    secondTransformation(code:string, expected:string):O<[string, string]> {
+        return undefined
+    }
+    thirdTransformation(code:string, expected:string):O<[string, string]> {
+        return undefined
+    }
+}
+
+export class TestMultiplierCommutative extends TestMultiplier {
+    firstTransformation(code:string, expected:string):[string, string] {
+        return [code.replace(/_/g, ''), expected]
+    }
+    secondTransformation(code:string, expected:string):[string, string] {
+        let pts = code.split('_');
+        assertEq(3, pts.length, '2I|');
+        return [pts[2] + ' ' + pts[1] + ' ' + pts[0], expected];
+    }
+}
+
+export class TestMultiplierInvert extends TestMultiplier {
+    constructor(protected leaveUnderscores:boolean) { super() }
+    firstTransformation(code:string, expected:string):[string, string] {
+        if (this.leaveUnderscores) {
+            return [code, expected]
+        } else {
+            return [code.replace(/_/g, ''), expected]
+        }
+    }
+    secondTransformation(code:string, expected:string):[string, string] {
+        let pts = code.split('_');
+        assertEq(3, pts.length, '2G|');
+        let op = this.flipOperation(pts[1])[0];
+        let delim = this.leaveUnderscores ? '_' : ''
+        return [pts[0] + ` ${delim}` + op + `${delim} ` + pts[2], this.flipBool(expected)];
+    
+    }
+    protected flipOperation (op: string): [string, string] {
+        /* first is the op when order is reversed */
+        /* second is the op that is logical inverse */
+        if (op === '==') {
+            return ['==', '!='];
+        } else if (op === '=') {
+            return ['=', '<>'];
+        } else if (op === 'is') {
+            return ['is', 'is not'];
+        } else if (op === '!=') {
+            return ['!=', '=='];
+        } else if (op === '<>') {
+            return ['<>', '='];
+        } else if (op === 'is not') {
+            return ['is not', 'is'];
+        } else if (op === '<') {
+            return ['>', '>='];
+        } else if (op === '<=') {
+            return ['>=', '>'];
+        } else if (op === '>') {
+            return ['<', '<='];
+        } else if (op === '>=') {
+            return ['<=', '<'];
+        } else {
+            checkThrowInternal(false, '2F|unknown op ' + op);
+        }
+    }
+    protected flipBool(s: string) {
+        if (s === 'true') {
+            return 'false';
+        } else if (s === 'false') {
+            return 'true';
+        } else if (s.startsWith('ERR:')) {
+            return s;
+        } else {
+            checkThrowInternal(false, '2J|could not flip ' + s);
+        }
+    }
+}
+
+export function evalInvertAndCommute() {
+    return [new TestMultiplierInvert(true), new TestMultiplierCommutative()]
 }

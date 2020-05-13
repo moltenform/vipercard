@@ -1,7 +1,7 @@
 
 /* auto */ import { ScriptTestBatch } from './../vpc/vpcTestScriptRunBase';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { longstr } from './../../ui512/utils/util512';
+/* auto */ import { longstr, assertWarnEq } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { h3 } from './test03lexer';
 
@@ -75,6 +75,10 @@ b.t('put z1 into z\ndelete line 2 of item 1 of line 3 of z\\z', 'ab cd,ef ,gh,ij
 /* deleting item might delete a lot, unless line is empty */
 b.t('put ""&"ab cd,ef ,gh,ij kl mn,op"&cr&""&cr&"st,uv,wx 01 23 45,"&cr&"67,89"&cr&"/. #$ ;: &*,() -="&cr&"~+, <> [],{}"&"" into z1\\1', '1')
 b.t('put z1 into z\ndelete line 2 of item 1 of line 3 of z\\z', 'ab cd,ef ,gh,ij kl mn,op\n\nst,uv,wx 01 23 45,\n67,89\n/. #$ ;: &*,() -=\n~+, <> [],{}')
+/* deleting item might delete a lot, only if delete item 0 */
+b.t('put ""&"ab cd,ef ,gh,ij kl mn,op"&cr&"qr"&cr&"st,uv,wx 01 23 45,"&cr&"67,89"&cr&"/. #$ ;: &*,() -="&cr&"~+, <> [],{}"&"" into z1\\1', '1')
+b.t('put z1 into z\ndelete line 2 of item 0 of line 3 of z\\z', 'ab cd,ef ,gh,ij kl mn,op\nqr\nst,uv,wx 01 23 45,\n67,89\n/. #$ ;: &*,() -=\n~+, <> [],{}')
+
 
     b.batchEvaluate(h3);
 })
@@ -215,519 +219,6 @@ t.test('03countnumber', () => {
     b.t('the number of words in " "&cr&" "', '0');
     b.t('the number of words in "ab cd, ef"&cr&"gh ii,jj,kk"&cr&"mn,op,q"&cr&"r,s"', '7');
     b.t('the number of words in " ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}"', '18');
-    /* more words tests */
-    b.t('the number of words in " a b c "', '3');
-    b.t('the number of words in "" & "ab "&cr&"bc "&cr&"de" & ""', '3');
-    b.t('the number of words in "" & " "&cr&"ab "&cr&"bc "&cr&"de "&cr&"" & ""', '3');
-    b.t('the number of words in "" & "ab  "&cr&"bc  "&cr&"de" & ""', '3');
-    b.t('the number of words in "" & "  "&cr&"ab  "&cr&"bc  "&cr&"de  "&cr&"" & ""', '3');
-    b.t('the number of words in "" & "ab"&cr&" bc"&cr&" de" & ""', '3');
-    b.t('the number of words in "" & ""&cr&" ab"&cr&" bc"&cr&" de"&cr&" " & ""', '3');
-    b.t('the number of words in "" & "ab"&cr&"  bc"&cr&"  de" & ""', '3');
-    b.t('the number of words in "" & ""&cr&"  ab"&cr&"  bc"&cr&"  de"&cr&"  " & ""', '3');
-    b.t('the number of words in "" & "ab "&cr&" bc "&cr&" de" & ""', '3');
-    b.t('the number of words in "" & " "&cr&" ab "&cr&" bc "&cr&" de "&cr&" " & ""', '3');
-    b.t('the number of words in "" & "ab"&cr&" "&cr&"bc"&cr&" "&cr&"de" & ""', '3');
-    b.t('the number of words in "" & ""&cr&" "&cr&"ab"&cr&" "&cr&"bc"&cr&" "&cr&"de"&cr&" "&cr&"" & ""', '3');
-    b.t('the number of words in "" & "ab"&cr&" "&cr&""&cr&"bc"&cr&" "&cr&""&cr&"de" & ""', '3');
-    b.t('the number of words in "" & ""&cr&" "&cr&""&cr&"ab"&cr&" "&cr&""&cr&"bc"&cr&" "&cr&""&cr&"de"&cr&" "&cr&""&cr&"" & ""', '3');
-    b.t('the number of words in "" & "ab"&cr&""&cr&" "&cr&"bc"&cr&""&cr&" "&cr&"de" & ""', '3');
-    b.t('the number of words in "" & ""&cr&""&cr&" "&cr&"ab"&cr&""&cr&" "&cr&"bc"&cr&""&cr&" "&cr&"de"&cr&""&cr&" "&cr&"" & ""', '3');
-    b.t('the number of words in "" & "ab "&cr&"  bc "&cr&"  de" & ""', '3');
-    b.t('the number of words in "" & " "&cr&"  ab "&cr&"  bc "&cr&"  de "&cr&"  " & ""', '3');
-    b.t('the number of words in "" & "ab  "&cr&" bc  "&cr&" de" & ""', '3');
-    b.t('the number of words in "" & "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " & ""', '3');
-    b.batchEvaluate(h3);
-    b = new ScriptTestBatch();
-    /* count number extensive. results from emulator. */
-    b.t('the number of words in (""&""&"")', '0');
-b.t('the number of words in (""&"a"&"")', '1');
-b.t('the number of words in (""&""&cr&""&"")', '0');
-b.t('the number of words in (""&" "&"")', '0');
-b.t('the number of words in (""&"a"&cr&""&"")', '1');
-b.t('the number of words in (""&"a "&"")', '1');
-b.t('the number of words in (""&""&cr&"a"&"")', '1');
-b.t('the number of words in (""&""&cr&""&cr&""&"")', '0');
-b.t('the number of words in (""&""&cr&" "&"")', '0');
-b.t('the number of words in (""&" a"&"")', '1');
-b.t('the number of words in (""&" "&cr&""&"")', '0');
-b.t('the number of words in (""&"  "&"")', '0');
-b.t('the number of words in (""&"a"&cr&"a"&"")', '2');
-b.t('the number of words in (""&"a"&cr&""&cr&""&"")', '1');
-b.t('the number of words in (""&"a"&cr&" "&"")', '1');
-b.t('the number of words in (""&"a a"&"")', '2');
-b.t('the number of words in (""&"a "&cr&""&"")', '1');
-b.t('the number of words in (""&"a  "&"")', '1');
-b.t('the number of words in (""&""&cr&"a"&cr&""&"")', '1');
-b.t('the number of words in (""&""&cr&"a "&"")', '1');
-b.t('the number of words in (""&""&cr&""&cr&"a"&"")', '1');
-b.t('the number of words in (""&""&cr&""&cr&""&cr&""&"")', '0');
-b.t('the number of words in (""&""&cr&""&cr&" "&"")', '0');
-b.t('the number of words in (""&""&cr&" a"&"")', '1');
-b.t('the number of words in (""&""&cr&" "&cr&""&"")', '0');
-b.t('the number of words in (""&""&cr&"  "&"")', '0');
-b.t('the number of words in (""&" a"&cr&""&"")', '1');
-b.t('the number of words in (""&" a "&"")', '1');
-b.t('the number of words in (""&" "&cr&"a"&"")', '1');
-b.t('the number of words in (""&" "&cr&""&cr&""&"")', '0');
-b.t('the number of words in (""&" "&cr&" "&"")', '0');
-b.t('the number of words in (""&"  a"&"")', '1');
-b.t('the number of words in (""&"  "&cr&""&"")', '0');
-b.t('the number of words in (""&"   "&"")', '0');
-b.t('the number of words in (""&"a"&cr&"a"&cr&""&"")', '2');
-b.t('the number of words in (""&"a"&cr&"a "&"")', '2');
-b.t('the number of words in (""&"a"&cr&""&cr&"a"&"")', '2');
-b.t('the number of words in (""&"a"&cr&""&cr&""&cr&""&"")', '1');
-b.t('the number of words in (""&"a"&cr&""&cr&" "&"")', '1');
-b.t('the number of words in (""&"a"&cr&" a"&"")', '2');
-b.t('the number of words in (""&"a"&cr&" "&cr&""&"")', '1');
-b.t('the number of words in (""&"a"&cr&"  "&"")', '1');
-b.t('the number of words in (""&"a a"&cr&""&"")', '2');
-b.t('the number of words in (""&"a a "&"")', '2');
-b.t('the number of words in (""&"a "&cr&"a"&"")', '2');
-b.t('the number of words in (""&"a "&cr&""&cr&""&"")', '1');
-b.t('the number of words in (""&"a "&cr&" "&"")', '1');
-b.t('the number of words in (""&"a  a"&"")', '2');
-b.t('the number of words in (""&"a  "&cr&""&"")', '1');
-b.t('the number of words in (""&"a   "&"")', '1');
-b.t('the number of words in (""&""&cr&"a"&cr&"a"&"")', '2');
-b.t('the number of words in (""&""&cr&"a"&cr&""&cr&""&"")', '1');
-b.t('the number of words in (""&""&cr&"a"&cr&" "&"")', '1');
-b.t('the number of words in (""&""&cr&"a a"&"")', '2');
-b.t('the number of words in (""&""&cr&"a "&cr&""&"")', '1');
-b.t('the number of words in (""&""&cr&"a  "&"")', '1');
-b.t('the number of words in (""&""&cr&""&cr&"a"&cr&""&"")', '1');
-b.t('the number of words in (""&""&cr&""&cr&"a "&"")', '1');
-b.t('the number of words in (""&""&cr&""&cr&""&cr&"a"&"")', '1');
-b.t('the number of words in (""&""&cr&""&cr&""&cr&""&cr&""&"")', '0');
-b.t('the number of words in (""&""&cr&""&cr&""&cr&" "&"")', '0');
-b.t('the number of words in (""&""&cr&""&cr&" a"&"")', '1');
-b.t('the number of words in (""&""&cr&""&cr&" "&cr&""&"")', '0');
-b.t('the number of words in (""&""&cr&""&cr&"  "&"")', '0');
-b.t('the number of words in (""&""&cr&" a"&cr&""&"")', '1');
-b.t('the number of words in (""&""&cr&" a "&"")', '1');
-b.t('the number of words in (""&""&cr&" "&cr&"a"&"")', '1');
-b.t('the number of words in (""&""&cr&" "&cr&""&cr&""&"")', '0');
-b.t('the number of words in (""&""&cr&" "&cr&" "&"")', '0');
-b.t('the number of words in (""&""&cr&"  a"&"")', '1');
-b.t('the number of words in (""&""&cr&"  "&cr&""&"")', '0');
-b.t('the number of words in (""&""&cr&"   "&"")', '0');
-b.t('the number of words in (""&" a"&cr&"a"&"")', '2');
-b.t('the number of words in (""&" a"&cr&""&cr&""&"")', '1');
-b.t('the number of words in (""&" a"&cr&" "&"")', '1');
-b.t('the number of words in (""&" a a"&"")', '2');
-b.t('the number of words in (""&" a "&cr&""&"")', '1');
-b.t('the number of words in (""&" a  "&"")', '1');
-b.t('the number of words in (""&" "&cr&"a"&cr&""&"")', '1');
-b.t('the number of words in (""&" "&cr&"a "&"")', '1');
-b.t('the number of words in (""&" "&cr&""&cr&"a"&"")', '1');
-b.t('the number of words in (""&" "&cr&""&cr&""&cr&""&"")', '0');
-b.t('the number of words in (""&" "&cr&""&cr&" "&"")', '0');
-b.t('the number of words in (""&" "&cr&" a"&"")', '1');
-b.t('the number of words in (""&" "&cr&" "&cr&""&"")', '0');
-b.t('the number of words in (""&" "&cr&"  "&"")', '0');
-b.t('the number of words in (""&"  a"&cr&""&"")', '1');
-b.t('the number of words in (""&"  a "&"")', '1');
-b.t('the number of words in (""&"  "&cr&"a"&"")', '1');
-b.t('the number of words in (""&"  "&cr&""&cr&""&"")', '0');
-b.t('the number of words in (""&"  "&cr&" "&"")', '0');
-b.t('the number of words in (""&"   a"&"")', '1');
-b.t('the number of words in (""&"   "&cr&""&"")', '0');
-b.t('the number of words in (""&"    "&"")', '0');
-b.batchEvaluate(h3);
-    b = new ScriptTestBatch();
-b.t('the number of items in (""&""&"")', '0');
-b.t('the number of items in (""&"a"&"")', '1');
-b.t('the number of items in (""&","&"")', '1');
-b.t('the number of items in (""&" "&"")', '0');
-b.t('the number of items in (""&""&cr&""&"")', '0');
-b.t('the number of items in (""&"a,"&"")', '1');
-b.t('the number of items in (""&"a "&"")', '1');
-b.t('the number of items in (""&"a"&cr&""&"")', '1');
-b.t('the number of items in (""&",a"&"")', '2');
-b.t('the number of items in (""&",,"&"")', '2');
-b.t('the number of items in (""&", "&"")', '1');
-b.t('the number of items in (""&","&cr&""&"")', '1');
-b.t('the number of items in (""&" a"&"")', '1');
-b.t('the number of items in (""&" ,"&"")', '1');
-b.t('the number of items in (""&"  "&"")', '0');
-b.t('the number of items in (""&" "&cr&""&"")', '0');
-b.t('the number of items in (""&""&cr&"a"&"")', '1');
-b.t('the number of items in (""&""&cr&","&"")', '1');
-b.t('the number of items in (""&""&cr&" "&"")', '0');
-b.t('the number of items in (""&""&cr&""&cr&""&"")', '0');
-b.t('the number of items in (""&"a,a"&"")', '2');
-b.t('the number of items in (""&"a,,"&"")', '2');
-b.t('the number of items in (""&"a, "&"")', '1');
-b.t('the number of items in (""&"a,"&cr&""&"")', '1');
-b.t('the number of items in (""&"a a"&"")', '1');
-b.t('the number of items in (""&"a ,"&"")', '1');
-b.t('the number of items in (""&"a  "&"")', '1');
-b.t('the number of items in (""&"a "&cr&""&"")', '1');
-b.t('the number of items in (""&"a"&cr&"a"&"")', '1');
-b.t('the number of items in (""&"a"&cr&","&"")', '1');
-b.t('the number of items in (""&"a"&cr&" "&"")', '1');
-b.t('the number of items in (""&"a"&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&",a,"&"")', '2');
-b.t('the number of items in (""&",a "&"")', '2');
-b.t('the number of items in (""&",a"&cr&""&"")', '2');
-b.t('the number of items in (""&",,a"&"")', '3');
-b.t('the number of items in (""&",,,"&"")', '3');
-b.t('the number of items in (""&",, "&"")', '2');
-b.t('the number of items in (""&",,"&cr&""&"")', '2');
-b.t('the number of items in (""&", a"&"")', '2');
-b.t('the number of items in (""&", ,"&"")', '2');
-b.t('the number of items in (""&",  "&"")', '1');
-b.t('the number of items in (""&", "&cr&""&"")', '1');
-b.t('the number of items in (""&","&cr&"a"&"")', '2');
-b.t('the number of items in (""&","&cr&","&"")', '2');
-b.t('the number of items in (""&","&cr&" "&"")', '1');
-b.t('the number of items in (""&","&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&" a,"&"")', '1');
-b.t('the number of items in (""&" a "&"")', '1');
-b.t('the number of items in (""&" a"&cr&""&"")', '1');
-b.t('the number of items in (""&" ,a"&"")', '2');
-b.t('the number of items in (""&" ,,"&"")', '2');
-b.t('the number of items in (""&" , "&"")', '1');
-b.t('the number of items in (""&" ,"&cr&""&"")', '1');
-b.t('the number of items in (""&"  a"&"")', '1');
-b.t('the number of items in (""&"  ,"&"")', '1');
-b.t('the number of items in (""&"   "&"")', '0');
-b.t('the number of items in (""&"  "&cr&""&"")', '0');
-b.t('the number of items in (""&" "&cr&"a"&"")', '1');
-b.t('the number of items in (""&" "&cr&","&"")', '1');
-b.t('the number of items in (""&" "&cr&" "&"")', '0');
-b.t('the number of items in (""&" "&cr&""&cr&""&"")', '0');
-b.t('the number of items in (""&""&cr&"a,"&"")', '1');
-b.t('the number of items in (""&""&cr&"a "&"")', '1');
-b.t('the number of items in (""&""&cr&"a"&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&",a"&"")', '2');
-b.t('the number of items in (""&""&cr&",,"&"")', '2');
-b.t('the number of items in (""&""&cr&", "&"")', '1');
-b.t('the number of items in (""&""&cr&","&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&" a"&"")', '1');
-b.t('the number of items in (""&""&cr&" ,"&"")', '1');
-b.t('the number of items in (""&""&cr&"  "&"")', '0');
-b.t('the number of items in (""&""&cr&" "&cr&""&"")', '0');
-b.t('the number of items in (""&""&cr&""&cr&"a"&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&","&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&" "&"")', '0');
-b.t('the number of items in (""&""&cr&""&cr&""&cr&""&"")', '0');
-b.t('the number of items in (""&"a,a,"&"")', '2');
-b.t('the number of items in (""&"a,a "&"")', '2');
-b.t('the number of items in (""&"a,a"&cr&""&"")', '2');
-b.t('the number of items in (""&"a,,a"&"")', '3');
-b.t('the number of items in (""&"a,,,"&"")', '3');
-b.t('the number of items in (""&"a,, "&"")', '2');
-b.t('the number of items in (""&"a,,"&cr&""&"")', '2');
-b.t('the number of items in (""&"a, a"&"")', '2');
-b.t('the number of items in (""&"a, ,"&"")', '2');
-b.t('the number of items in (""&"a,  "&"")', '1');
-b.t('the number of items in (""&"a, "&cr&""&"")', '1');
-b.t('the number of items in (""&"a,"&cr&"a"&"")', '2');
-b.t('the number of items in (""&"a,"&cr&","&"")', '2');
-b.t('the number of items in (""&"a,"&cr&" "&"")', '1');
-b.t('the number of items in (""&"a,"&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&"a a,"&"")', '1');
-b.t('the number of items in (""&"a a "&"")', '1');
-b.t('the number of items in (""&"a a"&cr&""&"")', '1');
-b.t('the number of items in (""&"a ,a"&"")', '2');
-b.t('the number of items in (""&"a ,,"&"")', '2');
-b.t('the number of items in (""&"a , "&"")', '1');
-b.t('the number of items in (""&"a ,"&cr&""&"")', '1');
-b.t('the number of items in (""&"a  a"&"")', '1');
-b.t('the number of items in (""&"a  ,"&"")', '1');
-b.t('the number of items in (""&"a   "&"")', '1');
-b.t('the number of items in (""&"a  "&cr&""&"")', '1');
-b.t('the number of items in (""&"a "&cr&"a"&"")', '1');
-b.t('the number of items in (""&"a "&cr&","&"")', '1');
-b.t('the number of items in (""&"a "&cr&" "&"")', '1');
-b.t('the number of items in (""&"a "&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&"a"&cr&"a,"&"")', '1');
-b.t('the number of items in (""&"a"&cr&"a "&"")', '1');
-b.t('the number of items in (""&"a"&cr&"a"&cr&""&"")', '1');
-b.t('the number of items in (""&"a"&cr&",a"&"")', '2');
-b.t('the number of items in (""&"a"&cr&",,"&"")', '2');
-b.t('the number of items in (""&"a"&cr&", "&"")', '1');
-b.t('the number of items in (""&"a"&cr&","&cr&""&"")', '1');
-b.t('the number of items in (""&"a"&cr&" a"&"")', '1');
-b.t('the number of items in (""&"a"&cr&" ,"&"")', '1');
-b.t('the number of items in (""&"a"&cr&"  "&"")', '1');
-b.t('the number of items in (""&"a"&cr&" "&cr&""&"")', '1');
-b.t('the number of items in (""&"a"&cr&""&cr&"a"&"")', '1');
-b.t('the number of items in (""&"a"&cr&""&cr&","&"")', '1');
-b.t('the number of items in (""&"a"&cr&""&cr&" "&"")', '1');
-b.t('the number of items in (""&"a"&cr&""&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&",a,a"&"")', '3');
-b.t('the number of items in (""&",a,,"&"")', '3');
-b.t('the number of items in (""&",a, "&"")', '2');
-b.t('the number of items in (""&",a,"&cr&""&"")', '2');
-b.t('the number of items in (""&",a a"&"")', '2');
-b.t('the number of items in (""&",a ,"&"")', '2');
-b.t('the number of items in (""&",a  "&"")', '2');
-b.t('the number of items in (""&",a "&cr&""&"")', '2');
-b.t('the number of items in (""&",a"&cr&"a"&"")', '2');
-b.t('the number of items in (""&",a"&cr&","&"")', '2');
-b.t('the number of items in (""&",a"&cr&" "&"")', '2');
-b.t('the number of items in (""&",a"&cr&""&cr&""&"")', '2');
-b.t('the number of items in (""&",,a,"&"")', '3');
-b.t('the number of items in (""&",,a "&"")', '3');
-b.t('the number of items in (""&",,a"&cr&""&"")', '3');
-b.t('the number of items in (""&",,,a"&"")', '4');
-b.t('the number of items in (""&",,,,"&"")', '4');
-b.t('the number of items in (""&",,, "&"")', '3');
-b.t('the number of items in (""&",,,"&cr&""&"")', '3');
-b.t('the number of items in (""&",, a"&"")', '3');
-b.t('the number of items in (""&",, ,"&"")', '3');
-b.t('the number of items in (""&",,  "&"")', '2');
-b.t('the number of items in (""&",, "&cr&""&"")', '2');
-b.t('the number of items in (""&",,"&cr&"a"&"")', '3');
-b.t('the number of items in (""&",,"&cr&","&"")', '3');
-b.t('the number of items in (""&",,"&cr&" "&"")', '2');
-b.t('the number of items in (""&",,"&cr&""&cr&""&"")', '2');
-b.t('the number of items in (""&", a,"&"")', '2');
-b.t('the number of items in (""&", a "&"")', '2');
-b.t('the number of items in (""&", a"&cr&""&"")', '2');
-b.t('the number of items in (""&", ,a"&"")', '3');
-b.t('the number of items in (""&", ,,"&"")', '3');
-b.t('the number of items in (""&", , "&"")', '2');
-b.t('the number of items in (""&", ,"&cr&""&"")', '2');
-b.t('the number of items in (""&",  a"&"")', '2');
-b.t('the number of items in (""&",  ,"&"")', '2');
-b.t('the number of items in (""&",   "&"")', '1');
-b.batchEvaluate(h3);
-b = new ScriptTestBatch();
-b.t('the number of items in (""&",  "&cr&""&"")', '1');
-b.t('the number of items in (""&", "&cr&"a"&"")', '2');
-b.t('the number of items in (""&", "&cr&","&"")', '2');
-b.t('the number of items in (""&", "&cr&" "&"")', '1');
-b.t('the number of items in (""&", "&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&","&cr&"a,"&"")', '2');
-b.t('the number of items in (""&","&cr&"a "&"")', '2');
-b.t('the number of items in (""&","&cr&"a"&cr&""&"")', '2');
-b.t('the number of items in (""&","&cr&",a"&"")', '3');
-b.t('the number of items in (""&","&cr&",,"&"")', '3');
-b.t('the number of items in (""&","&cr&", "&"")', '2');
-b.t('the number of items in (""&","&cr&","&cr&""&"")', '2');
-b.t('the number of items in (""&","&cr&" a"&"")', '2');
-b.t('the number of items in (""&","&cr&" ,"&"")', '2');
-b.t('the number of items in (""&","&cr&"  "&"")', '1');
-b.t('the number of items in (""&","&cr&" "&cr&""&"")', '1');
-b.t('the number of items in (""&","&cr&""&cr&"a"&"")', '2');
-b.t('the number of items in (""&","&cr&""&cr&","&"")', '2');
-b.t('the number of items in (""&","&cr&""&cr&" "&"")', '1');
-b.t('the number of items in (""&","&cr&""&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&" a,a"&"")', '2');
-b.t('the number of items in (""&" a,,"&"")', '2');
-b.t('the number of items in (""&" a, "&"")', '1');
-b.t('the number of items in (""&" a,"&cr&""&"")', '1');
-b.t('the number of items in (""&" a a"&"")', '1');
-b.t('the number of items in (""&" a ,"&"")', '1');
-b.t('the number of items in (""&" a  "&"")', '1');
-b.t('the number of items in (""&" a "&cr&""&"")', '1');
-b.t('the number of items in (""&" a"&cr&"a"&"")', '1');
-b.t('the number of items in (""&" a"&cr&","&"")', '1');
-b.t('the number of items in (""&" a"&cr&" "&"")', '1');
-b.t('the number of items in (""&" a"&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&" ,a,"&"")', '2');
-b.t('the number of items in (""&" ,a "&"")', '2');
-b.t('the number of items in (""&" ,a"&cr&""&"")', '2');
-b.t('the number of items in (""&" ,,a"&"")', '3');
-b.t('the number of items in (""&" ,,,"&"")', '3');
-b.t('the number of items in (""&" ,, "&"")', '2');
-b.t('the number of items in (""&" ,,"&cr&""&"")', '2');
-b.t('the number of items in (""&" , a"&"")', '2');
-b.t('the number of items in (""&" , ,"&"")', '2');
-b.t('the number of items in (""&" ,  "&"")', '1');
-b.t('the number of items in (""&" , "&cr&""&"")', '1');
-b.t('the number of items in (""&" ,"&cr&"a"&"")', '2');
-b.t('the number of items in (""&" ,"&cr&","&"")', '2');
-b.t('the number of items in (""&" ,"&cr&" "&"")', '1');
-b.t('the number of items in (""&" ,"&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&"  a,"&"")', '1');
-b.t('the number of items in (""&"  a "&"")', '1');
-b.t('the number of items in (""&"  a"&cr&""&"")', '1');
-b.t('the number of items in (""&"  ,a"&"")', '2');
-b.t('the number of items in (""&"  ,,"&"")', '2');
-b.t('the number of items in (""&"  , "&"")', '1');
-b.t('the number of items in (""&"  ,"&cr&""&"")', '1');
-b.t('the number of items in (""&"   a"&"")', '1');
-b.t('the number of items in (""&"   ,"&"")', '1');
-b.t('the number of items in (""&"    "&"")', '0');
-b.t('the number of items in (""&"   "&cr&""&"")', '0');
-b.t('the number of items in (""&"  "&cr&"a"&"")', '1');
-b.t('the number of items in (""&"  "&cr&","&"")', '1');
-b.t('the number of items in (""&"  "&cr&" "&"")', '0');
-b.t('the number of items in (""&"  "&cr&""&cr&""&"")', '0');
-b.t('the number of items in (""&" "&cr&"a,"&"")', '1');
-b.t('the number of items in (""&" "&cr&"a "&"")', '1');
-b.t('the number of items in (""&" "&cr&"a"&cr&""&"")', '1');
-b.t('the number of items in (""&" "&cr&",a"&"")', '2');
-b.t('the number of items in (""&" "&cr&",,"&"")', '2');
-b.t('the number of items in (""&" "&cr&", "&"")', '1');
-b.t('the number of items in (""&" "&cr&","&cr&""&"")', '1');
-b.t('the number of items in (""&" "&cr&" a"&"")', '1');
-b.t('the number of items in (""&" "&cr&" ,"&"")', '1');
-b.t('the number of items in (""&" "&cr&"  "&"")', '0');
-b.t('the number of items in (""&" "&cr&" "&cr&""&"")', '0');
-b.t('the number of items in (""&" "&cr&""&cr&"a"&"")', '1');
-b.t('the number of items in (""&" "&cr&""&cr&","&"")', '1');
-b.t('the number of items in (""&" "&cr&""&cr&" "&"")', '0');
-b.t('the number of items in (""&" "&cr&""&cr&""&cr&""&"")', '0');
-b.t('the number of items in (""&""&cr&"a,a"&"")', '2');
-b.t('the number of items in (""&""&cr&"a,,"&"")', '2');
-b.t('the number of items in (""&""&cr&"a, "&"")', '1');
-b.t('the number of items in (""&""&cr&"a,"&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&"a a"&"")', '1');
-b.t('the number of items in (""&""&cr&"a ,"&"")', '1');
-b.t('the number of items in (""&""&cr&"a  "&"")', '1');
-b.t('the number of items in (""&""&cr&"a "&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&"a"&cr&"a"&"")', '1');
-b.t('the number of items in (""&""&cr&"a"&cr&","&"")', '1');
-b.t('the number of items in (""&""&cr&"a"&cr&" "&"")', '1');
-b.t('the number of items in (""&""&cr&"a"&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&",a,"&"")', '2');
-b.t('the number of items in (""&""&cr&",a "&"")', '2');
-b.t('the number of items in (""&""&cr&",a"&cr&""&"")', '2');
-b.t('the number of items in (""&""&cr&",,a"&"")', '3');
-b.t('the number of items in (""&""&cr&",,,"&"")', '3');
-b.t('the number of items in (""&""&cr&",, "&"")', '2');
-b.t('the number of items in (""&""&cr&",,"&cr&""&"")', '2');
-b.t('the number of items in (""&""&cr&", a"&"")', '2');
-b.t('the number of items in (""&""&cr&", ,"&"")', '2');
-b.t('the number of items in (""&""&cr&",  "&"")', '1');
-b.t('the number of items in (""&""&cr&", "&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&","&cr&"a"&"")', '2');
-b.t('the number of items in (""&""&cr&","&cr&","&"")', '2');
-b.t('the number of items in (""&""&cr&","&cr&" "&"")', '1');
-b.t('the number of items in (""&""&cr&","&cr&""&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&" a,"&"")', '1');
-b.t('the number of items in (""&""&cr&" a "&"")', '1');
-b.t('the number of items in (""&""&cr&" a"&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&" ,a"&"")', '2');
-b.t('the number of items in (""&""&cr&" ,,"&"")', '2');
-b.t('the number of items in (""&""&cr&" , "&"")', '1');
-b.t('the number of items in (""&""&cr&" ,"&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&"  a"&"")', '1');
-b.t('the number of items in (""&""&cr&"  ,"&"")', '1');
-b.t('the number of items in (""&""&cr&"   "&"")', '0');
-b.t('the number of items in (""&""&cr&"  "&cr&""&"")', '0');
-b.t('the number of items in (""&""&cr&" "&cr&"a"&"")', '1');
-b.t('the number of items in (""&""&cr&" "&cr&","&"")', '1');
-b.t('the number of items in (""&""&cr&" "&cr&" "&"")', '0');
-b.t('the number of items in (""&""&cr&" "&cr&""&cr&""&"")', '0');
-b.t('the number of items in (""&""&cr&""&cr&"a,"&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&"a "&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&"a"&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&",a"&"")', '2');
-b.t('the number of items in (""&""&cr&""&cr&",,"&"")', '2');
-b.t('the number of items in (""&""&cr&""&cr&", "&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&","&cr&""&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&" a"&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&" ,"&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&"  "&"")', '0');
-b.t('the number of items in (""&""&cr&""&cr&" "&cr&""&"")', '0');
-b.t('the number of items in (""&""&cr&""&cr&""&cr&"a"&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&""&cr&","&"")', '1');
-b.t('the number of items in (""&""&cr&""&cr&""&cr&" "&"")', '0');
-b.t('the number of items in (""&""&cr&""&cr&""&cr&""&cr&""&"")', '0');
-b.batchEvaluate(h3);
-    b = new ScriptTestBatch();
-b.t('the number of lines in (""&""&"")', '0');
-b.t('the number of lines in (""&"a"&"")', '1');
-b.t('the number of lines in (""&" "&"")', '1');
-b.t('the number of lines in (""&""&cr&""&"")', '1');
-b.t('the number of lines in (""&"a "&"")', '1');
-b.t('the number of lines in (""&"a"&cr&""&"")', '1');
-b.t('the number of lines in (""&" a"&"")', '1');
-b.t('the number of lines in (""&"  "&"")', '1');
-b.t('the number of lines in (""&" "&cr&""&"")', '1');
-b.t('the number of lines in (""&""&cr&"a"&"")', '2');
-b.t('the number of lines in (""&""&cr&" "&"")', '2');
-b.t('the number of lines in (""&""&cr&""&cr&""&"")', '2');
-b.t('the number of lines in (""&"a a"&"")', '1');
-b.t('the number of lines in (""&"a  "&"")', '1');
-b.t('the number of lines in (""&"a "&cr&""&"")', '1');
-b.t('the number of lines in (""&"a"&cr&"a"&"")', '2');
-b.t('the number of lines in (""&"a"&cr&" "&"")', '2');
-b.t('the number of lines in (""&"a"&cr&""&cr&""&"")', '2');
-b.t('the number of lines in (""&" a "&"")', '1');
-b.t('the number of lines in (""&" a"&cr&""&"")', '1');
-b.t('the number of lines in (""&"  a"&"")', '1');
-b.t('the number of lines in (""&"   "&"")', '1');
-b.t('the number of lines in (""&"  "&cr&""&"")', '1');
-b.t('the number of lines in (""&" "&cr&"a"&"")', '2');
-b.t('the number of lines in (""&" "&cr&" "&"")', '2');
-b.t('the number of lines in (""&" "&cr&""&cr&""&"")', '2');
-b.t('the number of lines in (""&""&cr&"a "&"")', '2');
-b.t('the number of lines in (""&""&cr&"a"&cr&""&"")', '2');
-b.t('the number of lines in (""&""&cr&" a"&"")', '2');
-b.t('the number of lines in (""&""&cr&"  "&"")', '2');
-b.t('the number of lines in (""&""&cr&" "&cr&""&"")', '2');
-b.t('the number of lines in (""&""&cr&""&cr&"a"&"")', '3');
-b.t('the number of lines in (""&""&cr&""&cr&" "&"")', '3');
-b.t('the number of lines in (""&""&cr&""&cr&""&cr&""&"")', '3');
-b.t('the number of lines in (""&"a a "&"")', '1');
-b.t('the number of lines in (""&"a a"&cr&""&"")', '1');
-b.t('the number of lines in (""&"a  a"&"")', '1');
-b.t('the number of lines in (""&"a   "&"")', '1');
-b.t('the number of lines in (""&"a  "&cr&""&"")', '1');
-b.t('the number of lines in (""&"a "&cr&"a"&"")', '2');
-b.t('the number of lines in (""&"a "&cr&" "&"")', '2');
-b.t('the number of lines in (""&"a "&cr&""&cr&""&"")', '2');
-b.t('the number of lines in (""&"a"&cr&"a "&"")', '2');
-b.t('the number of lines in (""&"a"&cr&"a"&cr&""&"")', '2');
-b.t('the number of lines in (""&"a"&cr&" a"&"")', '2');
-b.t('the number of lines in (""&"a"&cr&"  "&"")', '2');
-b.t('the number of lines in (""&"a"&cr&" "&cr&""&"")', '2');
-b.t('the number of lines in (""&"a"&cr&""&cr&"a"&"")', '3');
-b.t('the number of lines in (""&"a"&cr&""&cr&" "&"")', '3');
-b.t('the number of lines in (""&"a"&cr&""&cr&""&cr&""&"")', '3');
-b.t('the number of lines in (""&" a a"&"")', '1');
-b.t('the number of lines in (""&" a  "&"")', '1');
-b.t('the number of lines in (""&" a "&cr&""&"")', '1');
-b.t('the number of lines in (""&" a"&cr&"a"&"")', '2');
-b.t('the number of lines in (""&" a"&cr&" "&"")', '2');
-b.t('the number of lines in (""&" a"&cr&""&cr&""&"")', '2');
-b.t('the number of lines in (""&"  a "&"")', '1');
-b.t('the number of lines in (""&"  a"&cr&""&"")', '1');
-b.t('the number of lines in (""&"   a"&"")', '1');
-b.t('the number of lines in (""&"    "&"")', '1');
-b.t('the number of lines in (""&"   "&cr&""&"")', '1');
-b.t('the number of lines in (""&"  "&cr&"a"&"")', '2');
-b.t('the number of lines in (""&"  "&cr&" "&"")', '2');
-b.t('the number of lines in (""&"  "&cr&""&cr&""&"")', '2');
-b.t('the number of lines in (""&" "&cr&"a "&"")', '2');
-b.t('the number of lines in (""&" "&cr&"a"&cr&""&"")', '2');
-b.t('the number of lines in (""&" "&cr&" a"&"")', '2');
-b.t('the number of lines in (""&" "&cr&"  "&"")', '2');
-b.t('the number of lines in (""&" "&cr&" "&cr&""&"")', '2');
-b.t('the number of lines in (""&" "&cr&""&cr&"a"&"")', '3');
-b.t('the number of lines in (""&" "&cr&""&cr&" "&"")', '3');
-b.t('the number of lines in (""&" "&cr&""&cr&""&cr&""&"")', '3');
-b.t('the number of lines in (""&""&cr&"a a"&"")', '2');
-b.t('the number of lines in (""&""&cr&"a  "&"")', '2');
-b.t('the number of lines in (""&""&cr&"a "&cr&""&"")', '2');
-b.t('the number of lines in (""&""&cr&"a"&cr&"a"&"")', '3');
-b.t('the number of lines in (""&""&cr&"a"&cr&" "&"")', '3');
-b.t('the number of lines in (""&""&cr&"a"&cr&""&cr&""&"")', '3');
-b.t('the number of lines in (""&""&cr&" a "&"")', '2');
-b.t('the number of lines in (""&""&cr&" a"&cr&""&"")', '2');
-b.t('the number of lines in (""&""&cr&"  a"&"")', '2');
-b.t('the number of lines in (""&""&cr&"   "&"")', '2');
-b.t('the number of lines in (""&""&cr&"  "&cr&""&"")', '2');
-b.t('the number of lines in (""&""&cr&" "&cr&"a"&"")', '3');
-b.t('the number of lines in (""&""&cr&" "&cr&" "&"")', '3');
-b.t('the number of lines in (""&""&cr&" "&cr&""&cr&""&"")', '3');
-b.t('the number of lines in (""&""&cr&""&cr&"a "&"")', '3');
-b.t('the number of lines in (""&""&cr&""&cr&"a"&cr&""&"")', '3');
-b.t('the number of lines in (""&""&cr&""&cr&" a"&"")', '3');
-b.t('the number of lines in (""&""&cr&""&cr&"  "&"")', '3');
-b.t('the number of lines in (""&""&cr&""&cr&" "&cr&""&"")', '3');
-b.t('the number of lines in (""&""&cr&""&cr&""&cr&"a"&"")', '4');
-b.t('the number of lines in (""&""&cr&""&cr&""&cr&" "&"")', '4');
-b.t('the number of lines in (""&""&cr&""&cr&""&cr&""&cr&""&"")', '4');
-    b.batchEvaluate(h3);
 })
 
 /**
@@ -1072,7 +563,7 @@ t.test('03chunkexpression_delete_word', () => {
     b.t('put z1 into z\ndelete word 5 of z\\z', 'a.b  c.d\ne');
     /* normal ranges */
     b.t('put z1 into z\ndelete word 1 to 1 of z\\z', 'c.d\ne');
-    //~ b.t('put z1 into z\ndelete word 1 to 2 of z\\z', '\ne');
+    b.t('put z1 into z\ndelete word 1 to 2 of z\\z', '\ne');
     //~ b.t('put z1 into z\ndelete word 1 to 3 of z\\z', '');
     //~ b.t('put z1 into z\ndelete word 2 to 3 of z\\z', 'a.b');
     //~ /* recurse */
@@ -1427,47 +918,107 @@ t.test('03chunkexpression_mathops', () => {
 
 t.test('03chunkexpression_additional delete tests', () => {
     let b = new ScriptTestBatch();
-    /* normal word */
-    b.t('global z1\nput "a b c" into z1\\1', '1');
-    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
-    b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
-    b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
-    b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
-    b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
-    b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
-    /* normal word 2 */
-    b.t('global z1\nput " a b c " into z1\\1', '1');
-    b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
-    b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
-    b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
-    b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
-    b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
-    b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
-    b.t('put z1 into z\ndelete word 6 of z\\z', ' a b c');
-    /* normal item */
-    b.t('global z1\nput "a,b,c" into z1\\1', '1');
-    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
-    b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
-    b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
-    b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
-    b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
-    b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
-    b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
-    /* normal item 2 */
-    b.t('global z1\nput ",a,b,c," into z1\\1', '1');
-    b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
-    b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
-    b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
-    b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
-    b.t('put z1 into z\ndelete item 4 of z\\z', ',a,b,');
-    b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
-    b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
-    b.t('put z1 into z\ndelete item 7 of z\\z', ',a,b,c,');
+    //~ /* normal word */
+    //~ b.t('global z1\nput "a b c" into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c');
+    //~ b.t('put z1 into z\ndelete word 1 of z\\z', 'b c');
+    //~ b.t('put z1 into z\ndelete word 2 of z\\z', 'a c');
+    //~ b.t('put z1 into z\ndelete word 3 of z\\z', 'a b');
+    //~ b.t('put z1 into z\ndelete word 4 of z\\z', 'a b c');
+    //~ b.t('put z1 into z\ndelete word 5 of z\\z', 'a b c');
+    //~ /* normal word 2 */
+    //~ b.t('global z1\nput " a b c " into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete word 0 of z\\z', 'a b c ');
+    //~ b.t('put z1 into z\ndelete word 1 of z\\z', ' b c ');
+    //~ b.t('put z1 into z\ndelete word 2 of z\\z', ' a c ');
+    //~ b.t('put z1 into z\ndelete word 3 of z\\z', ' a b');
+    //~ b.t('put z1 into z\ndelete word 4 of z\\z', ' a b c');
+    //~ b.t('put z1 into z\ndelete word 5 of z\\z', ' a b c');
+    //~ b.t('put z1 into z\ndelete word 6 of z\\z', ' a b c');
+    //~ /* normal item */
+    //~ b.t('global z1\nput "a,b,c" into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c');
+    //~ b.t('put z1 into z\ndelete item 1 of z\\z', 'b,c');
+    //~ b.t('put z1 into z\ndelete item 2 of z\\z', 'a,c');
+    //~ b.t('put z1 into z\ndelete item 3 of z\\z', 'a,b');
+    //~ b.t('put z1 into z\ndelete item 4 of z\\z', 'a,b,c');
+    //~ b.t('put z1 into z\ndelete item 5 of z\\z', 'a,b,c');
+    //~ b.t('put z1 into z\ndelete item 6 of z\\z', 'a,b,c');
+    //~ /* normal item 2 */
+    //~ b.t('global z1\nput ",a,b,c," into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete item 0 of z\\z', 'a,b,c,');
+    //~ b.t('put z1 into z\ndelete item 1 of z\\z', 'a,b,c,');
+    //~ b.t('put z1 into z\ndelete item 2 of z\\z', ',b,c,');
+    //~ b.t('put z1 into z\ndelete item 3 of z\\z', ',a,c,');
+    //~ b.t('put z1 into z\ndelete item 4 of z\\z', ',a,b,');
+    //~ b.t('put z1 into z\ndelete item 5 of z\\z', ',a,b,c');
+    //~ b.t('put z1 into z\ndelete item 6 of z\\z', ',a,b,c,');
+    //~ b.t('put z1 into z\ndelete item 7 of z\\z', ',a,b,c,');
+    //~ /* manual ranges */
+    //~ /* shows that just doing this in a loop is not sufficient. */
+    b.t('global z1\nput "a.b  c.d" & cr & "e" into z1\\1', '1');
+    //~ b.t('put z1 into z\ndelete word 3 of z\\z', 'a.b  c.d\n');
+    b.t('put z1 into z\ndelete word 3 of z\ndelete word 2 of z\\z', 'a.b \n');
+    b.t('put z1 into z\ndelete word 3 of z\ndelete word 2 of z\ndelete word 1 of z\\z', '\n');
     /* corner cases */
     //~ b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
     //~ b.t('put z1 into z\ndelete word 3 of z\\z', '  \n ab  \n bc  \n \n ');
     //~ b.t('global z1\nput "ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}" into z1\\1', '1');
     //~ b.t('put z1 into z\ndelete word 3 to 4 of z\\z', 'ab\ncd,ef\n\n\nkl\nmn,op\nqr\nst,uv,wx\n01 23\n45 \n67 89,/.\n#$,;: &*,(),-=\n~+, <>\n[],{}');
+    b.batchEvaluate(h3);
+})
+
+t.test('03chunk, recommended use scenarios', () => {
+    let b = new ScriptTestBatch();
+    /* use as a 1-d array */
+    b.t('put "" into arrayLike\n1', '1');
+    b.t('put 9 into item 5 of arrayLike\narrayLike && the number of items in arrayLike', ',,,,9 5');
+    b.t('put 10 into item 3 of arrayLike\narrayLike && the number of items in arrayLike', ',,10,,9 5');
+    b.t('put 11 into item 1 of arrayLike\narrayLike && the number of items in arrayLike', '11,,10,,9 5');
+    b.t('put 12 into item 7 of arrayLike\narrayLike && the number of items in arrayLike', '11,,10,,9,,12 7');
+    b.t('put "" into item 3 of arrayLike\narrayLike && the number of items in arrayLike', '11,,,,9,,12 7');
+    b.t('item 1 of arrayLike && item 3 of arrayLike && item 7 of arrayLike', '11  12');
+    /* use as a 2-d array */
+    b.t('put "" into arr2d\n1', '1');
+    b.t('put 9 into item 5 of line 3 of arr2d\narr2d && the number of lines in arr2d', '\n\n,,,,9 3');
+    b.t('put 10 into item 3 of line 5 of arr2d\narr2d && the number of lines in arr2d', '\n\n,,,,9\n\n,,10 5');
+    b.t('put 11 into item 1 of line 3 of arr2d\narr2d && the number of lines in arr2d', '\n\n11,,,,9\n\n,,10 5');
+    b.t('put 12 into item 2 of line 1 of arr2d\narr2d && the number of lines in arr2d', ',12\n\n11,,,,9\n\n,,10 5');
+    b.t('put 14 into item 2 of line 3 of arr2d\narr2d && the number of lines in arr2d', ',12\n\n11,,14,,9\n\n,,10 5');
+    b.t('put "" into item 1 of line 3 of arr2d\narr2d && the number of lines in arr2d', ',12\n\n,,14,,9\n\n,,10 5');
+    b.t('put "" into item 3 of line 5 of arr2d\narr2d && the number of lines in arr2d', ',12\n\n,,14,,9\n\n,, 5');
+    /* loops */
+    const code = `
+function sum1d arr
+    put 0 into total
+    repeat with x = 1 to the number of items in arr
+        put item x of arr into v
+        if length(v) > 0 then add v to total
+    end repeat
+    return total
+end sum1d
+
+function sum2d arr
+    put 0 into total
+    repeat with y = 1 to the number of lines in arr
+        put line y of arr into vy
+        repeat with x = 1 to the number of items in vy
+            put item x of vy into v
+            if length(v) > 0 then add v to total
+        end repeat
+    end repeat
+    return total
+end sum2d
+    `
+    h3.runGeneralCode(code, 'global testresult1\nput sum1d("") into testresult1')
+    let got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
+    assertWarnEq("0", got, "")
+    h3.runGeneralCode(code, 'global testresult1\nput sum1d(arrayLike) into testresult1')
+    got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
+    assertWarnEq((11+9+12).toString(), got, "")
+    h3.runGeneralCode(code, 'global testresult1\nput sum2d(arr2d) into testresult1')
+    got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
+    assertWarnEq((12+14+9).toString(), got, "")
     b.batchEvaluate(h3);
 })
 

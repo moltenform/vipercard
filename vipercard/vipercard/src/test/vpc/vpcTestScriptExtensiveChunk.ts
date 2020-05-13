@@ -3,8 +3,9 @@
 /* auto */ import { checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { callDebuggerIfNotInProduction } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
+import { EmbeddedActionsParser } from '../../../external/chevrotain-6.5.0/chevrotaintyping';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -38,6 +39,7 @@ class RunExtensiveChunkTests {
         let url = '/resources03a/test/testScriptExtensiveChunkTests.txt';
         let txt = await Util512Higher.asyncLoadJsonString(url);
         let data = txt.trim().replace(/\r\n/g, '\n').split('\n');
+        data = this.expandTestData(data)
         return data;
     }
 
@@ -46,12 +48,15 @@ class RunExtensiveChunkTests {
         /* let's run it in batches of 40 */
         const batchSize = 40
         let count = 0;
+        let sleepCount = 0
         let data = await this.loadTestData();
         while(true) {
             /* release our timeslice for a bit so the ui doesn't freeze */
-            if (count % batchSize*4 === 0) {
+            sleepCount += 1
+            if (sleepCount > 300) {
                 await Util512Higher.sleep(10);
                 console.log(count, '...');
+                sleepCount = 0
             }
 
             if (!data.length) {
@@ -90,6 +95,28 @@ class RunExtensiveChunkTests {
         }
     }
 
+    /**
+     * expand the R+W+D tests into separate read, write, delete tests
+     */
+    protected expandTestData(data: string[]): string[] {
+        let ret:string[] = []
+        for (let item of data) {
+            let pts = item.split('|')
+            if (pts[0] === 'R+W+D') {
+                let [type, ch, target, placeholder, resread, reswrite, resdelete] = pts
+                ret.push(['READ', ch, target, resread ].join('|'))
+                ret.push(['WRITE', ch, target, reswrite ].join('|'))
+                ret.push(['DELETE', ch, target, resdelete ].join('|'))
+            } else {
+                ret.push(item)
+            }
+        }
+        return ret
+    }
+
+    /**
+     * run a batch of tests
+     */
     doTests(batch:string[], count:number) {
         /* placeholder text so that an empty batch is ok */
         let code = 'put 1 into x'
@@ -114,6 +141,15 @@ class RunExtensiveChunkTests {
             } else if (pts[0]==='DELETE') {
                 code += `\nput ${targetStringForInput} into results${i}`
                 code += `\ndelete ${pts[1]} results${i}`
+            } else if (pts[0]==='COUNTITEMS') {
+                assertWarn(!pts[1].length, '')
+                code += `put the number of items in (${targetStringForInput}) into results${i}`
+            } else if (pts[0]==='COUNTWORDS') {
+                assertWarn(!pts[1].length, '')
+                code += `put the number of words in (${targetStringForInput}) into results${i}`
+            } else if (pts[0]==='COUNTLINES') {
+                assertWarn(!pts[1].length, '')
+                code += `put the number of lines in (${targetStringForInput}) into results${i}`
             } else {
                 checkThrowInternal(false, "unknown test")
             }

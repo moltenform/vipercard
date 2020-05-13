@@ -507,20 +507,31 @@ export const ChunkResolutionApplication = /* static class */ {
         let unfFull = cont.getRawString()
         //~ unf = unf.substring(resolved.startPos) /* this will let you strip whitespace after, but we don't want that special case */
         let unf = unfFull.substring(resolved.startPos, resolved.endPos)
-        for (let i=current.last ?? current.first; i>=current.first; i--) {
+        let unfAndAfter = unfFull.substring(resolved.startPos)
+        {
             let tmp = current.getClone()
-            tmp.first = i
-            tmp.last = i
-            let unfAndAfter = unfFull.substring(resolved.startPos)
-            let [start, end] = this._applyDeleteHelper(unf, itemDel, compatibility, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
+            tmp.first = current.first
+            tmp.last = current.last ?? current.first
+            isLastOfRange = true
+            let [start, end_unused] = this._applyDeleteHelper(unf, itemDel, compatibility, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
+            let end:number
+            if (tmp.first === tmp.last) {
+                end = end_unused
+            } else {
+                tmp = current.getClone()
+                tmp.first = current.last ?? current.first
+                tmp.last = current.last ?? current.first
+                isLastOfRange = true //?
+                let gt = this._applyDeleteHelper(unf, itemDel, compatibility, tmp, isLastOfRange, unfAndAfter, resolved.startPos)
+                end = gt[1]
+            }
+
             cont.splice(resolved.startPos + start, end-start, '')
-            isLastOfRange = false
             //~ allstart = Math.min(allstart, start)
             //~ allend = Math.max(allend, end)
         }
-        
-        
 
+            
 
         {
             //~ let s = new WritableContainerSimpleFmtText()
@@ -594,7 +605,7 @@ export const ChunkResolutionApplication = /* static class */ {
 
         } else if (current.granularity === VpcGranularity.Items || current.granularity === VpcGranularity.Lines) {
             let activeChar = current.granularity === VpcGranularity.Items ? delim : '\n'
-            if (current.first === 0 && parentStartPos>0 && !unf.includes(delim) && unf.length && unf.length !== unfAndAfter.length && unfAndAfter[unf.length]==='\n' ) {
+            if (current.granularity === VpcGranularity.Items && current.first === 0 && parentStartPos>0 && !unf.includes(delim) && unf.length && unf.length !== unfAndAfter.length && unfAndAfter[unf.length]==='\n' ) {
                 /* weird corner case: delete more than normal */
                 start = 0
                 end = unf.length + 1
@@ -610,12 +621,6 @@ export const ChunkResolutionApplication = /* static class */ {
             } else if (current.first === table.length) {
                 start = 0
                 end = 0
-                //~ /* strip final whitespace */
-                //~ start = unf.length
-                //~ end = unf.length
-                //~ while(unf[start-1] === activeChar) {
-                    //~ start--
-                //~ }
             } else if (current.first === table.length - 1) {
                 /* this is a weird case-it deletes spaces both before and after */
                 if (current.granularity === VpcGranularity.Items) {
@@ -638,7 +643,6 @@ export const ChunkResolutionApplication = /* static class */ {
                 start = table[current.first]
                 end = start
                 while (end < table[current.first + 1]) {
-                    //~ if (unf[end] === '\n') { break }
                     end++
                 }
             }
