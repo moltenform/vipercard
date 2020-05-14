@@ -16,6 +16,28 @@
  */
 export const ChunkResolutionUtils = /* static class */ {
     /**
+     * regex for a given granularity
+     */
+    getRegex(type: VpcGranularity, delim: string): RegExp {
+        if (type === VpcGranularity.Items) {
+            /*
+                if the script has said something like
+                set the itemDel to "?"
+                make sure it is one-character and that the regex is escaped
+            */
+            checkThrowEq(1, delim.length, '8m|delim should be length 1 but got', delim);
+            let escaped = Util512.escapeForRegex(delim);
+            return new RegExp(escaped, 'g');
+        } else if (type === VpcGranularity.Lines) {
+            return /\n/g;
+        } else if (type === VpcGranularity.Words) {
+            return new RegExp('(\\n| )+', 'g');
+        } else {
+            checkThrowInternal(false, 'no regex for this granularity');
+        }
+    },
+
+    /**
      * make a table of positions where items start
      * positions are 0-based
      * "a,bb,c" -> [0, 2, 5]
@@ -41,28 +63,6 @@ export const ChunkResolutionUtils = /* static class */ {
         }
 
         return positions;
-    },
-
-    /**
-     * what is regex for this type
-     */
-    getRegex(type: VpcGranularity, delim: string): RegExp {
-        if (type === VpcGranularity.Items) {
-            /*
-                if the script has said something like
-                set the itemDel to "?"
-                make sure it is one-character and that the regex is escaped
-            */
-            checkThrowEq(1, delim.length, '8m|delim should be length 1 but got', delim);
-            let escaped = Util512.escapeForRegex(delim);
-            return new RegExp(escaped, 'g');
-        } else if (type === VpcGranularity.Lines) {
-            return /\n/g;
-        } else if (type === VpcGranularity.Words) {
-            return new RegExp('(\\n| )+', 'g');
-        } else {
-            checkThrowInternal(false, 'no regex for this granularity');
-        }
     },
 
     /**
@@ -155,7 +155,7 @@ export const ChunkResolutionUtils = /* static class */ {
     },
 
     /**
-     * we've been asked to get item x to y of z.
+     * we've been asked to get item x to y.
      * return semi-inclusive bounds [start, end)
      */
     _getBoundsForGet(s: string, itemDel: string, ch: RequestedChunk): O<[number, number]> {
@@ -222,7 +222,7 @@ export const ChunkResolutionUtils = /* static class */ {
     },
 
     /**
-     * we've been asked to get item x to y of z.
+     * we've been asked to set item x to y.
      * return semi-inclusive bounds [start, end)
      */
     _getBoundsForSet(sInput: string, itemDel: string, ch: RequestedChunk): [number, number, string] {
@@ -296,44 +296,55 @@ export const ChunkResolutionUtils = /* static class */ {
 
     /**
      * go from "word 2 to 5" to the character start+end positions.
-     * this might be a child of a parent scope, so
+     * this might be a child of a parent scope (word 3 of line 4), so
      * remember to adjust based on parent.startPos!
      */
     doResolveOne(
         request: RequestedChunk,
         parent: ResolvedChunk,
         itemDel: string,
-        news: O<string>,
+        newString: O<string>,
         compat: boolean,
         prep: O<VpcChunkPreposition>,
         isWriteContext: boolean,
-        isChildOfAddedLine: boolean,
-        okToAppend: boolean,
-        addedExtra?: ValHolder<boolean>
-    ): O<ResolvedChunk> {
+        isChildOfAddedText: boolean,
+    ): [O<ResolvedChunk>, boolean] {
+        /* we limit our view to the parent scope */
         let unformatted = parent.container.getRawString();
         unformatted = unformatted.substring(parent.startPos, parent.endPos);
         let retbounds: O<[number, number]>;
+        let addedExtraText = false
         if (isWriteContext) {
+            let writeAccess = parent.container as WritableContainer;
             let bounds = this._getBoundsForSet(unformatted, itemDel, request);
-            let writeParentContainer = parent.container as WritableContainer;
-            if (news === undefined) {
-                if (compat && parent.startPos === parent.endPos && isChildOfAddedLine && bounds[2]) {
+            if (bounds[2] && bounds[2].length) {
+                /* it's a brand new item, 'before' or 'after' isn't applicable */
+                prep = VpcChunkPreposition.Into
+            }
+
+            if (newString === undefined) {
+                /* if we are in a write-context and newString is undefined,
+                this means that we are in a parent scope i.e. the 
+                'line 3' in 'put "a" into item 2 of line 3 of z' */
+
+                /* for compat, don't add extra commas if a parent scope
+                has already added extra text */
+                if (compat && parent.startPos === parent.endPos && isChildOfAddedText) {
                     bounds[2] = '';
                 }
 
-                /* still add our commas to the end */
+                /* add extra commas to the end */
                 let fakeNewS = '';
-                okToAppend = true;
-                let result = fakeNewS + okToAppend ? bounds[2] : '';
+                let result = fakeNewS + bounds[2];
                 let insertionPoint = parent.startPos + bounds[0];
-                if (bounds[2] && addedExtra) {
-                    addedExtra.val = true;
-                }
                 if (bounds[2]) {
+                    /* the insertionPoint needs to be adjusted,
+                    otherwise the extra commas would send us outside our scope */
+                    addedExtraText = true;
                     insertionPoint = Math.min(parent.endPos, insertionPoint);
                 }
-                writeParentContainer.splice(insertionPoint, 0 /* delete nothing */, result);
+
+                writeAccess.splice(insertionPoint, 0 /* delete nothing */, result);
                 if (bounds[2]) {
                     retbounds = [
                         -parent.startPos + insertionPoint + result.length,
@@ -342,32 +353,36 @@ export const ChunkResolutionUtils = /* static class */ {
                 } else {
                     retbounds = [-parent.startPos + insertionPoint, bounds[1] + result.length];
                 }
-            } else if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
-                if (compat && parent.startPos === parent.endPos && isChildOfAddedLine && bounds[2]) {
+            } else if (prep === VpcChunkPreposition.Into) {
+                /* for compat, don't add extra commas if a parent scope
+                has already added extra text */
+                if (compat && parent.startPos === parent.endPos && isChildOfAddedText) {
                     bounds[2] = '';
                 }
-                /* it's a brand new item, adding 'before' or 'after' isn't applicable */
-                let result = bounds[2] + news;
+                
+                /* prepare to insert text */
+                let result = bounds[2] + newString;
                 let insertionPoint = parent.startPos + bounds[0];
-                if (bounds[2] && addedExtra) {
-                    addedExtra.val = true;
-                }
-                if (bounds[2] && !okToAppend) {
+                if (bounds[2]) {
+                    /* the insertionPoint needs to be adjusted,
+                    otherwise the extra commas would send us outside our scope */
+                    addedExtraText = true;
                     insertionPoint = Math.min(parent.endPos, insertionPoint);
                 }
-                writeParentContainer.splice(insertionPoint, bounds[1] - bounds[0], result);
+
+                writeAccess.splice(insertionPoint, bounds[1] - bounds[0], result);
                 retbounds = [insertionPoint, insertionPoint + result.length];
             } else if (prep === VpcChunkPreposition.After) {
-                writeParentContainer.splice(parent.startPos + bounds[1], 0, news);
-                retbounds = [bounds[1], bounds[1] + news.length];
+                writeAccess.splice(parent.startPos + bounds[1], 0, newString);
+                retbounds = [bounds[1], bounds[1] + newString.length];
             } else if (prep === VpcChunkPreposition.Before) {
-                writeParentContainer.splice(parent.startPos + bounds[0], 0, news);
-                retbounds = [bounds[0], bounds[0] + news.length];
+                writeAccess.splice(parent.startPos + bounds[0], 0, newString);
+                retbounds = [bounds[0], bounds[0] + newString.length];
             } else {
                 checkThrow(false, `5,|unknown preposition ${prep}`);
             }
         } else {
-            assertTrue(!news, '');
+            assertTrue(!newString, '');
             assertTrue(!prep || prep === VpcChunkPreposition.Into, '');
             retbounds = this._getBoundsForGet(unformatted, itemDel, request);
         }
@@ -375,9 +390,9 @@ export const ChunkResolutionUtils = /* static class */ {
         if (retbounds) {
             let ret = new ResolvedChunk(parent.container, parent.startPos + retbounds[0], parent.startPos + retbounds[1]);
             checkThrow(ret.startPos >= 0 && ret.endPos >= 0, 'somehow got a negative');
-            return ret;
+            return [ret, addedExtraText];
         } else {
-            return undefined;
+            return [undefined, addedExtraText];
         }
     }
 };
@@ -421,6 +436,8 @@ export class RequestedChunk extends VpcIntermedValBase {
 
 /**
  * a resolved chunk.
+ * positions are in 0-based offsets,
+ * [start, end)
  */
 export class ResolvedChunk {
     constructor(public container: ReadableContainer, public startPos: number, public endPos: number) {}

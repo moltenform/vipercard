@@ -9,28 +9,24 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-/**
-   Places where we need chunks:
-    Note: we treat "the selection" as a chunk, since it is one.
-
-   READING (any expression context)          put char 3 to 5 of x into y
-   PUT                                       put x into char 3 to 5 of y
-   MODIFY                                    add 1 to char 3 to 5 of y
-   PROPERTY                                  set the textsize of char 3 to 5 of y to 12
-
-
-
+/*
+    we support:
+    put char 3 to 5 of x into y (read)
+    put x into char 3 to 5 of y (write)
+    add 1 to char 3 to 5 of y (modify)
+    delete char 3 to 5 of y (delete)
+    set the textsize of char 3 to 5 of cd fld 1 to 12 (text)
+    Note: "the selection" is also a chunk.
  */
 
 /**
- * it turns out to be kind of complicated to evaluate something like
+ * it turns out to be complicated to evaluate something like
  * put item x to y of myList into z,
- * to match all of the corner cases with the original product's behavior
- * e.g. put "" into z; put "a" into item 40 of z
- * it will actually make a lot of commas and make it happen
- *
- * tested by brute-force comparing it with examples from the original product
- *
+ * to match all of the corner cases with the original product's behavior.
+ * we use 500,000 tests in vpcTestScriptExtensiveChunk.ts to verify.
+ * the original product is weird - e.g. order is ignored in puts/deletes,
+ * items and lines behave subtly differently, and words have
+ * tricky behavior around newlines. 
  */
 
 /**
@@ -39,27 +35,30 @@
 export const ChunkResolution = /* static class */ {
     /**
      * the original product has counter-intuitive behavior for put
+     * where order is ignored, and only one part for each
+     * granularity is kept. item 2 of item 3 of === item 2 of.
+     * see _rearrangeChunksToMatchOriginalProduct.
      */
     applyPut(
         cont: WritableContainer,
         chunk: O<RequestedChunk>,
         itemDel: string,
-        news: string,
+        newString: string,
         prep: VpcChunkPreposition,
         compat: boolean
-    ): void {
+    ) {
         if (!chunk) {
-            /* needs to be handled separately,
-            since we might be inserting into a never-before-seen variable */
+            /* don't use parent scopes,
+            we might be inserting into a never-before-seen variable */
             let result: string;
             if (prep === VpcChunkPreposition.After) {
                 let prevs = cont.isDefined() ? cont.getRawString() : '';
-                result = prevs + news;
+                result = prevs + newString;
             } else if (prep === VpcChunkPreposition.Before) {
                 let prevs = cont.isDefined() ? cont.getRawString() : '';
-                result = news + prevs;
+                result = newString + prevs;
             } else if (prep === VpcChunkPreposition.Into) {
-                result = news;
+                result = newString;
             } else {
                 checkThrow(false, `5+|unknown preposition ${prep}`);
             }
@@ -68,65 +67,62 @@ export const ChunkResolution = /* static class */ {
             return;
         }
 
-        checkThrow(itemDel !== '\n', "we haven't tested with an itemdel of newline");
+        /* compatibility */
         chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compat);
+        checkThrow(itemDel !== '\n', "we haven't tested with an itemdel of newline");
 
         /* make parent objects */
         let resolved = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
-        let isTop = true;
-        let isChildOfAddedLine = false;
+        let isChildOfAddedText = false;
         while (current) {
-            if (current.child) {
-                /* narrow it down */
-                let addedExtra = new ValHolder<boolean>(false);
-                resolved = ensureDefined(
-                    ChunkResolutionUtils.doResolveOne(
-                        current,
-                        resolved,
-                        itemDel,
-                        undefined,
-                        compat,
-                        VpcChunkPreposition.Into,
-                        true,
-                        isChildOfAddedLine,
-                        true,
-                        addedExtra
-                    ),
-                    ''
-                );
-                if (addedExtra.val) {
-                    isChildOfAddedLine = true;
-                }
-            } else {
-                /* insert the real text */
-                resolved = ensureDefined(
-                    ChunkResolutionUtils.doResolveOne(
-                        current,
-                        resolved,
-                        itemDel,
-                        news,
-                        compat,
-                        prep,
-                        true,
-                        isChildOfAddedLine,
-                        isTop
-                    ),
-                    ''
-                );
+            if (!current.child) {
+                break
             }
 
-            isTop = false;
+            /* narrow down the scope.
+            it still might write text here;
+            item 99 of x will still add commas. */
+            let got = 
+                ChunkResolutionUtils.doResolveOne(
+                    current,
+                    resolved,
+                    itemDel,
+                    undefined,
+                    compat,
+                    VpcChunkPreposition.Into,
+                    true,
+                    isChildOfAddedText,
+                )
+            
+            resolved = ensureDefined(got[0], '')
+            isChildOfAddedText = isChildOfAddedText || got[1]
             current = current.child;
         }
+
+        /* insert the real text */
+        ensureDefined(
+            ChunkResolutionUtils.doResolveOne(
+                current,
+                resolved,
+                itemDel,
+                newString,
+                compat,
+                prep,
+                true,
+                isChildOfAddedText,
+            )[0],
+            ''
+        );
     },
 
     /**
-     * warning: follows the same funky logic as put.
+     * used for 'add 2 to item 1 of x'
+     * follows the same funky logic as put.
      */
     applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, compat: boolean, fn: (s: string) => string) {
         if (!chunk) {
-            /* handle separately for better perf */
+            /* no chunk logic needed */
             let s = cont.getRawString();
             let news = fn(s);
             cont.splice(0, cont.len(), news);
@@ -161,7 +157,7 @@ export const ChunkResolution = /* static class */ {
     },
 
     /**
-     * returns a ResolvedChunk, so you can use the bounds for things
+     * returns a ResolvedChunk, so you can use the bounds
      */
     applyRead(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string): O<ResolvedChunk> {
         /* make parent objects */
@@ -173,8 +169,9 @@ export const ChunkResolution = /* static class */ {
         let current: O<RequestedChunk> = chunk;
         let compat = true; /* doesn't matter for reads */
         let isChildOfAddedLine = false; /* doesn't matter for reads */
-        let okToAppend = true;
         while (current && resolved) {
+            /* resolved will be undefined if we ask for 
+            something non-existent like line 99 of x */
             resolved = ChunkResolutionUtils.doResolveOne(
                 current,
                 resolved,
@@ -184,8 +181,7 @@ export const ChunkResolution = /* static class */ {
                 VpcChunkPreposition.Into,
                 false,
                 isChildOfAddedLine,
-                okToAppend
-            );
+            )[0];
             current = current.child;
         }
 
@@ -193,7 +189,7 @@ export const ChunkResolution = /* static class */ {
     },
 
     /**
-     * helper that returns an unformatted string
+     * for convenience, returns an unformatted string
      */
     applyReadToString(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string): string {
         let resolved = this.applyRead(cont, chunk, itemDel);
@@ -201,33 +197,58 @@ export const ChunkResolution = /* static class */ {
     },
 
     /**
-     * delete, which is a bit different from `put "" into`
+     * find the deepest child
+     */
+    _getFinalChild(chunk: RequestedChunk) {
+        let current: O<RequestedChunk> = chunk;
+        while (current.child) {
+            current = current.child
+        }
+
+        return current
+    },
+
+    /**
+     * delete, which is not the same as `put "" into`
      */
     applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string, compat: boolean) {
         /* don't allow backwards bounds. only have to check the first one since
-        there's a check in vpcVisitorMixin for recursive scopes. covered in tests. */
+        there's a check in vpcVisitorMixin for recursive scopes. */
         checkThrow(!chunk.hasBackwardsBounds(), "backwards bounds - don't allow delete item 3 to 2 of x.");
         checkThrow(itemDel !== '\n', "we haven't tested with an itemdel of newline");
 
-
+        /* use same funky logic as put */
         chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compat);
 
-        {
-            let currentTmp: O<RequestedChunk> = chunk;
-            while (currentTmp.child) {
-                currentTmp = currentTmp.child
-            }
-            if (currentTmp.granularity === VpcGranularity.Chars) {
-                return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compat);
-            }
-            checkThrow(currentTmp.ordinal !== undefined ||currentTmp.last === undefined || currentTmp.first === currentTmp.last, "we don't yet support deleting ranges");
-            checkThrow(currentTmp.ordinal !== undefined ||currentTmp.last === undefined || currentTmp.first <= currentTmp.last, "we don't support backwards bounds");
+        let finalChild = this._getFinalChild(chunk)
+
+        /* if the final child is a char, it's the one case where it is the same as put "" into */
+        if (finalChild.granularity === VpcGranularity.Chars) {
+            return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compat);
         }
 
+        /* we don't yet support deleting ranges.
+            we tried doing:
+                delete word 1 to 3 ->
+                delete word 3; delete word 2; delete word 1
+            and
+                pretend to delete word 3, get bounds,
+                pretend to delete word 2, get bounds,
+                pretend to delete word 1, get bounds,
+                then delete the min to max bounds
+            and
+                pretend to delete word 3 and get the rightmost bound
+                pretend to delete word 1 and get the leftmost bound
+                then delete everything in-between
+            none of them 100% matched original product
+         */
+        checkThrow(finalChild.ordinal !== undefined ||finalChild.last === undefined || finalChild.first === finalChild.last, "we don't yet support deleting ranges");
+        checkThrow(finalChild.ordinal !== undefined ||finalChild.last === undefined || finalChild.first <= finalChild.last, "we don't support backwards bounds");
+
+        /* first, narrow the scope */
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
-        let isChildOfAddedLine = false; /* doesn't matter for reads */
-        let okToAppend = true;
+        let isChildOfAddedLine = false; /* not used here */
         let isChild = false;
         while (current && resolved) {
             if (!current.child) {
@@ -241,72 +262,43 @@ export const ChunkResolution = /* static class */ {
                 '',
                 compat,
                 VpcChunkPreposition.Into,
-                false,
+                false, /* not a write context; don't insert extra commas */
                 isChildOfAddedLine,
-                okToAppend
-            );
+            )[0];
             current = current.child;
             isChild = true;
         }
 
-        
-
-        /*
-        we don't yet support deleting ranges.
-        we tried doing:
-            delete word 1 to 3 === delete word 3; delete word 2; delete word 1
-            and
-            pretend to delete word 3, get bounds, pretend to delete word 2, get bounds, pretend to delete word 1,
-            get bounds, then delete the min to max bounds
-            and
-            delete word 1 to 3
-                pretend to delete word 3 and get the rightmost bound
-                pretend to delete word 1 and get the leftmost bound
-                then delete everything in-between
-        */
-
-        //~ if (current.ordinal === undefined) {
-            //~ checkThrow(current.last === undefined || current.first === current.last, "we don't yet support deleting ranges");
-            //~ checkThrow(current.last === undefined || current.first <= current.last, "we don't support backwards bounds");
-        //~ }
-
+        /* if you delete something that isn't found, it is a no-op */
        if (!resolved) {
-            /* delete something that isn't found is a no-op */
             return;
         }
-        let isLastOfRange = true;
-        let unfFull = cont.getRawString()
-        let unf = unfFull.substring(resolved.startPos, resolved.endPos);
-        let unfAndAfter = unfFull.substring(resolved.startPos);
-        ChunkResolutionUtils.resolveOrdinal(unf, itemDel, current)
-        //~ checkThrow(current.last === undefined || current.first === current.last, "we don't yet support deleting ranges");
-        //~ checkThrow(current.last === undefined || current.first <= current.last, "we don't support backwards bounds");
+
+        let txtFull = cont.getRawString()
+        let txtNarrowed = txtFull.substring(resolved.startPos, resolved.endPos);
+        let narrowedAndAfter = txtFull.substring(resolved.startPos);
+        ChunkResolutionUtils.resolveOrdinal(txtNarrowed, itemDel, current)
         
         {
-            isLastOfRange = true;
             let startAndEnd: [number, number];
             if (current.granularity === VpcGranularity.Items || current.granularity === VpcGranularity.Lines) {
                 startAndEnd = this._applyDeleteHelperItemsLines(
-                    unf,
+                    txtNarrowed,
                     itemDel,
-                    compat,
                     current.first - 1 /* one-based to 0 based */,
                     current.granularity,
-                    isLastOfRange,
-                    unfAndAfter,
-                    unfFull,
+                    narrowedAndAfter,
+                    txtFull,
                     isChild ? resolved.startPos : -1
                 );
             } else if (current.granularity === VpcGranularity.Words) {
                 startAndEnd = this._applyDeleteHelperWords(
-                    unf,
+                    txtNarrowed,
                     itemDel,
-                    compat,
                     current.first - 1 /* one-based to 0 based */,
                     current.granularity,
-                    isLastOfRange,
-                    unfAndAfter,
-                    unfFull,
+                    narrowedAndAfter,
+                    txtFull,
                     isChild ? resolved.startPos : -1
                 );
             } else {
@@ -318,38 +310,39 @@ export const ChunkResolution = /* static class */ {
         }
     },
 
+    /**
+     * delete a word
+     */
     _applyDeleteHelperWords(
-        unf: string,
+        txtNarrowed: string,
         delim: string,
-        compat: boolean,
         currentPlace: number,
         granularity: VpcGranularity,
-        isLastOfRange: boolean,
-        unfAndAfter: string,
-        unfFull: string,
+        narrowedAndAfter: string,
+        txtFull: string,
         parentStartPos: number
     ): [number, number] {
-        let table = ChunkResolutionUtils._getPositionsTable(unf, granularity, delim);
-        let start = 0,
-            end = 0;
+        let table = ChunkResolutionUtils._getPositionsTable(txtNarrowed, granularity, delim);
+        let start = 0
+        let end = 0;
         if (currentPlace === -1) {
             /* emulator confirms you can say word 0 of x */
             start = 0;
             end = start;
             while (end < table[0]) {
-                if (unf[end] === '\n') {
+                if (txtNarrowed[end] === '\n') {
                     break;
                 }
                 end++;
             }
         } else if (currentPlace > table.length - 1) {
             /* strip final whitespace */
-            start = unf.length;
-            end = unf.length;
-            if (end === unfAndAfter.length) {
+            start = txtNarrowed.length;
+            end = txtNarrowed.length;
+            if (end === narrowedAndAfter.length) {
                 /*
             this special case only applies to the true end of the string */
-                while (unf[start - 1] === ' ') {
+                while (txtNarrowed[start - 1] === ' ') {
                     start--;
                 }
             }
@@ -358,17 +351,17 @@ export const ChunkResolution = /* static class */ {
             start = table[table.length - 1];
             end = table[table.length - 1];
             let sawReturn = false;
-            while (end < unf.length) {
-                if (unf[end] === '\n' && isLastOfRange) {
+            while (end < txtNarrowed.length) {
+                if (txtNarrowed[end] === '\n') {
                     sawReturn = true;
                     break;
                 }
                 end++;
             }
-            /* use unfAndAfter.length not unf.length here,
+            /* use narrowedAndAfter.length not txtNarrowed.length here,
             this special case only applies to the true end of the string */
-            if (end >= unfAndAfter.length - 1 && !sawReturn && unf.length === unfAndAfter.length) {
-                while (unf[start - 1] === ' ') {
+            if (end >= narrowedAndAfter.length - 1 && !sawReturn && txtNarrowed.length === narrowedAndAfter.length) {
+                while (txtNarrowed[start - 1] === ' ') {
                     start--;
                 }
             }
@@ -376,7 +369,7 @@ export const ChunkResolution = /* static class */ {
             start = table[currentPlace];
             end = start;
             while (end < table[currentPlace + 1]) {
-                if (unf[end] === '\n') {
+                if (txtNarrowed[end] === '\n') {
                     break;
                 }
                 end++;
@@ -386,39 +379,40 @@ export const ChunkResolution = /* static class */ {
         return [start, end];
     },
 
+    /**
+     * delete an item or line
+     */
     _applyDeleteHelperItemsLines(
-        unf: string,
+        txtNarrowed: string,
         delim: string,
-        compat: boolean,
         currentPlace: number,
         granularity: VpcGranularity,
-        isLastOfRange: boolean,
-        unfAndAfter: string,
-        unfFull: string,
+        narrowedAndAfter: string,
+        txtFull: string,
         parentStartPos: number
     ): [number, number] {
-        let table = ChunkResolutionUtils._getPositionsTable(unf, granularity, delim);
-        let start = 0,
-            end = 0;
+        let table = ChunkResolutionUtils._getPositionsTable(txtNarrowed, granularity, delim);
+        let start = 0
+        let end = 0;
         let activeChar = granularity === VpcGranularity.Items ? delim : '\n';
         if (
             granularity === VpcGranularity.Items &&
             currentPlace === 0 &&
             parentStartPos > 0 &&
-            !unf.includes(delim) &&
-            unfFull[parentStartPos - 1] === '\n' &&
-            (unf.length ||
+            !txtNarrowed.includes(delim) &&
+            txtFull[parentStartPos - 1] === '\n' &&
+            (txtNarrowed.length ||
                 /* is at end of string */
-                parentStartPos + unf.length === unfFull.length)
+                parentStartPos + txtNarrowed.length === txtFull.length)
         ) {
             /* weird corner case: delete more than normal - note it deletes backwards */
             start = -1;
-            end = unf.length;
+            end = txtNarrowed.length;
         } else if (currentPlace === -1) {
             /* emulator confirms you can say word 0 of x */
             if (
-                (granularity === VpcGranularity.Items && unf.startsWith(activeChar)) ||
-                (granularity === VpcGranularity.Lines && unf.startsWith(activeChar))
+                (granularity === VpcGranularity.Items && txtNarrowed.startsWith(activeChar)) ||
+                (granularity === VpcGranularity.Lines && txtNarrowed.startsWith(activeChar))
             ) {
                 start = 0;
                 end = 1;
@@ -433,12 +427,12 @@ export const ChunkResolution = /* static class */ {
             /* this is a weird case-it deletes commas both before and after */
             if (
                 granularity === VpcGranularity.Items &&
-                (unf.length === unfAndAfter.length || (unfAndAfter[unf.length] === '\n' && !unf.endsWith(activeChar)))
+                (txtNarrowed.length === narrowedAndAfter.length || (narrowedAndAfter[txtNarrowed.length] === '\n' && !txtNarrowed.endsWith(activeChar)))
             ) {
                 start = table[table.length - 1];
-                end = unf.length;
+                end = txtNarrowed.length;
                 let a = 0;
-                while (unf[start - 1] === activeChar) {
+                while (txtNarrowed[start - 1] === activeChar) {
                     start--;
                     a++;
                     if (a > 0) {
@@ -447,7 +441,7 @@ export const ChunkResolution = /* static class */ {
                 }
             } else {
                 start = table[table.length - 1];
-                end = unf.length;
+                end = txtNarrowed.length;
             }
         } else if (currentPlace > table.length - 1) {
             start = 0;
