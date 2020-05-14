@@ -249,10 +249,10 @@ export class VpcIntroProvider {
         for (let vel of model.stack.iterEntireStack()) {
             if (vel instanceof VpcElStack) {
                 if (vel['_compatibilitymode'] === undefined) {
-                    vel['_compatibilitymode'] = false
+                    vel['_compatibilitymode'] = false;
                 }
                 if (vel['_cardorder'] === undefined) {
-                    vel['_cardorder'] = ''
+                    vel['_cardorder'] = '';
                     model.stack.alterCardOrder(current => {
                         let order: string[] = [];
                         for (let bg of model.stack.bgs) {
@@ -269,33 +269,33 @@ export class VpcIntroProvider {
                 }
             } else if (vel instanceof VpcElCard) {
                 if (vel['_marked'] === undefined) {
-                    vel['_marked'] = false
+                    vel['_marked'] = false;
                 }
             } else if (vel instanceof VpcElButton) {
                 if (vel['_sharedhilite'] === undefined) {
-                    vel['_sharedhilite'] = false
+                    vel['_sharedhilite'] = false;
                 }
                 if (vel['_is_bg_velement_id'] === undefined) {
-                    vel['_is_bg_velement_id'] = ''
+                    vel['_is_bg_velement_id'] = '';
                 }
                 if (vel['_hilite_uniquetocard'] === undefined) {
-                    vel['_hilite_uniquetocard'] = false
+                    vel['_hilite_uniquetocard'] = false;
                 }
                 if (vel['_checkmark_uniquetocard'] === undefined) {
-                    vel['_checkmark_uniquetocard'] = false
+                    vel['_checkmark_uniquetocard'] = false;
                 }
             } else if (vel instanceof VpcElField) {
                 if (vel['_sharedtext'] === undefined) {
-                    vel['_sharedtext'] = false
+                    vel['_sharedtext'] = false;
                 }
                 if (vel['_is_bg_velement_id'] === undefined) {
-                    vel['_is_bg_velement_id'] = ''
+                    vel['_is_bg_velement_id'] = '';
                 }
                 if (vel['_ftxt_uniquetocard'] === undefined) {
-                    vel['_ftxt_uniquetocard'] = new FormattedText()
+                    vel['_ftxt_uniquetocard'] = new FormattedText();
                 }
                 if (vel['_scroll_uniquetocard'] === undefined) {
-                    vel['_scroll_uniquetocard'] = 0
+                    vel['_scroll_uniquetocard'] = 0;
                 }
             }
         }

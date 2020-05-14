@@ -24,7 +24,7 @@
  * the main preparse (syntax rewriting) logic is here
  */
 export const VpcTopPreparse = /* static class */ {
-    goPreparseOrThrow(code: string, idGen: CountNumericId, compatMode:boolean): VpcParsedCodeCollection {
+    goPreparseOrThrow(code: string, idGen: CountNumericId, compatMode: boolean): VpcParsedCodeCollection {
         /* set current status */
         VpcCurrentScriptStage.currentStage = VpcErrStage.Lex;
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
@@ -139,7 +139,7 @@ export const VpcTopPreparse = /* static class */ {
     },
 
     /* apply the 3rd stage of rewriting */
-    _stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite, compatMode:boolean): ChvITk[][] {
+    _stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite, compatMode: boolean): ChvITk[][] {
         line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line, rw, compatMode);
         line = VpcRewritesGlobal.rewritePropertySynonyms(line, rw);
         let outlines = exp.go(line);

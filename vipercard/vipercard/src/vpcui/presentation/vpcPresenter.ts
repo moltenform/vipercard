@@ -422,7 +422,7 @@ export class VpcPresenter extends VpcPresenterInit {
             because currently hand is a css cursor that will never lag slowly
             if the script is really busy running things. */
             UI512CursorAccess.setCursor(UI512Cursors.hand);
-            return
+            return;
         }
 
         if (isDocumentEl) {
@@ -534,7 +534,7 @@ export class VpcPresenter extends VpcPresenterInit {
         let vel = this.vci.getOutside().CreatePart(type, newX, newY, w, h);
         vel.setOnVel(
             'name',
-             longstr(`my ${vpcElTypeShowInUI(vel.getType())} 
+            longstr(`my ${vpcElTypeShowInUI(vel.getType())}
              ${this.vci.getModel().stack.getNextNumberForElemName(this.vci.getModel())}`),
             this.vci.getModel()
         );

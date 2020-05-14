@@ -572,7 +572,7 @@ t.test('evalArithmetic', () => {
     b.t('12 div 2.3', '5');
     b.t('12 mod 2.3', '0.5');
 
-    b.batchEvaluate(h,[], BatchType.floatingPoint);
+    b.batchEvaluate(h, [], BatchType.floatingPoint);
     b = new ScriptTestBatch();
 
     /* old-style functions should not eat too much.
@@ -598,7 +598,7 @@ t.test('evalArithmetic', () => {
     b.t('12 * 34 / 56 * 78', '568.285714285714285');
     b.t('12 / 34 / 56 / 78', '0.00008080155');
 
-    b.batchEvaluate(h,[], BatchType.floatingPoint);
+    b.batchEvaluate(h, [], BatchType.floatingPoint);
     b = new ScriptTestBatch();
 
     /* test wrong types given (commutative works) */

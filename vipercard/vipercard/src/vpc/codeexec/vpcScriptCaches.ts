@@ -107,7 +107,7 @@ export class VpcCacheParsedAST {
      * if there is a lex error, preparse error or syntax error, throws.
      * parse errors and runtime errors will not be seen until later
      */
-    protected getParsedCodeCollectionOrThrow(code: string, velIdForErrMsg: string, compatMode:boolean): VpcParsedCodeCollection {
+    protected getParsedCodeCollectionOrThrow(code: string, velIdForErrMsg: string, compatMode: boolean): VpcParsedCodeCollection {
         VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         VpcCurrentScriptStage.latestDestLineSeen = undefined;
@@ -140,7 +140,7 @@ export class VpcCacheParsedAST {
         code: string,
         handlername: string,
         velIdForErrMsg: string,
-        compatMode:boolean
+        compatMode: boolean
     ): [VpcParsedCodeCollection, O<VpcCodeLineReference>] {
         let coll = this.getParsedCodeCollectionOrThrow(code, velIdForErrMsg, compatMode);
         let handler = coll.handlers.find(handlername);

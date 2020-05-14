@@ -6,7 +6,8 @@
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
+/* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolutionInternal';
+/* auto */ import { ChunkResolution } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
@@ -114,7 +115,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     ElementExists(vel: RequestedVelRef): O<string> {
         let found = this.ResolveVelRef(vel);
         if (found) {
-            return new VelRenderId(this.vci.getModel()).go(found, PropAdjective.Long, this.Model().stack.getB('compatibilitymode'));
+            return new VelRenderId(this.vci.getModel()).go(
+                found,
+                PropAdjective.Long,
+                this.Model().stack.getB('compatibilitymode')
+            );
         } else {
             return undefined;
         }
@@ -299,9 +304,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
                 ret.vel.lookById = Util512.parseIntStrict(selFld.idInternal);
                 checkThrow(ret.vel.lookById, 'S7|');
                 ret.chunk = new RequestedChunk(bounds[0]);
-                ret.chunk.granularity = VpcGranularity.Chars
+                ret.chunk.granularity = VpcGranularity.Chars;
                 ret.chunk.last = bounds[1];
-                ret.chunk.sortFirst = true
+                ret.chunk.sortFirst = true;
             }
 
             return ret;
@@ -567,7 +572,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (adjective === PropAdjective.Short) {
             return target.getS('name') ?? '';
         } else {
-            return new VelRenderId(this.vci.getModel()).go(target, PropAdjective.Long, this.Model().stack.getB('compatibilitymode'));
+            return new VelRenderId(this.vci.getModel()).go(
+                target,
+                PropAdjective.Long,
+                this.Model().stack.getB('compatibilitymode')
+            );
         }
     }
 
@@ -593,7 +602,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (adjective === PropAdjective.Short) {
             return owner.getS('name') ?? '';
         } else {
-            return new VelRenderId(this.vci.getModel()).go(owner, PropAdjective.Long, this.Model().stack.getB('compatibilitymode'));
+            return new VelRenderId(this.vci.getModel()).go(
+                owner,
+                PropAdjective.Long,
+                this.Model().stack.getB('compatibilitymode')
+            );
         }
     }
 

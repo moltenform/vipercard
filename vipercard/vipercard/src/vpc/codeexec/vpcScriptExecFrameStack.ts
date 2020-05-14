@@ -331,8 +331,12 @@ export class VpcExecFrameStack {
 
             let v = this.outside.Model().findByIdUntyped(velId);
             if (v) {
-                let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(v.getS('script'), handlername, v.idInternal, 
-                    this.outside.Model().stack.getB('compatibilitymode'));
+                let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(
+                    v.getS('script'),
+                    handlername,
+                    v.idInternal,
+                    this.outside.Model().stack.getB('compatibilitymode')
+                );
                 if (codeColl && lineRef) {
                     return [codeColl, lineRef, v];
                 }
@@ -709,7 +713,12 @@ export class VpcExecFrameStack {
         VpcCurrentScriptStage.origClass = undefined;
         VpcCurrentScriptStage.latestVelID = meId;
         VpcCurrentScriptStage.dynamicCodeOrigin = dynamicCodeOrigin;
-        let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(code, newHandlerName, meId, this.outside.Model().stack.getB('compatibilitymode'));
+        let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(
+            code,
+            newHandlerName,
+            meId,
+            this.outside.Model().stack.getB('compatibilitymode')
+        );
         checkThrow(lineRef, 'Ro|did not find the handler we just created?');
         VpcCurrentScriptStage.currentStage = VpcErrStage.SyntaxStep;
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;

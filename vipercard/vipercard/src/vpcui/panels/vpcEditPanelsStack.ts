@@ -5,6 +5,7 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { cAltProductName } from './../../ui512/utils/util512Base';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { TextFontSpec } from './../../ui512/drawtext/ui512DrawTextClasses';
@@ -39,12 +40,12 @@ export class VpcEditPanelsStack extends VpcEditPanelsBase {
      * initialize layout for lower part of panel
      */
     createLowerSection(app: UI512Application) {
-        super.createLowerSection(app)
+        super.createLowerSection(app);
 
         let grp = app.getGroup(this.grpId);
         const spaceFromRight = 130;
         const spaceFromBottom = 17;
-        const btnW = 100+70;
+        const btnW = 100 + 70;
         const btnH = 23;
         let scriptBtn = this.genBtn(app, grp, 'btnCompatibility');
         scriptBtn.set('labeltext', lng('lngCompatibility Mode...'));
@@ -61,20 +62,23 @@ export class VpcEditPanelsStack extends VpcEditPanelsBase {
      * user clicked on Compatibility
      */
     static onBtnCompatibility(vci: VpcStateInterface) {
-        let fn = async() => {
-            let isCurrently = vci.getModel().stack.getB('compatibilitymode')
-            let offOn = isCurrently ? 'on':'off'
-            let onOff = isCurrently ? 'off' : 'on'
-            let msg = `Turn ${onOff} this setting for more compatibility with ${cAltProductName}? Currently is ${offOn}.`
-            let chosen = await vci.answerMsgAsync(msg, 'OK', 'Cancel')
+        let fn = async () => {
+            let isCurrently = vci.getModel().stack.getB('compatibilitymode');
+            let offOn = isCurrently ? 'on' : 'off';
+            let onOff = isCurrently ? 'off' : 'on';
+            let msg = deleteThis.longstr(
+                `Turn ${onOff} this setting for more compatibility with ${cAltProductName}? Currently is ${offOn}.`,
+                ''
+            );
+            let chosen = await vci.answerMsgAsync(msg, 'OK', 'Cancel');
             if (chosen === 0) {
-               /* clicked ok */
-               vci.undoableAction(()=>vci.getModel().stack.setOnVel('compatibilitymode', !isCurrently, vci.getModel()))
+                /* clicked ok */
+                vci.undoableAction(() => vci.getModel().stack.setOnVel('compatibilitymode', !isCurrently, vci.getModel()));
             } else {
                 /* clicked cancel or off the screen */
             }
-        }
+        };
 
-        Util512Higher.syncToAsyncTransition(fn(), 'onBtnCompatibility', RespondToErr.ConsoleErrOnly)
+        Util512Higher.syncToAsyncTransition(fn(), 'onBtnCompatibility', RespondToErr.ConsoleErrOnly);
     }
 }

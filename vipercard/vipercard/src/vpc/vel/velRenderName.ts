@@ -169,7 +169,7 @@ export class VelRenderId {
     /**
      * get the id
      */
-    go(vel: VpcElBase, adjective: PropAdjective, compatMode:boolean) {
+    go(vel: VpcElBase, adjective: PropAdjective, compatMode: boolean) {
         if (vel instanceof VpcElCard) {
             return this.goCard(vel, adjective);
         } else if (vel instanceof VpcElProductOpts) {
@@ -204,7 +204,7 @@ export class VelRenderId {
     /**
      * the long id of a cd btn is the same as the short id of a cd btn
      */
-    protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective, compatMode:boolean) {
+    protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective, compatMode: boolean) {
         let userFacingId = vel.getUserFacingId();
         if (adjective === PropAdjective.Long) {
             if (vel instanceof VpcElButton || vel instanceof VpcElField) {
@@ -215,11 +215,11 @@ export class VelRenderId {
                 let s = `${cdOrBg} ${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`;
                 if (!compatMode && vel.getS('is_bg_velement_id').length) {
                     /* fix the ambiguity */
-                    let parent = this.model.getByIdUntyped(vel.parentIdInternal)
-                    s += ` of cd id ${parent.getUserFacingId()}`
+                    let parent = this.model.getByIdUntyped(vel.parentIdInternal);
+                    s += ` of cd id ${parent.getUserFacingId()}`;
                 }
-                
-                return s
+
+                return s;
             } else {
                 return `${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`;
             }

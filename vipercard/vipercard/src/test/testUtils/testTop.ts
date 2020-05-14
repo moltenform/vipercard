@@ -41,7 +41,6 @@
 /* auto */ import { testCollection03exprObjectRef } from './../vpc03/test03exprObjectRef';
 /* auto */ import { testCollection03chunkBasic } from './../vpc03/test03chunkBasic';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
@@ -65,10 +64,10 @@ export const SimpleUtil512Tests = /* static class */ {
             testCollectionScriptExtensiveChunk,
             testCollection03chunkBasic,
             testCollection03exprObjectRef,
-            testCollection03lexer,
+            testCollection03lexer
             //~ testCollectionScriptRewrites,
             //~ testCollectionScriptRunCustomFns,
-            //~ testCollectionScriptRunCmd, 
+            //~ testCollectionScriptRunCmd,
             //~ testCollectionvpcScriptEval,
             //~ testCollectionvpcScriptRunSyntax,
             //~ testCollectionScriptExprLvl,

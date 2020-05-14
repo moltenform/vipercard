@@ -112,10 +112,10 @@ export class VpcElProductOpts extends VpcElBase {
                 let curs = UI512CursorAccess.getCursor();
                 let ret = getEnumToStrOrFallback(UI512Cursors, curs);
                 if (ret.startsWith('drawn_')) {
-                    ret = ret.substr('drawn_'.length)
+                    ret = ret.substr('drawn_'.length);
                 }
                 if (ret.startsWith('css_')) {
-                    ret = ret.substr('css_'.length)
+                    ret = ret.substr('css_'.length);
                 }
                 return ret.toLowerCase();
             }
@@ -156,7 +156,7 @@ export class VpcElProductOpts extends VpcElBase {
                 } else if (s === '8') {
                     s = 'none';
                 }
-                
+
                 let n = getStrToEnum<UI512Cursors>(UI512Cursors, `cursor ${s} not supported`, s);
                 UI512CursorAccess.setCursorSupportRotate(n);
             }

@@ -205,7 +205,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
                 if (d.elClick.id && d.elClick.id.endsWith('##btnScript')) {
                     this.editor.respondToClick(this.vci.UI512App(), d.elClick.id);
                 } else if (d.elClick.id && d.elClick.id.endsWith('##btnCompatibility')) {
-                    VpcEditPanelsStack.onBtnCompatibility(this.vci)
+                    VpcEditPanelsStack.onBtnCompatibility(this.vci);
                 } else if (d.elClick.id && this.active instanceof VpcPanelScriptEditor) {
                     this.editor.respondToClick(this.vci.UI512App(), d.elClick.id);
                 } else if (d.elClick.id && d.elClick.id.endsWith('##btnGenPart')) {

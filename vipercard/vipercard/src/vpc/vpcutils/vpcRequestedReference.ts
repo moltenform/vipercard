@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcIntermedValBase } from './vpcVal';
 /* auto */ import { OrdinalOrPosition, VpcElType } from './vpcEnums';
-/* auto */ import { RequestedChunk } from './vpcChunkResolution';
+/* auto */ import { RequestedChunk } from './vpcChunkResolutionInternal';
 /* auto */ import { O, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 

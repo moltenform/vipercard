@@ -201,10 +201,10 @@ end if
 
     /* not for vipercard, but for the original project
     running in an emulator.
-    
+
     we use on idle since capturing on errorDialog, while
     silencing the error, still stops the current script from executing
-    
+
     1) optional: use genconditionaltests.py to generate
         testScriptExtensiveConditionalsCollateral.txt
     2) change lineendings in that file to \r

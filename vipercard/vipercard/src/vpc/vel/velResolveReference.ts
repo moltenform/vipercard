@@ -10,7 +10,7 @@
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { O, bool, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { O, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, cast, getEnumToStrOrFallback } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -363,7 +363,7 @@ export class VelResolveReference {
                 /* add current one to it as a place of comparison */
                 /* we should still use findPositionFromOrdinalOrPosition
                 since we still want wrap-around behavior */
-                arr = arr.filter(cd => bool(cd.getB('marked')) || cd.idInternal === currCdId);
+                arr = arr.filter(cd => cd.getB('marked') || /* bool */ cd.idInternal === currCdId);
             } else if (ref.cardLookAtMarkedOnly) {
                 arr = arr.filter(cd => cd.getB('marked'));
                 checkThrow(arr.length, 'break, not found, no marked cards');

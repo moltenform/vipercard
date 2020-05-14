@@ -102,7 +102,7 @@ export const VpcGettableSerialization = /* static class */ {
         ftxt_uniquetocard: true,
         scroll_uniquetocard: true,
         hilite_uniquetocard: true,
-        checkmark_uniquetocard: true,
+        checkmark_uniquetocard: true
     } as { [key: string]: boolean },
 
     /**

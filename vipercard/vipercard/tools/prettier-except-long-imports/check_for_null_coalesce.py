@@ -48,6 +48,8 @@ def checkText(f, lines):
             # for example, /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */
             if i > 0 and 'prefer-nullish-coalescing' in lines[i-1]:
                 pass # ok, ignored
+            elif '/* bool */' in lines[i]:
+                pass # ok, ignored
             else:
                 showWarningGccStyle(f, i+1, f'saw a || in a context that looks like nullish-coalescing')
                 trace(f'please use ?? instead or put /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */')

@@ -439,10 +439,11 @@ t.test('vpcProperties', () => {
 
     /* run the tests again with fld instead of btn */
     class UseFldInsteadOfBtn extends TestMultiplier {
-        secondTransformation(code:string, expected:string):O<[string, string]> {
-            code = code.replace(/ cd btn /g, ' cd fld ')
-            .replace(new RegExp(`${h.ids.bBC1}`, 'g'), `${h.ids.fBC1}`)
-            return [code, expected]
+        secondTransformation(code: string, expected: string): O<[string, string]> {
+            code = code
+                .replace(/ cd btn /g, ' cd fld ')
+                .replace(new RegExp(`${h.ids.bBC1}`, 'g'), `${h.ids.fBC1}`);
+            return [code, expected];
         }
     }
 

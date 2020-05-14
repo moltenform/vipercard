@@ -1,11 +1,9 @@
 
-/* auto */ import { VpcBuiltinMsg, checkThrowInternal } from './vpcEnums';
+/* auto */ import { VpcBuiltinMsg } from './vpcEnums';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrFallback, slength } from './../../ui512/utils/util512';
-/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
-/* auto */ import { UI512FontRequest } from './../../ui512/drawtext/ui512DrawTextFontRequest';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

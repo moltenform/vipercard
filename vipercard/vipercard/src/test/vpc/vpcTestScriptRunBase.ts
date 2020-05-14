@@ -66,9 +66,9 @@ export class ScriptTestBatch {
 
         let whichTests = this.tests.filter(t => t[1].startsWith(onlyTestsWithPrefix));
         if (multipliers && multipliers.length) {
-            whichTests = this.multiplyTests(whichTests, multipliers)
+            whichTests = this.multiplyTests(whichTests, multipliers);
         }
-        
+
         runner.testBatchEvaluate(whichTests, isFloatingPt);
 
         /* prevent you from re-using the object */
@@ -83,28 +83,37 @@ export class ScriptTestBatch {
      * which can be helpful, since earlier multipliers can add markers that
      * later multipliers can remove.
      */
-    multiplyTests(input:[string, string][], multipliers: NoParameterCtor<TestMultiplier>[]):[string, string][] {
-        /* should we first run through all original tests in order, before multiplying?  
+    multiplyTests(
+        input: [string, string][],
+        multipliers: NoParameterCtor<TestMultiplier>[]
+    ): [string, string][] {
+        /* should we first run through all original tests in order, before multiplying?
         no, some tests might be setup like global vars/go to card that we should keep in order */
-        let ret: [string, string][] = []
-        let ms = multipliers.map(cls=>new cls())
+        let ret: [string, string][] = [];
+        let ms = multipliers.map(cls => new cls());
         for (let item of input) {
-            let curItems = [item]
+            let curItems = [item];
             for (let multiplier of ms) {
-                let first = curItems.map((item)=>multiplier.firstTransformation(item[0], item[1]))
-                let second = curItems.map((item)=>multiplier.secondTransformation(item[0], item[1]))
-                let third = curItems.map((item)=>multiplier.thirdTransformation(item[0], item[1]))
-                let nextCurItems: [string, string][] = []
-                Util512.extendArray(nextCurItems, first)
-                Util512.extendArray(nextCurItems, second)
-                Util512.extendArray(nextCurItems, third)
-                curItems = nextCurItems.filter((item) => item !== undefined)
+                let first = curItems.map(item =>
+                    multiplier.firstTransformation(item[0], item[1])
+                );
+                let second = curItems.map(item =>
+                    multiplier.secondTransformation(item[0], item[1])
+                );
+                let third = curItems.map(item =>
+                    multiplier.thirdTransformation(item[0], item[1])
+                );
+                let nextCurItems: [string, string][] = [];
+                Util512.extendArray(nextCurItems, first);
+                Util512.extendArray(nextCurItems, second);
+                Util512.extendArray(nextCurItems, third);
+                curItems = nextCurItems.filter(item => item !== undefined);
             }
 
-            Util512.extendArray(ret, curItems)
+            Util512.extendArray(ret, curItems);
         }
 
-        return ret
+        return ret;
     }
 
     static checkPending() {
@@ -564,7 +573,7 @@ put ${s} into testresult`;
                 /* if it's like "doSomeCode\\0" then it is a line of code */
                 assertTrue(
                     pts[1] === 'x' || pts[1] === '0',
-                     longstr(`It looks like this test expects a preparseerr.
+                    longstr(`It looks like this test expects a preparseerr.
                      So, it can't have a \\\\expression, the first part needs
                      to end with \\\\0, since it is ignored`)
                 );
@@ -643,7 +652,7 @@ put ${s} into testresult`;
 
 export enum BatchType {
     default = 1,
-    floatingPoint,
+    floatingPoint
 }
 
 /**
@@ -653,25 +662,25 @@ export enum BatchType {
  * by overriding only secondTransformation, you are multiplying the number
  * of tests by two.
  * each transformation can elect to skip a test, just return undefined
- * you can also override both,  
+ * you can also override both,
  */
 export abstract class TestMultiplier {
-    firstTransformation(code:string, expected:string):O<[string, string]> {
-        return [code, expected]
+    firstTransformation(code: string, expected: string): O<[string, string]> {
+        return [code, expected];
     }
-    secondTransformation(code:string, expected:string):O<[string, string]> {
-        return undefined
+    secondTransformation(code: string, expected: string): O<[string, string]> {
+        return undefined;
     }
-    thirdTransformation(code:string, expected:string):O<[string, string]> {
-        return undefined
+    thirdTransformation(code: string, expected: string): O<[string, string]> {
+        return undefined;
     }
 }
 
 export class TestMultiplierCommutative extends TestMultiplier {
-    firstTransformation(code:string, expected:string):[string, string] {
-        return [code.replace(/_/g, ''), expected]
+    firstTransformation(code: string, expected: string): [string, string] {
+        return [code.replace(/_/g, ''), expected];
     }
-    secondTransformation(code:string, expected:string):[string, string] {
+    secondTransformation(code: string, expected: string): [string, string] {
         let pts = code.split('_');
         assertEq(3, pts.length, '2I|');
         let op = TestMultiplierInvert.flipOperationCommute(pts[1]);
@@ -680,23 +689,25 @@ export class TestMultiplierCommutative extends TestMultiplier {
 }
 
 export class TestMultiplierInvert extends TestMultiplier {
-    leaveUnderscores = false
-    firstTransformation(code:string, expected:string):[string, string] {
+    leaveUnderscores = false;
+    firstTransformation(code: string, expected: string): [string, string] {
         if (this.leaveUnderscores) {
-            return [code, expected]
+            return [code, expected];
         } else {
-            return [code.replace(/_/g, ''), expected]
+            return [code.replace(/_/g, ''), expected];
         }
     }
-    secondTransformation(code:string, expected:string):[string, string] {
+    secondTransformation(code: string, expected: string): [string, string] {
         let pts = code.split('_');
         assertEq(3, pts.length, '2G|');
         let op = TestMultiplierInvert.flipOperationInvert(pts[1]);
-        let delim = this.leaveUnderscores ? '_' : ''
-        return [pts[0] + ` ${delim}` + op + `${delim} ` + pts[2], TestMultiplierInvert.flipBool(expected)];
-    
+        let delim = this.leaveUnderscores ? '_' : '';
+        return [
+            pts[0] + ` ${delim}` + op + `${delim} ` + pts[2],
+            TestMultiplierInvert.flipBool(expected)
+        ];
     }
-    protected static flipOperation (op: string): O<[string, string]> {
+    protected static flipOperation(op: string): O<[string, string]> {
         /* first is the op when order is reversed */
         /* second is the op that is logical inverse */
         if (op === '==') {
@@ -720,17 +731,17 @@ export class TestMultiplierInvert extends TestMultiplier {
         } else if (op === '>=') {
             return ['<=', '<'];
         } else {
-            return undefined
+            return undefined;
         }
     }
-    static flipOperationCommute (op: string): string {
-        let ret = TestMultiplierInvert.flipOperation(op)
-        return ret ? ret[0] : op
+    static flipOperationCommute(op: string): string {
+        let ret = TestMultiplierInvert.flipOperation(op);
+        return ret ? ret[0] : op;
     }
-    static flipOperationInvert (op: string): string {
-        let ret = TestMultiplierInvert.flipOperation(op)
+    static flipOperationInvert(op: string): string {
+        let ret = TestMultiplierInvert.flipOperation(op);
         checkThrowInternal(ret, '2F|unknown op ' + op);
-        return ret[1]
+        return ret[1];
     }
     static flipBool(s: string) {
         if (s === 'true') {
@@ -746,6 +757,5 @@ export class TestMultiplierInvert extends TestMultiplier {
 }
 
 export class TestMultiplierInvertLeaveUnderscores extends TestMultiplierInvert {
-    leaveUnderscores = true
+    leaveUnderscores = true;
 }
-

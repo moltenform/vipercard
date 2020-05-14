@@ -3,7 +3,7 @@
 /* auto */ import { ChvITk } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition } from './../vpcutils/vpcEnums';
-/* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolutionInternal';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

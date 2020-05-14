@@ -47,19 +47,19 @@
  * Other ppl hitting the same issue:
  * https://stackoverflow.com/questions/35561547/svg-mouse-cursor-blurry-on-retina-display
  * https://jsfiddle.net/jhhbrook/ucuLefut/
- * 
+ *
  * Another big downside of drawing the cursor manually:
  *      When javascript is busy, the cursor is stuck.
  *      For example, commiting a drawn spraypaint to the card takes a few hundred milliseconds,
  *      and that delay is noticeable when it causes the cursor to stick.
  *      even worse, if you're running a script that takes a long time,
  *      the cursor is really laggy.
- *      so I've decided to 
+ *      so I've decided to
  *          1) use drawn cursors as often as possible
  *          2) use css cursors for potentially long operations (painting)
  *          3) for the css cursors, try not to have any white-to-transparent borders,
  *              which is one of the main reasons it looked bad (caused a gray line)
- * 
+ *
  *      If I know the scale is 125%, should I use an 80% cursor to compensate?
  *      Prob not because a) still stretched, fewer pixels
  *          b) devicePixelRatio could be one of 3 things:
@@ -76,7 +76,7 @@ export enum UI512Cursors {
     /* manually drawn cursors
     advantage: looks better */
     /* order here should match order in 0cursors1.png */
-    drawn_lbeam=1,
+    drawn_lbeam = 1,
     drawn_cross,
     drawn_plus,
     drawn_watch,
@@ -122,72 +122,70 @@ export enum UI512Cursors {
     busy4 = css_busy4,
     unknown = drawn_unknown,
     paintbrush = css_paintbrush,
-    painterase = drawn_painterase, /* use drawn, otherwise size might not match */
+    painterase = drawn_painterase /* use drawn, otherwise size might not match */,
     paintlasso = drawn_paintlasso,
     paintpencil = css_paintpencil,
     paintrectsel = drawn_paintrectsel,
     paintspray = css_paintspray,
     paintbucket = drawn_paintbucket,
-    __AlternateForm__none=arrow,
+    __AlternateForm__none = arrow
 }
 
 /**
  * x, y offset indicating the active pixel of the cursor
  */
-const hotCoords = [
-    [0, 0] /* placeholder */,
-]
-hotCoords[UI512Cursors.drawn_lbeam]=[3, 7]
-hotCoords[UI512Cursors.drawn_cross]=[7, 7] 
-hotCoords[UI512Cursors.drawn_plus]=[7, 7]
-hotCoords[UI512Cursors.drawn_watch]=[7, 7] 
-hotCoords[UI512Cursors.drawn_hand]=[6, 0]
-hotCoords[UI512Cursors.drawn_arrow]=[3, 1] 
-hotCoords[UI512Cursors.drawn_busy]=[7, 7]
-hotCoords[UI512Cursors.drawn_unknown]=[3, 1]
-hotCoords[UI512Cursors.drawn_paintbrush]=[5, 14 ]
-hotCoords[UI512Cursors.drawn_painterase]=[7, 7]
-hotCoords[UI512Cursors.drawn_paintlasso]=[2, 13 ]
-hotCoords[UI512Cursors.drawn_paintpencil]=[1, 15 ]
-hotCoords[UI512Cursors.drawn_paintrectsel]=[7, 7]
-hotCoords[UI512Cursors.drawn_paintspray]=[2, 2]
-hotCoords[UI512Cursors.drawn_paintbucket]=[14, 14]
-hotCoords[UI512Cursors.drawn_busy2]=[7, 7] 
-hotCoords[UI512Cursors.drawn_busy3]=[7, 7] 
-hotCoords[UI512Cursors.drawn_busy4]=[7, 7] 
-hotCoords[UI512Cursors.css_cross]=[7, 7] 
-hotCoords[UI512Cursors.css_watch]=[7, 7] 
-hotCoords[UI512Cursors.css_hand]=[6, 0]
-hotCoords[UI512Cursors.css_busy]=[7, 7]
-hotCoords[UI512Cursors.css_paintbrush]=[5, 14 ]
-hotCoords[UI512Cursors.css_painterase]=[7, 7]
-hotCoords[UI512Cursors.css_paintpencil]=[1, 15 ]
-hotCoords[UI512Cursors.css_paintspray]=[2, 2]
-hotCoords[UI512Cursors.css_busy2]=[7, 7] 
-hotCoords[UI512Cursors.css_busy3]=[7, 7] 
-hotCoords[UI512Cursors.css_busy4]=[7, 7] 
+const hotCoords = [[0, 0] /* placeholder */];
+hotCoords[UI512Cursors.drawn_lbeam] = [3, 7];
+hotCoords[UI512Cursors.drawn_cross] = [7, 7];
+hotCoords[UI512Cursors.drawn_plus] = [7, 7];
+hotCoords[UI512Cursors.drawn_watch] = [7, 7];
+hotCoords[UI512Cursors.drawn_hand] = [6, 0];
+hotCoords[UI512Cursors.drawn_arrow] = [3, 1];
+hotCoords[UI512Cursors.drawn_busy] = [7, 7];
+hotCoords[UI512Cursors.drawn_unknown] = [3, 1];
+hotCoords[UI512Cursors.drawn_paintbrush] = [5, 14];
+hotCoords[UI512Cursors.drawn_painterase] = [7, 7];
+hotCoords[UI512Cursors.drawn_paintlasso] = [2, 13];
+hotCoords[UI512Cursors.drawn_paintpencil] = [1, 15];
+hotCoords[UI512Cursors.drawn_paintrectsel] = [7, 7];
+hotCoords[UI512Cursors.drawn_paintspray] = [2, 2];
+hotCoords[UI512Cursors.drawn_paintbucket] = [14, 14];
+hotCoords[UI512Cursors.drawn_busy2] = [7, 7];
+hotCoords[UI512Cursors.drawn_busy3] = [7, 7];
+hotCoords[UI512Cursors.drawn_busy4] = [7, 7];
+hotCoords[UI512Cursors.css_cross] = [7, 7];
+hotCoords[UI512Cursors.css_watch] = [7, 7];
+hotCoords[UI512Cursors.css_hand] = [6, 0];
+hotCoords[UI512Cursors.css_busy] = [7, 7];
+hotCoords[UI512Cursors.css_paintbrush] = [5, 14];
+hotCoords[UI512Cursors.css_painterase] = [7, 7];
+hotCoords[UI512Cursors.css_paintpencil] = [1, 15];
+hotCoords[UI512Cursors.css_paintspray] = [2, 2];
+hotCoords[UI512Cursors.css_busy2] = [7, 7];
+hotCoords[UI512Cursors.css_busy3] = [7, 7];
+hotCoords[UI512Cursors.css_busy4] = [7, 7];
 
-const cssCursorFilenames:{ [key: number]: string } = {};
-cssCursorFilenames[UI512Cursors.css_paintbrush]='brush5,14.png'
-cssCursorFilenames[UI512Cursors.css_cross]='cross7,7.png'
-cssCursorFilenames[UI512Cursors.css_painterase]='erase7,7.png'
-cssCursorFilenames[UI512Cursors.css_hand]='hand6,0.png'
-cssCursorFilenames[UI512Cursors.css_paintpencil]='pencil1,15.png'
-cssCursorFilenames[UI512Cursors.css_paintspray]='spray2,2.png'
-cssCursorFilenames[UI512Cursors.css_busy]='xtrabusya7,7.png'
-cssCursorFilenames[UI512Cursors.css_busy2]='xtrabusyb7,7.png'
-cssCursorFilenames[UI512Cursors.css_busy3]='xtrabusyc7,7.png'
-cssCursorFilenames[UI512Cursors.css_busy4]='xtrabusyd7,7.png'
-cssCursorFilenames[UI512Cursors.css_watch]='xtrawatch7,7.png'
+const cssCursorFilenames: { [key: number]: string } = {};
+cssCursorFilenames[UI512Cursors.css_paintbrush] = 'brush5,14.png';
+cssCursorFilenames[UI512Cursors.css_cross] = 'cross7,7.png';
+cssCursorFilenames[UI512Cursors.css_painterase] = 'erase7,7.png';
+cssCursorFilenames[UI512Cursors.css_hand] = 'hand6,0.png';
+cssCursorFilenames[UI512Cursors.css_paintpencil] = 'pencil1,15.png';
+cssCursorFilenames[UI512Cursors.css_paintspray] = 'spray2,2.png';
+cssCursorFilenames[UI512Cursors.css_busy] = 'xtrabusya7,7.png';
+cssCursorFilenames[UI512Cursors.css_busy2] = 'xtrabusyb7,7.png';
+cssCursorFilenames[UI512Cursors.css_busy3] = 'xtrabusyc7,7.png';
+cssCursorFilenames[UI512Cursors.css_busy4] = 'xtrabusyd7,7.png';
+cssCursorFilenames[UI512Cursors.css_watch] = 'xtrawatch7,7.png';
 
-const cssCursorFallbacks:{ [key: number]: string } = {};
-cssCursorFallbacks[UI512Cursors.css_hand]='pointer'
-cssCursorFallbacks[UI512Cursors.css_watch]='progress'
-cssCursorFallbacks[UI512Cursors.css_busy]='wait'
-cssCursorFallbacks[UI512Cursors.css_busy2]='wait'
-cssCursorFallbacks[UI512Cursors.css_busy3]='wait'
-cssCursorFallbacks[UI512Cursors.css_busy4]='wait'
-cssCursorFallbacks[UI512Cursors.css_cross]='crosshair'
+const cssCursorFallbacks: { [key: number]: string } = {};
+cssCursorFallbacks[UI512Cursors.css_hand] = 'pointer';
+cssCursorFallbacks[UI512Cursors.css_watch] = 'progress';
+cssCursorFallbacks[UI512Cursors.css_busy] = 'wait';
+cssCursorFallbacks[UI512Cursors.css_busy2] = 'wait';
+cssCursorFallbacks[UI512Cursors.css_busy3] = 'wait';
+cssCursorFallbacks[UI512Cursors.css_busy4] = 'wait';
+cssCursorFallbacks[UI512Cursors.css_cross] = 'crosshair';
 
 /* cross is slightly different in
 the css version,
@@ -196,7 +194,6 @@ is that the white-to-transparent transition becomes
 a faint gray line. so add no white pixels
 in the css version */
 const filenames: { [key: number]: boolean } = {};
-
 
 /**
  * certain cursors are neither black nor white,
@@ -254,18 +251,20 @@ export class UI512CursorAccess {
             /* for efficiency, exit early */
             return;
         }
-        
+
         let el = window.document.getElementById('mainDomCanvas');
         if (el) {
-            let fname = cssCursorFilenames[nextCursor]
+            let fname = cssCursorFilenames[nextCursor];
             if (fname) {
                 /* show a real cursor */
-                let fullname = `/resources03a/images/cursors/x${UI512CursorAccess.multForCssCursor}${fname}`
+                let fullname =
+                    '/resources03a/images/cursors/x' +
+                    `${UI512CursorAccess.multForCssCursor}${fname}`;
                 let [hotsx, hotsy] = hotCoords[nextCursor] ?? [0, 0];
-                hotsx *= UI512CursorAccess.multForCssCursor
-                hotsy *= UI512CursorAccess.multForCssCursor
-                let fallback = cssCursorFallbacks[nextCursor] ?? 'default'
-                el.style.cursor = `url(${fullname}) ${hotsx} ${hotsy}, ${fallback}`
+                hotsx *= UI512CursorAccess.multForCssCursor;
+                hotsy *= UI512CursorAccess.multForCssCursor;
+                let fallback = cssCursorFallbacks[nextCursor] ?? 'default';
+                el.style.cursor = `url(${fullname}) ${hotsx} ${hotsy}, ${fallback}`;
             } else {
                 /* hide the real cursor */
                 let hots = hotCoords[nextCursor] ?? [0, 0];
@@ -277,7 +276,7 @@ export class UI512CursorAccess {
                 el.style.cursor = 'none';
             }
         }
-        
+
         UI512CursorAccess.currentCursor = nextCursor;
     }
 
@@ -307,8 +306,8 @@ export class UI512CursorAccess {
      * also called on init()
      */
     static notifyScreenMult(mult: number) {
-        UI512CursorAccess.multForCssCursor = mult
-        /* don't actually call setcursor here to 
+        UI512CursorAccess.multForCssCursor = mult;
+        /* don't actually call setcursor here to
         force the refresh because it might flash for a second */
         UI512CursorAccess.lastDrawnCur = UI512Cursors.busy4;
         UI512CursorAccess.setCursor(UI512CursorAccess.getCursor(), true);
@@ -329,12 +328,18 @@ export class UI512CursorAccess {
      */
     static suggestPreloadCursors() {
         /* preload some cursors we'll probably want */
-        for (let cursor of [UI512Cursors.css_hand, UI512Cursors.css_paintpencil, UI512Cursors.css_cross]) {
-            let preloadLink = window.document.createElement("link");
-            let fname = cssCursorFilenames[cursor]
-            preloadLink.href = `/resources03a/images/cursors/x${UI512CursorAccess.multForCssCursor}${fname}`;
-            preloadLink.rel = "preload";
-            preloadLink.as = "image";
+        for (let cursor of [
+            UI512Cursors.css_hand,
+            UI512Cursors.css_paintpencil,
+            UI512Cursors.css_cross
+        ]) {
+            let preloadLink = window.document.createElement('link');
+            let fname = cssCursorFilenames[cursor];
+            preloadLink.href =
+                '/resources03a/images/cursors/x' +
+                `${UI512CursorAccess.multForCssCursor}${fname}`;
+            preloadLink.rel = 'preload';
+            preloadLink.as = 'image';
             document.head.appendChild(preloadLink);
         }
     }
@@ -349,15 +354,17 @@ export class UI512CursorAccess {
     ) {
         if (cssCursorFilenames[UI512CursorAccess.currentCursor]) {
             /* hope to erase a previously drawn one */
-            if (UI512CursorAccess.lastDrawnCur !== UI512CursorAccess.currentCursor ||
-                drewAnything) {
+            if (
+                UI512CursorAccess.lastDrawnCur !== UI512CursorAccess.currentCursor ||
+                drewAnything
+            ) {
                 final.context.drawImage(buffer.canvas, 0, 0);
             }
 
             UI512CursorAccess.lastDrawnMx = UI512CursorAccess.currentMx;
             UI512CursorAccess.lastDrawnMy = UI512CursorAccess.currentMy;
             UI512CursorAccess.lastDrawnCur = UI512CursorAccess.currentCursor;
-            return
+            return;
         }
 
         if (
@@ -442,4 +449,3 @@ export class UI512CursorAccess {
         UI512CursorAccess.lastDrawnCur = UI512CursorAccess.currentCursor;
     }
 }
-

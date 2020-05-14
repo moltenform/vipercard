@@ -20,8 +20,9 @@ t.atest('--init--testCollection03exprObjectRef', async () => {
     );
 });
 t.test('03ObjectSpecial', () => {
-    h3.vcstate.vci.undoableAction(()=>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model))
+    h3.vcstate.vci.undoableAction(() =>
+        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
+    );
     let b = new ScriptTestBatch();
     /* special objects */
     b.t(`the short id of ${cProductName}`, `WILD`);
@@ -153,9 +154,9 @@ t.test('03ObjectBg', () => {
 
     /* run the tests again, specifying the stack */
     class AppendOfThisStack extends TestMultiplier {
-        secondTransformation(code:string, expected:string):O<[string, string]> {
-            code = code + ' of stack 1'
-            return [code, expected]
+        secondTransformation(code: string, expected: string): O<[string, string]> {
+            code = code + ' of stack 1';
+            return [code, expected];
         }
     }
 
@@ -168,20 +169,20 @@ t.test('03ObjectBg', () => {
  */
 //~ todo: use this everywhere
 class EvaluateForBothShortIdAndThereIs extends TestMultiplier {
-    secondTransformation(code:string, expected:string):O<[string, string]> {
+    secondTransformation(code: string, expected: string): O<[string, string]> {
         if (!code.startsWith('the short id of')) {
             /* might be testing a command, or going to a card */
-            return undefined
+            return undefined;
         } else {
-            return [this.convertCode(code), this.convertExpected(expected)]
+            return [this.convertCode(code), this.convertExpected(expected)];
         }
     }
-    protected convertCode(s:string) {
+    protected convertCode(s: string) {
         assertTrue(s.startsWith('the short id of'), '');
         assertTrue(!s.includes('\\'), '');
         return s.replace(/the short id of/, 'there is a');
     }
-    protected convertExpected(s:string) {
+    protected convertExpected(s: string) {
         if (s.startsWith('ERR:could not find')) {
             return 'false';
         } else if (s.startsWith('ERR:') || s.startsWith('PREPARSEERR:')) {
@@ -192,4 +193,3 @@ class EvaluateForBothShortIdAndThereIs extends TestMultiplier {
         }
     }
 }
-

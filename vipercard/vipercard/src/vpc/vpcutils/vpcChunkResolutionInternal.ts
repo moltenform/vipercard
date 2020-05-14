@@ -1,12 +1,11 @@
 
-/* auto */ import { WritableContainer } from './vpcUtils';
+/* auto */ import { VpcIntermedValBase } from './vpcVal';
+/* auto */ import { ReadableContainer, WritableContainer } from './vpcUtils';
 /* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, checkThrowInternal, findPositionFromOrdinalOrPosition } from './vpcEnums';
-/* auto */ import { ChunkResolution, RequestedChunk, ResolvedChunk } from './vpcChunkResolution';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { largeArea } from './../../ui512/drawtext/ui512DrawTextClasses';
-
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -21,9 +20,9 @@ export const ChunkResolutionInternal = /* static class */ {
      * positions are 0-based
      * "a,bb,c" -> [0, 2, 5]
      */
-    _getPositionsTable(s: string, type:VpcGranularity, itemDel:string): number[] {
-        let re = ChunkResolutionInternal.getRegex(type, itemDel)
-        let isWords = type===VpcGranularity.Words
+    _getPositionsTable(s: string, type: VpcGranularity, itemDel: string): number[] {
+        let re = ChunkResolutionInternal.getRegex(type, itemDel);
+        let isWords = type === VpcGranularity.Words;
         let positions: number[] = [];
         if (!isWords || (!s.startsWith(' ') && !s.startsWith('\n'))) {
             positions.push(0);
@@ -47,7 +46,7 @@ export const ChunkResolutionInternal = /* static class */ {
     /**
      * what is regex for this type
      */
-    getRegex(type: VpcGranularity, delim: string):RegExp {
+    getRegex(type: VpcGranularity, delim: string): RegExp {
         if (type === VpcGranularity.Items) {
             /*
                 if the script has said something like
@@ -58,11 +57,11 @@ export const ChunkResolutionInternal = /* static class */ {
             let escaped = Util512.escapeForRegex(delim);
             return new RegExp(escaped, 'g');
         } else if (type === VpcGranularity.Lines) {
-            return /\n/g
+            return /\n/g;
         } else if (type === VpcGranularity.Words) {
-            return new RegExp('(\\n| )+', 'g')
+            return new RegExp('(\\n| )+', 'g');
         } else {
-            checkThrowInternal(false, 'no regex for this granularity')
+            checkThrowInternal(false, 'no regex for this granularity');
         }
     },
 
@@ -99,7 +98,7 @@ export const ChunkResolutionInternal = /* static class */ {
      * confirmed in emulator: only spaces and newlines separate words, not punctuation.
      * return semi-inclusive bounds [start, end)
      */
-    _wordsBoundsForGet(sInput: string, start: number, end: number, itemDel:string): O<[number, number]> {
+    _wordsBoundsForGet(sInput: string, start: number, end: number, itemDel: string): O<[number, number]> {
         let table = this._getPositionsTable(sInput, VpcGranularity.Words, itemDel);
         if (start >= table.length) {
             return undefined;
@@ -146,7 +145,7 @@ export const ChunkResolutionInternal = /* static class */ {
     /**
      * when you say put "abc" into word x to y of z, which positions should be replaced with "abc"?
      */
-    _wordsBoundsForSet(sInput: string, start: number, end: number, itemDel:string): any {
+    _wordsBoundsForSet(sInput: string, start: number, end: number, itemDel: string): any {
         let boundsGet = this._wordsBoundsForGet(sInput, start, end, itemDel);
         if (boundsGet === undefined) {
             return [sInput.length, sInput.length, ''];
@@ -163,7 +162,7 @@ export const ChunkResolutionInternal = /* static class */ {
         let first = ch.first;
         let last = ch.last;
         if (ch.ordinal !== undefined) {
-            let count = ChunkResolution.applyCount(s, itemDel, ch.granularity, false);
+            let count = ChunkResolutionInternal.applyCount(s, itemDel, ch.granularity, false);
             let maybeFirst = findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, count);
             if (maybeFirst === undefined) {
                 return undefined;
@@ -174,7 +173,7 @@ export const ChunkResolutionInternal = /* static class */ {
             last = first;
         }
 
-        checkThrow(first >= 0 && (!last || last >= 0), "do not allow negative")
+        checkThrow(first >= 0 && (!last || last >= 0), 'do not allow negative');
         if (ch.granularity === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
             return undefined;
@@ -219,17 +218,20 @@ export const ChunkResolutionInternal = /* static class */ {
         let first = ch.first;
         let last = ch.last;
         if (ch.ordinal !== undefined) {
-            let upperBound = largeArea
+            let upperBound = largeArea;
             if (
-            ch.ordinal===OrdinalOrPosition.Last||ch.ordinal===OrdinalOrPosition.Middle||ch.ordinal===OrdinalOrPosition.Any) {
-                upperBound = ChunkResolution.applyCount(sInput, itemDel, ch.granularity, false);
+                ch.ordinal === OrdinalOrPosition.Last ||
+                ch.ordinal === OrdinalOrPosition.Middle ||
+                ch.ordinal === OrdinalOrPosition.Any
+            ) {
+                upperBound = ChunkResolutionInternal.applyCount(sInput, itemDel, ch.granularity, false);
             }
-            
+
             first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, upperBound), 'too big an index');
             last = first;
         }
 
-        checkThrow(first >= 0 && (!last || last >= 0), "do not allow negative")
+        checkThrow(first >= 0 && (!last || last >= 0), 'do not allow negative');
         assertTrue(first !== null && first !== undefined && last !== null, '5;|invalid first or last');
         if (ch.granularity === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
@@ -265,6 +267,40 @@ export const ChunkResolutionInternal = /* static class */ {
     },
 
     /**
+     * count chunks, e.g.
+     * 'put the number of words in x into y'
+     */
+    applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
+        /* in the public interface, change behavior to match original product */
+        let adjust = 0;
+        if (isPublicCall && sInput === '' && (type === VpcGranularity.Items || VpcGranularity.Lines)) {
+            return 0;
+        } else if (isPublicCall && type === VpcGranularity.Items && !sInput.includes(itemDel) && sInput.trim() === '') {
+            return 0;
+        } else if (isPublicCall && type === VpcGranularity.Lines && sInput.endsWith('\n')) {
+            adjust = -1;
+        } else if (isPublicCall && type === VpcGranularity.Items && sInput.trim().endsWith(',')) {
+            if (sInput) {
+                adjust = -1;
+            } else {
+                return 1;
+            }
+        }
+
+        if (type === VpcGranularity.Chars) {
+            return sInput.length + adjust;
+        } else if (type === VpcGranularity.Items) {
+            return ChunkResolutionInternal._getPositionsTable(sInput, type, itemDel).length + adjust;
+        } else if (type === VpcGranularity.Lines) {
+            return ChunkResolutionInternal._getPositionsTable(sInput, type, itemDel).length + adjust;
+        } else if (type === VpcGranularity.Words) {
+            return ChunkResolutionInternal._getPositionsTable(sInput, type, itemDel).length + adjust;
+        } else {
+            checkThrow(false, `5-|unknown chunk granularity ${type}`);
+        }
+    },
+
+    /**
      * resolve the chunk, getting start+end positions
      * remember to adjust the results based on parent.startPos!!!
      */
@@ -273,12 +309,12 @@ export const ChunkResolutionInternal = /* static class */ {
         parent: ResolvedChunk,
         itemDel: string,
         news: O<string>,
-        compat:boolean,
+        compat: boolean,
         prep: O<VpcChunkPreposition>,
-        isWriteContext:boolean,
-        isChildOfAddedLine:boolean,
-        okToAppend:boolean,
-        addedExtra?:ValHolder<boolean>
+        isWriteContext: boolean,
+        isChildOfAddedLine: boolean,
+        okToAppend: boolean,
+        addedExtra?: ValHolder<boolean>
     ): O<ResolvedChunk> {
         let unformatted = parent.container.getRawString();
         unformatted = unformatted.substring(parent.startPos, parent.endPos);
@@ -288,43 +324,46 @@ export const ChunkResolutionInternal = /* static class */ {
             let writeParentContainer = parent.container as WritableContainer;
             if (news === undefined) {
                 if (compat && parent.startPos === parent.endPos && isChildOfAddedLine && bounds[2]) {
-                    bounds[2] = ''
+                    bounds[2] = '';
                 }
 
                 /* still add our commas to the end */
-                let fakeNewS = ''
+                let fakeNewS = '';
                 //~ let result = fakeNewS + okToAppend ? bounds[2] : '';
-                okToAppend = true
+                okToAppend = true;
                 let result = fakeNewS + okToAppend ? bounds[2] : '';
-                let insertionPoint = parent.startPos + bounds[0]
+                let insertionPoint = parent.startPos + bounds[0];
                 if (bounds[2] && addedExtra) {
-                    addedExtra.val = true
+                    addedExtra.val = true;
                 }
                 if (bounds[2]) {
-                    insertionPoint = Math.min(parent.endPos, insertionPoint)
+                    insertionPoint = Math.min(parent.endPos, insertionPoint);
                 }
                 writeParentContainer.splice(insertionPoint, 0 /* delete nothing */, result);
                 if (bounds[2]) {
-                    retbounds = [-parent.startPos + insertionPoint + result.length, -parent.startPos + insertionPoint + result.length];
+                    retbounds = [
+                        -parent.startPos + insertionPoint + result.length,
+                        -parent.startPos + insertionPoint + result.length
+                    ];
                 } else {
-                    retbounds = [-parent.startPos + insertionPoint, bounds[1]+ result.length];
+                    retbounds = [-parent.startPos + insertionPoint, bounds[1] + result.length];
                 }
             } else if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
                 //~ if (!okToAppend) {
-                    //~ /* ignore adding the newones */
-                    //~ bounds[2] = ''
+                //~ /* ignore adding the newones */
+                //~ bounds[2] = ''
                 //~ }
                 if (compat && parent.startPos === parent.endPos && isChildOfAddedLine && bounds[2]) {
-                    bounds[2] = ''
+                    bounds[2] = '';
                 }
                 /* it's a brand new item, adding 'before' or 'after' isn't applicable */
                 let result = bounds[2] + news;
-                let insertionPoint = parent.startPos + bounds[0]
+                let insertionPoint = parent.startPos + bounds[0];
                 if (bounds[2] && addedExtra) {
-                    addedExtra.val = true
+                    addedExtra.val = true;
                 }
                 if (bounds[2] && !okToAppend) {
-                    insertionPoint = Math.min(parent.endPos, insertionPoint)
+                    insertionPoint = Math.min(parent.endPos, insertionPoint);
                 }
                 writeParentContainer.splice(insertionPoint, bounds[1] - bounds[0], result);
                 retbounds = [insertionPoint, insertionPoint + result.length];
@@ -345,10 +384,52 @@ export const ChunkResolutionInternal = /* static class */ {
 
         if (retbounds) {
             let ret = new ResolvedChunk(parent.container, parent.startPos + retbounds[0], parent.startPos + retbounds[1]);
-            checkThrow(ret.startPos>=0 && ret.endPos>=0, "somehow got a negative")
-            return ret
+            checkThrow(ret.startPos >= 0 && ret.endPos >= 0, 'somehow got a negative');
+            return ret;
         } else {
             return undefined;
         }
     }
 };
+
+/**
+ * a requested chunk from a script.
+ */
+export class RequestedChunk extends VpcIntermedValBase {
+    granularity = VpcGranularity.Chars;
+    first: number;
+    last: O<number>;
+    ordinal: O<OrdinalOrPosition>;
+    sortFirst = false;
+    child: O<RequestedChunk>;
+    constructor(first: number) {
+        super();
+        this.first = first;
+    }
+
+    /**
+     * get a copy of this structure
+     */
+    getClone() {
+        let other = new RequestedChunk(this.first);
+        other.granularity = this.granularity;
+        other.first = this.first;
+        other.last = this.last;
+        other.ordinal = this.ordinal;
+        other.sortFirst = this.sortFirst;
+        other.child = this.child?.getClone();
+        return other;
+    }
+
+    /** are bounds backwards? we sometimes support this */
+    hasBackwardsBounds(): boolean {
+        return this.last !== undefined && this.last < this.first;
+    }
+}
+
+/**
+ * a resolved chunk.
+ */
+export class ResolvedChunk {
+    constructor(public container: ReadableContainer, public startPos: number, public endPos: number) {}
+}
