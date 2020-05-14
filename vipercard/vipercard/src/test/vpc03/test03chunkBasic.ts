@@ -118,6 +118,7 @@ b.t('global z1\nput "a.b  c.d" & cr & "e" into z1\\1', '1');
 b.t('put z1 into z\ndelete word 3 of z\\z', 'a.b  c.d\n');
 b.t('put z1 into z\ndelete word 3 of z\ndelete word 2 of z\\z', 'a.b  \n');
 b.t('put z1 into z\ndelete word 3 of z\ndelete word 2 of z\ndelete word 1 of z\\z', '\n');
+
 /* corner cases */
 b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
 b.t('put z1 into z\ndelete word 3 of z\\z', '  \n ab  \n bc  \n \n ');
@@ -636,7 +637,7 @@ t.test('03chunkexpression_delete_line', () => {
     b.t('global z1\nput z1 into z\ndelete line 1 to 3 of z\\z', 'ERR:6:deleting ranges'/* '' */);
     b.t('global z1\nput z1 into z\ndelete line 2 to 3 of z\\z', 'ERR:6:deleting ranges'/* 'ab\n' */);
     /* recurse */
-    //~ b.t('global z1\nput z1 into z\ndelete line 2 of line 1 to 2 of z\\z', 'ERR:6:deleting ranges'/* 'ab\nef' */);
+    b.t('global z1\nput z1 into z\ndelete line 2 of line 1 to 2 of z\\z', 'ab\nef');
     b.t('global z1\nput z1 into z\ndelete line 2 to 3 of line 1 to 3 of z\\z', 'ERR:6:deleting ranges'/* 'ab\n' */);
     b.t(
         'global z1\nput z1 into z\ndelete line 2 to 3 of line 2 to 3 of line 1 to 3 of z\\z',

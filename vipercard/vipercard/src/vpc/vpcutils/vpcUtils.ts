@@ -33,33 +33,6 @@ export interface WritableContainer extends ReadableContainer {
 }
 
 /**
- * dead-simple WritableContainer
- * we don't even care about formatted text, we're just using it
- * for the splice() implementation
- */
-export class WritableContainerSimpleFmtText implements WritableContainer {
-    txt = new FormattedText()
-    isDefined(): boolean {
-        return true
-    }
-    getRawString(): string {
-        return this.txt.toUnformatted()
-    }
-    len(): number {
-        return this.txt.len()
-    }
-    setAll(newText: string): void {
-        this.txt = FormattedText.newFromUnformatted(newText)
-    }
-    splice(insertion: number, lenToDelete: number, newText: string): void {
-        this.txt = FormattedText.byInsertion(this.txt, insertion, lenToDelete, newText, UI512FontRequest.defaultFont)
-    }
-    replaceAll(search: string, replaceWith: string): void {
-        checkThrowInternal(false, "not yet implemented")
-    }
-}
-
-/**
  * a message sent to a script
  * includes both built-in messages "mouseUp" and custom messages "myHandler"
  */

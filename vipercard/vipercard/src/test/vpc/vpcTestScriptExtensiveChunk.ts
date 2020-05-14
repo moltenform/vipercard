@@ -1,11 +1,11 @@
 
-/* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
-/* auto */ import { checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { ScriptTestBatch, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
+/* auto */ import { VpcGranularity, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { callDebuggerIfNotInProduction } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, assertWarnEq, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
-import { assertWarnEq } from '../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -35,12 +35,42 @@ t.atest('ScriptExtensiveChunk', async () => {
  */
 class RunExtensiveChunkTests {
     failures = 0
+    deferred = 0
     async loadTestData() {
         let url = '/resources03a/test/testScriptExtensiveChunkTests.txt';
         let txt = await Util512Higher.asyncLoadJsonString(url);
         let data = txt.trim().replace(/\r\n/g, '\n').split('\n');
         data = this.expandTestData(data)
         return data;
+    }
+
+    isADeleteWithFinalRange(s:string) {
+        /* typical input: "word line 3 to 5 of 3 to 3 of" */
+        s = s.replace(/(\b[0-9]+\b) to \1 of\b/g, '$1 of')
+        /* typical input is now: "line 3 to 5 of word 3 of" */
+        /* split on middle 'of's - not the final 'of' */
+        let pts = s.split(' of ' )
+        if (pts.length <= 1) {
+            return !(s.startsWith('char ') || !s.includes(' to '))
+        }
+
+        /* typical input is now: [line 3 to 5, word 3 of] */
+        let newPts = Util512.sortDecorated(pts, (ss)=>getStrToEnum<VpcGranularity>(VpcGranularity, "no such granularity", ss.split(' ')[0]))
+        /* typical input is now: [word 3 of, line 3 to 5] */
+        s = newPts.join(' of ')
+        if (s.startsWith('char ')) {
+            return false
+        }
+        
+        /* if "to" comes after the " of ", then it is ok, we accept
+        ranges in the parents, just not the children */
+        let indexOf = s.indexOf(' of')
+        let indexOfTo = s.indexOf(' to ')
+        if (indexOf === -1 || indexOfTo === -1 || indexOfTo > indexOf) {
+            return false
+        } else {
+            return true
+        }
     }
 
     /* runs the test */
@@ -50,6 +80,11 @@ class RunExtensiveChunkTests {
         let count = 0;
         let sleepCount = 0
         let data = await this.loadTestData();
+        let enableThisTest = (s:string)=> {
+            /* you can selectively enable tests */
+            return true
+        }
+
         while(true) {
             /* release our timeslice for a bit so the ui doesn't freeze */
             sleepCount += 1
@@ -60,34 +95,8 @@ class RunExtensiveChunkTests {
             }
 
             if (!data.length) {
-                console.log(`extensive chunk tests done with ${count} tests, ${this.failures} failures.`)
+                console.log(`extensive chunk tests done with ${count} tests, ${this.failures} failures, ${this.deferred} confirmed to be skipped.`)
                 return
-            }
-
-            let enableThisTest = (s:string)=> {
-                if (s.startsWith("COUNT")) {
-                    return true
-                }
-                if (s.startsWith("READ\t")) {
-                    return true
-                }
-                if (s.startsWith("WRITE\t")) {
-                    return true
-                }
-                //~ if (s.startsWith('READ\t') || s.startsWith('WRITE\t')) {
-                    //~ return true
-                //~ }
-                //~ return false
-                /* collapse identical ranges */
-                s = s.replace(/(\b[0-9]+\b) to \1 of\b/g, '$1 of')
-                if (s.includes(' to ')) {
-                    return false
-                }
-
-                //~ if (s.split(' of ').length > 1) {
-                    //~ return false
-                //~ }
-                return true
             }
 
             let batch:string[] = []
@@ -135,13 +144,18 @@ class RunExtensiveChunkTests {
         let expecteds:string[] = []
         let i = 0
         for (let entry of batch) {
-            if (entry.startsWith('DELETE')) {
+            if (entry.startsWith('DELETE') && this.isADeleteWithFinalRange(entry.split('\t')[1])) {
                 /* we don't support deleting ranges */
-                //~ dgdfg
+                /* confirm that we throw */
+                let b = new ScriptTestBatch()
+                let smcode = this.genTestCode(entry, [], 1).trim()
+                b.t(`${smcode}\\z`, 'ERR:6:deleting ranges');
+                b.batchEvaluate(h)
+                this.deferred ++
+            } else {
+                i++
+                code += this.genTestCode(entry, expecteds, i);
             }
-
-            i++
-            code += this.genTestCode(entry, expecteds, i);
         }
 
         h.runGeneralCode('', code);
@@ -180,7 +194,7 @@ class RunExtensiveChunkTests {
         }
     }
 
-    private genTestCode(entry: string, expecteds: string[],  i: number) {
+    protected genTestCode(entry: string, expecteds: string[],  i: number) {
         let code = ''
         let pts = entry.split('\t');
         assertTrue(pts.length === 4, "not 4 parts?", entry);

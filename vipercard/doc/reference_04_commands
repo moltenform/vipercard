@@ -254,15 +254,37 @@ delete char {i} to {j} of {container}
 delete btn|fld
 =====
 
+        `put "abcde" into x`
+        `delete char 2 of x`
+        `answer x -- shows "acde"`
+
+        `put "abcde" into x`
+        `delete char 2 to 4 of x`
+        `answer x -- shows "ae"`
+
+        Deleting words, lines and items is also supported for compatibility
+        with HyperCard but is not recommended in new code, as HyperCard's
+        behavior can be inconsistent and non-intuitive.
+
         Examples:
-
-        put "abcde" into x
-        delete char 2 of x
-        answer x -- shows "acde"
-
-        put "abcde" into x
-        delete char 2 to 4 of x
-        answer x -- shows "ae"
+        
+        -- we support many expressions
+        delete word 3 of myVar
+        delete word 3 of item 3 to 5 of myVar
+        delete item 3 of myVar
+        delete line 3 of myVar
+        
+        -- we do not support backwards ranges
+        delete item 
+        
+        -- we do not support out-of-order scopes
+        -- (unless you go Object->Stack Info and turn on compatibility mode)
+        delete line 3 of item 3 of myVar -- error
+        delete item 3 of word 3 of myVar -- error
+        delete word 3 of char 3 of myVar -- error
+        
+        -- we do not support deleting a range (unless chars)
+        delete word 3 to 5 of myVar -- not yet supported
 
         As far as deleting a button or field, this feature will arrive in a 
         future version...

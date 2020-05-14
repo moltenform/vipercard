@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { VpcChunkPreposition, VpcGranularity } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
+/* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { ReadableContainerVar, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
@@ -483,7 +483,7 @@ function testGetChunk(
     let ch = new RequestedChunk(first);
     ch.last = last;
     ch.granularity = type;
-    let got = ChunkResolutionApplication.applyReadToString(reader, ch, itemDel);
+    let got = ChunkResolution.applyReadToString(reader, ch, itemDel);
     assertEq(s, world.result, '2l|');
     assertEq(sExpected, got, '2k|');
 }
@@ -506,7 +506,7 @@ function testSetChunk(
     let ch = new RequestedChunk(first);
     ch.last = last;
     ch.granularity = type;
-    ChunkResolutionApplication.applyPut(
+    ChunkResolution.applyPut(
         writer,
         ch,
         itemDel,

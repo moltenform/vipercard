@@ -6,7 +6,7 @@
 /* auto */ import { tkstr } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
-/* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { VelRenderId } from './../vel/velRenderName';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
@@ -451,7 +451,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let str = evaledvpc.readAsString();
             let stype = ctx.tkChunkGranularity[0].image;
             let type = getStrToEnum<VpcGranularity>(VpcGranularity, 'VpcGranularity', stype);
-            let result = ChunkResolutionApplication.applyCount(str, this.outside.GetItemDelim(), type, true);
+            let result = ChunkResolution.applyCount(str, this.outside.GetItemDelim(), type, true);
             return VpcValN(result);
         }
 
@@ -599,7 +599,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 let chunk = this.visit(ctx.RuleHChunk[0]);
                 checkThrow(chunk instanceof RequestedChunk, '8_|not a RequestedChunk', chunk);
                 let reader = new ReadableContainerStr(val.readAsString());
-                let result = ChunkResolutionApplication.applyReadToString(reader, chunk, this.outside.GetItemDelim());
+                let result = ChunkResolution.applyReadToString(reader, chunk, this.outside.GetItemDelim());
                 val = VpcValS(result);
             }
 

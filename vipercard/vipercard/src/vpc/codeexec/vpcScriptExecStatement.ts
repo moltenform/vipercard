@@ -7,7 +7,7 @@
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { MapTermToMilliseconds, OrdinalOrPosition, SortType, VpcChunkPreposition, VpcElType, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, checkThrowInternal, checkThrowNotifyMsg, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
-/* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
@@ -151,7 +151,7 @@ export class ExecuteStatement {
 
             contRef.chunk = chunk;
             let cont = this.outside.ResolveContainerWritable(contRef);
-            ChunkResolutionApplication.applyDelete(cont, contRef.chunk, this.outside.GetItemDelim(), this.outside.Model().stack.getB('compatibilitymode'));
+            ChunkResolution.applyDelete(cont, contRef.chunk, this.outside.GetItemDelim(), this.outside.Model().stack.getB('compatibilitymode'));
         }
     }
     /**
@@ -290,7 +290,7 @@ export class ExecuteStatement {
         let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
         let compatibility = this.outside.Model().stack.getB('compatibilitymode')
-        ChunkResolutionApplication.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep, compatibility);
+        ChunkResolution.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep, compatibility);
     }
     /**
      * reset paint/ menubar

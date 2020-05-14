@@ -3,7 +3,7 @@
 /* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { PropAdjective, VpcElType, VpcGranularity, checkThrow, checkThrowNotifyMsg } from './../vpcutils/vpcEnums';
-/* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { ReadableContainerField } from './velResolveContainer';
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcElBase, VpcHandleLinkedVels } from './velBase';
@@ -295,7 +295,7 @@ export class VpcFontSpecialChunk {
 
         /* we've already handled the formattedText.len() === 0 case in getChunkTextAttribute */
         let cont = new ReadableContainerField(this.vel, h);
-        let bounds = ChunkResolutionApplication.applyRead(cont, chunk, itemDel);
+        let bounds = ChunkResolution.applyRead(cont, chunk, itemDel);
         return bounds ? [bounds.startPos, bounds.endPos] : [0, 0];
     }
 

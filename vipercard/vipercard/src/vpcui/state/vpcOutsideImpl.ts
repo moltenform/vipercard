@@ -6,7 +6,7 @@
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
+/* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
@@ -265,7 +265,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     ContainerRead(contRef: RequestedContainerRef): string {
         let cont = this.ResolveContainerReadable(contRef);
-        return ChunkResolutionApplication.applyReadToString(cont, contRef.chunk, this.GetItemDelim());
+        return ChunkResolution.applyReadToString(cont, contRef.chunk, this.GetItemDelim());
     }
 
     /**
@@ -273,7 +273,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     ContainerModify(contRef: RequestedContainerRef, fn: (s: string) => string) {
         let cont = this.ResolveContainerWritable(contRef);
-        ChunkResolutionApplication.applyModify(cont, contRef.chunk, this.GetItemDelim(), this.Model().stack.getB('compatibilitymode'), fn);
+        ChunkResolution.applyModify(cont, contRef.chunk, this.GetItemDelim(), this.Model().stack.getB('compatibilitymode'), fn);
     }
 
     /**
