@@ -173,16 +173,16 @@ export abstract class UI512CompBase {
         }
 
         if (hasCloseBtn) {
-            /* draw background for close button */
-            let closeBtnBg = this.genBtn(app, grp, 'closebtnbg');
-            closeBtnBg.set('style', UI512BtnStyle.Opaque);
-            closeBtnBg.set('autohighlight', false);
+            /* draw image behind close button */
+            let behindCloseBtn = this.genBtn(app, grp, 'behindclosebtn');
+            behindCloseBtn.set('style', UI512BtnStyle.Opaque);
+            behindCloseBtn.set('autohighlight', false);
             let clX =
-                pr.closeBtnX - Math.floor((pr.closeBtnBgWidth - pr.closeBtnWidth) / 2);
-            closeBtnBg.setDimensions(
+                pr.closeBtnX - Math.floor((pr.behindCloseBtnWidth - pr.closeBtnWidth) / 2);
+            behindCloseBtn.setDimensions(
                 this.x + clX,
                 this.y + 1,
-                pr.closeBtnBgWidth,
+                pr.behindCloseBtnWidth,
                 pr.headHeight - 2
             );
 
@@ -227,7 +227,7 @@ export class BorderDecorationConsts {
     headHeight = 0;
     fillShrinkX = 0;
     fillShrinkY = 0;
-    closeBtnBgWidth = 0;
+    behindCloseBtnWidth = 0;
     closeBtnWidth = 0;
     closeBtnHeight = 0;
     closeBtnX = 0;
@@ -249,7 +249,7 @@ export class PalBorderDecorationConsts extends BorderDecorationConsts {
     readonly fillIconGroup = '000';
     readonly fillIconNumber = 2;
     readonly fillIconAdjustY = 1;
-    readonly closeBtnBgWidth = 11;
+    readonly behindCloseBtnWidth = 11;
     readonly closeBtnWidth = 7;
     readonly closeBtnHeight = 7;
     readonly closeBtnX = 8;
@@ -266,7 +266,7 @@ export class WndBorderDecorationConsts extends BorderDecorationConsts {
     readonly fillIconGroup = '000';
     readonly fillIconNumber = 3;
     readonly fillIconAdjustY = 1;
-    readonly closeBtnBgWidth = 13;
+    readonly behindCloseBtnWidth = 13;
     readonly closeBtnWidth = 11;
     readonly closeBtnHeight = 11;
     readonly closeBtnX = 9;

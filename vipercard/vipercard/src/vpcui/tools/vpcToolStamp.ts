@@ -49,13 +49,13 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
     /**
      * respond to mouse down event
      */
-    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {}
+    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBaseLayer: boolean): void {}
 
     /**
      * draw the clipart onto the page
      */
-    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
-        if (isVelOrBg) {
+    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBaseLayer: boolean): void {
+        if (isVelOrBaseLayer) {
             let theimg = this.currentImg;
             if (theimg && theimg.loaded && theimg.image) {
                 /* paint the image, centered on the mouse position */
@@ -65,9 +65,9 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
                 ty -= Math.round(srch / 2);
                 this.cbPaintRender().commitHtmlImageOntoImage(theimg.image, tx, ty, srcw, srch);
             }
-        } else if (!isVelOrBg && d.elRaw && d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceLeft')) {
+        } else if (!isVelOrBaseLayer && d.elRaw && d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceLeft')) {
             this.onChooseCategory();
-        } else if (!isVelOrBg && d.elRaw && d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceRight')) {
+        } else if (!isVelOrBaseLayer && d.elRaw && d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceRight')) {
             this.onChoosePicture();
         }
     }

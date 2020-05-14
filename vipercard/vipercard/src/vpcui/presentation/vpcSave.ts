@@ -82,7 +82,7 @@ export class VpcSave implements VpcSaveInterface {
         try {
             let newStackData = this.pr.getSerializedStack();
             let info = this.pr.vci.getModel().stack.getLatestStackLineage();
-            didSave = bool(await this.goSaveAsWithNewName(ses, info.stackName, newStackData));
+            didSave = await this.goSaveAsWithNewName(ses, info.stackName, newStackData);
         } catch (e) {
             this.pr.answerMsg(
                 longstr(`Save did not complete. If you encounter repeated
@@ -113,9 +113,9 @@ export class VpcSave implements VpcSaveInterface {
             let newStackData = this.pr.getSerializedStack();
             let info = this.pr.vci.getModel().stack.getLatestStackLineage();
             if (info.stackOwner === ses.username) {
-                didSave = bool(await this.goSaveQuietUpdate(ses, info.stackGuid, info.stackName, newStackData));
+                didSave = await this.goSaveQuietUpdate(ses, info.stackGuid, info.stackName, newStackData);
             } else {
-                didSave = bool(await this.goSaveAsWithNewName(ses, info.stackName, newStackData));
+                didSave = await this.goSaveAsWithNewName(ses, info.stackName, newStackData);
             }
         } catch (e) {
             await this.pr.answerMsgAsync(

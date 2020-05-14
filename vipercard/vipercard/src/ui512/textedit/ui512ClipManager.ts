@@ -59,11 +59,12 @@ export class ClipManager implements ClipManagerInterface {
             assertTrue(hiddenInput, '2>|could not create hiddenInput');
             hiddenInput.value = s;
             hiddenInput.select();
-            let succeeded = justConsoleMsgIfExceptionThrown(
+            let ret = justConsoleMsgIfExceptionThrown(
                 () => window.document.execCommand('copy'),
                 'copy'
             );
-            return bool(succeeded);
+            
+            return ret === undefined;
         } else {
             this.simClipboard = s;
             return true;

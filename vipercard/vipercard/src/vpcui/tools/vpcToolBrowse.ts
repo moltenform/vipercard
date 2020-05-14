@@ -16,8 +16,8 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolBase {
     /**
      * respond to mouse down event
      */
-    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
-        if (isVelOrBg) {
+    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBaseLayer: boolean): void {
+        if (isVelOrBaseLayer) {
             this.cbScheduleScriptEventSend(d);
         }
     }
@@ -25,8 +25,8 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolBase {
     /**
      * respond to mouse up event
      */
-    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
-        if (isVelOrBg) {
+    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBaseLayer: boolean): void {
+        if (isVelOrBaseLayer) {
             this.cbScheduleScriptEventSend(d);
         }
     }
@@ -35,7 +35,7 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolBase {
      * respond to mouse move event
      * mouseWithin events are scheduled by onIdle, not here.
      */
-    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {}
+    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBaseLayer: boolean): void {}
 
     /**
      * erase any uncommitted partial changes, called by Undo() etc

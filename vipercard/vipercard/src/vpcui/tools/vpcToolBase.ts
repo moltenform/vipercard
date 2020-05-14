@@ -22,11 +22,11 @@ export abstract class VpcAppUIToolBase {
     cbScheduleScriptEventSend: (d: EventDetails) => void;
 
     constructor(protected bounds: number[], protected userBounds: number[]) {}
-    abstract respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void;
+    abstract respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBaseLayer: boolean): void;
     abstract cancelCurrentToolAction(): void;
     abstract whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors;
-    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {}
-    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {}
+    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBaseLayer: boolean): void {}
+    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBaseLayer: boolean): void {}
     onOpenTool() {}
     onLeaveTool() {}
     onDeleteSelection() {}

@@ -747,7 +747,7 @@ export class UI512ViewDraw {
 
         /* use the 'borders' argument to also store canvas and bounds */
         let b = new UI512ViewDrawBorders(canvas, el.x, el.y, el.w, el.h, complete);
-        hasFocus = bool(hasFocus) || bool(this.allowMultipleFocus);
+        hasFocus = hasFocus || /* bool */ this.allowMultipleFocus;
         let methodName = 'go' + el.typename;
         Util512.callAsMethodOnClass(
             UI512ViewDraw.name,

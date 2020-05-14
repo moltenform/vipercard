@@ -52,7 +52,7 @@ export class VpcExecFrame {
         /* make special locals */
         this.locals.set('$result', VpcVal.Empty);
         this.locals.set('it', VpcVal.Empty);
-        assertTrue(bool(this.message), '5N|message is null');
+        assertTrue(this.message, '5N|message is null');
         this.messageChain = VpcExecFrame.getMessageChain(meId, statedParentId, tmpOutside);
     }
 

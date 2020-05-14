@@ -50,8 +50,8 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
     /**
      * respond to mouse down event
      */
-    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
-        if (!isVelOrBg && !(d.el && d.el.id.endsWith('UiSelectElPlaceholderForCursor'))) {
+    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBaseLayer: boolean): void {
+        if (!isVelOrBaseLayer && !(d.el && d.el.id.endsWith('UiSelectElPlaceholderForCursor'))) {
             return;
         }
 
@@ -100,7 +100,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                 this.st.offsetForMoveY = d.mouseY - this.st.elBorder.y;
                 this.st.elBorder.set('visible', false);
                 this.st.areCopyingMult = (d.mods & ModifierKeys.Opt) !== 0;
-                this.st.areCopying = bool(this.st.areCopyingMult) || bool((d.mods & ModifierKeys.Cmd) !== 0);
+                this.st.areCopying = this.st.areCopyingMult || /* bool */(d.mods & ModifierKeys.Cmd) !== 0;
                 this.st.elMask.set('visible', !this.st.areCopying);
                 this.st.mode = SelectToolMode.MovingRegion;
             } else {
@@ -114,12 +114,12 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
     /**
      * respond to mouse move event
      */
-    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {
+    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBaseLayer: boolean): void {
         let [prevX, prevY] = this.getTranslatedCoords(d.prevMouseX, d.prevMouseY);
         let [tnx, tny] = this.getTranslatedCoords(d.mouseX, d.mouseY);
 
         if (this.st && this.st.mode === SelectToolMode.SelectingRegion) {
-            if (!isVelOrBg && !(d.elNext && d.elNext.id.endsWith('UiSelectElPlaceholderForCursor'))) {
+            if (!isVelOrBaseLayer && !(d.elNext && d.elNext.id.endsWith('UiSelectElPlaceholderForCursor'))) {
                 return;
             }
 
@@ -179,7 +179,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
      *
      * see comment at the top of the class for more info
      */
-    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
+    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBaseLayer: boolean): void {
         if (this.st && this.st.mode === SelectToolMode.SelectingRegion) {
             /* if lasso, close the loop */
             if (tl === VpcTool.Lasso) {

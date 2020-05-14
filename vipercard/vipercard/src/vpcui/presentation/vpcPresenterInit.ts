@@ -202,7 +202,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
         /* make a map of tool number to tool response */
         for (let tl = VpcTool.__first; tl <= VpcTool.__last; tl++) {
             let ctg = getToolCategory(tl);
-            assertTrue(bool(this.tlResponses[ctg]), 'Km|');
+            assertTrue(this.tlResponses[ctg], 'Km|');
             this.tlNumToResponse[tl] = this.tlResponses[ctg];
         }
 

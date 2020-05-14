@@ -21,7 +21,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
     /**
      * respond to mouse down event
      */
-    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
+    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBaseLayer: boolean): void {
         this.lyrPanels.respondMouseDown(d);
         if (d.el && d.el.id === 'VpcModelRender$$baselayer') {
             /* click on the screen but on no item: deselect all */
@@ -85,7 +85,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
     /**
      * respond to mouse move event
      */
-    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean) {
+    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBaseLayer: boolean) {
         const minVelW = 5;
         const minVelH = 5;
         if (this.dragStatus) {
@@ -111,7 +111,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
     /**
      * respond to mouse up event
      */
-    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
+    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBaseLayer: boolean): void {
         this.lyrPanels.respondMouseUp(d);
         if (this.dragStatus) {
             /* cancel the resize if we're on a different card now or if selected vel was changed */

@@ -62,7 +62,7 @@ export class Util512BaseErr {
      * cast a class to an Error
      */
     clsAsErr() {
-        assertWarn(bool((this as any).typeName), 'RW|');
+        assertWarn((this as any).typeName, 'RW|');
         assertWarn((this as any).message, 'RV|');
         return (this as any) as Error;
     }
@@ -286,7 +286,7 @@ export class UI512ErrorHandling {
  */
 export function respondUI512Error(e: Error, context: string, logOnly = false) {
     let message =
-        bool((e as any).typeName?.includes('Message')) ||
+        (e as any).typeName?.includes('Message') ||
         (e as any).typeName?.includes('Msg');
     let warn = (e as any).typeName?.includes('Warn');
     let structure = bool((e as any).typeName);

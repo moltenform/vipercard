@@ -184,8 +184,8 @@ export const VpcPresenterEvents = /* static class */ {
     respondMouseDown(pr: VpcPresenterInterface, d: MouseDownEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg = trueIfDefinedAndNotNull(d.el) && bool(pr.lyrModelRender.isVelOrBaseLayer(d.el.id));
-                pr.getToolResponse(pr.vci.getTool()).respondMouseDown(pr.vci.getTool(), d, isUserElOrBg);
+                let isUserElOrBaseLayer = trueIfDefinedAndNotNull(d.el) && pr.lyrModelRender.isVelOrBaseLayer(d.el.id);
+                pr.getToolResponse(pr.vci.getTool()).respondMouseDown(pr.vci.getTool(), d, isUserElOrBaseLayer);
                 pr.lyrNonModalDlgHolder.respondMouseDown(d);
 
                 /* change focus on click, to make the property panel commit */
@@ -209,8 +209,8 @@ export const VpcPresenterEvents = /* static class */ {
     respondMouseUp(pr: VpcPresenterInterface, d: MouseUpEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBaseLayer(item.id)));
-                pr.getToolResponse(pr.vci.getTool()).respondMouseUp(pr.vci.getTool(), d, isUserElOrBg);
+                let isUserElOrBaseLayer = d.getAffectedElements().some(item => pr.lyrModelRender.isVelOrBaseLayer(item.id));
+                pr.getToolResponse(pr.vci.getTool()).respondMouseUp(pr.vci.getTool(), d, isUserElOrBaseLayer);
                 pr.lyrNonModalDlgHolder.respondMouseUp(d);
                 pr.lyrToolboxes.toolsMain.respondMouseUp(pr.app, d);
                 pr.lyrToolboxes.toolsPatterns.respondMouseUp(pr.app, d);
@@ -224,9 +224,9 @@ export const VpcPresenterEvents = /* static class */ {
      * send mousemove event to current tool
      */
     respondMouseMove(pr: VpcPresenterInterface, d: MouseMoveEventDetails) {
-        let isUserElOrBaseLayer = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBaseLayer(item.id)));
+        let isUserElOrBaseLayer = d.getAffectedElements().some(item => pr.lyrModelRender.isVelOrBaseLayer(item.id));
         pr.getToolResponse(pr.vci.getTool()).respondMouseMove(pr.vci.getTool(), d, isUserElOrBaseLayer);
-        let isNextAVelOrBaseLayer = trueIfDefinedAndNotNull(d.elNext) && bool(pr.lyrModelRender.isVelOrBaseLayer(d.elNext.id));
+        let isNextAVelOrBaseLayer = trueIfDefinedAndNotNull(d.elNext) && pr.lyrModelRender.isVelOrBaseLayer(d.elNext.id);
         if (d.elNext !== d.elPrev) {
             pr.refreshCursorElemKnown(d.elNext, isNextAVelOrBaseLayer);
         }

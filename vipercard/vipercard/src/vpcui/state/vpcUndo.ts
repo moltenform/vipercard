@@ -93,7 +93,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
     static checkIfCanDelete(vel: VpcElBase, vci: VpcStateInterface) {
         let currentCard = vci.getModel().getByIdUntyped(vci.getModel().productOpts.getS('currentCardId'));
         assertTrue(
-            bool(vci.getModel().findByIdUntyped(vel.idInternal)),
+            vci.getModel().findByIdUntyped(vel.idInternal),
             "6Z|deleting element that doesn't exist?",
             vel.idInternal
         );

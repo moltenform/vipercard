@@ -26,8 +26,8 @@ export class VpcAppUIToolShape extends VpcAppUIToolBase {
     /**
      * respond to mouse down event
      */
-    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
-        if (!isVelOrBg) {
+    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBaseLayer: boolean): void {
+        if (!isVelOrBaseLayer) {
             return;
         }
         if (!this.state) {
@@ -53,8 +53,8 @@ export class VpcAppUIToolShape extends VpcAppUIToolBase {
     /**
      * respond to mouse move event
      */
-    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {
-        if (!isVelOrBg) {
+    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBaseLayer: boolean): void {
+        if (!isVelOrBaseLayer) {
             return;
         }
         if (this.state && this.state.mode === ShapeToolMode.Dragging) {
@@ -77,7 +77,7 @@ export class VpcAppUIToolShape extends VpcAppUIToolBase {
     /**
      * respond to mouse up event
      */
-    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
+    respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBaseLayer: boolean): void {
         if (this.state && this.state.mode === ShapeToolMode.Dragging) {
             this.cbPaintRender().commitImageOntoImage([this.state.elStage.getCanvasForWrite()], 0, 0);
             this.onLeaveTool();

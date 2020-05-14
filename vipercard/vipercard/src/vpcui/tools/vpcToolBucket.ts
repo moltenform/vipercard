@@ -16,8 +16,8 @@ export class VpcAppUIToolBucket extends VpcAppUIToolBase {
     /**
      * respond to mouse down event
      */
-    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
-        if (!isVelOrBg) {
+    respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBaseLayer: boolean): void {
+        if (!isVelOrBaseLayer) {
             return;
         }
 
