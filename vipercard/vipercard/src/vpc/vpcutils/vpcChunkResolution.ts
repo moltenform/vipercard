@@ -4,7 +4,7 @@
 /* auto */ import { ChunkResolutionUtils, RequestedChunk, ResolvedChunk } from './vpcChunkResolutionUtils';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -220,9 +220,8 @@ export const ChunkResolution = /* static class */ {
         /* use same funky logic as put */
         chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compat);
 
-        let finalChild = this._getFinalChild(chunk)
-
         /* if the final child is a char, it's the one case where it is the same as put "" into */
+        let finalChild = this._getFinalChild(chunk)
         if (finalChild.granularity === VpcGranularity.Chars) {
             return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compat);
         }
@@ -240,7 +239,7 @@ export const ChunkResolution = /* static class */ {
                 pretend to delete word 3 and get the rightmost bound
                 pretend to delete word 1 and get the leftmost bound
                 then delete everything in-between
-            none of them 100% matched original product
+            none of them seemed to 100% match original product
          */
         checkThrow(finalChild.ordinal !== undefined ||finalChild.last === undefined || finalChild.first === finalChild.last, "we don't yet support deleting ranges");
         checkThrow(finalChild.ordinal !== undefined ||finalChild.last === undefined || finalChild.first <= finalChild.last, "we don't support backwards bounds");
@@ -270,7 +269,7 @@ export const ChunkResolution = /* static class */ {
         }
 
         /* if you delete something that isn't found, it is a no-op */
-       if (!resolved) {
+        if (!resolved) {
             return;
         }
 
@@ -279,35 +278,35 @@ export const ChunkResolution = /* static class */ {
         let narrowedAndAfter = txtFull.substring(resolved.startPos);
         ChunkResolutionUtils.resolveOrdinal(txtNarrowed, itemDel, current)
         
-        {
-            let startAndEnd: [number, number];
-            if (current.granularity === VpcGranularity.Items || current.granularity === VpcGranularity.Lines) {
-                startAndEnd = this._applyDeleteHelperItemsLines(
-                    txtNarrowed,
-                    itemDel,
-                    current.first - 1 /* one-based to 0 based */,
-                    current.granularity,
-                    narrowedAndAfter,
-                    txtFull,
-                    isChild ? resolved.startPos : -1
-                );
-            } else if (current.granularity === VpcGranularity.Words) {
-                startAndEnd = this._applyDeleteHelperWords(
-                    txtNarrowed,
-                    itemDel,
-                    current.first - 1 /* one-based to 0 based */,
-                    current.granularity,
-                    narrowedAndAfter,
-                    txtFull,
-                    isChild ? resolved.startPos : -1
-                );
-            } else {
-                checkThrowInternal(false, 'unknown type');
-            }
-
-            let [start, end] = startAndEnd;
-            cont.splice(resolved.startPos + start, end - start, '');
+        let startAndEnd: [number, number];
+        if (current.granularity === VpcGranularity.Items || current.granularity === VpcGranularity.Lines) {
+            startAndEnd = this._applyDeleteHelperItemsLines(
+                txtNarrowed,
+                itemDel,
+                current.first - 1 /* one-based to 0 based */,
+                current.granularity,
+                narrowedAndAfter,
+                txtFull,
+                compat,
+                isChild ? resolved.startPos : -1
+            );
+        } else if (current.granularity === VpcGranularity.Words) {
+            startAndEnd = this._applyDeleteHelperWords(
+                txtNarrowed,
+                itemDel,
+                current.first - 1 /* one-based to 0 based */,
+                current.granularity,
+                narrowedAndAfter,
+                txtFull,
+                compat,
+                isChild ? resolved.startPos : -1
+            );
+        } else {
+            checkThrowInternal(false, 'unknown type');
         }
+
+        let [start, end] = startAndEnd;
+        cont.splice(resolved.startPos + start, end - start, '');
     },
 
     /**
@@ -320,13 +319,14 @@ export const ChunkResolution = /* static class */ {
         granularity: VpcGranularity,
         narrowedAndAfter: string,
         txtFull: string,
+        compat: boolean,
         parentStartPos: number
     ): [number, number] {
         let table = ChunkResolutionUtils._getPositionsTable(txtNarrowed, granularity, delim);
         let start = 0
         let end = 0;
         if (currentPlace === -1) {
-            /* emulator confirms you can say word 0 of x */
+            /* emulator confirms you can say meaningfully say word 0 of x */
             start = 0;
             end = start;
             while (end < table[0]) {
@@ -340,8 +340,7 @@ export const ChunkResolution = /* static class */ {
             start = txtNarrowed.length;
             end = txtNarrowed.length;
             if (end === narrowedAndAfter.length) {
-                /*
-            this special case only applies to the true end of the string */
+                /* special case only applies to the true end of the string */
                 while (txtNarrowed[start - 1] === ' ') {
                     start--;
                 }
@@ -358,6 +357,7 @@ export const ChunkResolution = /* static class */ {
                 }
                 end++;
             }
+
             /* use narrowedAndAfter.length not txtNarrowed.length here,
             this special case only applies to the true end of the string */
             if (end >= narrowedAndAfter.length - 1 && !sawReturn && txtNarrowed.length === narrowedAndAfter.length) {
@@ -366,6 +366,7 @@ export const ChunkResolution = /* static class */ {
                 }
             }
         } else {
+            /* normal case in middle of the string */
             start = table[currentPlace];
             end = start;
             while (end < table[currentPlace + 1]) {
@@ -389,6 +390,7 @@ export const ChunkResolution = /* static class */ {
         granularity: VpcGranularity,
         narrowedAndAfter: string,
         txtFull: string,
+        compat: boolean,
         parentStartPos: number
     ): [number, number] {
         let table = ChunkResolutionUtils._getPositionsTable(txtNarrowed, granularity, delim);
@@ -399,20 +401,22 @@ export const ChunkResolution = /* static class */ {
             granularity === VpcGranularity.Items &&
             currentPlace === 0 &&
             parentStartPos > 0 &&
+            compat &&
             !txtNarrowed.includes(delim) &&
             txtFull[parentStartPos - 1] === '\n' &&
             (txtNarrowed.length ||
                 /* is at end of string */
                 parentStartPos + txtNarrowed.length === txtFull.length)
         ) {
-            /* weird corner case: delete more than normal - note it deletes backwards */
+            /* weird corner case: if you say delete item 1 of line 2
+            and there is text in line 2 but no commas, we need to
+            delete the entire line - it even deletes backwards */
             start = -1;
             end = txtNarrowed.length;
         } else if (currentPlace === -1) {
-            /* emulator confirms you can say word 0 of x */
+            /* emulator confirms you can say item 0 of x */
             if (
-                (granularity === VpcGranularity.Items && txtNarrowed.startsWith(activeChar)) ||
-                (granularity === VpcGranularity.Lines && txtNarrowed.startsWith(activeChar))
+            txtNarrowed.startsWith(activeChar)
             ) {
                 start = 0;
                 end = 1;
@@ -420,33 +424,27 @@ export const ChunkResolution = /* static class */ {
                 start = 0;
                 end = 0;
             }
-        } else if (currentPlace === table.length) {
+        } else if (currentPlace >= table.length) {
             start = 0;
             end = 0;
         } else if (currentPlace === table.length - 1) {
-            /* this is a weird case-it deletes commas both before and after */
+            /* this is a weird case-it might delete commas both before and after */
+            /* and newlines are significant, even for an 'item'. */
             if (
                 granularity === VpcGranularity.Items &&
                 (txtNarrowed.length === narrowedAndAfter.length || (narrowedAndAfter[txtNarrowed.length] === '\n' && !txtNarrowed.endsWith(activeChar)))
             ) {
                 start = table[table.length - 1];
                 end = txtNarrowed.length;
-                let a = 0;
-                while (txtNarrowed[start - 1] === activeChar) {
+                if (txtNarrowed[start - 1] === activeChar) {
                     start--;
-                    a++;
-                    if (a > 0) {
-                        break;
-                    }
                 }
             } else {
                 start = table[table.length - 1];
                 end = txtNarrowed.length;
             }
-        } else if (currentPlace > table.length - 1) {
-            start = 0;
-            end = 0;
         } else {
+            /* normal case in the middle of the string */
             start = table[currentPlace];
             end = start;
             while (end < table[currentPlace + 1]) {
@@ -466,22 +464,23 @@ export const ChunkResolution = /* static class */ {
     },
 
     /**
-     * match the really weird behavior seen.
+     * match the weird behavior seen in original product.
      * 1) first come, first serve, for each granularity
      * 2) regardless of order seen, sort in the order seen in enum VpcGranularity
      */
     _rearrangeChunksToMatchOriginalProduct(chunk: RequestedChunk, compat: boolean) {
-        /* simple case */
         if (!chunk.child) {
             return chunk;
         }
 
-        /* flatten it! the given order does not matter!!!
-        we'll helpfully use the fact that VpcGranularity #s are already in order,
-        and index them into a list*/
+        /* flatten it! the given order does not matter!
+        we'll use the fact that VpcGranularity enum numbers are already in order,
+        and index them into a list */
         let max = VpcGranularity.__Max + 1;
         let arr = Util512.repeat(max, undefined as O<RequestedChunk>);
-        /* remember that it's first come, first serve */
+        
+        /* remember that it's first come, first serve,
+        so placing into the array intentionally overwrites what we saw before */
         let current: O<RequestedChunk> = chunk;
         let lastKey = -1;
         while (current) {
@@ -519,25 +518,26 @@ export const ChunkResolution = /* static class */ {
         /* reverse it so that higher ones are first */
         arr.reverse();
 
-        let ret: O<RequestedChunk>;
-        let currentBuild: O<RequestedChunk>;
+        /* from list back into a tree */
+        let newRoot: O<RequestedChunk>;
+        let rebuild: O<RequestedChunk>;
         for (let i = 0; i < arr.length; i++) {
             if (arr[i]) {
-                if (!currentBuild) {
-                    currentBuild = arr[i];
-                    ret = arr[i];
+                if (!rebuild) {
+                    rebuild = arr[i];
+                    newRoot = arr[i];
                 } else {
-                    currentBuild.child = arr[i];
-                    currentBuild = arr[i];
+                    rebuild.child = arr[i];
+                    rebuild = arr[i];
                 }
             }
         }
 
         /* be sure to overwrite the child here in case it used to have a child */
-        if (currentBuild) {
-            currentBuild.child = undefined;
+        if (rebuild) {
+            rebuild.child = undefined;
         }
 
-        return ensureDefined(ret, 'chunk dissapeared');
+        return ensureDefined(newRoot, 'newRoot');
     }
 };

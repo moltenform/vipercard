@@ -62,11 +62,11 @@ export const SimpleUtil512Tests = /* static class */ {
         let colls: SimpleUtil512TestCollection[] = [
             /* testCollectionvpcuiServer, */
             /* testCollectionScriptExtensive, */
-            testCollectionScriptExtensiveChunk,
             testCollection03chunkAdditional,
             testCollection03chunkBasic,
             testCollection03exprObjectRef,
             testCollection03lexer,
+            testCollectionScriptExtensiveChunk,
             //~ testCollectionScriptRewrites,
             //~ testCollectionScriptRunCustomFns,
             //~ testCollectionScriptRunCmd,
@@ -109,6 +109,11 @@ export const SimpleUtil512Tests = /* static class */ {
         colls.reverse();
         let colNamesSeen = new MapKeyToObjectCanSet<boolean>();
         let mapSeen = new MapKeyToObjectCanSet<boolean>();
+
+        /* put slow tests after fast tests */
+        let slowTests = colls.filter(item=> item.slow)
+        let fastTests = colls.filter(item=> !item.slow)
+        colls = fastTests.concat(slowTests)
         let countTotal = colls
             .filter(item => includeSlow || !item.slow)
             .map(item => item.tests.length)

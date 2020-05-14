@@ -622,7 +622,19 @@ t.test('03chunk, recommended use scenarios', () => {
         'put "" into item 3 of arrayLike\\arrayLike && the number of items in arrayLike',
         '11,,,,9,,12 7'
     );
-    b.t('item 1 of arrayLike && item 3 of arrayLike && item 7 of arrayLike', '11  12');
+    b.t(
+        'put 1 into item 4 of arrayLike\\arrayLike && the number of items in arrayLike',
+        '11,,,1,9,,12 7'
+    );
+    b.t(
+        'delete item 4 of arrayLike\\arrayLike && the number of items in arrayLike',
+        '11,,,9,,12 6'
+    );
+    b.t(
+        'delete item 3 of arrayLike\\arrayLike && the number of items in arrayLike',
+        '11,,9,,12 5'
+    );
+    b.t('item 1 of arrayLike && item 2 of arrayLike && item 5 of arrayLike', '11  12');
     /* use as a 2-d array */
     b.t('global arr2d\nput "" into arr2d\\1', '1');
     b.t(
@@ -669,6 +681,18 @@ t.test('03chunk, recommended use scenarios', () => {
         'put "" into item 3 of line 5 of arr2d\\arr2d && the number of lines in arr2d',
         ',12,21\n\n,14,,,9,,20\n\n,,,,22 5'
     );
+    b.t(
+        'delete item 2 of line 3 of arr2d\\arr2d && the number of lines in arr2d',
+        ',12,21\n\n,,,9,,20\n\n,,,,22 5'
+    );
+    b.t(
+        'put 23 into item 1 of line 2 of arr2d\\arr2d && the number of lines in arr2d',
+        ',12,21\n23\n,,,9,,20\n\n,,,,22 5'
+    );
+    b.t(
+        'delete item 1 of line 2 of arr2d\\arr2d && the number of lines in arr2d',
+        ',12,21\n\n,,,9,,20\n\n,,,,22 5'
+    );
     b.batchEvaluate(h3);
     /* loops */
     const code = `
@@ -707,7 +731,7 @@ end sum2d
         'global testresult1, arr2d\nput sum2d(arr2d) into testresult1'
     );
     got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
-    assertWarnEq((12 + 21 + 14 + 9 + 20 + 22).toString(), got, '');
+    assertWarnEq((12 + 21 + 9 + 20 + 22).toString(), got, '');
     h3.vcstate.vci.undoableAction(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
     );
