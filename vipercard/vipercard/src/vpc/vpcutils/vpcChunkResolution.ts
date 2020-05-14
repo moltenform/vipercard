@@ -209,11 +209,21 @@ export const ChunkResolution = /* static class */ {
         checkThrow(!chunk.hasBackwardsBounds(), "backwards bounds - don't allow delete item 3 to 2 of x.");
         checkThrow(itemDel !== '\n', "we haven't tested with an itemdel of newline");
 
-        if (chunk.granularity === VpcGranularity.Chars) {
-            return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compat);
-        }
 
         chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compat);
+
+        {
+            let currentTmp: O<RequestedChunk> = chunk;
+            while (currentTmp.child) {
+                currentTmp = currentTmp.child
+            }
+            if (currentTmp.granularity === VpcGranularity.Chars) {
+                return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compat);
+            }
+            checkThrow(currentTmp.ordinal !== undefined ||currentTmp.last === undefined || currentTmp.first === currentTmp.last, "we don't yet support deleting ranges");
+            checkThrow(currentTmp.ordinal !== undefined ||currentTmp.last === undefined || currentTmp.first <= currentTmp.last, "we don't support backwards bounds");
+        }
+
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         let current: O<RequestedChunk> = chunk;
         let isChildOfAddedLine = false; /* doesn't matter for reads */
@@ -239,12 +249,7 @@ export const ChunkResolution = /* static class */ {
             isChild = true;
         }
 
-        checkThrow(!current.last || current.first === current.last, "we don't yet support deleting ranges");
-        checkThrow(!current.last || current.first <= current.last, "we don't support backwards bounds");
-        if (!resolved) {
-            /* delete something that isn't found is a no-op */
-            return;
-        }
+        
 
         /*
         we don't yet support deleting ranges.
@@ -260,10 +265,23 @@ export const ChunkResolution = /* static class */ {
                 then delete everything in-between
         */
 
+        //~ if (current.ordinal === undefined) {
+            //~ checkThrow(current.last === undefined || current.first === current.last, "we don't yet support deleting ranges");
+            //~ checkThrow(current.last === undefined || current.first <= current.last, "we don't support backwards bounds");
+        //~ }
+
+       if (!resolved) {
+            /* delete something that isn't found is a no-op */
+            return;
+        }
         let isLastOfRange = true;
-        let unfFull = cont.getRawString();
+        let unfFull = cont.getRawString()
         let unf = unfFull.substring(resolved.startPos, resolved.endPos);
         let unfAndAfter = unfFull.substring(resolved.startPos);
+        ChunkResolutionUtils.resolveOrdinal(unf, itemDel, current)
+        //~ checkThrow(current.last === undefined || current.first === current.last, "we don't yet support deleting ranges");
+        //~ checkThrow(current.last === undefined || current.first <= current.last, "we don't support backwards bounds");
+        
         {
             isLastOfRange = true;
             let startAndEnd: [number, number];

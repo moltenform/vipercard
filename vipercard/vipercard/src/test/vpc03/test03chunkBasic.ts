@@ -9,7 +9,9 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-/* most tests here, unlike in test03chunk additional,
+/* all tests here confirmed in emulator -
+yes, it's weird that put and delete ignore order.
+most tests here, unlike in test03chunk additional,
 are redundant with those in the extensive test. */
 
 let t = new SimpleUtil512TestCollection('testCollection03chunkBasic');
@@ -134,6 +136,7 @@ t.test('03 chunk groundwork', () => {
         'global z1\nput z1 into z\nput "AA" into item 1 to fifth item of z\\z',
         'ERR:6:parse err'
     );
+
     b.batchEvaluate(h3, [EvaluateWithVarAndFld]);
 });
 

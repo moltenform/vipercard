@@ -145,11 +145,15 @@ class RunExtensiveChunkTests {
                 entry.startsWith('DELETE') &&
                 this.isADeleteWithFinalRange(entry.split('\t')[1])
             ) {
+                //~ if (entry.split('\t')[1].includes("word 1 to 2 of item 2 to 3 of")) {
+                    //~ debugger
+                //~ }
+                
                 /* we don't support deleting ranges,
                 so confirm that we throw */
                 let b = new ScriptTestBatch();
                 let smcode = this.genTestCode(entry, [], 1).trim();
-                b.t(`${smcode}\\z`, 'ERR:6:deleting ranges');
+                b.t(`${smcode}\\1`, 'ERR:6:deleting ranges');
                 b.batchEvaluate(h);
                 this.skipped++;
             } else {

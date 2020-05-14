@@ -159,19 +159,9 @@ export const ChunkResolutionUtils = /* static class */ {
      * return semi-inclusive bounds [start, end)
      */
     _getBoundsForGet(s: string, itemDel: string, ch: RequestedChunk): O<[number, number]> {
+        this.resolveOrdinal(s, itemDel, ch)
         let first = ch.first;
         let last = ch.last;
-        if (ch.ordinal !== undefined) {
-            let count = ChunkResolutionUtils.applyCount(s, itemDel, ch.granularity, false);
-            let maybeFirst = findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, count);
-            if (maybeFirst === undefined) {
-                return undefined;
-            } else {
-                first = maybeFirst;
-            }
-
-            last = first;
-        }
 
         checkThrow(first >= 0 && (!last || last >= 0), 'do not allow negative');
         if (ch.granularity === VpcGranularity.Chars && last !== undefined && last < first) {
@@ -211,12 +201,10 @@ export const ChunkResolutionUtils = /* static class */ {
     },
 
     /**
-     * we've been asked to get item x to y of z.
-     * return semi-inclusive bounds [start, end)
+     * resolve "first" or "last"
+     * treat "tenth" exactly the same as "10", even if there are not 10 items
      */
-    _getBoundsForSet(sInput: string, itemDel: string, ch: RequestedChunk): [number, number, string] {
-        let first = ch.first;
-        let last = ch.last;
+    resolveOrdinal(sInput: string, itemDel: string, ch: RequestedChunk) {
         if (ch.ordinal !== undefined) {
             let upperBound = largeArea;
             if (
@@ -227,9 +215,20 @@ export const ChunkResolutionUtils = /* static class */ {
                 upperBound = ChunkResolutionUtils.applyCount(sInput, itemDel, ch.granularity, false);
             }
 
-            first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, upperBound), 'too big an index');
-            last = first;
+            ch.first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, upperBound), 'too big an index');
+            ch.last = ch.first;
+            ch.ordinal = undefined
         }
+    },
+
+    /**
+     * we've been asked to get item x to y of z.
+     * return semi-inclusive bounds [start, end)
+     */
+    _getBoundsForSet(sInput: string, itemDel: string, ch: RequestedChunk): [number, number, string] {
+        this.resolveOrdinal(sInput, itemDel, ch)
+        let first = ch.first;
+        let last = ch.last;
 
         checkThrow(first >= 0 && (!last || last >= 0), 'do not allow negative');
         assertTrue(first !== null && first !== undefined && last !== null, '5;|invalid first or last');

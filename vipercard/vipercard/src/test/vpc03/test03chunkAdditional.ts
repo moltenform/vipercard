@@ -10,7 +10,9 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-/* most tests here, unlike in test03chunk additional,
+/* all tests here confirmed in emulator -
+yes, it's weird that put and delete ignore order.
+most tests here, unlike in test03chunk additional,
 are not covered in the extensive test. */
 
 let t = new SimpleUtil512TestCollection('testCollection03chunkAdditional');
@@ -500,6 +502,33 @@ t.test('03chunkexpression_recursivescopes', () => {
     );
     b.batchEvaluate(h3, [EvaluateWithVarAndFld]);
 });
+
+t.test('03chunkexpression_ordinal recursive', () => {
+    let b = new ScriptTestBatch();
+    b.t('global z1\nput "a,b"&cr&"cd,ef"&cr&"g,h"&cr&"ij"&cr&"kl"&cr&"mn,op"&cr&"qr" into z1\\1', '1');
+    b.t('second line of second item of z1', 'cd');
+    b.t('put z1 into z\nput "A" into second line of second item of z\\z', 'a,b\ncd,A\ng,h\nij\nkl\nmn,op\nqr');
+    b.t('put z1 into z\ndelete second line of second item of z\\z', 'a,b\ncd\ng,h\nij\nkl\nmn,op\nqr');
+    b.t('last line of last item of z1', 'qr');
+    b.t('put z1 into z\nput "A" into last line of last item of z\\z', 'a,b\ncd,ef\ng,h\nij\nkl\nmn,op\nA');
+    b.t('put z1 into z\ndelete last line of last item of z\\z', 'a,b\ncd,ef\ng,h\nij\nkl\nmn,op');
+    b.t('second char of second item of z1', '\n');
+    b.t('put z1 into z\nput "A" into second char of second item of z\\z', 'a,bAcd,ef\ng,h\nij\nkl\nmn,op\nqr');
+    b.t('put z1 into z\ndelete second char of second item of z\\z', 'a,bcd,ef\ng,h\nij\nkl\nmn,op\nqr');
+    b.t('second item of second char of z1', '');
+    b.t('put z1 into z\nput "A" into second item of second char of z\\z', 'a,bAcd,ef\ng,h\nij\nkl\nmn,op\nqr');
+    b.t('put z1 into z\ndelete second item of second char of z\\z', 'a,bcd,ef\ng,h\nij\nkl\nmn,op\nqr');
+    b.t('global z1\nput "a,b,c" into z1\\1', '1');
+    b.t('put z1 into z\ndelete first item of z\\z', 'b,c');
+    b.t('put z1 into z\ndelete last item of z\\z', 'a,b');
+    b.t('global z1\nput "a"&cr&"b"&cr&"c" into z1\\1', '1');
+    b.t('put z1 into z\ndelete first line of z\\z', 'b\nc');
+    b.t('put z1 into z\ndelete last line of z\\z', 'a\nb\n');
+    b.t('global z1\nput "abcd" into z1\\1', '1');
+    b.t('put z1 into z\ndelete first char of z\\z', 'bcd');
+    b.t('put z1 into z\ndelete last char of z\\z', 'abc');
+    b.batchEvaluate(h3, [EvaluateWithVarAndFld]);
+})
 
 /**
  * math ops
