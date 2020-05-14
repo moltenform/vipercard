@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { VpcChunkPreposition, VpcGranularity } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolutionInternal';
+/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { ChunkResolution } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { ReadableContainerVar, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';

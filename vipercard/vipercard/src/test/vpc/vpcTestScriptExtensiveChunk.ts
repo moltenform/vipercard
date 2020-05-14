@@ -37,7 +37,7 @@ t.atest('ScriptExtensiveChunk', async () => {
  */
 class RunExtensiveChunkTests {
     failures = 0;
-    deferred = 0;
+    acceptibleSkips = 0;
     async loadTestData() {
         let url = '/resources03a/test/testScriptExtensiveChunkTests.txt';
         let txt = await Util512Higher.asyncLoadJsonString(url);
@@ -105,8 +105,8 @@ class RunExtensiveChunkTests {
             if (!data.length) {
                 console.log(
                     longstr(`extensive chunk tests done with ${count} tests,
-                     ${this.failures} failures, ${this.deferred}
-                     confirmed to be skipped.`)
+                     ${this.failures} failures, ${this.acceptibleSkips}
+                     completely acceptable skips.`)
                 );
                 return;
             }
@@ -166,7 +166,7 @@ class RunExtensiveChunkTests {
                 let smcode = this.genTestCode(entry, [], 1).trim();
                 b.t(`${smcode}\\z`, 'ERR:6:deleting ranges');
                 b.batchEvaluate(h);
-                this.deferred++;
+                this.acceptibleSkips++;
             } else {
                 i++;
                 code += this.genTestCode(entry, expecteds, i);

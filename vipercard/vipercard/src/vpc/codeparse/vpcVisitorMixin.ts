@@ -6,7 +6,7 @@
 /* auto */ import { tkstr } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
-/* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolutionInternal';
+/* auto */ import { RequestedChunk } from '../vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { ChunkResolution } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { VelRenderId } from './../vel/velRenderName';

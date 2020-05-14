@@ -203,9 +203,10 @@ t.test('03chunkexpression_additional chunk tests', () => {
     b.t('global z1\nput "  "&cr&" ab  "&cr&" bc  "&cr&" de  "&cr&" " into z1\\1', '1');
     b.t('put z1 into z\ndelete word 3 of z\\z', '  \n ab  \n bc  \n \n ');
     b.t(
-        longstr(`global z1\nput "ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&"ij"&cr&"kl"&cr&
-         "mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr&"45 "&cr&"67 89,/."&cr&
-         "#$,;: &*,(),-="&cr&"~+, <>"&cr&"[],{}" into z1\\1`),
+        longstr(`global z1{{NEWLINE}}put "ab"&cr&"cd,ef"&cr&""&cr&"gh"&cr&
+        "ij"&cr&"kl"&cr&"mn,op"&cr&"qr"&cr&"st,uv,wx"&cr&"01 23"&cr
+        &"45 "&cr&"67 89,/."&cr&"#$,;: &*,(),-="&cr&"~+, <>"&cr&
+        "[],{}" into z1\\1`),
         '1'
     );
     b.t(
@@ -914,21 +915,20 @@ end getBoldChars
     );
     /* recurse */
     b.t(
-        longstr(`resetStyle\nset the textstyle of item 2 of item 1 to 2
+        longstr(`resetStyle{{NEWLINE}}set the textstyle of item 2 of item 1 to 2
          of cd fld 1 to bold\\getBoldChars()`),
         ''
     );
     b.t(
-        longstr(`resetStyle\nset the textstyle of item 2 to 3
+        longstr(`resetStyle{{NEWLINE}}set the textstyle of item 2 to 3
          of item 1 to 3 of cd fld 1 to bold\\getBoldChars()`),
         ',cd'
     );
     b.t(
         longstr(
-            `resetStyle\nset the textstyle of item 2 to 3
+            `resetStyle{{NEWLINE}}set the textstyle of item 2 to 3
          of item 2 to 3 of item 1 to 3 of cd fld 1 to bold\\getBoldChars()`,
-            ''
-        ),
+            ),
         'cd'
     );
     /* reset fld */

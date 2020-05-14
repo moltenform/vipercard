@@ -2,10 +2,10 @@
 /* auto */ import { VpcIntermedValBase } from './vpcVal';
 /* auto */ import { ReadableContainer, WritableContainer } from './vpcUtils';
 /* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, checkThrowInternal, findPositionFromOrdinalOrPosition } from './vpcEnums';
-/* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
-/* auto */ import { largeArea } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { O } from '../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from '../../ui512/utils/util512Assert';
+/* auto */ import { Util512, ValHolder } from '../../ui512/utils/util512';
+/* auto */ import { largeArea } from '../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -14,14 +14,14 @@
  * the input is given as 1-based but
  * internally in this class we use 0-based indexes
  */
-export const ChunkResolutionInternal = /* static class */ {
+export const ChunkResolutionUtils = /* static class */ {
     /**
      * make a table of positions where items start
      * positions are 0-based
      * "a,bb,c" -> [0, 2, 5]
      */
     _getPositionsTable(s: string, type: VpcGranularity, itemDel: string): number[] {
-        let re = ChunkResolutionInternal.getRegex(type, itemDel);
+        let re = ChunkResolutionUtils.getRegex(type, itemDel);
         let isWords = type === VpcGranularity.Words;
         let positions: number[] = [];
         if (!isWords || (!s.startsWith(' ') && !s.startsWith('\n'))) {
@@ -162,7 +162,7 @@ export const ChunkResolutionInternal = /* static class */ {
         let first = ch.first;
         let last = ch.last;
         if (ch.ordinal !== undefined) {
-            let count = ChunkResolutionInternal.applyCount(s, itemDel, ch.granularity, false);
+            let count = ChunkResolutionUtils.applyCount(s, itemDel, ch.granularity, false);
             let maybeFirst = findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, count);
             if (maybeFirst === undefined) {
                 return undefined;
@@ -224,7 +224,7 @@ export const ChunkResolutionInternal = /* static class */ {
                 ch.ordinal === OrdinalOrPosition.Middle ||
                 ch.ordinal === OrdinalOrPosition.Any
             ) {
-                upperBound = ChunkResolutionInternal.applyCount(sInput, itemDel, ch.granularity, false);
+                upperBound = ChunkResolutionUtils.applyCount(sInput, itemDel, ch.granularity, false);
             }
 
             first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, upperBound), 'too big an index');
@@ -271,9 +271,10 @@ export const ChunkResolutionInternal = /* static class */ {
      * 'put the number of words in x into y'
      */
     applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
-        /* in the public interface, change behavior to match original product */
+        /* in the public interface, change behavior to match original product
+        behavior confirmed in emulator. */
         let adjust = 0;
-        if (isPublicCall && sInput === '' && (type === VpcGranularity.Items || VpcGranularity.Lines)) {
+        if (isPublicCall && type === VpcGranularity.Lines && sInput === '') {
             return 0;
         } else if (isPublicCall && type === VpcGranularity.Items && !sInput.includes(itemDel) && sInput.trim() === '') {
             return 0;
@@ -289,14 +290,8 @@ export const ChunkResolutionInternal = /* static class */ {
 
         if (type === VpcGranularity.Chars) {
             return sInput.length + adjust;
-        } else if (type === VpcGranularity.Items) {
-            return ChunkResolutionInternal._getPositionsTable(sInput, type, itemDel).length + adjust;
-        } else if (type === VpcGranularity.Lines) {
-            return ChunkResolutionInternal._getPositionsTable(sInput, type, itemDel).length + adjust;
-        } else if (type === VpcGranularity.Words) {
-            return ChunkResolutionInternal._getPositionsTable(sInput, type, itemDel).length + adjust;
         } else {
-            checkThrow(false, `5-|unknown chunk granularity ${type}`);
+            return ChunkResolutionUtils._getPositionsTable(sInput, type, itemDel).length + adjust;
         }
     },
 
@@ -329,7 +324,6 @@ export const ChunkResolutionInternal = /* static class */ {
 
                 /* still add our commas to the end */
                 let fakeNewS = '';
-                //~ let result = fakeNewS + okToAppend ? bounds[2] : '';
                 okToAppend = true;
                 let result = fakeNewS + okToAppend ? bounds[2] : '';
                 let insertionPoint = parent.startPos + bounds[0];
@@ -349,10 +343,6 @@ export const ChunkResolutionInternal = /* static class */ {
                     retbounds = [-parent.startPos + insertionPoint, bounds[1] + result.length];
                 }
             } else if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
-                //~ if (!okToAppend) {
-                //~ /* ignore adding the newones */
-                //~ bounds[2] = ''
-                //~ }
                 if (compat && parent.startPos === parent.endPos && isChildOfAddedLine && bounds[2]) {
                     bounds[2] = '';
                 }
@@ -421,7 +411,9 @@ export class RequestedChunk extends VpcIntermedValBase {
         return other;
     }
 
-    /** are bounds backwards? we sometimes support this */
+    /**
+     * are bounds backwards? we sometimes support this
+     */
     hasBackwardsBounds(): boolean {
         return this.last !== undefined && this.last < this.first;
     }

@@ -1,7 +1,7 @@
 
 /* auto */ import { ReadableContainer, WritableContainer } from './vpcUtils';
 /* auto */ import { VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowInternal } from './vpcEnums';
-/* auto */ import { ChunkResolutionInternal, RequestedChunk, ResolvedChunk } from './vpcChunkResolutionInternal';
+/* auto */ import { ChunkResolutionUtils, RequestedChunk, ResolvedChunk } from './vpcChunkResolutionUtils';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
@@ -81,7 +81,7 @@ export const ChunkResolution = /* static class */ {
                 /* narrow it down */
                 let addedExtra = new ValHolder<boolean>(false);
                 resolved = ensureDefined(
-                    ChunkResolutionInternal.doResolveOne(
+                    ChunkResolutionUtils.doResolveOne(
                         current,
                         resolved,
                         itemDel,
@@ -101,7 +101,7 @@ export const ChunkResolution = /* static class */ {
             } else {
                 /* insert the real text */
                 resolved = ensureDefined(
-                    ChunkResolutionInternal.doResolveOne(
+                    ChunkResolutionUtils.doResolveOne(
                         current,
                         resolved,
                         itemDel,
@@ -175,7 +175,7 @@ export const ChunkResolution = /* static class */ {
         let isChildOfAddedLine = false; /* doesn't matter for reads */
         let okToAppend = true;
         while (current && resolved) {
-            resolved = ChunkResolutionInternal.doResolveOne(
+            resolved = ChunkResolutionUtils.doResolveOne(
                 current,
                 resolved,
                 itemDel,
@@ -224,7 +224,7 @@ export const ChunkResolution = /* static class */ {
                 break;
             }
 
-            resolved = ChunkResolutionInternal.doResolveOne(
+            resolved = ChunkResolutionUtils.doResolveOne(
                 current,
                 resolved,
                 itemDel,
@@ -311,7 +311,7 @@ export const ChunkResolution = /* static class */ {
         unfFull: string,
         parentStartPos: number
     ): [number, number] {
-        let table = ChunkResolutionInternal._getPositionsTable(unf, granularity, delim);
+        let table = ChunkResolutionUtils._getPositionsTable(unf, granularity, delim);
         let start = 0,
             end = 0;
         if (currentPlace === -1) {
@@ -379,7 +379,7 @@ export const ChunkResolution = /* static class */ {
         unfFull: string,
         parentStartPos: number
     ): [number, number] {
-        let table = ChunkResolutionInternal._getPositionsTable(unf, granularity, delim);
+        let table = ChunkResolutionUtils._getPositionsTable(unf, granularity, delim);
         let start = 0,
             end = 0;
         let activeChar = granularity === VpcGranularity.Items ? delim : '\n';
@@ -450,7 +450,7 @@ export const ChunkResolution = /* static class */ {
      * 'put the number of words in x into y'
      */
     applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
-        return ChunkResolutionInternal.applyCount(sInput, itemDel, type, isPublicCall);
+        return ChunkResolutionUtils.applyCount(sInput, itemDel, type, isPublicCall);
     },
 
     /**

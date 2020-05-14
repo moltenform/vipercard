@@ -7,7 +7,7 @@
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { MapTermToMilliseconds, OrdinalOrPosition, SortType, VpcChunkPreposition, VpcElType, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, checkThrowInternal, checkThrowNotifyMsg, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
-/* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolutionInternal';
+/* auto */ import { RequestedChunk } from '../vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { ChunkResolution } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';

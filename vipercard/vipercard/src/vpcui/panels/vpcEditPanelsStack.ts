@@ -66,9 +66,9 @@ export class VpcEditPanelsStack extends VpcEditPanelsBase {
             let isCurrently = vci.getModel().stack.getB('compatibilitymode');
             let offOn = isCurrently ? 'on' : 'off';
             let onOff = isCurrently ? 'off' : 'on';
-            let msg = deleteThis.longstr(
-                `Turn ${onOff} this setting for more compatibility with ${cAltProductName}? Currently is ${offOn}.`,
-                ''
+            let msg = longstr(
+                `Turn ${onOff} this setting for more compatibility
+                with ${cAltProductName}? Currently is ${offOn}.`
             );
             let chosen = await vci.answerMsgAsync(msg, 'OK', 'Cancel');
             if (chosen === 0) {

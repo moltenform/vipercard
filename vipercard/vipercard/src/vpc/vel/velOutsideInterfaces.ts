@@ -3,7 +3,7 @@
 /* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { PropAdjective, VpcElType, VpcTool } from './../vpcutils/vpcEnums';
-/* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolutionInternal';
+/* auto */ import { RequestedChunk } from '../vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { VpcModelTop } from './velModelTop';
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcElBase } from './velBase';
