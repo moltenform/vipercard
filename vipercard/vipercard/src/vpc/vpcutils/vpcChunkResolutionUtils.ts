@@ -159,7 +159,7 @@ export const ChunkResolutionUtils = /* static class */ {
      * return semi-inclusive bounds [start, end)
      */
     _getBoundsForGet(s: string, itemDel: string, ch: RequestedChunk): O<[number, number]> {
-        this.resolveOrdinal(s, itemDel, ch)
+        this.resolveOrdinal(s, itemDel, ch);
         let first = ch.first;
         let last = ch.last;
 
@@ -217,7 +217,7 @@ export const ChunkResolutionUtils = /* static class */ {
 
             ch.first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, upperBound), 'too big an index');
             ch.last = ch.first;
-            ch.ordinal = undefined
+            ch.ordinal = undefined;
         }
     },
 
@@ -226,7 +226,7 @@ export const ChunkResolutionUtils = /* static class */ {
      * return semi-inclusive bounds [start, end)
      */
     _getBoundsForSet(sInput: string, itemDel: string, ch: RequestedChunk): [number, number, string] {
-        this.resolveOrdinal(sInput, itemDel, ch)
+        this.resolveOrdinal(sInput, itemDel, ch);
         let first = ch.first;
         let last = ch.last;
 
@@ -307,24 +307,24 @@ export const ChunkResolutionUtils = /* static class */ {
         compat: boolean,
         prep: O<VpcChunkPreposition>,
         isWriteContext: boolean,
-        isChildOfAddedText: boolean,
+        isChildOfAddedText: boolean
     ): [O<ResolvedChunk>, boolean] {
         /* we limit our view to the parent scope */
         let unformatted = parent.container.getRawString();
         unformatted = unformatted.substring(parent.startPos, parent.endPos);
         let retbounds: O<[number, number]>;
-        let addedExtraText = false
+        let addedExtraText = false;
         if (isWriteContext) {
             let writeAccess = parent.container as WritableContainer;
             let bounds = this._getBoundsForSet(unformatted, itemDel, request);
             if (bounds[2] && bounds[2].length) {
                 /* it's a brand new item, 'before' or 'after' isn't applicable */
-                prep = VpcChunkPreposition.Into
+                prep = VpcChunkPreposition.Into;
             }
 
             if (newString === undefined) {
                 /* if we are in a write-context and newString is undefined,
-                this means that we are in a parent scope i.e. the 
+                this means that we are in a parent scope i.e. the
                 'line 3' in 'put "a" into item 2 of line 3 of z' */
 
                 /* for compat, don't add extra commas if a parent scope
@@ -359,7 +359,7 @@ export const ChunkResolutionUtils = /* static class */ {
                 if (compat && parent.startPos === parent.endPos && isChildOfAddedText) {
                     bounds[2] = '';
                 }
-                
+
                 /* prepare to insert text */
                 let result = bounds[2] + newString;
                 let insertionPoint = parent.startPos + bounds[0];

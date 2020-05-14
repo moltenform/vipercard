@@ -417,9 +417,9 @@ t.test('execCommands hide and show', () => {
     b.t('show cd 1\\0', `ERR:unknown property visible`);
     b.t('show bg 1\\0', `ERR:unknown property visible`);
     b.t('show this stack\\0', `ERR:unknown property visible`);
-    b.t('show cd btn "p1" from 12, 23\\0', `ERR:must be show *at*`);
-    b.t('show cd btn "p1" into 12, 23\\0', `ERR:must be show *at*`);
-    b.t('show cd btn "p1" xyz 12, 23\\0', `ERR:must be show *at*`);
+    b.t('show cd btn "p1" from 12, 23\\0', `ERR:parse err`);
+    b.t('show cd btn "p1" into 12, 23\\0', `ERR:parse err`);
+    b.t('show cd btn "p1" xyz 12, 23\\0', `ERR:parse err`);
     b.t('show cd btn "p1" at 12\\0', `ERR:Not a list`);
     b.t('show cd btn "p1" at "12a,23"\\0', `ERR:Not a list`);
     b.t('show cd btn "p1" at "12,23a"\\0', `ERR:Not a list`);

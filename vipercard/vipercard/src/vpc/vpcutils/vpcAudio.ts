@@ -64,7 +64,8 @@ export const VpcAudio = /* static class */ {
      * will interrupt a sound that is currently playing
      */
     play(key: string) {
-        return justConsoleMsgIfExceptionThrown(() => {
+        return (
+            justConsoleMsgIfExceptionThrown(() => {
                 let aud = window.document.getElementById('vpcaudiohtmlel' + key) as HTMLAudioElement;
                 if (aud) {
                     VpcAudio._playAsyncImpl(aud);
@@ -72,8 +73,8 @@ export const VpcAudio = /* static class */ {
                 } else {
                     return false;
                 }
-            }, 'audio play')
-        === true
+            }, 'audio play') === true
+        );
     },
 
     /**

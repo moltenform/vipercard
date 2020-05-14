@@ -26,7 +26,7 @@
  * we use 500,000 tests in vpcTestScriptExtensiveChunk.ts to verify.
  * the original product is weird - e.g. order is ignored in puts/deletes,
  * items and lines behave subtly differently, and words have
- * tricky behavior around newlines. 
+ * tricky behavior around newlines.
  */
 
 /**
@@ -77,41 +77,31 @@ export const ChunkResolution = /* static class */ {
         let isChildOfAddedText = false;
         while (current) {
             if (!current.child) {
-                break
+                break;
             }
 
             /* narrow down the scope.
             it still might write text here;
             item 99 of x will still add commas. */
-            let got = 
-                ChunkResolutionUtils.doResolveOne(
-                    current,
-                    resolved,
-                    itemDel,
-                    undefined,
-                    compat,
-                    VpcChunkPreposition.Into,
-                    true,
-                    isChildOfAddedText,
-                )
-            
-            resolved = ensureDefined(got[0], '')
-            isChildOfAddedText = isChildOfAddedText || got[1]
+            let got = ChunkResolutionUtils.doResolveOne(
+                current,
+                resolved,
+                itemDel,
+                undefined,
+                compat,
+                VpcChunkPreposition.Into,
+                true,
+                isChildOfAddedText
+            );
+
+            resolved = ensureDefined(got[0], '');
+            isChildOfAddedText = isChildOfAddedText || /* bool */ got[1];
             current = current.child;
         }
 
         /* insert the real text */
         ensureDefined(
-            ChunkResolutionUtils.doResolveOne(
-                current,
-                resolved,
-                itemDel,
-                newString,
-                compat,
-                prep,
-                true,
-                isChildOfAddedText,
-            )[0],
+            ChunkResolutionUtils.doResolveOne(current, resolved, itemDel, newString, compat, prep, true, isChildOfAddedText)[0],
             ''
         );
     },
@@ -170,7 +160,7 @@ export const ChunkResolution = /* static class */ {
         let compat = true; /* doesn't matter for reads */
         let isChildOfAddedLine = false; /* doesn't matter for reads */
         while (current && resolved) {
-            /* resolved will be undefined if we ask for 
+            /* resolved will be undefined if we ask for
             something non-existent like line 99 of x */
             resolved = ChunkResolutionUtils.doResolveOne(
                 current,
@@ -180,7 +170,7 @@ export const ChunkResolution = /* static class */ {
                 compat,
                 VpcChunkPreposition.Into,
                 false,
-                isChildOfAddedLine,
+                isChildOfAddedLine
             )[0];
             current = current.child;
         }
@@ -202,10 +192,10 @@ export const ChunkResolution = /* static class */ {
     _getFinalChild(chunk: RequestedChunk) {
         let current: O<RequestedChunk> = chunk;
         while (current.child) {
-            current = current.child
+            current = current.child;
         }
 
-        return current
+        return current;
     },
 
     /**
@@ -221,7 +211,7 @@ export const ChunkResolution = /* static class */ {
         chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compat);
 
         /* if the final child is a char, it's the one case where it is the same as put "" into */
-        let finalChild = this._getFinalChild(chunk)
+        let finalChild = this._getFinalChild(chunk);
         if (finalChild.granularity === VpcGranularity.Chars) {
             return this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into, compat);
         }
@@ -241,8 +231,14 @@ export const ChunkResolution = /* static class */ {
                 then delete everything in-between
             none of them seemed to 100% match original product
          */
-        checkThrow(finalChild.ordinal !== undefined ||finalChild.last === undefined || finalChild.first === finalChild.last, "we don't yet support deleting ranges");
-        checkThrow(finalChild.ordinal !== undefined ||finalChild.last === undefined || finalChild.first <= finalChild.last, "we don't support backwards bounds");
+        checkThrow(
+            finalChild.ordinal !== undefined || finalChild.last === undefined || finalChild.first === finalChild.last,
+            "we don't yet support deleting ranges"
+        );
+        checkThrow(
+            finalChild.ordinal !== undefined || finalChild.last === undefined || finalChild.first <= finalChild.last,
+            "we don't support backwards bounds"
+        );
 
         /* first, narrow the scope */
         let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
@@ -261,8 +257,8 @@ export const ChunkResolution = /* static class */ {
                 '',
                 compat,
                 VpcChunkPreposition.Into,
-                false, /* not a write context; don't insert extra commas */
-                isChildOfAddedLine,
+                false /* not a write context; don't insert extra commas */,
+                isChildOfAddedLine
             )[0];
             current = current.child;
             isChild = true;
@@ -273,11 +269,11 @@ export const ChunkResolution = /* static class */ {
             return;
         }
 
-        let txtFull = cont.getRawString()
+        let txtFull = cont.getRawString();
         let txtNarrowed = txtFull.substring(resolved.startPos, resolved.endPos);
         let narrowedAndAfter = txtFull.substring(resolved.startPos);
-        ChunkResolutionUtils.resolveOrdinal(txtNarrowed, itemDel, current)
-        
+        ChunkResolutionUtils.resolveOrdinal(txtNarrowed, itemDel, current);
+
         let startAndEnd: [number, number];
         if (current.granularity === VpcGranularity.Items || current.granularity === VpcGranularity.Lines) {
             startAndEnd = this._applyDeleteHelperItemsLines(
@@ -323,7 +319,7 @@ export const ChunkResolution = /* static class */ {
         parentStartPos: number
     ): [number, number] {
         let table = ChunkResolutionUtils._getPositionsTable(txtNarrowed, granularity, delim);
-        let start = 0
+        let start = 0;
         let end = 0;
         if (currentPlace === -1) {
             /* emulator confirms you can say meaningfully say word 0 of x */
@@ -394,7 +390,7 @@ export const ChunkResolution = /* static class */ {
         parentStartPos: number
     ): [number, number] {
         let table = ChunkResolutionUtils._getPositionsTable(txtNarrowed, granularity, delim);
-        let start = 0
+        let start = 0;
         let end = 0;
         let activeChar = granularity === VpcGranularity.Items ? delim : '\n';
         if (
@@ -415,9 +411,7 @@ export const ChunkResolution = /* static class */ {
             end = txtNarrowed.length;
         } else if (currentPlace === -1) {
             /* emulator confirms you can say item 0 of x */
-            if (
-            txtNarrowed.startsWith(activeChar)
-            ) {
+            if (txtNarrowed.startsWith(activeChar)) {
                 start = 0;
                 end = 1;
             } else {
@@ -432,7 +426,8 @@ export const ChunkResolution = /* static class */ {
             /* and newlines are significant, even for an 'item'. */
             if (
                 granularity === VpcGranularity.Items &&
-                (txtNarrowed.length === narrowedAndAfter.length || (narrowedAndAfter[txtNarrowed.length] === '\n' && !txtNarrowed.endsWith(activeChar)))
+                (txtNarrowed.length === narrowedAndAfter.length ||
+                    (narrowedAndAfter[txtNarrowed.length] === '\n' && !txtNarrowed.endsWith(activeChar)))
             ) {
                 start = table[table.length - 1];
                 end = txtNarrowed.length;
@@ -478,7 +473,7 @@ export const ChunkResolution = /* static class */ {
         and index them into a list */
         let max = VpcGranularity.__Max + 1;
         let arr = Util512.repeat(max, undefined as O<RequestedChunk>);
-        
+
         /* remember that it's first come, first serve,
         so placing into the array intentionally overwrites what we saw before */
         let current: O<RequestedChunk> = chunk;

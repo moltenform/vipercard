@@ -3,7 +3,7 @@
 /* auto */ import { NoParameterCtor, Util512 } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
-/* Released under the GPLv3 license */
+/* Released under the MIT license */
 
 /**
  * serialize and deserialize simple structures.

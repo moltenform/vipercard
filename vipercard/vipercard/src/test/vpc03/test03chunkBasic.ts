@@ -867,6 +867,4 @@ t.test('03chunkbasic turn off compat mode', () => {
     h3.vcstate.vci.undoableAction(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
     );
-})
-
-
+});

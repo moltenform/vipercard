@@ -79,8 +79,4 @@ if __name__=='__main__':
     trace(allowLongerLinesOn)
     trace(tasksDisabled)
     
-    p = r"C:\b\pydev\devhiatus\vipercard\repov2\repo\vipercard\vipercard\src\vpcui\menu\vpcAppMenuActions.ts"
-    assertTrue(shouldAllowLongerLinesOn(p, allowLongerLinesOn))
-    p = r"../..\src\vpcui\menu\vpcAppMenuActions.ts"
-    assertException(lambda: shouldAllowLongerLinesOn(p, allowLongerLinesOn), '')
-
+    

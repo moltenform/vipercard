@@ -67,37 +67,37 @@ export const SimpleUtil512Tests = /* static class */ {
             testCollection03exprObjectRef,
             testCollection03lexer,
             testCollectionScriptExtensiveChunk,
-            //~ testCollectionScriptRewrites,
-            //~ testCollectionScriptRunCustomFns,
-            //~ testCollectionScriptRunCmd,
-            //~ testCollectionvpcScriptEval,
-            //~ testCollectionvpcScriptRunSyntax,
-            //~ testCollectionScriptExprLvl,
-            //~ testCollectionvpcScriptParseCmd,
-            //~ testCollectionvpcScriptParseExpr,
-            //~ testCollectionvpcChunkResolution,
-            //~ testCollectionvpcElements,
-            //~ testCollectionvpcuiMsgBox,
-            //~ testCollectionvpcuiIntroProvider,
-            //~ testCollectionvpcVpcVal,
-            //~ testCollectionUI512CodeEditor,
-            //~ testCollectionUI512Composites,
-            //~ testCollectionUI512DrawText,
-            //~ testCollectionUI512Elements,
-            //~ testCollectionUI512ElementsViewButtons,
-            //~ testCollectionUI512FormattedText,
-            //~ testCollectionUI512MenuRender,
-            //~ testCollectionUI512Paint,
-            //~ testCollectionUI512TextEdit,
-            //~ testCollectionUI512TextModify,
-            //~ testCollectionUI512TextSelectEvents,
-            //~ testCollectionUtilsCanvasWrapper,
-            //~ testCollectionUtilsDraw,
-            //~ testCollectionUtil512Higher,
-            //~ testCollectionUtil512Class,
-            //~ testCollectionUtil512,
-            //~ testCollectionUtil512Assert,
-            //~ testCollectionExternalLibs
+            testCollectionScriptRewrites,
+            testCollectionScriptRunCustomFns,
+            testCollectionScriptRunCmd,
+            testCollectionvpcScriptEval,
+            testCollectionvpcScriptRunSyntax,
+            testCollectionScriptExprLvl,
+            testCollectionvpcScriptParseCmd,
+            testCollectionvpcScriptParseExpr,
+            testCollectionvpcChunkResolution,
+            testCollectionvpcElements,
+            testCollectionvpcuiMsgBox,
+            testCollectionvpcuiIntroProvider,
+            testCollectionvpcVpcVal,
+            testCollectionUI512CodeEditor,
+            testCollectionUI512Composites,
+            testCollectionUI512DrawText,
+            testCollectionUI512Elements,
+            testCollectionUI512ElementsViewButtons,
+            testCollectionUI512FormattedText,
+            testCollectionUI512MenuRender,
+            testCollectionUI512Paint,
+            testCollectionUI512TextEdit,
+            testCollectionUI512TextModify,
+            testCollectionUI512TextSelectEvents,
+            testCollectionUtilsCanvasWrapper,
+            testCollectionUtilsDraw,
+            testCollectionUtil512Higher,
+            testCollectionUtil512Class,
+            testCollectionUtil512,
+            testCollectionUtil512Assert,
+            testCollectionExternalLibs
         ];
 
         if (!colls || !colls.length) {
@@ -111,9 +111,9 @@ export const SimpleUtil512Tests = /* static class */ {
         let mapSeen = new MapKeyToObjectCanSet<boolean>();
 
         /* put slow tests after fast tests */
-        let slowTests = colls.filter(item=> item.slow)
-        let fastTests = colls.filter(item=> !item.slow)
-        colls = fastTests.concat(slowTests)
+        let slowTests = colls.filter(item => item.slow);
+        let fastTests = colls.filter(item => !item.slow);
+        colls = fastTests.concat(slowTests);
         let countTotal = colls
             .filter(item => includeSlow || !item.slow)
             .map(item => item.tests.length)

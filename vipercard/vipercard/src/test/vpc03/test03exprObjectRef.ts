@@ -20,7 +20,7 @@ t.atest('--init--testCollection03exprObjectRef', async () => {
     );
 });
 t.test('03ObjectSpecial', () => {
-    assertWarn(!h3.vcstate.model.stack.getB('compatibilitymode'), '')
+    assertWarn(!h3.vcstate.model.stack.getB('compatibilitymode'), '');
     let b = new ScriptTestBatch();
     /* special objects */
     b.t(`the short id of ${cProductName}`, `WILD`);
