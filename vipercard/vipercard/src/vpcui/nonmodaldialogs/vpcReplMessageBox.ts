@@ -16,6 +16,7 @@
 /* auto */ import { TextFontSpec, TextFontStyling } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { PalBorderDecorationConsts } from './../../ui512/composites/ui512Composites';
+import { lastIfThere } from '../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -35,9 +36,8 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     hasCloseBtn = true;
     entry: UI512ElTextField;
     showResults: UI512ElTextField;
-    history = new RememberHistory();
     rememberedTool = VpcTool.Button;
-    constructor(protected vci: VpcStateInterface) {
+    constructor(protected vci: VpcStateInterface, protected history:RememberHistory) {
         super('VpcNonModalReplBox' + Math.random());
         this.vci.UI512App();
         this.adjustDimensions(vci);
@@ -79,7 +79,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         this.entry.set('defaultFont', 'geneva');
         this.vci.getPresenter().setCurrentFocus(this.entry.id);
 
-        let msg = 'put "abc"';
+        let msg = lastIfThere(this.history.list) ?? 'put "abc"'
         this.setFontAndText(this.entry, msg, 'geneva', 12);
         this.setFontAndText(this.showResults, '', 'monaco', 9);
         this.entry.set('selcaret', msg.length);

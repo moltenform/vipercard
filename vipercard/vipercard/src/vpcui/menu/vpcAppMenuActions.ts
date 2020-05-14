@@ -1,4 +1,5 @@
 
+/* auto */ import { RememberHistory } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcNonModalFormBase } from './../nonmodaldialogs/vpcLyrNonModalHolder';
@@ -26,6 +27,7 @@
 export class VpcMenuActions {
     fontChanger: VpcChangeSelectedFont;
     save: VpcSaveInterface;
+    msgBoxHistory = new RememberHistory()
     constructor(protected vci: VpcStateInterface) {
         this.fontChanger = new VpcChangeSelectedFont();
     }
@@ -82,7 +84,7 @@ export class VpcMenuActions {
      * show message box (repl)
      */
     goMnuMsgBox() {
-        let dlg = new VpcNonModalReplBox(this.vci);
+        let dlg = new VpcNonModalReplBox(this.vci, this.msgBoxHistory);
         this.vci.setNonModalDialog(dlg);
     }
 

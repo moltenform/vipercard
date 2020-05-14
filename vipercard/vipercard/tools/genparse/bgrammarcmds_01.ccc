@@ -13,6 +13,11 @@
 // as what is typed by the user -- we'll apply transformations during "rewrite".
 // all commands start with ..., which means 3 tkSyntaxMark tokens
 
+// don't have consecutive terms like tkIdentifier <Expression> or tkIdentifier <Object>
+// this is ok now, but it limits flexibility in case we want to allow consecutive tkIdentifiers
+// use rewrites to make it tkSyntaxMark <Expression> instead.
+// e.g. vpcRewritesCommands will turn 'show at <Expression>' into 'show tkSyntaxMark <Expression>'
+
 // addition. supports customfns
 BuiltinCmdAdd:=... <Lvl1Expression> _to <HContainer>                                                             
 // show dialog. software rewrite "with" to tkSyntaxMark. it's a Lvl6Expression not an Expr so that Or works

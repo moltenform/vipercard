@@ -114,6 +114,7 @@ export class VpcRuntimeOpts extends UI512PublicSettable {
     /**
      * an option with getOptionS('foo') might either be on model.productOpts (so it's undoable)
      * or put here under VpcRuntimeOpts (so it's not undoable)
+     * if it should be persisted, make it a stack property
      * is this a VpcRuntimeOpts option?
      */
     isARuntimeOpt: { [key: string]: boolean } = {
