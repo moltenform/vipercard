@@ -399,7 +399,7 @@ export class ExecuteStatement {
             return;
         }
 
-        checkThrow(!identifiers || !identifiers[0] || identifiers[0] === 'at', 'R&|must be show *at*');
+        checkThrow(!identifiers || identifiers.length === 0, 'R&|show identifier unknown');
         let location = this.h.getChildVpcVals(vals, tkstr.RuleLvl4Expression, false);
         let locationStr = location.map(v => v.readAsString()).join(',');
 

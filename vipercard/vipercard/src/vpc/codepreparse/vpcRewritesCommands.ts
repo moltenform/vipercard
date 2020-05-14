@@ -385,6 +385,8 @@ put the result %ARG0%`;
         }
     }
     rewriteShow(line: ChvITk[]): ChvITk[][] {
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'at', false);
+
         for (let unsupportedTerm of ['all', 'menu', 'picture', 'window']) {
             if (this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], unsupportedTerm) !== -1) {
                 return [this.hBuildNyi(`the show ${unsupportedTerm} command`, line[0])];
