@@ -141,7 +141,7 @@ export class TestDrawUI512Text {
         this.addFonts(list, 'symbol', '12', 'biuosdce');
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
-            complete.complete = makeallbools just /* bool */(
+            complete.complete = bool(
                 drawText.drawStringIntoBox(
                     this.getFormattedText(list, true, this.demoText1),
                     canvas,

@@ -25,19 +25,19 @@ export class CheckReservedWords {
         s = s.toLowerCase();
         return (
             bool(findStrToEnum(VpcBuiltinMsg, s)) ||
-            bool(listOfAllBuiltinEventsInOriginalProduct[s]) ||
+            listOfAllBuiltinEventsInOriginalProduct[s] ||
             VpcStandardLibScript.handlersImplementedInSoftware[s]
         );
     }
 
     isBuiltinVarOrConstant(s: string): boolean {
         /* "pi", "result" */
-        return bool(this.constants.find(s)) || bool(s === 'result') || bool(s === '$result');
+        return bool(this.constants.find(s)) || s === 'result' || s === '$result';
     }
 
     isPropertyName(s: string): boolean {
         /* "autohilite", "style" */
-        return VpcElProductOpts.isAnyProp(s);
+        return bool(VpcElProductOpts.isAnyProp(s));
     }
 
     isBuiltinFunction(s: string): boolean {
@@ -50,7 +50,7 @@ export class CheckReservedWords {
         let isCmd = listOfAllBuiltinCommandsInOriginalProduct[s.toLowerCase()] !== undefined;
 
         /* "from", "with", "to", "end" */
-        return isCmd || bool(alsoReservedWordsList[s]);
+        return isCmd || /* bool */ alsoReservedWordsList[s];
     }
 
     okHandlerName(s: string) {

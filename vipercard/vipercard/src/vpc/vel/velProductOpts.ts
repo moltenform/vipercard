@@ -195,7 +195,7 @@ export class VpcElProductOpts extends VpcElBase {
      */
     static canGetProductProp(propName: string) {
         VpcElProductOpts.prodInit();
-        return bool(VpcElProductOpts.cachedGetters[propName]) || bool(VpcElProductOpts.cachedSetters[propName]);
+        return VpcElProductOpts.cachedGetters[propName] !== undefined || VpcElProductOpts.cachedSetters[propName] !== undefined;
     }
 
     /**
@@ -209,18 +209,18 @@ export class VpcElProductOpts extends VpcElBase {
         VpcElStack.stackInit();
         VpcElProductOpts.prodInit();
         return (
-            bool(VpcElButton.cachedGetters[propName]) ||
-            bool(VpcElButton.cachedSetters[propName]) ||
-            bool(VpcElField.cachedGetters[propName]) ||
-            bool(VpcElField.cachedSetters[propName]) ||
-            bool(VpcElCard.cachedGetters[propName]) ||
-            bool(VpcElCard.cachedSetters[propName]) ||
-            bool(VpcElBg.cachedGetters[propName]) ||
-            bool(VpcElBg.cachedSetters[propName]) ||
-            bool(VpcElStack.cachedGetters[propName]) ||
-            bool(VpcElStack.cachedSetters[propName]) ||
-            bool(VpcElProductOpts.cachedGetters[propName]) ||
-            bool(VpcElProductOpts.cachedSetters[propName])
+            (VpcElButton.cachedGetters[propName]) ||
+            (VpcElButton.cachedSetters[propName]) ||
+            (VpcElField.cachedGetters[propName]) ||
+            (VpcElField.cachedSetters[propName]) ||
+            (VpcElCard.cachedGetters[propName]) ||
+            (VpcElCard.cachedSetters[propName]) ||
+            (VpcElBg.cachedGetters[propName]) ||
+            (VpcElBg.cachedSetters[propName]) ||
+            (VpcElStack.cachedGetters[propName]) ||
+            (VpcElStack.cachedSetters[propName]) ||
+            (VpcElProductOpts.cachedGetters[propName]) ||
+            (VpcElProductOpts.cachedSetters[propName])
         );
     }
 

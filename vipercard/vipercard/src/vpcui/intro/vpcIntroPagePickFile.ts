@@ -46,9 +46,9 @@ export class IntroPagePickFile extends IntroPageBase {
         );
 
         /* draw the cancel button */
-        let windowBg = grp.getEl(this.getElId('windowBg'));
-        const baseX = windowBg.right - 170;
-        const baseY = windowBg.bottom - 50;
+        let windowLowestLayer = grp.getEl(this.getElId('windowLowestLayer'));
+        const baseX = windowLowestLayer.right - 170;
+        const baseY = windowLowestLayer.bottom - 50;
         let btnCancel = this.drawBtn(app, grp, 1, baseX + (252 - 174), baseY + (68 - 64), 68, 21);
         this.cancelBtnId = btnCancel.id;
 

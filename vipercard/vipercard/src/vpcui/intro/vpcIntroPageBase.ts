@@ -55,7 +55,7 @@ export abstract class IntroPageBase extends UI512CompBase {
      */
     drawCommonFirst(app: UI512Application, grp: UI512ElGroup) {
         /* draw opaque bg for the page */
-        let bg = this.genBtn(app, grp, 'windowBg');
+        let bg = this.genBtn(app, grp, 'windowLowestLayer');
         bg.set('style', UI512BtnStyle.Shadow);
         bg.set('autohighlight', false);
         bg.setDimensions(this.x, this.y, this.logicalWidth + 1, this.logicalHeight + 2);

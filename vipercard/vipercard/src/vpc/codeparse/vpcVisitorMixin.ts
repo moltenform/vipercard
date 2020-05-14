@@ -44,7 +44,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
     return class extends Base {
         Helper$ReadVpcVal(ctx: VisitingContext, subrule: string, context: string): VpcVal {
             let child = ctx[subrule];
-            checkThrow(bool(child && child[0]), `9P|expected to have an expression ${context}`);
+            checkThrow(child && child[0], `9P|expected to have an expression ${context}`);
             let evaledVpc = this.visit(child[0]);
             checkThrow(evaledVpc instanceof VpcVal, `9O|expected a vpcval when looking up element id or name`);
             return evaledVpc;
@@ -560,7 +560,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 typeCheck = castVerifyIsStr(map.vals._number[0]);
             }
 
-            let checkIsWithin = bool(map.vals.tkInOnly) || bool(map.vals._within);
+            let checkIsWithin = map.vals.tkInOnly || map.vals._within;
             if (checkIsWithin) {
                 /* "is within" expression */
                 checkThrow(map.vals.RuleLvl3Expression && map.vals.RuleLvl3Expression[0] instanceof VpcVal, 'R[|');

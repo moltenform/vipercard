@@ -135,8 +135,8 @@ export const VpcGettableSerialization = /* static class */ {
      */
     _propNameExpectFormattedText(propName: string) {
         return (
-            bool(propName === UI512PublicSettable.fmtTxtVarName) ||
-            bool(propName.startsWith(UI512PublicSettable.fmtTxtVarName + '_'))
+            propName === UI512PublicSettable.fmtTxtVarName ||
+            propName.startsWith(UI512PublicSettable.fmtTxtVarName + '_')
         );
     },
 

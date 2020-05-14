@@ -385,7 +385,7 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete): boolean {
         //~ this.lyrModelRender.checkIfScreenWasJustUnlocked();
-        let shouldUpdate = bool(this.lyrModelRender.needUIToolsRedraw) || bool(this.lyrModelRender.needFullRedraw);
+        let shouldUpdate = this.lyrModelRender.needUIToolsRedraw || this.lyrModelRender.needFullRedraw;
 
         /* we used to put a finally here to ensure that needFullRedraw is
         always set to false even if an exception ocurrs. we did this to

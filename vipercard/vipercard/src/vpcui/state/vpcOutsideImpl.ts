@@ -401,7 +401,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     IsProductProp(propName: string): boolean {
         return (
-            VpcElProductOpts.canGetProductProp(propName) || propName === 'target' || propName === 'date' || propName === 'version'
+            VpcElProductOpts.canGetProductProp(propName) || propName === 'target' ||  propName === 'date' || propName === 'version'
         );
     }
 
