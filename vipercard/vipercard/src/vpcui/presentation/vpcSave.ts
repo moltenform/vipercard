@@ -8,7 +8,7 @@
 /* auto */ import { VpcSaveInterface } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { BrowserInfo, BrowserOSInfo, RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
+/* auto */ import { O, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';

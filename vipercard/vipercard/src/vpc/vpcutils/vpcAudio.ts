@@ -1,7 +1,6 @@
 
 /* auto */ import { checkThrow } from './vpcEnums';
 /* auto */ import { RespondToErr, Util512Higher, VoidFn, justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
-/* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -65,8 +64,7 @@ export const VpcAudio = /* static class */ {
      * will interrupt a sound that is currently playing
      */
     play(key: string) {
-        return bool(
-            justConsoleMsgIfExceptionThrown(() => {
+        return justConsoleMsgIfExceptionThrown(() => {
                 let aud = window.document.getElementById('vpcaudiohtmlel' + key) as HTMLAudioElement;
                 if (aud) {
                     VpcAudio._playAsyncImpl(aud);
@@ -75,7 +73,7 @@ export const VpcAudio = /* static class */ {
                     return false;
                 }
             }, 'audio play')
-        );
+        === true
     },
 
     /**

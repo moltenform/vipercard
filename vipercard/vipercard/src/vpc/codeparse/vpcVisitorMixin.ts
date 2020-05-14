@@ -6,7 +6,7 @@
 /* auto */ import { tkstr } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
-/* auto */ import { RequestedChunk } from '../vpcutils/vpcChunkResolutionUtils';
+/* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { ChunkResolution } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { VelRenderId } from './../vel/velRenderName';
@@ -560,7 +560,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 typeCheck = castVerifyIsStr(map.vals._number[0]);
             }
 
-            let checkIsWithin = map.vals.tkInOnly || map.vals._within;
+            let checkIsWithin = map.vals.tkInOnly || /* bool */ map.vals._within;
             if (checkIsWithin) {
                 /* "is within" expression */
                 checkThrow(map.vals.RuleLvl3Expression && map.vals.RuleLvl3Expression[0] instanceof VpcVal, 'R[|');

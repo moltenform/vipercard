@@ -2,10 +2,10 @@
 /* auto */ import { VpcIntermedValBase } from './vpcVal';
 /* auto */ import { ReadableContainer, WritableContainer } from './vpcUtils';
 /* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, checkThrowInternal, findPositionFromOrdinalOrPosition } from './vpcEnums';
-/* auto */ import { O } from '../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from '../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder } from '../../ui512/utils/util512';
-/* auto */ import { largeArea } from '../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
+/* auto */ import { largeArea } from './../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -274,7 +274,7 @@ export const ChunkResolutionUtils = /* static class */ {
         /* in the public interface, change behavior to match original product
         behavior confirmed in emulator. */
         let adjust = 0;
-        if (isPublicCall && type === VpcGranularity.Lines && sInput === '') {
+        if (isPublicCall && sInput === '') {
             return 0;
         } else if (isPublicCall && type === VpcGranularity.Items && !sInput.includes(itemDel) && sInput.trim() === '') {
             return 0;
@@ -296,8 +296,9 @@ export const ChunkResolutionUtils = /* static class */ {
     },
 
     /**
-     * resolve the chunk, getting start+end positions
-     * remember to adjust the results based on parent.startPos!!!
+     * go from "word 2 to 5" to the character start+end positions.
+     * this might be a child of a parent scope, so
+     * remember to adjust based on parent.startPos!
      */
     doResolveOne(
         request: RequestedChunk,

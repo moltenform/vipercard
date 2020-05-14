@@ -40,6 +40,7 @@
 /* auto */ import { testCollection03lexer } from './../vpc03/test03lexer';
 /* auto */ import { testCollection03exprObjectRef } from './../vpc03/test03exprObjectRef';
 /* auto */ import { testCollection03chunkBasic } from './../vpc03/test03chunkBasic';
+/* auto */ import { testCollection03chunkAdditional } from './../vpc03/test03chunkAdditional';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -62,9 +63,10 @@ export const SimpleUtil512Tests = /* static class */ {
             /* testCollectionvpcuiServer, */
             /* testCollectionScriptExtensive, */
             testCollectionScriptExtensiveChunk,
+            testCollection03chunkAdditional,
             testCollection03chunkBasic,
             testCollection03exprObjectRef,
-            testCollection03lexer
+            testCollection03lexer,
             //~ testCollectionScriptRewrites,
             //~ testCollectionScriptRunCustomFns,
             //~ testCollectionScriptRunCmd,

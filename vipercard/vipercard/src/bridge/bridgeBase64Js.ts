@@ -1,4 +1,3 @@
-
 // [base64js](https://github.com/beatgammit/base64-js)
 // this library is bundled into externalmanualbundle.js and exists on globalThis
 

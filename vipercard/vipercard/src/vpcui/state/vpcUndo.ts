@@ -6,7 +6,7 @@
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { O, UI512Compress, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O, UI512Compress } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { arLast } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
@@ -92,11 +92,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
      */
     static checkIfCanDelete(vel: VpcElBase, vci: VpcStateInterface) {
         let currentCard = vci.getModel().getByIdUntyped(vci.getModel().productOpts.getS('currentCardId'));
-        assertTrue(
-            vci.getModel().findByIdUntyped(vel.idInternal),
-            "6Z|deleting element that doesn't exist?",
-            vel.idInternal
-        );
+        assertTrue(vci.getModel().findByIdUntyped(vel.idInternal), "6Z|deleting element that doesn't exist?", vel.idInternal);
         if (vel.getType() === VpcElType.Stack || vel.getType() === VpcElType.Product || vel.getType() === VpcElType.Unknown) {
             checkThrow(false, '6Y|Cannot delete this type of element');
         } else if (vel instanceof VpcElCard) {

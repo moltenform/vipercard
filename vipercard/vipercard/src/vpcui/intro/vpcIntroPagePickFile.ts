@@ -154,7 +154,7 @@ export class IntroPagePickFile extends IntroPageBase {
             reader.addEventListener('load', evt => showMsgIfExceptionThrown(() => this.onOpenFileCallback(reader), ''));
             reader.addEventListener('error', evt => showMsgIfExceptionThrown(() => this.onOpenFileErrorCallback(reader), ''));
 
-            /* dead in the image file as a data URL */
+            /* read in the image file as a data URL */
             reader.readAsText(file, 'utf-8');
         }
     }

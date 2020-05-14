@@ -1,7 +1,7 @@
 
 /* auto */ import { ScriptTestBatch, TestMultiplier } from './../vpc/vpcTestScriptRunBase';
 /* auto */ import { O, cAltProductName, cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { h3 } from './test03lexer';
@@ -20,9 +20,7 @@ t.atest('--init--testCollection03exprObjectRef', async () => {
     );
 });
 t.test('03ObjectSpecial', () => {
-    h3.vcstate.vci.undoableAction(() =>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
-    );
+    assertWarn(!h3.vcstate.model.stack.getB('compatibilitymode'), '')
     let b = new ScriptTestBatch();
     /* special objects */
     b.t(`the short id of ${cProductName}`, `WILD`);

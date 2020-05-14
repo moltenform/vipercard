@@ -4,7 +4,7 @@
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper, RectUtils } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElCanvasPiece } from './../../ui512/elements/ui512ElementCanvasPiece';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
@@ -100,7 +100,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                 this.st.offsetForMoveY = d.mouseY - this.st.elBorder.y;
                 this.st.elBorder.set('visible', false);
                 this.st.areCopyingMult = (d.mods & ModifierKeys.Opt) !== 0;
-                this.st.areCopying = this.st.areCopyingMult || /* bool */(d.mods & ModifierKeys.Cmd) !== 0;
+                this.st.areCopying = this.st.areCopyingMult || /* bool */ (d.mods & ModifierKeys.Cmd) !== 0;
                 this.st.elMask.set('visible', !this.st.areCopying);
                 this.st.mode = SelectToolMode.MovingRegion;
             } else {

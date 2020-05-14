@@ -17,7 +17,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool, callDebuggerIfNotInProduction, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { O, callDebuggerIfNotInProduction, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
@@ -385,7 +385,7 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete): boolean {
         //~ this.lyrModelRender.checkIfScreenWasJustUnlocked();
-        let shouldUpdate = this.lyrModelRender.needUIToolsRedraw || this.lyrModelRender.needFullRedraw;
+        let shouldUpdate = this.lyrModelRender.needUIToolsRedraw || /* bool */ this.lyrModelRender.needFullRedraw;
 
         /* we used to put a finally here to ensure that needFullRedraw is
         always set to false even if an exception ocurrs. we did this to

@@ -6,7 +6,7 @@
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolutionUtils';
+/* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { ChunkResolution } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
@@ -401,7 +401,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     IsProductProp(propName: string): boolean {
         return (
-            VpcElProductOpts.canGetProductProp(propName) || propName === 'target' ||  propName === 'date' || propName === 'version'
+            VpcElProductOpts.canGetProductProp(propName) || propName === 'target' || propName === 'date' || propName === 'version'
         );
     }
 

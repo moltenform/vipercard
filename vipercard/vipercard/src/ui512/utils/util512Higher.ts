@@ -351,7 +351,7 @@ export enum RespondToErr {
 export function showMsgIfExceptionThrown(fn: () => void, context: string) {
     try {
         fn();
-        return undefined;
+        return true;
     } catch (e) {
         respondUI512Error(e, context);
         return e as Error;
@@ -364,7 +364,7 @@ export function showMsgIfExceptionThrown(fn: () => void, context: string) {
 export function justConsoleMsgIfExceptionThrown(fn: () => void, context: string) {
     try {
         fn();
-        return undefined;
+        return true;
     } catch (e) {
         respondUI512Error(e, context, true);
         return e as Error;

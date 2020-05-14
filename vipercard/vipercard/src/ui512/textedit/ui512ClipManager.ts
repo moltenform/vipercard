@@ -1,6 +1,5 @@
 
 /* auto */ import { RepeatingTimer, RespondToErr, Util512Higher, getRoot, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
-/* auto */ import { bool } from './../utils/util512Base';
 /* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { ClipManagerInterface } from './../draw/ui512Interfaces';
 /* auto */ import { PasteTextEventDetails } from './../menu/ui512Events';
@@ -63,8 +62,8 @@ export class ClipManager implements ClipManagerInterface {
                 () => window.document.execCommand('copy'),
                 'copy'
             );
-            
-            return ret === undefined;
+
+            return ret === true;
         } else {
             this.simClipboard = s;
             return true;

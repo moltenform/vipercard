@@ -287,7 +287,7 @@ export class UI512ErrorHandling {
 export function respondUI512Error(e: Error, context: string, logOnly = false) {
     let message =
         (e as any).typeName?.includes('Message') ||
-        (e as any).typeName?.includes('Msg');
+        /* bool */ (e as any).typeName?.includes('Msg');
     let warn = (e as any).typeName?.includes('Warn');
     let structure = bool((e as any).typeName);
     callDebuggerIfNotInProduction(e.message);

@@ -217,7 +217,7 @@ export class VpcEvalHelpers {
         let bv = b.readAsStrictBoolean(this.tmp2);
         switch (op) {
             case 'or':
-                return VpcValBool(av || bv);
+                return VpcValBool(av || /* bool */ bv);
             case 'and':
                 return VpcValBool(av && bv);
             default:

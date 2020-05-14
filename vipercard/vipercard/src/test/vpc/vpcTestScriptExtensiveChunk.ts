@@ -34,7 +34,7 @@ t.atest('ScriptExtensiveChunk', async () => {
  * writing a python script to generate hundreds of thousands of examples,
  * running the examples on the original product in an emulator,
  * in order to get very thorough fidelity.
- * 
+ *
  * genchunktests.py (might not be included)
  * generates a list of chunks like "item 2 to 4 of line 5 of"
  * and then generates a READ, WRITE, and DELETE test for each chunk.
@@ -167,7 +167,12 @@ class RunExtensiveChunkTests {
     /**
      * for a single test case, see if results are what we expected
      */
-    protected compareResultsWithExpected(i: number, expecteds: string[], count: number, batch: string[]) {
+    protected compareResultsWithExpected(
+        i: number,
+        expecteds: string[],
+        count: number,
+        batch: string[]
+    ) {
         let got = h.vcstate.runtime.codeExec.globals
             .get(`results${i + 1}`)
             .readAsString();
@@ -187,13 +192,16 @@ class RunExtensiveChunkTests {
                 /* write a helpful demo test case */
                 console.log('demo test case:');
                 console.log(`b.t('put ${input} into z1\\\\1', '1')`);
-                console.log(`b.t('put z1 into z\\nput "ABCDE" into ${pts[1]} z\\\\z', '${expected}')`);
-            }
-            else if (pts[0] === 'DELETE') {
+                console.log(
+                    `b.t('put z1 into z\\nput "ABCDE" into ${pts[1]} z\\\\z', '${expected}')`
+                );
+            } else if (pts[0] === 'DELETE') {
                 /* write a helpful demo test case */
                 console.log('demo test case:');
                 console.log(`b.t('put ${input} into z1\\\\1', '1')`);
-                console.log(`b.t('put z1 into z\\ndelete ${pts[1]} z\\\\z', '${expected}')`);
+                console.log(
+                    `b.t('put z1 into z\\ndelete ${pts[1]} z\\\\z', '${expected}')`
+                );
             }
             this.failures += 1;
             if (this.failures % 20 === 0) {
@@ -244,7 +252,7 @@ class RunExtensiveChunkTests {
      * we don't support a delete with a final range
      * i.e. we support 'delete word 3 of line 4 to 5 of x'
      * but not 'delete word 3 to 4 of line 5 of x'
-     * we need to re-order the input to see if there is 
+     * we need to re-order the input to see if there is
      * a final range, since 'delete line x of word y'
      * is actually done as 'delete word y of line x'
      */

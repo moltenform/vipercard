@@ -32,7 +32,7 @@ export class CheckReservedWords {
 
     isBuiltinVarOrConstant(s: string): boolean {
         /* "pi", "result" */
-        return bool(this.constants.find(s)) || s === 'result' || s === '$result';
+        return bool(this.constants.find(s)) || /* bool */ s === 'result' || s === '$result';
     }
 
     isPropertyName(s: string): boolean {

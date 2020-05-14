@@ -178,7 +178,8 @@ export abstract class UI512CompBase {
             behindCloseBtn.set('style', UI512BtnStyle.Opaque);
             behindCloseBtn.set('autohighlight', false);
             let clX =
-                pr.closeBtnX - Math.floor((pr.behindCloseBtnWidth - pr.closeBtnWidth) / 2);
+                pr.closeBtnX -
+                Math.floor((pr.behindCloseBtnWidth - pr.closeBtnWidth) / 2);
             behindCloseBtn.setDimensions(
                 this.x + clX,
                 this.y + 1,

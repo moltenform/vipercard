@@ -2,7 +2,6 @@
 /* auto */ import { VpcElType, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBase, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
-/* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
@@ -136,7 +135,7 @@ export const VpcGettableSerialization = /* static class */ {
     _propNameExpectFormattedText(propName: string) {
         return (
             propName === UI512PublicSettable.fmtTxtVarName ||
-            propName.startsWith(UI512PublicSettable.fmtTxtVarName + '_')
+            /* bool */ propName.startsWith(UI512PublicSettable.fmtTxtVarName + '_')
         );
     },
 
