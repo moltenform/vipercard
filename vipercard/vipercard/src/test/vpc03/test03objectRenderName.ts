@@ -1,12 +1,13 @@
 
-/* auto */ import { ScriptTestBatch, TestMultiplier } from './../vpc/vpcTestScriptRunBase';
+/* auto */ import { ScriptTestBatch } from './../vpc/vpcTestScriptRunBase';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
-/* auto */ import { O, cAltProductName, cProductName } from './../../ui512/utils/util512Base';
+/* auto */ import { cAltProductName, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { h3 } from './test03lexer';
+/* auto */ import { EvaluateAsParsedFromAString } from './test03exprObjectRef';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -133,36 +134,24 @@ t.test('03objectRenderID product', () => {
     b.batchEvaluate(h3);
 });
 t.test('03objectRenderID stack', () => {
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
-    );
     let b = new ScriptTestBatch();
+    b.t(`set the compatibilitymode of stack 1 to true\\1`, `1`)
     b.t('the id of this stack', `${h3.ids.stack}`)
     b.t('the short id of this stack', `${h3.ids.stack}`)
     b.t('the long id of this stack', `${h3.ids.stack}`)
-    b.batchEvaluate(h3);
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
-    );
-    b = new ScriptTestBatch();
+    b.t(`set the compatibilitymode of stack 1 to false\\1`, `1`)
     b.t('the id of this stack', `stack id ${h3.ids.stack}`)
     b.t('the short id of this stack', `${h3.ids.stack}`)
     b.t('the long id of this stack', `stack id ${h3.ids.stack}`)
     b.batchEvaluate(h3);
 });
 t.test('03objectRenderID bg', () => {
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
-    );
     let b = new ScriptTestBatch();
+    b.t(`set the compatibilitymode of stack 1 to true\\1`, `1`)
     b.t('the id of bg 2', `${h3.ids.bgB}`)
     b.t('the short id of bg 2', `${h3.ids.bgB}`)
     b.t('the long id of bg 2', `${h3.ids.bgB}`)
-    b.batchEvaluate(h3);
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
-    );
-    b = new ScriptTestBatch();
+    b.t(`set the compatibilitymode of stack 1 to false\\1`, `1`)
     b.t('the id of bg 2', `bkgnd id ${h3.ids.bgB}`)
     b.t('the short id of bg 2', `${h3.ids.bgB}`)
     b.t('the long id of bg 2', `bkgnd id ${h3.ids.bgB}`)
@@ -171,10 +160,8 @@ t.test('03objectRenderID bg', () => {
 t.test('03objectRenderID card', () => {
     /* this one stays the same regardless of compatmode */
     for (let compat of [true, false]) {
-        h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-            h3.vcstate.model.stack.setOnVel('compatibilitymode', compat, h3.vcstate.model)
-        );
         let b = new ScriptTestBatch();
+        b.t(`set the compatibilitymode of stack 1 to ${compat}\\1`, `1`)
         b.t(`the id of cd id ${h3.ids.cdBC}`, `card id ${h3.ids.cdBC}`)
         b.t(`the short id of cd id ${h3.ids.cdBC}`, `${h3.ids.cdBC}`)
         b.t(`the long id of cd id ${h3.ids.cdBC}`, `card id ${h3.ids.cdBC} of stack "Hard Drive:"`)
@@ -182,16 +169,12 @@ t.test('03objectRenderID card', () => {
     }
 })
 t.test('03objectRenderID button', () => {
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
-    );
     let b = new ScriptTestBatch();
+    b.t(`set the compatibilitymode of stack 1 to true\\1`, `1`)
     b.t(`the id of cd btn id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
     b.t(`the short id of cd btn id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
     b.t(`the long id of cd btn id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
-    );
+    b.t(`set the compatibilitymode of stack 1 to false\\1`, `1`)
     b = new ScriptTestBatch();
     b.t(`the id of cd btn id ${h3.ids.bBC1}`, `card button id ${h3.ids.bBC1}`)
     b.t(`the short id of cd btn id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
@@ -199,17 +182,12 @@ t.test('03objectRenderID button', () => {
     b.batchEvaluate(h3);
 })
 t.test('03objectRenderID field', () => {
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
-    );
     let b = new ScriptTestBatch();
+    b.t(`set the compatibilitymode of stack 1 to true\\1`, `1`)
     b.t(`the id of cd fld id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
     b.t(`the short id of cd fld id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
     b.t(`the long id of cd fld id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
-    );
-    b = new ScriptTestBatch();
+    b.t(`set the compatibilitymode of stack 1 to false\\1`, `1`)
     b.t(`the id of cd fld id ${h3.ids.fBC1}`, `card field id ${h3.ids.fBC1}`)
     b.t(`the short id of cd fld id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
     b.t(`the long id of cd fld id ${h3.ids.fBC1}`, `card field id ${h3.ids.fBC1}`)
@@ -219,60 +197,26 @@ t.test('03objectRenderID field', () => {
  * VelRenderId.parseFromString is similar to resolve-reference,
  * but does string manipulation instead. it's used when interpreting a string as an object.
  */
-t.test('VelRenderId.parseFromString product (not supported)', () => {
+t.test('VelRenderId.parseFromString', () => {
     let b = new ScriptTestBatch();
-    b.t(`"${cProductName}"\\the short id of x`, `ERR:fff`)
-    b.t(`"${cAltProductName}"\\the short id of x`, `ERR:fff`)
-    b.t(`"target"\\the short id of x`, `ERR:fff`)
-    b.t(`"me"\\the short id of x`, `ERR:fff`)
-    b.t(`"product"\\the short id of x`, `ERR:fff`)
-    b.batchEvaluate(h3, [DoParseFromStringTest]);
-})
-t.test('VelRenderId.parseFromString stack', () => {
-    let b = new ScriptTestBatch();
-    b.t(`"stack id ${h3.ids.stack}"\\the short id of x`, `${h3.ids.stack}`)
-    b.t(`"stack id 99"\\the short id of x`, `ERR:could not find`)
-    b.t(`"this stack"\\the short id of x`, `${h3.ids.stack}`)
-    b.t(`"next stack"\\the short id of x`, `ERR:could not find`)
-    b.t(`"prev stack"\\the short id of x`, `ERR:could not find`)
-    b.t(`"first stack"\\the short id of x`, `ERR:could not find`)
-    b.t(`"stack 1"\\the short id of x`, `${h3.ids.stack}`)
-    b.t(`"stack 2"\\the short id of x`, `ERR:could not find`)
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('name', 'stname', h3.vcstate.model)
-    );
-    b.t(`"stack ''"\\the short id of x`, `${h3.ids.stack}`)
-    b.t(`"stack 'Hard Drive:'"\\the short id of x`, `${h3.ids.stack}`)
-    b.t(`"stack 'other'"\\the short id of x`, `ERR:could not find`)
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('name', '', h3.vcstate.model)
-    );
-    b.t(`"stack ''"\\the short id of x`, `${h3.ids.stack}`)
-    b.t(`"stack 'Hard Drive:'"\\the short id of x`, `${h3.ids.stack}`)
-    b.t(`"stack 'other'"\\the short id of x`, `ERR:could not find`)
-    b.batchEvaluate(h3, [DoParseFromStringTest]);
+    /* product (not supported) */ 
+    b.t(`put "${cProductName}" into x\\the short id of x`, `ERR:fff`)
+    b.t(`put "${cAltProductName}" into x\\the short id of x`, `ERR:fff`)
+    b.t(`put "target" into x\\the short id of x`, `ERR:fff`)
+    b.t(`put "me" into x\\the short id of x`, `ERR:fff`)
+    b.t(`put "product" into x\\the short id of x`, `ERR:fff`)
+    b.batchEvaluate(h3);
+    b = new ScriptTestBatch();
+    /* stack */ 
+    b.t(`the short id of stack 1`, `${h3.ids.stack}`)
+    b.t(`the short id of stack 9`, `ERR:could not find`)
+    b.t(`the short id of stack id ${h3.ids.stack}`, `${h3.ids.stack}`)
+    b.t(`the short id of stack id 9`, `ERR:could not find`)
+    b.t(`the short id of 9`, `ERR:parse err`)
+    /* bg */ 
+
+    //~ finish this based on all tests above
+    b.batchEvaluate(h3, [EvaluateAsParsedFromAString]);
 })
 
-/**
- * transform it from 
- * "this stack"
- * to
- * put "this stack" into x
- * 
- * and from
- * "stack 'name'"
- * to
- * put "stack "&quote&"name"&quote&"" into x
- */
-class DoParseFromStringTest extends TestMultiplier {
-    firstTransformation(code: string, expected: string): O<[string, string]> {
-        let pts = code.split('\\')
-        if (pts.length) {
-            pts[0] = pts[0].replace(/'/g, '"&quote&"')
-            pts[0] = 'put ' + pts[0] + ' into x'
-            return [pts.join('\\'), expected]
-        } else {
-            return [code, expected]
-        }
-    }
-}
+

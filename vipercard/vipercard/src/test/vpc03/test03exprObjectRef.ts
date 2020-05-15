@@ -1,8 +1,9 @@
 
 /* auto */ import { ScriptTestBatch, TestMultiplier } from './../vpc/vpcTestScriptRunBase';
+/* auto */ import { OrdinalOrPosition } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { O, cAltProductName, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, Util512, assertWarnEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, Util512, assertWarnEq, listEnumValsIncludingAlternates, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { h3 } from './test03lexer';
 
@@ -183,28 +184,14 @@ t.test('03ObjectStack', () => {
     b.t(`the short id of first stack`, `ERR:parse`);
     b.t(`the short id of last stack`, `ERR:parse`);
     b.t(`the short id of any stack`, `ERR:parse`);
-    /* by expression */
-    b.t(`the short id of stack 1`, `${h3.ids.stack}`);
-    b.t(`the short id of stack id 1`, `ERR:could not find`);
+    /* by id */
     b.t(`the short id of stack id ${h3.ids.stack}`, `${h3.ids.stack}`);
-    /* by expression, not exist */
-    b.t(`the short id of stack 999`, `ERR:could not find`);
     b.t(`the short id of stack id 9`, `ERR:could not find`);
     b.t(`the short id of stack id -9`, `ERR:could not find`);
     b.t(`the short id of stack id "no"`, `ERR:expected a number`);
-    /* by name */
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('name', 'stname', h3.vcstate.model)
-    );
-    b.t(`the short id of stack "stname"`, `${h3.ids.stack}`);
-    b.t(`the short id of stack "Hard Drive:stname"`, `${h3.ids.stack}`);
-    b.t(`the short id of stack "STNAME"`, `${h3.ids.stack}`);
-    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
-        h3.vcstate.model.stack.setOnVel('name', '', h3.vcstate.model)
-    );
-    b.t(`the short id of stack ""`, `${h3.ids.stack}`);
-    b.t(`the short id of stack "Hard Drive:"`, `${h3.ids.stack}`);
-    b.t(`the short id of stack "xyz"`, `ERR:could not find`);
+    /* by expression */
+    b.t(`the short id of stack 1`, `${h3.ids.stack}`);
+    b.t(`the short id of stack 999`, `ERR:could not find`);
     /* stack-at-end-of-line is parsed differently
     it's intentionally using 'get'
     do not simplify! */
@@ -212,7 +199,24 @@ t.test('03ObjectStack', () => {
     b.t(`get the short id of first stack\\it`, `ERR:parse`);
     b.t(`get the short id of this stack\\it`, `${h3.ids.stack}`);
     b.t(`get the short id of stack\\it`, `${h3.ids.stack}`);
-    b.batchEvaluate(h3, [EvaluateThereIs]);
+    b.batchEvaluate(h3, [EvaluateThereIs, EvaluateAsParsedFromAString]);
+    /* by name */
+    b = new ScriptTestBatch();
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
+        h3.vcstate.model.stack.setOnVel('name', 'stname', h3.vcstate.model)
+    );
+    b.t(`the short id of stack "stname"`, `${h3.ids.stack}`);
+    b.t(`the short id of stack "Hard Drive:stname"`, `${h3.ids.stack}`);
+    b.t(`the short id of stack "STNAME"`, `${h3.ids.stack}`);
+    b.batchEvaluate(h3, [EvaluateThereIs, EvaluateAsParsedFromAString]);
+    b = new ScriptTestBatch();
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
+        h3.vcstate.model.stack.setOnVel('name', '', h3.vcstate.model)
+    );
+    b.t(`the short id of stack ""`, `${h3.ids.stack}`);
+    b.t(`the short id of stack "Hard Drive:"`, `${h3.ids.stack}`);
+    b.t(`the short id of stack "xyz"`, `ERR:could not find`);
+    b.batchEvaluate(h3, [EvaluateThereIs, EvaluateAsParsedFromAString]);
 });
 t.test('03ObjectBg', () => {
     let b = new ScriptTestBatch();
@@ -264,7 +268,7 @@ t.test('03ObjectBg', () => {
     b.t(`get the short id of 1 bg\\it`, `ERR:parse`);
     b.t(`get the short id of bg\\it`, `${h3.ids.bgA}`);
 
-    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs]);
+    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs, EvaluateAsParsedFromAString]);
 });
 t.test('03ObjectCard', () => {
     let b = new ScriptTestBatch();
@@ -325,10 +329,10 @@ t.test('03ObjectCard', () => {
     /* special back-forth cards */
     b.t(`go cd 2\\1`, `1`);
     b.t(`go cd 3\\1`, `1`);
-    b.t(`the short id of recent`, `${h3.ids.cdBB}`);
-    b.t(`the short id of back`, `${h3.ids.cdBB}`);
+    b.t(`the short id of recent --[[noSParse]]`, `${h3.ids.cdBB}`);
+    b.t(`the short id of back --[[noSParse]]`, `${h3.ids.cdBB}`);
     b.t(`go back\\1`, ``);
-    b.t(`the short id of forth`, `${h3.ids.cdBC}`);
+    b.t(`the short id of forth --[[noSParse]]`, `${h3.ids.cdBC}`);
     /* by ord/position at end of line
     it's intentionally using 'get'
     do not simplify! */
@@ -342,7 +346,7 @@ t.test('03ObjectCard', () => {
     b.t(`put the short id of cd into x\\x`, `ERR:parse`);
     b.t(`get the short id of 1 cd\\it`, `ERR:parse`);
     b.t(`get the short id of cd\\it`, `${h3.ids.cdA}`);
-    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs]);
+    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs, EvaluateAsParsedFromAString]);
 });
 t.test('03ObjectCardMarked', () => {
     let b = new ScriptTestBatch();
@@ -512,7 +516,7 @@ t.test('03ObjectBtnAndField', () => {
     b.t(`the short id of first cd (typ) 1`, `ERR:ffff`);
     b.t(`the short id of cd (typ) (typ) 1`, `ERR:parse err`);
     b.t(`the short id of cd 1 of this cd`, `ERR:parse err`);
-    b.batchEvaluate(h3, [GoForBothFldAndBtn, EvaluateThereIs]);
+    b.batchEvaluate(h3, [GoForBothFldAndBtn, EvaluateThereIs, EvaluateAsParsedFromAString]);
 })
 t.test('03exprNumberOfObjects', () => {
     let b = new ScriptTestBatch();
@@ -648,3 +652,31 @@ class EvaluateThereIs extends TestMultiplier {
         }
     }
 }
+
+/**
+ * transform it from "the short id" to "there is a"
+ */
+export class EvaluateAsParsedFromAString extends TestMultiplier {
+    secondTransformation(code: string, expected: string): O<[string, string]> {
+        if (!code.startsWith('the short id of ') || code.includes('\\') || code.includes('--[[noSParse]]')) {
+            /* might be testing a command, or going to a card */
+            return undefined;
+        } else {
+            /* automatically skip "next", "third", etc */
+            for (let key of listEnumValsIncludingAlternates(OrdinalOrPosition)) {
+                if (key !=='this' && new RegExp('\\b'+key+'\\b', 'i').exec(code)) {
+                    return [code, expected]
+                }
+            }
+
+            code = code.substr('the short id of '.length)
+            code = code.replace(/"/g, '"&quote&"')
+            code = 'put "' + code + '" into x\\the short id of x'
+            if (expected.startsWith('ERR:') || expected.startsWith('PREPARSEERR:')) {
+                expected = 'ERR:'
+            }
+            return [code, expected]
+        }
+    }
+}
+

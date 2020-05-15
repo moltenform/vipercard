@@ -140,11 +140,13 @@ export class VpcElStack extends VpcElBase {
         if (!VpcElStack.cachedGetters || !VpcElStack.cachedSetters) {
             VpcElStack.cachedGetters = {};
             VpcElStack.cachedGetters['script'] = [PrpTyp.Str, 'script'];
+            VpcElStack.cachedGetters['compatibilitymode'] = [PrpTyp.Bool, 'compatibilitymode'];
             VpcElStack.cachedGetters['freesize'] = [PrpTyp.Num, () => 0];
             VpcElStack.cachedGetters['size'] = [PrpTyp.Num, () => 0];
             VpcElStack.cachedSetters = {};
             VpcElStack.cachedSetters['name'] = [PrpTyp.Str, 'name'];
             VpcElStack.cachedSetters['script'] = [PrpTyp.Str, 'script'];
+            VpcElStack.cachedSetters['compatibilitymode'] = [PrpTyp.Bool, 'compatibilitymode'];
             Util512.freezeRecurse(VpcElStack.cachedGetters);
             Util512.freezeRecurse(VpcElStack.cachedSetters);
         }

@@ -513,6 +513,29 @@ export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & {
 /**
  * list enum vals
  */
+export function listEnumValsIncludingAlternates<T>(Enm: T) {
+    let ret:string[] = []
+    for (let enumMember in Enm) {
+        /* show possible values */
+        if (
+            typeof enumMember === 'string' &&
+            !'0123456789'.includes(enumMember[0].toString())
+        ) {
+            let s = enumMember.toString()
+            if (s.startsWith('__AlternateForm__')) {
+                s = s.substr('__AlternateForm__'.length)
+            }
+
+            ret.push(s);
+        }
+    }
+
+    return ret;
+}
+
+/**
+ * list enum vals
+ */
 export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
     let s = '';
     for (let enumMember in Enm) {
