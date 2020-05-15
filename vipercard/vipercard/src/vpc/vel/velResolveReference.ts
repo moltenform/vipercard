@@ -11,7 +11,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { O, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, cast, getEnumToStrOrFallback, assertWarnEq } from './../../ui512/utils/util512';
+/* auto */ import { Util512, assertWarnEq, cast, getEnumToStrOrFallback } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -283,7 +283,11 @@ export class VelResolveReference {
     protected goStack(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>): O<VpcElBase> {
         if (ref.lookByName !== undefined) {
             /* `the short id of stack "myStack"` */
-            return ref.lookByName === this.model.stack.getS('name') ? this.model.stack : undefined;
+            if (ref.lookByName.startsWith('Hard Drive:')) {
+                ref.lookByName = ref.lookByName.substr('Hard Drive:'.length)
+            }
+
+            return ref.lookByName.toLowerCase() === this.model.stack.getS('name').toLowerCase() ? this.model.stack : undefined;
         } else if (ref.lookByAbsolute !== undefined) {
             /* `the short id of stack 1` */
             return ref.lookByAbsolute === 1 ? this.model.stack : undefined;

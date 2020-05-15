@@ -232,7 +232,7 @@ t.test('03Identifier', () => {
 export class TestVpc03 extends TestVpcScriptRunBase {
     populateModel() {
         super.populateModel()
-        let bgD = this.vcstate.createVel(this.vcstate.model.stack.idInternal, VpcElType.Bg, -1);
+        let bgD = this.vcstate.createVel(this.ids.stack, VpcElType.Bg, -1);
         this.vcstate.vci.setCurCardNoOpenCardEvt(this.ids.cdCD);
         let cdDD = this.vcstate.createVel(bgD.idInternal, VpcElType.Card, -1);        
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdDD.idInternal);

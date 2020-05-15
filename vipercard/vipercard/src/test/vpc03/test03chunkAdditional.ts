@@ -31,7 +31,7 @@ t.atest('--init--testCollection03chunkAdditional', async () => {
     b.batchEvaluate(h3);
 
     /* turn on compat mode */
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
     );
 });
@@ -69,7 +69,7 @@ function getBoldChars
     return ret
 end getBoldChars
     `;
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('script', helperCode, h3.vcstate.model)
     );
     let b = new ScriptTestBatch();
@@ -139,7 +139,7 @@ end getBoldChars
     /* reset fld */
     b.t('put "" into cd fld 1\\1', '1');
     b.batchEvaluate(h3);
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('script', '', h3.vcstate.model)
     );
 });
@@ -157,7 +157,7 @@ t.test('03chunkexpression_recursivescopes', () => {
     */
     /* scopes that should not work */
     let b = new ScriptTestBatch();
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
     );
     /* put, nothing after a char */
@@ -274,7 +274,7 @@ t.test('03chunkexpression_recursivescopes', () => {
     );
     b.batchEvaluate(h3, [EvaluateWithVarAndFld]);
     b = new ScriptTestBatch();
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
     );
     /* negatives should throw */
@@ -622,7 +622,7 @@ t.test('03chunkexpression_mathops', () => {
 });
 
 t.test('03chunk, recommended use scenarios', () => {
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
     );
     let b = new ScriptTestBatch();
@@ -758,7 +758,7 @@ end sum2d
     );
     got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
     assertWarnEq((12 + 21 + 9 + 20 + 22).toString(), got, '');
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
     );
 });
@@ -937,7 +937,7 @@ t.test('03chunkexpression_additional chunk tests', () => {
 });
 
 t.test('03chunkadditional turn off compat mode', () => {
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
     );
 });

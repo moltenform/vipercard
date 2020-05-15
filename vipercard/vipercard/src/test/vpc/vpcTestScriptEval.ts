@@ -276,7 +276,7 @@ t.test('vpcProperties', () => {
 
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-    h.setScript(h.vcstate.model.stack.idInternal, 'on stackscript\nend stackscript');
+    h.setScript(h.ids.stack, 'on stackscript\nend stackscript');
     h.setScript(h.vcstate.model.stack.bgs[1].idInternal, 'on bgscript\nend bgscript');
     h.setScript(
         h.vcstate.model.stack.bgs[1].cards[1].idInternal,

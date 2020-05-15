@@ -192,6 +192,19 @@ t.test('03ObjectStack', () => {
     b.t(`the short id of stack id 9`, `ERR:could not find`);
     b.t(`the short id of stack id -9`, `ERR:could not find`);
     b.t(`the short id of stack id "no"`, `ERR:expected a number`);
+    /* by name */
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
+        h3.vcstate.model.stack.setOnVel('name', 'stname', h3.vcstate.model)
+    );
+    b.t(`the short id of stack "stname"`, `${h3.ids.stack}`);
+    b.t(`the short id of stack "Hard Drive:stname"`, `${h3.ids.stack}`);
+    b.t(`the short id of stack "STNAME"`, `${h3.ids.stack}`);
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
+        h3.vcstate.model.stack.setOnVel('name', '', h3.vcstate.model)
+    );
+    b.t(`the short id of stack ""`, `${h3.ids.stack}`);
+    b.t(`the short id of stack "Hard Drive:"`, `${h3.ids.stack}`);
+    b.t(`the short id of stack "xyz"`, `ERR:could not find`);
     /* stack-at-end-of-line is parsed differently
     it's intentionally using 'get'
     do not simplify! */
@@ -537,7 +550,7 @@ t.test('03exprNumberOfObjects', () => {
 t.test('03Object Auto-insert scope for backwards compat', () => {
     /* tests rewriteSpecifyCdOrBgPart in vpcRewritesGlobal.ts */
     /* turn on compat mode */
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
     );
     let b = new ScriptTestBatch();
@@ -556,10 +569,10 @@ t.test('03Object Auto-insert scope for backwards compat', () => {
     b.t(`the short id of last fld`, `ERR:could not find`);
     b.batchEvaluate(h3, [EvaluateThereIs]);
     /* turn off compat mode */
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
     );
-    
+
     b = new ScriptTestBatch();
     b.t(`go cd id ${h3.ids.cdBB}\\1`, `PREPARSEERR:compatibility mode`);
     b.t(`the number of btns`, `PREPARSEERR:compatibility mode`);

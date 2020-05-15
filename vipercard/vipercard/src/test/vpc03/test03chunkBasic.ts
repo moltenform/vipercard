@@ -30,7 +30,7 @@ t.atest('--init--testCollection03chunkBasic', async () => {
     b.batchEvaluate(h3);
 
     /* turn on compat mode */
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
     );
 });
@@ -864,7 +864,7 @@ export class EvaluateWithVarAndFld extends TestMultiplier {
 }
 
 t.test('03chunkbasic turn off compat mode', () => {
-    h3.vcstate.vci.undoableAction(() =>
+    h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
     );
 });

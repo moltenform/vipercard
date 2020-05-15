@@ -77,22 +77,16 @@ export class VelRenderName {
     }
 
     /**
-     * get the name of a background button or field
-     */
-    protected goResolveBgBtnOrFld(vel: VpcElButton | VpcElField, adjective: PropAdjective) {
-        checkThrow(false, 'J?|not yet implemented');
-    }
-
-    /**
      * get the name of a card
      */
     protected goResolveNameCard(vel: VpcElCard, adjective: PropAdjective): string {
         checkThrow(vel instanceof VpcElCard, 'J>|');
         let name = vel.getS('name');
+        let stname = this.model.stack.getS('name');
         if (name.length) {
             /* name exists, show the name */
             if (adjective === PropAdjective.Long) {
-                return `card "${name}" of this stack`;
+                return `card "${name}" of stack "${stname}"`;
             } else if (adjective === PropAdjective.Short) {
                 return `${name}`;
             } else {
@@ -101,7 +95,7 @@ export class VelRenderName {
         } else {
             /* no name, fall back to showing the id */
             if (adjective === PropAdjective.Long) {
-                return `card id ${vel.getUserFacingId()} of this stack`;
+                return `card id ${vel.getUserFacingId()} of stack "${stname}"`;
             } else {
                 return `card id ${vel.getUserFacingId()}`;
             }
@@ -114,10 +108,11 @@ export class VelRenderName {
     protected goResolveNameBg(vel: VpcElBg, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElBg, 'J=|');
         let name = vel.getS('name');
+        let stname = this.model.stack.getS('name');
         if (name.length) {
             /* name exists, show the name */
             if (adjective === PropAdjective.Long) {
-                return `bkgnd "${name}" of this stack`;
+                return `bkgnd "${name}" of stack "${stname}"`;
             } else if (adjective === PropAdjective.Short) {
                 return `${name}`;
             } else {
@@ -126,7 +121,7 @@ export class VelRenderName {
         } else {
             /* no name, fall back to showing the id */
             if (adjective === PropAdjective.Long) {
-                return `bkgnd id ${vel.getUserFacingId()} of this stack`;
+                return `bkgnd id ${vel.getUserFacingId()} of stack "${stname}"`;
             } else {
                 return `bkgnd id ${vel.getUserFacingId()}`;
             }
@@ -136,6 +131,7 @@ export class VelRenderName {
     /**
      * get the name of a stack.
      * made compatible with original product.
+     * we don't return 'stack id x' because original product never did that.
      */
     protected goResolveNameStack(vel: VpcElStack, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElStack, 'J<|');
@@ -151,11 +147,15 @@ export class VelRenderName {
 
     /**
      * get the name of product
-     * interesting fact, in emulator the "long name" of product would return filepath of the app
+     * fun fact, in emulator the "long name" of product would return filepath of the app
      */
     protected goResolveNameProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElProductOpts, 'J;|');
-        return cProductName;
+        if (adjective === PropAdjective.Long) {
+            return `Hard Drive:${cProductName}"`;
+        } else {
+            return `${cProductName}`;
+        }
     }
 }
 
@@ -180,7 +180,7 @@ export class VelRenderId {
     }
 
     /**
-     * matching the emulator's behavior. interesting.
+     * matching the emulator's behavior. fascinating.
      */
     protected goProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
         return 'WILD';
@@ -195,7 +195,8 @@ export class VelRenderId {
         if (adjective === PropAdjective.Short) {
             return userFacingId;
         } else if (adjective === PropAdjective.Long) {
-            return `card id ${userFacingId} of this stack`;
+            let stname = this.model.stack.getS('name');
+            return `card id ${userFacingId} of stack "${stname}"`;
         } else {
             return `card id ${userFacingId}`;
         }
@@ -206,7 +207,7 @@ export class VelRenderId {
      */
     protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective, compatMode: boolean) {
         let userFacingId = vel.getUserFacingId();
-        if (adjective === PropAdjective.Long) {
+        if (adjective === PropAdjective.Long && !compatMode) {
             if (vel instanceof VpcElButton || vel instanceof VpcElField) {
                 let cdOrBg = vel.getS('is_bg_velement_id').length ? 'bkgnd' : 'card';
                 /* NOTE: this is ambiguous - for a bg object,
@@ -214,7 +215,7 @@ export class VelRenderId {
                 but this is the way the original product worked. */
                 let s = `${cdOrBg} ${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`;
                 if (!compatMode && vel.getS('is_bg_velement_id').length) {
-                    /* fix the ambiguity */
+                    /* this fixes the ambiguity */
                     let parent = this.model.getByIdUntyped(vel.parentIdInternal);
                     s += ` of cd id ${parent.getUserFacingId()}`;
                 }
@@ -360,18 +361,20 @@ export class VelGetNumberProperty {
      */
     go(vel: VpcElBase) {
         if (vel instanceof VpcElStack) {
-            checkThrow(false, 'Ty|This type of object does not have a number.');
+            /* emulator throws an error,
+            but since we support 'stack 1' we may as well do this. */
+            return 1
         } else if (vel instanceof VpcElProductOpts) {
             checkThrow(false, 'Tx|This type of object does not have a number.');
         } else {
-            return this.goOtherTypes(vel);
+            return this.goStandard(vel);
         }
     }
 
     /**
      * most objects exist in a list of siblings
      */
-    goOtherTypes(vel: VpcElBase) {
+    goStandard(vel: VpcElBase) {
         let parentList: VpcElBase[] = [];
         if (vel.getType() === VpcElType.Bg) {
             let parent = this.model.getOwner(VpcElStack, vel);
