@@ -139,6 +139,22 @@ t.test('03Object look by id', () => {
     );
     b.batchEvaluate(h3, [EvaluateThereIs]);
 });
+t.test('03Objects use a Lvl6Expression', () => {
+    let b = new ScriptTestBatch();
+    b.t(`go cd 1\\1`, `1`);
+    b.t(`put -1 into x\\the short id of cd -x`, `${h3.ids.cdA}`);
+    b.t(`put "a b c" into x\\the short id of cd word 2 of x`, `${h3.ids.cdBB}`);
+    b.t(`put "a b c" into x\\the short id of cd second word of x`, `${h3.ids.cdBB}`);
+    b.t(`put "a"&cr&"a b c"&"c" into x\\the short id of cd word 2 of line 2 of x`, `${h3.ids.cdBB}`);
+    b.t(`put 1 into x\\the short id of cd x`, `${h3.ids.cdA}`);
+    b.t(`put 1 into x\\the short id of cd (x+1)`, `${h3.ids.cdBB}`);
+    b.t(`put 1 into x\\the short id of cd (char 1 of x)`, `${h3.ids.cdA}`);
+    b.t(`put 1 into x\\the short id of cd length("ab")`, `${h3.ids.cdBB}`);
+    b.t(`put 1 into x\\the short id of cd the length of "ab"`, `${h3.ids.cdBB}`);
+    b.t(`put 1 into x\\the short id of cd the name of this cd`, `${h3.ids.cdA}`);
+    b.t(`put 1 into x\\the short id of cd the number of cds`, `${h3.ids.cdDH}`);
+    b.batchEvaluate(h3, [EvaluateThereIs]);
+})
 t.test('03ObjectPart', () => {
     let b = new ScriptTestBatch();
     /* btns are valid parts */
@@ -240,36 +256,45 @@ t.test('03ObjectBg', () => {
 t.test('03ObjectCard', () => {
     let b = new ScriptTestBatch();
     /* if names are ambiguous, pick the first, even if closer to another. 
-    confirmed in emulator */
+    confirmed in emulator. but if you're already at one, pick the other. */
     b.t(`go cd id ${h3.ids.cdBC}\\1`, `1`);
-    b.t(`the short id of cd "d" --[[noaddbg]]`, `${h3.ids.cdBD}`);
+    b.t(`the short id of cd "d"`, `${h3.ids.cdBD}`);
     b.t(`go cd id ${h3.ids.cdBD}\\1`, `1`);
-    b.t(`the short id of cd "d" --[[noaddbg]]`, `${h3.ids.cdBD}`);
+    b.t(`the short id of cd "d"`, `${h3.ids.cdCD}`);
     b.t(`go cd id ${h3.ids.cdCD}\\1`, `1`);
-    b.t(`the short id of cd "d" --[[noaddbg]]`, `${h3.ids.cdBD}`);
+    b.t(`the short id of cd "d"`, `${h3.ids.cdDD}`);
+    b.t(`go cd id ${h3.ids.cdDD}\\1`, `1`);
+    b.t(`the short id of cd "d"`, `${h3.ids.cdBD}`);
+    b.t(`go cd id ${h3.ids.cdDE}\\1`, `1`);
+    b.t(`the short id of cd "d"`, `${h3.ids.cdBD}`);
     /* look by name */
-    b.t(`the short id of cd "a" --[[noaddbg]]`, `${h3.ids.cdA}`);
+    b.t(`go cd id ${h3.ids.cdA}\\1`, `1`);
+    b.t(`the short id of cd "a"`, `${h3.ids.cdA}`);
+    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
+    b.t(`the short id of cd "a"`, `${h3.ids.cdA}`);
     b.t(`the short id of cd "b"`, `${h3.ids.cdBB}`);
     b.t(`the short id of cd "C"`, `${h3.ids.cdBC}`);
+    b.t(`the short id of cd "b" of bg 2`, `${h3.ids.cdBB}`);
+    b.t(`the short id of cd "C" of bg 2`, `${h3.ids.cdBC}`);
     b.t(`the short id of cd "b" of bg 1`, `ERR:could not find`);
     b.t(`the short id of cd "notfound"`, `ERR:could not find`);
     /* look by absolute */
-    b.t(`the short id of cd 1 --[[noaddbg]]`, `${h3.ids.cdA}`);
-    b.t(`the short id of cd 2 --[[noaddbg]]`, `${h3.ids.cdBB}`);
-    b.t(`the short id of cd 3 --[[noaddbg]]`, `${h3.ids.cdBC}`);
-    b.t(`the short id of cd 99 --[[noaddbg]]`, `ERR:could not find`);
+    b.t(`the short id of cd 1`, `${h3.ids.cdA}`);
+    b.t(`the short id of cd 2`, `${h3.ids.cdBB}`);
+    b.t(`the short id of cd 3`, `${h3.ids.cdBC}`);
+    b.t(`the short id of cd 99`, `ERR:could not find`);
     b.t(`the short id of cd 1 of bg 2`, `${h3.ids.cdBB}`);
     b.t(`the short id of cd 2 of bg 2`, `${h3.ids.cdBC}`);
     b.t(`the short id of cd 3 of bg 2`, `${h3.ids.cdBD}`);
     b.t(`the short id of cd 99 of bg 2`, `ERR:could not find`);
     /* look by relative */
     b.t(`go cd id ${h3.ids.cdBC}\\1`, `1`);
-    b.t(`the short id of first cd --[[noaddbg]]`, `${h3.ids.cdA}`);
-    b.t(`the short id of this cd --[[noaddbg]]`, `${h3.ids.cdA}`);
-    b.t(`the short id of prev cd --[[noaddbg]]`, `${h3.ids.cdBB}`);
-    b.t(`the short id of next cd --[[noaddbg]]`, `${h3.ids.cdBD}`);
-    b.t(`the short id of last cd --[[noaddbg]]`, `${h3.ids.cdCD}`);
-    b.t(`the short id of tenth cd --[[noaddbg]]`, `ERR:could not find`);
+    b.t(`the short id of first cd`, `${h3.ids.cdA}`);
+    b.t(`the short id of this cd`, `${h3.ids.cdA}`);
+    b.t(`the short id of prev cd`, `${h3.ids.cdBB}`);
+    b.t(`the short id of next cd`, `${h3.ids.cdBD}`);
+    b.t(`the short id of last cd`, `${h3.ids.cdCD}`);
+    b.t(`the short id of tenth cd`, `ERR:could not find`);
     b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
     b.t(`the short id of first cd of bg 2`, `${h3.ids.cdBB}`);
     b.t(`the short id of this cd of bg 2`, `${h3.ids.cdBB}`);
@@ -284,23 +309,27 @@ t.test('03ObjectCard', () => {
     b.t(`the short id of next cd of bg 2`, `${h3.ids.cdBB}`);
     b.t(`the short id of last cd of bg 2`, `${h3.ids.cdBD}`);
     b.t(`the short id of tenth cd of bg 2`, `ERR:could not find`);
-
-    /* run the tests again, specifying the bg and the stack */
-    class AppendOfThisBgAndStack extends TestMultiplier {
-    secondTransformation(code: string, expected: string): O<[string, string]> {
-        if (code.includes('--[[noaddbg]]') || code.includes(' of bg ') ) {
-            return undefined
-        } else {
-            code = code + ` of bg id ${h3.ids.bgB}`;
-            return [code, expected];
-        }
-    }
-    thirdTransformation(code: string, expected: string): O<[string, string]> {
-        code = code + ` of this stack`;
-        return [code, expected];
-    }
-    }
-    b.batchEvaluate(h3, [AppendOfThisBgAndStack, EvaluateThereIs]);
+    /* special back-forth cards */
+    b.t(`go cd 2\\1`, `1`);
+    b.t(`go cd 3\\1`, `1`);
+    b.t(`the short id of recent`, `${h3.ids.cdBB}`);
+    b.t(`the short id of back`, `${h3.ids.cdBB}`);
+    b.t(`go back\\1`, ``);
+    b.t(`the short id of forth`, `${h3.ids.cdBC}`);
+    /* by ord/position at end of line
+    it's intentionally using 'get'
+    do not simplify! */
+    b.t(`go cd 1\\1`, `1`);
+    b.t(`get the short id of second cd\\it`, `${h3.ids.cdBB}`);
+    b.t(`get the short id of this cd\\it`, `${h3.ids.cdA}`);
+    b.t(`get the short id of next cd\\it`, `${h3.ids.cdBB}`);
+    /* not exist, by ord/position at end of line */
+    b.t(`get the short id of tenth cd\\it`, `ERR:could not find`);
+    /* cd-at-end-of-line is parsed differently*/
+    b.t(`put the short id of cd into x\\x`, `ERR:parse`);
+    b.t(`get the short id of 1 cd\\it`, `ERR:parse`);
+    b.t(`get the short id of cd\\it`, `${h3.ids.cdA}`);
+    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs]);
 });
 t.test('03ObjectCardMarked', () => {
     let b = new ScriptTestBatch();
@@ -311,64 +340,139 @@ t.test('03ObjectCardMarked', () => {
     /* look by name */
     b.t(`the short id of marked cd "b"`, `${h3.ids.cdBB}`);
     b.t(`the short id of marked cd "d"`, `${h3.ids.cdCD}`);
+    b.t(`the short id of marked cd "c"`, `ERR:could not find`);
     b.t(`the short id of marked cd "a"`, `ERR:could not find`);
     /* look by absolute */
     b.t(`the short id of marked cd 1`, `${h3.ids.cdBB}`);
     b.t(`the short id of marked cd 2`, `${h3.ids.cdCD}`);
     b.t(`the short id of marked cd 10`, `ERR:could not find`);
-    /* look by relative */
-    b.t(`mark cd id ${h3.ids.cdBC}\\1`, `1`);
+    /* look by ordinal */
     b.t(`the short id of first marked cd`, `${h3.ids.cdBB}`);
-    b.t(`the short id of second marked cd`, `${h3.ids.cdBC}`);
-    b.t(`the short id of last marked cd`, `${h3.ids.cdCD}`);
-    /* before them */
+    b.t(`the short id of second marked cd`, `${h3.ids.cdCD}`);
+    b.t(`the short id of last marked cd`, `${h3.ids.cdDD}`);
+    b.t(`the short id of tenth marked cd`, `ERR:could not find`);
+    /* look by relative - before all */
     b.t(`go cd 1\\1`, `1`);
     b.t(`the short id of this marked cd`, `ERR:could not find`);
     b.t(`the short id of next marked cd`, `${h3.ids.cdBB}`);
+    b.t(`the short id of prev marked cd`, `${h3.ids.cdDD}`);
+    /* look by relative - on first */
+    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
+    b.t(`the short id of this marked cd`, `${h3.ids.cdBB}`);
+    b.t(`the short id of next marked cd`, `${h3.ids.cdCD}`);
+    b.t(`the short id of prev marked cd`, `${h3.ids.cdDD}`);
+    /* look by relative - between them */
+    b.t(`go cd id ${h3.ids.cdBD}\\1`, `1`);
+    b.t(`the short id of this marked cd`, `ERR:could not find`);
+    b.t(`the short id of next marked cd`, `${h3.ids.cdCD}`);
+    b.t(`the short id of prev marked cd`, `${h3.ids.cdBB}`);
+    /* look by relative - on last */
+    b.t(`go cd id ${h3.ids.cdDD}\\1`, `1`);
+    b.t(`the short id of this marked cd`, `${h3.ids.cdDD}`);
+    b.t(`the short id of next marked cd`, `${h3.ids.cdBB}`);
     b.t(`the short id of prev marked cd`, `${h3.ids.cdCD}`);
-    /* after them */
-    b.t(`unmark cd id ${h3.ids.cdCD}\\1`, `1`);
-    b.t(`go cd ${h3.ids.cdCD}\\1`, `1`);
+    /* look by relative - after all */
+    b.t(`go cd id ${h3.ids.cdDF}\\1`, `1`);
     b.t(`the short id of this marked cd`, `ERR:could not find`);
     b.t(`the short id of next marked cd`, `${h3.ids.cdBB}`);
-    b.t(`the short id of prev marked cd`, `${h3.ids.cdBC}`);
+    b.t(`the short id of prev marked cd`, `${h3.ids.cdCD}`);
     /* none marked */
     b.t(`unmark all cards\\1`, `1`);
     b.t(`the short id of this marked cd`, `ERR:could not find`);
     b.t(`the short id of next marked cd`, `ERR:could not find`);
     b.t(`the short id of prev marked cd`, `ERR:could not find`);
+    /* one marked, wraps around */
+    b.t(`mark cd id ${h3.ids.cdDF}\\1`, `1`);
+    b.t(`go cd id ${h3.ids.cdDF}\\1`, `1`);
+    b.t(`the short id of this marked cd`, `${h3.ids.cdDF}`);
+    b.t(`the short id of next marked cd`, `${h3.ids.cdDF}`);
+    b.t(`the short id of prev marked cd`, `${h3.ids.cdDF}`);
+
+    /* now do all of the above, but within a bg */
     b.t(`unmark all cards\\1`, `1`);
-    b.t(`mark cd id ${h3.ids.cdA}\\1`, `1`);
-    b.t(`mark cd id ${h3.ids.cdBB}\\1`, `1`);
     b.t(`mark cd id ${h3.ids.cdCD}\\1`, `1`);
-    /* between them, not marked */
-    b.t(`go cd id ${h3.ids.cdBD}\\1`, `1`);
-    b.t(`the short id of this marked cd`, `ERR:could not find`);
-    b.t(`the short id of next marked cd`, `${h3.ids.cdBB}`);
-    b.t(`the short id of prev marked cd`, `${h3.ids.cdCD}`);
-    /* between them, marked */
-    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
-    b.t(`the short id of this marked cd`, `ERR:could not find`);
-    b.t(`the short id of next marked cd`, `${h3.ids.cdCD}`);
-    b.t(`the short id of prev marked cd`, `${h3.ids.cdA}`);
-    /* within bg */
-    b.t(`the short id of first marked cd of bg 2`, `${h3.ids.cdBB}`);
-    b.t(`the short id of last marked cd of bg 2`, `${h3.ids.cdBB}`);
-    b.t(`the short id of first marked cd of bg 3`, `ERR:could not find`);
-    b.t(`the short id of last marked cd of bg 3`, `ERR:could not find`);
-    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
-    b.t(`the short id of this marked cd of bg 2`, `${h3.ids.cdBB}`);
-    b.t(`the short id of next marked cd of bg 2`, `${h3.ids.cdBB}`);
+    b.t(`mark cd id ${h3.ids.cdDD}\\1`, `1`);
+    b.t(`mark cd id ${h3.ids.cdDF}\\1`, `1`);
+    b.t(`mark cd id ${h3.ids.cdDG}\\1`, `1`);
+    /* look by name */
+    b.t(`the short id of marked cd "d" of bg 4`, `${h3.ids.cdDD}`);
+    b.t(`the short id of marked cd "f" of bg 4`, `${h3.ids.cdDF}`);
+    b.t(`the short id of marked cd "e" of bg 4`, `ERR:could not find`);
+    b.t(`the short id of marked cd "a" of bg 4`, `ERR:could not find`);
+    /* look by absolute */
+    b.t(`the short id of marked cd 1 of bg 4`, `${h3.ids.cdDD}`);
+    b.t(`the short id of marked cd 2 of bg 4`, `${h3.ids.cdDF}`);
+    b.t(`the short id of marked cd 10 of bg 4`, `ERR:could not find`);
+    /* look by ordinal */
+    b.t(`the short id of first marked cd of bg 4`, `${h3.ids.cdDD}`);
+    b.t(`the short id of second marked cd of bg 4`, `${h3.ids.cdDF}`);
+    b.t(`the short id of last marked cd of bg 4`, `${h3.ids.cdDG}`);
+    b.t(`the short id of tenth marked cd of bg 4`, `ERR:could not find`);
+    /* look by relative - before all */
     b.t(`go cd id ${h3.ids.cdCD}\\1`, `1`);
-    b.t(`the short id of this marked cd of bg 3`, `${h3.ids.cdCD}`);
-    b.t(`the short id of next marked cd of bg 3`, `${h3.ids.cdCD}`);
+    b.t(`the short id of this marked cd of bg 4`, `ERR:could not find`);
+    b.t(`the short id of next marked cd of bg 4`, `${h3.ids.cdDD}`);
+    b.t(`the short id of prev marked cd of bg 4`, `${h3.ids.cdDF}`);
+    /* look by relative - on first */
+    b.t(`go cd id ${h3.ids.cdDD}\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 4`, `${h3.ids.cdDD}`);
+    b.t(`the short id of next marked cd of bg 4`, `${h3.ids.cdDF}`);
+    b.t(`the short id of prev marked cd of bg 4`, `${h3.ids.cdDG}`);
+    /* look by relative - between them */
+    b.t(`go cd id ${h3.ids.cdDE}\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 4`, `ERR:could not find`);
+    b.t(`the short id of next marked cd of bg 4`, `${h3.ids.cdDF}`);
+    b.t(`the short id of prev marked cd of bg 4`, `${h3.ids.cdDD}`);
+    /* look by relative - on last */
+    b.t(`go cd id ${h3.ids.cdDG}\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 4`, `${h3.ids.cdDG}`);
+    b.t(`the short id of next marked cd of bg 4`, `${h3.ids.cdDD}`);
+    b.t(`the short id of prev marked cd of bg 4`, `${h3.ids.cdDF}`);
+    /* look by relative - after all */
+    b.t(`go cd id ${h3.ids.cdDH}\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 4`, `ERR:could not find`);
+    b.t(`the short id of next marked cd of bg 4`, `${h3.ids.cdDD}`);
+    b.t(`the short id of prev marked cd of bg 4`, `${h3.ids.cdDG}`);
+    /* bg ones that don't have an analogue */
     b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 4`, `ERR:could not find`);
+    b.t(`the short id of next marked cd of bg 4`, `${h3.ids.cdDD}`);
+    b.t(`the short id of prev marked cd of bg 4`, `${h3.ids.cdDG}`);
     b.t(`the short id of this marked cd of bg 1`, `ERR:could not find`);
-    b.t(`the short id of next marked cd of bg 1`, `${h3.ids.cdA}`);
+    b.t(`the short id of next marked cd of bg 1`, `ERR:could not find`);
+    b.t(`the short id of prev marked cd of bg 1`, `ERR:could not find`);
+    /* none marked */
+    b.t(`unmark all cards\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 4`, `ERR:could not find`);
+    b.t(`the short id of next marked cd of bg 4`, `ERR:could not find`);
+    b.t(`the short id of prev marked cd of bg 4`, `ERR:could not find`);
+    /* one marked, wraps around */
+    b.t(`mark cd id ${h3.ids.cdDF}\\1`, `1`);
+    b.t(`go cd id ${h3.ids.cdDF}\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 4`, `${h3.ids.cdDF}`);
+    b.t(`the short id of next marked cd of bg 4`, `${h3.ids.cdDF}`);
+    b.t(`the short id of prev marked cd of bg 4`, `${h3.ids.cdDF}`);
     /* clean up */
     b.t(`unmark all cards\\1`, `1`);
     b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs]);
 });
+t.test('03ObjectBtnAndField', () => {
+
+
+})
+
+
+/* run the tests again, except for fld instead of btn */
+class GoForFldInsteadOfBtn extends TestMultiplier {
+    secondTransformation(code: string, expected: string): O<[string, string]> {
+        if (code.startsWith('the short id of')) {
+            code = code + ' of stack 1';
+            return [code, expected];
+        } else {
+            return undefined
+        }
+    }
+}
 
 /* run the tests again, specifying the stack */
 class AppendOfThisStack extends TestMultiplier {
@@ -382,7 +486,6 @@ class AppendOfThisStack extends TestMultiplier {
     }
 }
 
-//~ todo: don't just get fld 1, get all the objects in all possible ways
 
 /**
  * transform it from "the short id" to "there is a"
