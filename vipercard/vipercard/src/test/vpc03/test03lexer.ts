@@ -227,7 +227,7 @@ t.test('03Identifier', () => {
 });
 
 /**
- * adds a few more cards
+ * adds a few more elements
  */
 export class TestVpc03 extends TestVpcScriptRunBase {
     populateModel() {
@@ -249,11 +249,30 @@ export class TestVpc03 extends TestVpcScriptRunBase {
         this.ids.cdDF = cdDF.idInternal
         this.ids.cdDG = cdDG.idInternal
         this.ids.cdDH = cdDH.idInternal
+        this.vcstate.vci.setCurCardNoOpenCardEvt(this.ids.cdDE);
+        let bDE1 = this.vcstate.createVel(cdDE.idInternal, VpcElType.Btn, -1);        
+        let fDE1 = this.vcstate.createVel(cdDE.idInternal, VpcElType.Fld, -1);        
+        let bDE2 = this.vcstate.createVel(cdDE.idInternal, VpcElType.Btn, -1);        
+        let fDE2 = this.vcstate.createVel(cdDE.idInternal, VpcElType.Fld, -1);        
+        let bDE3 = this.vcstate.createVel(cdDE.idInternal, VpcElType.Btn, -1);        
+        let fDE3 = this.vcstate.createVel(cdDE.idInternal, VpcElType.Fld, -1);        
+        this.ids.bDE1 = bDE1.idInternal
+        this.ids.fDE1 = fDE1.idInternal
+        this.ids.bDE2 = bDE2.idInternal
+        this.ids.fDE2 = fDE2.idInternal
+        this.ids.bDE3 = bDE3.idInternal
+        this.ids.fDE3 = fDE3.idInternal
         this.vcstate.vci.setCurCardNoOpenCardEvt(this.ids.cdCD);
         cdDD.setOnVel('name', 'd', this.vcstate.model);
         cdDE.setOnVel('name', 'e', this.vcstate.model);
         cdDF.setOnVel('name', 'f', this.vcstate.model);
         cdDG.setOnVel('name', 'g', this.vcstate.model);
         cdDH.setOnVel('name', 'h', this.vcstate.model);
+        bDE1.setOnVel('name', 'de1', this.vcstate.model);
+        bDE2.setOnVel('name', 'de2', this.vcstate.model);
+        bDE3.setOnVel('name', 'de3', this.vcstate.model);
+        fDE1.setOnVel('name', 'de1', this.vcstate.model);
+        fDE2.setOnVel('name', 'de2', this.vcstate.model);
+        fDE3.setOnVel('name', 'de3', this.vcstate.model);
     }
 }

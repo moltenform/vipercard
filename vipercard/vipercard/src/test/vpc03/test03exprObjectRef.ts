@@ -387,8 +387,8 @@ t.test('03ObjectCardMarked', () => {
     b.t(`the short id of this marked cd`, `${h3.ids.cdDF}`);
     b.t(`the short id of next marked cd`, `${h3.ids.cdDF}`);
     b.t(`the short id of prev marked cd`, `${h3.ids.cdDF}`);
-
     /* now do all of the above, but within a bg */
+    /* prepare */
     b.t(`unmark all cards\\1`, `1`);
     b.t(`mark cd id ${h3.ids.cdCD}\\1`, `1`);
     b.t(`mark cd id ${h3.ids.cdDD}\\1`, `1`);
@@ -441,6 +441,13 @@ t.test('03ObjectCardMarked', () => {
     b.t(`the short id of this marked cd of bg 1`, `ERR:could not find`);
     b.t(`the short id of next marked cd of bg 1`, `ERR:could not find`);
     b.t(`the short id of prev marked cd of bg 1`, `ERR:could not find`);
+    /* count number of! */
+    b.t(`the number of marked cards`, `4`);
+    b.t(`the number of marked cards of bg 1`, `0`);
+    b.t(`the number of marked cards of bg 2`, `1`);
+    b.t(`the number of marked cards of bg 3`, `0`);
+    b.t(`the number of marked cards of bg 4`, `3`);
+    b.t(`the number of marked cards of bg 999`, `ERR:could not find`);
     /* none marked */
     b.t(`unmark all cards\\1`, `1`);
     b.t(`the short id of this marked cd of bg 4`, `ERR:could not find`);
@@ -457,20 +464,134 @@ t.test('03ObjectCardMarked', () => {
     b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs]);
 });
 t.test('03ObjectBtnAndField', () => {
-
-
+    let b = new ScriptTestBatch();
+    /* can't read ones from the wrong card */
+    b.t(`go cd id ${h3.ids.cdDE}\\1`, `1`);
+    b.t(`the short id of cd btn "p1"`, `ERR:could not find`);
+    b.t(`the short id of cd fld "p2"`, `ERR:could not find`);
+    b.t(`the short id of cd btn "p1" of cd 1`, `ERR:could not find`);
+    b.t(`the short id of cd fld "p2" of cd 1`, `ERR:could not find`);
+    b.t(`the short id of cd btn "p1" of cd id ${h3.ids.cdBC}`, `${h3.ids.bBC1}`);
+    b.t(`the short id of cd fld "p2" of cd id ${h3.ids.cdBC}`, `${h3.ids.fBC2}`);
+    /* look by name */
+    b.t(`go cd id ${h3.ids.cdDE}\\1`, `1`);
+    b.t(`the short id of cd (typ) "de1"`, `(1)`);
+    b.t(`the short id of cd (typ) "de2"`, `(2)`);
+    b.t(`the short id of cd (typ) "DE3"`, `(3)`);
+    b.t(`the short id of cd (typ) "de1" of this bg`, `ERR:does not make sense`);
+    b.t(`the short id of cd (typ) "de1" of this stack`, `ERR:parse err`);
+    b.t(`the short id of cd (typ) "xyz"`, `ERR:could not find`);
+    /* look by absolute */
+    b.t(`the short id of cd (typ) 1`, `(1)`);
+    b.t(`the short id of cd (typ) 2`, `(2)`);
+    b.t(`the short id of cd (typ) 3`, `(3)`);
+    b.t(`the short id of cd (typ) -1`, `ERR:could not find`);
+    b.t(`the short id of cd (typ) 0`, `ERR:could not find`);
+    b.t(`the short id of cd (typ) 99`, `ERR:could not find`);
+    /* look by relative */
+    b.t(`the short id of this cd (typ)`, `ERR:parse err`);
+    b.t(`the short id of prev cd (typ)`, `ERR:parse err`);
+    b.t(`the short id of next cd (typ)`, `ERR:parse err`);
+    b.t(`the short id of first cd (typ)`, `(1)`);
+    b.t(`the short id of second cd (typ)`, `(2)`);
+    b.t(`the short id of last cd (typ)`, `(3)`);
+    /* bad syntax */
+    b.t(`the short id of first cd (typ) 1`, `ERR:ffff`);
+    b.t(`the short id of cd (typ) (typ) 1`, `ERR:parse err`);
+    b.t(`the short id of cd 1 of this cd`, `ERR:parse err`);
+    b.batchEvaluate(h3, [GoForBothFldAndBtn, EvaluateThereIs]);
+})
+t.test('03exprNumberOfObjects', () => {
+    let b = new ScriptTestBatch();
+    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
+    /* buttons and fields */
+    b.t(`the number of cd btns`, `0`);
+    b.t(`the number of cd flds`, `0`);
+    b.t(`the number of bg btns`, `0`);
+    b.t(`the number of bg btns`, `0`);
+    /* the original product doesn't support this either */
+    b.t(`the number of cd btns of cd id ${h3.ids.cdBC}`, `ERR:parse err`);
+    b.t(`the number of cd flds of cd id ${h3.ids.cdBC}`, `ERR:parse err`);
+    b.t(`go cd id ${h3.ids.cdBC}\\1`, `1`);
+    b.t(`the number of cd btns`, `2`);
+    b.t(`the number of cd flds`, `3`);
+    /* cards */
+    b.t(`the number of cards`, `0`);
+    b.t(`the number of cards of this stack`, `10`);
+    b.t(`the number of cards of bg 1`, `1`);
+    b.t(`the number of cards of bg 2`, `3`);
+    b.t(`the number of cards of bg 1 of this stack`, `1`);
+    b.t(`the number of cards of bg 2 of this stack`, `3`);
+    b.t(`the number of cards of bg 99`, `ERR:could not find`);
+    /* number of marked cards-see above */
+    /* bkgnds */
+    b.t(`the number of bkgnds`, `4`);
+    b.t(`the number of bkgnds of this stack`, `4`);
+    b.t(`the number of bkgnds of stack 2`, `ERR:could not find`);
+    /* other */
+    b.t(`the number of stacks`, `ERR:parse err`);
+    b.t(`the number of ViperCards`, `ERR:parse err`);
+    b.t(`the number of me`, `1`);
+    b.batchEvaluate(h3, [EvaluateThereIs]);
+})
+t.test('03Object Auto-insert scope for backwards compat', () => {
+    /* tests rewriteSpecifyCdOrBgPart in vpcRewritesGlobal.ts */
+    /* turn on compat mode */
+    h3.vcstate.vci.undoableAction(() =>
+        h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
+    );
+    let b = new ScriptTestBatch();
+    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
+    b.t(`the number of btns`, `0`);
+    b.t(`the number of flds`, `0`);
+    b.t(`go cd id ${h3.ids.cdBC}\\1`, `1`);
+    b.t(`the number of btns`, `2`);
+    b.t(`the number of flds`, `0`);
+    b.t(`go cd id ${h3.ids.cdDE}\\1`, `1`);
+    b.t(`the short id of btn 1`, `${h3.ids.bDE1}`);
+    b.t(`the short id of btn "de2"`, `${h3.ids.bDE2}`);
+    b.t(`the short id of last btn`, `${h3.ids.bDE3}`);
+    b.t(`the short id of fld 1`, `ERR:could not find`);
+    b.t(`the short id of fld "de2"`, `ERR:could not find`);
+    b.t(`the short id of last fld`, `ERR:could not find`);
+    b.batchEvaluate(h3, [EvaluateThereIs]);
+    /* turn off compat mode */
+    h3.vcstate.vci.undoableAction(() =>
+        h3.vcstate.model.stack.setOnVel('compatibilitymode', false, h3.vcstate.model)
+    );
+    
+    b = new ScriptTestBatch();
+    b.t(`go cd id ${h3.ids.cdBB}\\1`, `PREPARSEERR:compatibility mode`);
+    b.t(`the number of btns`, `PREPARSEERR:compatibility mode`);
+    b.t(`the number of flds`, `PREPARSEERR:compatibility mode`);
+    b.t(`go cd id ${h3.ids.cdBC}\\1`, `PREPARSEERR:compatibility mode`);
+    b.t(`the number of btns`, `PREPARSEERR:compatibility mode`);
+    b.t(`the number of flds`, `PREPARSEERR:compatibility mode`);
+    b.t(`go cd id ${h3.ids.cdDE}\\1`, `PREPARSEERR:compatibility mode`);
+    b.t(`the short id of btn 1`, `PREPARSEERR:compatibility mode`);
+    b.t(`the short id of btn "de2"`, `PREPARSEERR:compatibility mode`);
+    b.t(`the short id of last btn`, `PREPARSEERR:compatibility mode`);
+    b.t(`the short id of fld 1`, `PREPARSEERR:compatibility mode`);
+    b.t(`the short id of fld "de2"`, `PREPARSEERR:compatibility mode`);
+    b.t(`the short id of last fld`, `PREPARSEERR:compatibility mode`);
+    b.batchEvaluate(h3, [EvaluateThereIs]);
 })
 
-
 /* run the tests again, except for fld instead of btn */
-class GoForFldInsteadOfBtn extends TestMultiplier {
+class GoForBothFldAndBtn extends TestMultiplier {
+    firstTransformation(code: string, expected: string): O<[string, string]> {
+        code = code.replace(/\b\(typ\)\b/g, 'btn')
+        expected = expected.replace(/\b\(1\)\b/g, `${h3.ids.bDE1}`)
+        expected = expected.replace(/\b\(2\)\b/g, `${h3.ids.bDE2}`)
+        expected = expected.replace(/\b\(3\)\b/g, `${h3.ids.bDE3}`)
+        return [code, expected];
+    }
     secondTransformation(code: string, expected: string): O<[string, string]> {
-        if (code.startsWith('the short id of')) {
-            code = code + ' of stack 1';
-            return [code, expected];
-        } else {
-            return undefined
-        }
+        code = code.replace(/\b\(typ\)\b/g, 'fld')
+        expected = expected.replace(/\b\(1\)\b/g, `${h3.ids.fDE1}`)
+        expected = expected.replace(/\b\(2\)\b/g, `${h3.ids.fDE2}`)
+        expected = expected.replace(/\b\(3\)\b/g, `${h3.ids.fDE3}`)
+        return [code, expected];
     }
 }
 
@@ -486,11 +607,9 @@ class AppendOfThisStack extends TestMultiplier {
     }
 }
 
-
 /**
  * transform it from "the short id" to "there is a"
  */
-//~ todo: use this everywhere
 class EvaluateThereIs extends TestMultiplier {
     secondTransformation(code: string, expected: string): O<[string, string]> {
         if (!code.startsWith('the short id of')) {

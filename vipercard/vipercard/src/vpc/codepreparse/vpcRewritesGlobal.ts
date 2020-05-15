@@ -75,11 +75,13 @@ export const VpcRewritesGlobal = /* static class */ {
                 ret.push(line[i]);
             }
 
-            if (line[i + 1].tokenType === tks.tkBtn || line[i + 1].tokenType === tks.tkFld) {
+            if (line[i + 1].tokenType === tks.tkBtn || line[i + 1].tokenType === tks.tkFld ||
+                line[i + 1].tokenType === tks.tkBtnPlural || line[i + 1].tokenType === tks.tkFldPlural) {
                 if (line[i].tokenType !== tks.tkCard && line[i].tokenType !== tks.tkBg) {
                     if (compatMode) {
                         /* insert a missing 'bg' or 'cd' */
-                        let s = line[i + 1].tokenType === tks.tkFld ? 'bg' : 'cd';
+                        let s = (line[i + 1].tokenType === tks.tkFld ||
+                            line[i + 1].tokenType === tks.tkFldPlural) ? 'bg' : 'cd';
                         let newTk = rw.tokenFromEnglishTerm(s, line[i]);
                         ret.push(newTk);
                     } else {
@@ -109,8 +111,7 @@ export const VpcRewritesGlobal = /* static class */ {
  * but what we have now is much more convenient to write (and read).
 
    example:
-   `
-    put %ARG0% into x
+   `put %ARG0% into x
     put %ARG1% into $loopbound%UNIQUE%
     repeat
         if x >= $loopbound%UNIQUE% then
@@ -118,6 +119,8 @@ export const VpcRewritesGlobal = /* static class */ {
         end if
         put x + 1 into x
     end repeat`
+    
+ * it will build code and automatically use the correct tokens.
  */
 export class VpcSuperRewrite {
     constructor(protected idGen: CountNumericId) {}
