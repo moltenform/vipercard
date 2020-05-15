@@ -257,11 +257,15 @@ end if`;
             return [[line[0]]];
         }
     }
-    rewriteMark(line: ChvITk[], fromUnmark?:boolean): ChvITk[][] {
+    rewriteMark(line: ChvITk[], fromUnmark=false): ChvITk[][] {
         checkThrow(line.length > 1, "not enough args for mark/unmark.");
         let isAll = false
         if (line[1].image === 'cards') {
-            return [this.hBuildNyi('this type of mark expression', line[0])];
+            if (line[2].image === 'where') {
+                return this.hBuildMarkExpression(line.slice(3), fromUnmark)
+            } else {
+                return [this.hBuildNyi('this type of mark expression', line[0])];
+            }
         } else if (line[1].image === 'all') {
             if (line[2].image === 'cards' || line[2].image === 'cds') {
                 isAll = true
@@ -269,6 +273,7 @@ end if`;
                 checkThrow(false, "expected mark all cards")
             }
         }
+        
         let ret:ChvITk[] = [line[0]]
         if (fromUnmark) {
             ret.push(this.rw.tokenFromEnglishTerm('not', line[0]))
@@ -626,5 +631,30 @@ end repeat`;
     hReturnNoOp(line: ChvITk[]): ChvITk[][] {
         let template = `put "no-op" %INTO% c%UNIQUE% `;
         return this.rw.gen(template, line[0]);
+    }
+
+    /* build a mark expression in software */
+    hBuildMarkExpression(expression: ChvITk[], fromUnmark: boolean): ChvITk[][] {
+        /* can't put this in standardlib, it needs "each" access */
+        /* go to each card, so that bg field accesses work */
+        checkThrow(expression?.length, "requires expression")
+        let code = `
+put the short id of this cd into prevCard%UNIQUE%
+put 1 into i%UNIQUE%
+repeat
+    go cd i%UNIQUE%
+    if ( %ARG0% ) then
+        set the marked of this cd to true
+    else
+        set the marked of this cd to false
+    end if
+    add 1 to i%UNIQUE%
+    if i%UNIQUE% > the number of cds then
+        exit repeat
+    end if
+end repeat
+go cd id prevCard%UNIQUE%
+        `
+        return this.rw.gen(code, expression[0], [expression]);
     }
 }

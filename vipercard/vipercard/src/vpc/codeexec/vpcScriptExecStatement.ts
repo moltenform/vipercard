@@ -259,6 +259,7 @@ export class ExecuteStatement {
         } else {
             let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), "no object?");
             let vel = ensureDefined(this.outside.ResolveVelRef(ref), "could not find card")
+            checkThrow(vel.getType() === VpcElType.Card, "you can only mark a card")
             vel.setOnVel('marked', shouldMark, this.outside.Model())
         }
     }

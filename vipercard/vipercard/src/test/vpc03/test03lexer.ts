@@ -1,5 +1,6 @@
 
 /* auto */ import { BatchType, ScriptTestBatch, TestVpcScriptRunBase } from './../vpc/vpcTestScriptRunBase';
+/* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -225,5 +226,34 @@ t.test('03Identifier', () => {
     b.batchEvaluate(h3);
 });
 
-/* no customizations yet */
-export class TestVpc03 extends TestVpcScriptRunBase {}
+/**
+ * adds a few more cards
+ */
+export class TestVpc03 extends TestVpcScriptRunBase {
+    populateModel() {
+        super.populateModel()
+        let bgD = this.vcstate.createVel(this.vcstate.model.stack.idInternal, VpcElType.Bg, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(this.ids.cdCD);
+        let cdDD = this.vcstate.createVel(bgD.idInternal, VpcElType.Card, -1);        
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdDD.idInternal);
+        let cdDE = this.vcstate.createVel(bgD.idInternal, VpcElType.Card, -1);        
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdDE.idInternal);
+        let cdDF = this.vcstate.createVel(bgD.idInternal, VpcElType.Card, -1);        
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdDF.idInternal);
+        let cdDG = this.vcstate.createVel(bgD.idInternal, VpcElType.Card, -1);        
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdDG.idInternal);
+        let cdDH = this.vcstate.createVel(bgD.idInternal, VpcElType.Card, -1);        
+        this.ids.bgD = bgD.idInternal
+        this.ids.cdDD = cdDD.idInternal
+        this.ids.cdDE = cdDE.idInternal
+        this.ids.cdDF = cdDF.idInternal
+        this.ids.cdDG = cdDG.idInternal
+        this.ids.cdDH = cdDH.idInternal
+        this.vcstate.vci.setCurCardNoOpenCardEvt(this.ids.cdCD);
+        cdDD.setOnVel('name', 'd', this.vcstate.model);
+        cdDE.setOnVel('name', 'e', this.vcstate.model);
+        cdDF.setOnVel('name', 'f', this.vcstate.model);
+        cdDG.setOnVel('name', 'g', this.vcstate.model);
+        cdDH.setOnVel('name', 'h', this.vcstate.model);
+    }
+}

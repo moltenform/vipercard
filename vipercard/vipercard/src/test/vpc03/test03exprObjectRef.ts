@@ -35,7 +35,7 @@ t.test('03ObjectSpecial', () => {
     b.t(`the short id of the`, `ERR:parse`);
     b.t(`the short id of stack`, `ERR:parse`);
     b.t(`the short id of button`, `PREPARSEERR:compatibility`);
-    b.batchEvaluate(h3, [EvaluateForBothShortIdAndThereIs]);
+    b.batchEvaluate(h3, [EvaluateThereIs]);
 });
 t.test('03Object look by id', () => {
     /* even if the id exists, we must reject if the type does not match.
@@ -65,7 +65,7 @@ t.test('03Object look by id', () => {
     }
 
     assertWarnEq(map.getKeys().length * map.getKeys().length, b.tests.length, '');
-    b.batchEvaluate(h3, [EvaluateForBothShortIdAndThereIs]);
+    b.batchEvaluate(h3, [EvaluateThereIs]);
     /* looking by id with incorrect parent must also fail! */
     b = new ScriptTestBatch();
     b.t(`the short id of bg id ${h3.ids.bgA} of stack 2`, `ERR:could not find`);
@@ -137,7 +137,7 @@ t.test('03Object look by id', () => {
         `the short id of cd btn id ${h3.ids.bBC1} of cd id ${h3.ids.cdBC}`,
         `${h3.ids.bBC1}`
     );
-    b.batchEvaluate(h3, [EvaluateForBothShortIdAndThereIs]);
+    b.batchEvaluate(h3, [EvaluateThereIs]);
 });
 t.test('03ObjectPart', () => {
     let b = new ScriptTestBatch();
@@ -155,7 +155,7 @@ t.test('03ObjectPart', () => {
     b.t(`show part (1 + 1)\\0`, `ERR:no handler`);
     b.t(`show first part\\0`, `ERR:parse err`);
     b.t(`show first part of this card\\0`, `ERR:parse err`);
-    b.batchEvaluate(h3, [EvaluateForBothShortIdAndThereIs]);
+    b.batchEvaluate(h3, [EvaluateThereIs]);
 });
 t.test('03ObjectStack', () => {
     let b = new ScriptTestBatch();
@@ -183,7 +183,7 @@ t.test('03ObjectStack', () => {
     b.t(`get the short id of first stack\\it`, `ERR:parse`);
     b.t(`get the short id of this stack\\it`, `${h3.ids.stack}`);
     b.t(`get the short id of stack\\it`, `${h3.ids.stack}`);
-    b.batchEvaluate(h3, [EvaluateForBothShortIdAndThereIs]);
+    b.batchEvaluate(h3, [EvaluateThereIs]);
 });
 t.test('03ObjectBg', () => {
     let b = new ScriptTestBatch();
@@ -235,19 +235,7 @@ t.test('03ObjectBg', () => {
     b.t(`get the short id of 1 bg\\it`, `ERR:parse`);
     b.t(`get the short id of bg\\it`, `${h3.ids.bgA}`);
 
-    /* run the tests again, specifying the stack */
-    class AppendOfThisStack extends TestMultiplier {
-        secondTransformation(code: string, expected: string): O<[string, string]> {
-            if (code.startsWith('the short id of')) {
-                code = code + ' of stack 1';
-                return [code, expected];
-            } else {
-                return undefined
-            }
-        }
-    }
-
-    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateForBothShortIdAndThereIs]);
+    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs]);
 });
 t.test('03ObjectCard', () => {
     let b = new ScriptTestBatch();
@@ -312,12 +300,87 @@ t.test('03ObjectCard', () => {
         return [code, expected];
     }
     }
-    b.batchEvaluate(h3, [AppendOfThisBgAndStack, EvaluateForBothShortIdAndThereIs]);
+    b.batchEvaluate(h3, [AppendOfThisBgAndStack, EvaluateThereIs]);
 });
 t.test('03ObjectCardMarked', () => {
     let b = new ScriptTestBatch();
-    
+    b.t(`unmark all cards\\1`, `1`);
+    b.t(`mark cd id ${h3.ids.cdBB}\\1`, `1`);
+    b.t(`mark cd id ${h3.ids.cdCD}\\1`, `1`);
+    b.t(`mark cd id ${h3.ids.cdDD}\\1`, `1`);
+    /* look by name */
+    b.t(`the short id of marked cd "b"`, `${h3.ids.cdBB}`);
+    b.t(`the short id of marked cd "d"`, `${h3.ids.cdCD}`);
+    b.t(`the short id of marked cd "a"`, `ERR:could not find`);
+    /* look by absolute */
+    b.t(`the short id of marked cd 1`, `${h3.ids.cdBB}`);
+    b.t(`the short id of marked cd 2`, `${h3.ids.cdCD}`);
+    b.t(`the short id of marked cd 10`, `ERR:could not find`);
+    /* look by relative */
+    b.t(`mark cd id ${h3.ids.cdBC}\\1`, `1`);
+    b.t(`the short id of first marked cd`, `${h3.ids.cdBB}`);
+    b.t(`the short id of second marked cd`, `${h3.ids.cdBC}`);
+    b.t(`the short id of last marked cd`, `${h3.ids.cdCD}`);
+    /* before them */
+    b.t(`go cd 1\\1`, `1`);
+    b.t(`the short id of this marked cd`, `ERR:could not find`);
+    b.t(`the short id of next marked cd`, `${h3.ids.cdBB}`);
+    b.t(`the short id of prev marked cd`, `${h3.ids.cdCD}`);
+    /* after them */
+    b.t(`unmark cd id ${h3.ids.cdCD}\\1`, `1`);
+    b.t(`go cd ${h3.ids.cdCD}\\1`, `1`);
+    b.t(`the short id of this marked cd`, `ERR:could not find`);
+    b.t(`the short id of next marked cd`, `${h3.ids.cdBB}`);
+    b.t(`the short id of prev marked cd`, `${h3.ids.cdBC}`);
+    /* none marked */
+    b.t(`unmark all cards\\1`, `1`);
+    b.t(`the short id of this marked cd`, `ERR:could not find`);
+    b.t(`the short id of next marked cd`, `ERR:could not find`);
+    b.t(`the short id of prev marked cd`, `ERR:could not find`);
+    b.t(`unmark all cards\\1`, `1`);
+    b.t(`mark cd id ${h3.ids.cdA}\\1`, `1`);
+    b.t(`mark cd id ${h3.ids.cdBB}\\1`, `1`);
+    b.t(`mark cd id ${h3.ids.cdCD}\\1`, `1`);
+    /* between them, not marked */
+    b.t(`go cd id ${h3.ids.cdBD}\\1`, `1`);
+    b.t(`the short id of this marked cd`, `ERR:could not find`);
+    b.t(`the short id of next marked cd`, `${h3.ids.cdBB}`);
+    b.t(`the short id of prev marked cd`, `${h3.ids.cdCD}`);
+    /* between them, marked */
+    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
+    b.t(`the short id of this marked cd`, `ERR:could not find`);
+    b.t(`the short id of next marked cd`, `${h3.ids.cdCD}`);
+    b.t(`the short id of prev marked cd`, `${h3.ids.cdA}`);
+    /* within bg */
+    b.t(`the short id of first marked cd of bg 2`, `${h3.ids.cdBB}`);
+    b.t(`the short id of last marked cd of bg 2`, `${h3.ids.cdBB}`);
+    b.t(`the short id of first marked cd of bg 3`, `ERR:could not find`);
+    b.t(`the short id of last marked cd of bg 3`, `ERR:could not find`);
+    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 2`, `${h3.ids.cdBB}`);
+    b.t(`the short id of next marked cd of bg 2`, `${h3.ids.cdBB}`);
+    b.t(`go cd id ${h3.ids.cdCD}\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 3`, `${h3.ids.cdCD}`);
+    b.t(`the short id of next marked cd of bg 3`, `${h3.ids.cdCD}`);
+    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
+    b.t(`the short id of this marked cd of bg 1`, `ERR:could not find`);
+    b.t(`the short id of next marked cd of bg 1`, `${h3.ids.cdA}`);
+    /* clean up */
+    b.t(`unmark all cards\\1`, `1`);
+    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs]);
 });
+
+/* run the tests again, specifying the stack */
+class AppendOfThisStack extends TestMultiplier {
+    secondTransformation(code: string, expected: string): O<[string, string]> {
+        if (code.startsWith('the short id of')) {
+            code = code + ' of stack 1';
+            return [code, expected];
+        } else {
+            return undefined
+        }
+    }
+}
 
 //~ todo: don't just get fld 1, get all the objects in all possible ways
 
@@ -325,7 +388,7 @@ t.test('03ObjectCardMarked', () => {
  * transform it from "the short id" to "there is a"
  */
 //~ todo: use this everywhere
-class EvaluateForBothShortIdAndThereIs extends TestMultiplier {
+class EvaluateThereIs extends TestMultiplier {
     secondTransformation(code: string, expected: string): O<[string, string]> {
         if (!code.startsWith('the short id of')) {
             /* might be testing a command, or going to a card */

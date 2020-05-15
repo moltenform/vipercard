@@ -1,7 +1,7 @@
 
 /* auto */ import { RememberHistory } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, findPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, checkThrowInternal, findPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElProductOpts } from './velProductOpts';
 /* auto */ import { VpcModelTop } from './velModelTop';
@@ -344,6 +344,12 @@ export class VelResolveReference {
                 arr = arr.filter(cd => cd.getB('marked'));
             }
             /* `the short id of cd "theName"` */
+            let curId = this.model.getCurrentCard().idInternal;
+            let pivot = arr.findIndex(vel=>vel.idInternal===curId)
+            if (pivot !== -1) {
+                /* match product: start search from current card and wrap around */
+                arr = arr.slice(pivot+1).concat(arr.slice(0, pivot+1))
+            }
             return arr.find(vel => vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase());
         } else if (ref.lookByAbsolute !== undefined) {
             if (ref.cardLookAtMarkedOnly) {
@@ -380,7 +386,7 @@ export class VelResolveReference {
             let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, curIndex, 0, arr.length - 1);
             return index === undefined ? undefined : arr[index];
         } else {
-            checkThrow(false, 'T,|unknown object reference');
+            checkThrowInternal(false, 'T,|unknown object reference');
         }
     }
 
