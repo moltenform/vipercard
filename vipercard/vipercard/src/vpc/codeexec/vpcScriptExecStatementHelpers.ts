@@ -54,7 +54,7 @@ export class VpcScriptExecuteStatementHelpers {
                 /* confirmed in emulator that floats are not accepted here */
                 let coords = item.isIntegerList(2);
                 if (coords) {
-                    Util512.extendArray(argsGiven, coords);
+                    argsGiven = argsGiven.concat(coords);
                 } else {
                     argsGiven.push(item.readAsStrictInteger());
                 }

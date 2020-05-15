@@ -477,7 +477,7 @@ export class ExecuteStatement {
      */
     goWait(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
-        Util512.extendArray(params, this.h.getLiteralParams(vals, tkstr.tkOrdinal));
+        params = params.concat(this.h.getLiteralParams(vals, tkstr.tkOrdinal));
         let multiply = MapTermToMilliseconds.Ticks;
         if (params && params.length) {
             checkThrowEq(1, params.length, 'Rx|expected something like `wait 400 ms`');

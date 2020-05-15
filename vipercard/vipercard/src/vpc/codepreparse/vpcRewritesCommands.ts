@@ -273,7 +273,7 @@ end if`;
                 checkThrow(false, "expected mark all cards")
             }
         }
-        
+
         let ret:ChvITk[] = [line[0]]
         if (fromUnmark) {
             ret.push(this.rw.tokenFromEnglishTerm('not', line[0]))
@@ -497,7 +497,7 @@ put the result %ARG0%`;
                     let newlines = VpcRewritesLoops.Go(line, this.rw);
                     for (let newline of newlines) {
                         if (newline[0].image === 'put') {
-                            Util512.extendArray(ret, this.rewritePut(newline));
+                            ret = ret.concat(this.rewritePut(newline));
                         } else {
                             ret.push(newline);
                         }

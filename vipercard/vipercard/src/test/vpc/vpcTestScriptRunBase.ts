@@ -103,14 +103,14 @@ export class ScriptTestBatch {
                 let third = curItems.map(item =>
                     multiplier.thirdTransformation(item[0], item[1])
                 );
-                let nextCurItems: [string, string][] = [];
-                Util512.extendArray(nextCurItems, first);
-                Util512.extendArray(nextCurItems, second);
-                Util512.extendArray(nextCurItems, third);
-                curItems = nextCurItems.filter(item => item !== undefined);
+                let nextCurItems: O<[string, string]>[] = [];
+                nextCurItems = nextCurItems.concat(first)
+                nextCurItems = nextCurItems.concat(second)
+                nextCurItems = nextCurItems.concat(third)
+                curItems = nextCurItems.filter(item=>item !== undefined) as [string, string][];
             }
 
-            Util512.extendArray(ret, curItems);
+            ret = ret.concat(curItems);
         }
 
         return ret;

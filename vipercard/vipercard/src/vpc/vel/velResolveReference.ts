@@ -11,7 +11,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { O, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, cast, getEnumToStrOrFallback } from './../../ui512/utils/util512';
+/* auto */ import { Util512, cast, getEnumToStrOrFallback, assertWarnEq } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -348,7 +348,10 @@ export class VelResolveReference {
             let pivot = arr.findIndex(vel=>vel.idInternal===curId)
             if (pivot !== -1) {
                 /* match product: start search from current card and wrap around */
+                /* this doesn't happen for bg names. */
+                let prevLen = arr.length
                 arr = arr.slice(pivot+1).concat(arr.slice(0, pivot+1))
+                assertWarnEq(prevLen, arr.length, '')
             }
             return arr.find(vel => vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase());
         } else if (ref.lookByAbsolute !== undefined) {

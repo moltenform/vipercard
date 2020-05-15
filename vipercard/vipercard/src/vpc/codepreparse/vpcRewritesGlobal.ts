@@ -131,7 +131,7 @@ export class VpcSuperRewrite {
         let lines = s.replace(/\r\n/g, '\n').split('\n');
         for (let line of lines) {
             if (line.trim() === '%ARGMANY%' && argMany) {
-                Util512.extendArray(ret, argMany);
+                ret = ret.concat(argMany)
             } else {
                 let terms = line.split(/\s+/);
                 ret.push([]);
@@ -154,7 +154,7 @@ export class VpcSuperRewrite {
             let sn = term.replace(/%ARG/g, '').replace(/%/g, '');
             let n = Util512.parseIntStrict(sn);
             checkThrow(typeof n === 'number' && n >= 0 && n < args.length, 'TJ|internal error in template');
-            Util512.extendArray(arLast(ret), args[n]);
+            ret[ret.length - 1] = ret[ret.length - 1].concat(args[n])
         } else if (term === '%INTO%' || term === '%BEFORE%' || term === '%AFTER%') {
             arLast(ret).push(BuildFakeTokens.makeSyntaxMarker(realTokenAsBasis));
             let newToken = this.tokenFromEnglishTerm(term.replace(/%/g, '').toLowerCase(), realTokenAsBasis);
