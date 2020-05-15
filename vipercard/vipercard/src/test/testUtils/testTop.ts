@@ -37,7 +37,9 @@
 /* auto */ import { testCollectionUI512Composites } from './../util512ui/testUI512Composites';
 /* auto */ import { testCollectionUI512CodeEditor } from './../util512ui/testUI512CodeEditor';
 /* auto */ import { testCollectionExternalLibs } from './../util512/testExternalLibs';
+/* auto */ import { testCollection03objectRenderName } from './../vpc03/test03objectRenderName';
 /* auto */ import { testCollection03lexer } from './../vpc03/test03lexer';
+/* auto */ import { testCollection03exprPseudoObjects } from './../vpc03/test03exprPseudoObjects';
 /* auto */ import { testCollection03exprObjectRef } from './../vpc03/test03exprObjectRef';
 /* auto */ import { testCollection03chunkBasic } from './../vpc03/test03chunkBasic';
 /* auto */ import { testCollection03chunkAdditional } from './../vpc03/test03chunkAdditional';
@@ -62,42 +64,45 @@ export const SimpleUtil512Tests = /* static class */ {
         let colls: SimpleUtil512TestCollection[] = [
             /* testCollectionvpcuiServer, */
             /* testCollectionScriptExtensive, */
+
+            testCollection03exprPseudoObjects,
+            testCollection03objectRenderName,
+            testCollection03exprObjectRef,
             testCollection03chunkAdditional,
             testCollection03chunkBasic,
-            testCollection03exprObjectRef,
-            testCollection03lexer,
-            testCollectionScriptExtensiveChunk,
-            testCollectionScriptRewrites,
-            testCollectionScriptRunCustomFns,
-            testCollectionScriptRunCmd,
-            testCollectionvpcScriptEval,
-            testCollectionvpcScriptRunSyntax,
-            testCollectionScriptExprLvl,
-            testCollectionvpcScriptParseCmd,
-            testCollectionvpcScriptParseExpr,
-            testCollectionvpcChunkResolution,
-            testCollectionvpcElements,
-            testCollectionvpcuiMsgBox,
-            testCollectionvpcuiIntroProvider,
-            testCollectionvpcVpcVal,
-            testCollectionUI512CodeEditor,
-            testCollectionUI512Composites,
-            testCollectionUI512DrawText,
-            testCollectionUI512Elements,
-            testCollectionUI512ElementsViewButtons,
-            testCollectionUI512FormattedText,
-            testCollectionUI512MenuRender,
-            testCollectionUI512Paint,
-            testCollectionUI512TextEdit,
-            testCollectionUI512TextModify,
-            testCollectionUI512TextSelectEvents,
-            testCollectionUtilsCanvasWrapper,
-            testCollectionUtilsDraw,
-            testCollectionUtil512Higher,
-            testCollectionUtil512Class,
-            testCollectionUtil512,
-            testCollectionUtil512Assert,
-            testCollectionExternalLibs
+            testCollection03lexer
+            //~ testCollectionScriptExtensiveChunk,
+            //~ testCollectionScriptRewrites,
+            //~ testCollectionScriptRunCustomFns,
+            //~ testCollectionScriptRunCmd,
+            //~ testCollectionvpcScriptEval,
+            //~ testCollectionvpcScriptRunSyntax,
+            //~ testCollectionScriptExprLvl,
+            //~ testCollectionvpcScriptParseCmd,
+            //~ testCollectionvpcScriptParseExpr,
+            //~ testCollectionvpcChunkResolution,
+            //~ testCollectionvpcElements,
+            //~ testCollectionvpcuiMsgBox,
+            //~ testCollectionvpcuiIntroProvider,
+            //~ testCollectionvpcVpcVal,
+            //~ testCollectionUI512CodeEditor,
+            //~ testCollectionUI512Composites,
+            //~ testCollectionUI512DrawText,
+            //~ testCollectionUI512Elements,
+            //~ testCollectionUI512ElementsViewButtons,
+            //~ testCollectionUI512FormattedText,
+            //~ testCollectionUI512MenuRender,
+            //~ testCollectionUI512Paint,
+            //~ testCollectionUI512TextEdit,
+            //~ testCollectionUI512TextModify,
+            //~ testCollectionUI512TextSelectEvents,
+            //~ testCollectionUtilsCanvasWrapper,
+            //~ testCollectionUtilsDraw,
+            //~ testCollectionUtil512Higher,
+            //~ testCollectionUtil512Class,
+            //~ testCollectionUtil512,
+            //~ testCollectionUtil512Assert,
+            //~ testCollectionExternalLibs
         ];
 
         if (!colls || !colls.length) {

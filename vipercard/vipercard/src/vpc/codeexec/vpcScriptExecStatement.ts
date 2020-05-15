@@ -12,7 +12,7 @@
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, cast, getStrToEnum, longstr } from './../../ui512/utils/util512';
 
@@ -248,7 +248,19 @@ export class ExecuteStatement {
      * mark cards
      */
     goMark(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        checkThrow(false, 'R;|not yet implemented');
+        let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
+        let shouldMark = !bool(vals.vals[tkstr._not]?.length)
+        if (params[0] === 'all') {
+            for (let bg of this.outside.Model().stack.bgs){
+                for (let cd of bg.cards) {
+                    cd.setOnVel('marked', shouldMark, this.outside.Model())
+                }
+            }
+        } else {
+            let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), "no object?");
+            let vel = ensureDefined(this.outside.ResolveVelRef(ref), "could not find card")
+            vel.setOnVel('marked', shouldMark, this.outside.Model())
+        }
     }
     /**
      * multiply [chunk of] {container} by {number}

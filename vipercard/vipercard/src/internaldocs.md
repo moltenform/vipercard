@@ -118,6 +118,9 @@ Part 2: execution
 
 Background objects are tricky. For say bg fld when sharedtext is off, state (position) is shared, some state (contents) are unique per-card.
 
+Confirmed in emulator that every bg field has shared fallback text for when sharedtext is set to true. Note that when the sharedtext is true, you can only edit the field contents when you go edit->background. When you transition from 
+sharedtext on and off, it also preserves the per-card content. So each field must maintain both per-card and shared text. And the same for scrollposition.
+
 We used to internally store things like this:
 
 ```

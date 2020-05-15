@@ -89,8 +89,8 @@ BuiltinCmdHide:=... <Object>
 // lock. parsed in software, takes no args.
 BuiltinCmdLock:=... tkIdentifier
 // mark. other parsing done in software
-// not supported yet but I'll leave this syntax here
-BuiltinCmdMark:=... [_not] {tkSyntaxMark <ObjectCard> | tkComma <Expr> <Of> <ObjectFld> }
+// mark all cards -> [mark, all]  mark cd 1 -> [mark, tkSyntaxMark, cd 1]
+BuiltinCmdMark:=... [_not] { tkIdentifier | tkSyntaxMark <Object> }
 // multiply. rewrite from "by" the tkIdentifier is "by"
 BuiltinCmdMultiply:=...<HContainer> tkSyntaxMark <Lvl1Expression>                                                               
 // open. show NYI in rewrite

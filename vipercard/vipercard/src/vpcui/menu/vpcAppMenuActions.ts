@@ -27,7 +27,7 @@
 export class VpcMenuActions {
     fontChanger: VpcChangeSelectedFont;
     save: VpcSaveInterface;
-    msgBoxHistory = new RememberHistory()
+    msgBoxHistory = new RememberHistory();
     constructor(protected vci: VpcStateInterface) {
         this.fontChanger = new VpcChangeSelectedFont();
     }

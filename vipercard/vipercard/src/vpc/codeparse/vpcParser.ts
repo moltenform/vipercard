@@ -1400,16 +1400,13 @@ this.CONSUME1(tks._not)
 this.OR1([
 {
 ALT: () => {
-this.CONSUME4(tks.tkSyntaxMark)
-this.SUBRULE1(this.RuleObjectCard)
+this.CONSUME1(tks.tkIdentifier)
 }
 },
 {
 ALT: () => {
-this.CONSUME1(tks.tkComma)
-this.SUBRULE1(this.RuleExpr)
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleObjectFld)
+this.CONSUME4(tks.tkSyntaxMark)
+this.SUBRULE1(this.RuleObject)
 }
 }
 ]);

@@ -249,7 +249,7 @@ end if`;
         return [this.hBuildNyi('the keydown command', line[0])];
     }
     rewriteLock(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length === 2, "S{|we only support 'lock screen");
+        checkThrow(line.length === 2, "S{|we only support 'lock screen'");
         if (line[1].image !== 'screen') {
             return [this.hBuildNyi('any type of unlock besides unlock screen', line[0])];
         } else {
@@ -257,8 +257,30 @@ end if`;
             return [[line[0]]];
         }
     }
-    rewriteMark(line: ChvITk[]): ChvITk[][] {
-        return [this.hBuildNyi('the mark command', line[0])];
+    rewriteMark(line: ChvITk[], fromUnmark?:boolean): ChvITk[][] {
+        checkThrow(line.length > 1, "not enough args for mark/unmark.");
+        let isAll = false
+        if (line[1].image === 'cards') {
+            return [this.hBuildNyi('this type of mark expression', line[0])];
+        } else if (line[1].image === 'all') {
+            if (line[2].image === 'cards' || line[2].image === 'cds') {
+                isAll = true
+            } else {
+                checkThrow(false, "expected mark all cards")
+            }
+        }
+        let ret:ChvITk[] = [line[0]]
+        if (fromUnmark) {
+            ret.push(this.rw.tokenFromEnglishTerm('not', line[0]))
+        }
+
+        if (isAll) {
+            ret.push(line[1])
+        } else {
+            ret.push(BuildFakeTokens.makeSyntaxMarker(line[0]))
+            ret = ret.concat(line.slice(1))
+        }
+        return [ret]
     }
     rewriteMultiply(line: ChvITk[]): ChvITk[][] {
         this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'by', true);
@@ -513,7 +535,7 @@ put the result %ARG0%`;
         }
     }
     rewriteUnmark(line: ChvITk[]): ChvITk[][] {
-        return [this.hBuildNyi('the unmark command', line[0])];
+        return this.rewriteMark(line, true)
     }
     rewriteVisual(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'S-|not enough args');

@@ -5,6 +5,7 @@
 /* auto */ import { VpcErr, VpcTool, cleanExceptionMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { lastIfThere } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
@@ -16,7 +17,6 @@
 /* auto */ import { TextFontSpec, TextFontStyling } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { PalBorderDecorationConsts } from './../../ui512/composites/ui512Composites';
-import { lastIfThere } from '../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -37,7 +37,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     entry: UI512ElTextField;
     showResults: UI512ElTextField;
     rememberedTool = VpcTool.Button;
-    constructor(protected vci: VpcStateInterface, protected history:RememberHistory) {
+    constructor(protected vci: VpcStateInterface, protected history: RememberHistory) {
         super('VpcNonModalReplBox' + Math.random());
         this.vci.UI512App();
         this.adjustDimensions(vci);
@@ -79,7 +79,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         this.entry.set('defaultFont', 'geneva');
         this.vci.getPresenter().setCurrentFocus(this.entry.id);
 
-        let msg = lastIfThere(this.history.list) ?? 'put "abc"'
+        let msg = lastIfThere(this.history.list) ?? 'put "abc"';
         this.setFontAndText(this.entry, msg, 'geneva', 12);
         this.setFontAndText(this.showResults, '', 'monaco', 9);
         this.entry.set('selcaret', msg.length);
