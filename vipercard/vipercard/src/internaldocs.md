@@ -92,6 +92,21 @@ Part 2: execution
         the scheduler will call into us again in a few milliseconds.
     If the stack of execution frames is empty, we've completed the script.
 ```
+## Call-method-by-name
+
+```
+I often use enums to call into a method on a class. For example, in
+the class VelResolveReference I have methods goBtn() goFld() goCard()
+and so on, but searching for the string goBtn(), the method doesn't
+seem to ever be called.
+
+I use callAsMethodOnClass, which turns VpcElType.Btn to the string
+"Btn", forms the string "goBtn", finds a method of that name on
+the class, and calls it. That way I don't need any switch statement,
+if-thens, or table of function pointers, it saves space and effort!
+
+```
+
 
 ## Rendering
 

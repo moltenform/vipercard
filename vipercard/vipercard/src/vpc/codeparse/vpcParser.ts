@@ -965,7 +965,6 @@ this.SUBRULE1(this.RuleFnCallNumberOf_5)
 });
 
 RuleFnCallNumberOf_1 = this.RULE('RuleFnCallNumberOf_1', () => {
-this.OPTION1(() => {
 this.OR1([
 {
 ALT: () => {
@@ -978,7 +977,6 @@ this.CONSUME1(tks.tkBg)
 }
 }
 ]);
-});
 this.OR2([
 {
 ALT: () => {

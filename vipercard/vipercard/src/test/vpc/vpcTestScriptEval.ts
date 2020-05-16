@@ -857,27 +857,28 @@ t.test('vpcProperties', () => {
     b.t(`the name of ${cProductName}`, `${cProductName}`);
     b.t(`the abbr name of ${cProductName}`, `${cProductName}`);
     b.t(`the short name of ${cProductName}`, `${cProductName}`);
-    b.t(`the long name of ${cProductName}`, `${cProductName}`);
+    b.t(`the long name of ${cProductName}`, `Hard Drive:${cProductName}`);
     b.t(`the id of ${cProductName}`, `WILD`);
     b.t(`the abbr id of ${cProductName}`, `WILD`);
     b.t(`the short id of ${cProductName}`, `WILD`);
     b.t(`the long id of ${cProductName}`, `WILD`);
 
     /* stack */
+    b.t('set the name of stack 1 to "teststack"\\1', '1');
     b.t('the name of this stack', 'stack "teststack"');
     b.t('the abbr name of this stack', 'stack "teststack"');
     b.t('the short name of this stack', 'teststack');
     b.t('the long name of this stack', 'stack "Hard Drive:teststack"');
-    b.t('the id of this stack', 'stack id 921');
+    b.t('the id of this stack', '921');
     b.t('the abbr id of this stack', '921');
     b.t('the short id of this stack', '921');
-    b.t('the long id of this stack', 'stack id 921');
+    b.t('the long id of stack "teststack"', 'stack id 921');
 
     /* bkgnd with a name */
     b.t('the name of bg 2', 'bkgnd "b"');
     b.t('the abbr name of bg 2', 'bkgnd "b"');
     b.t('the short name of bg 2', 'b');
-    b.t('the long name of bg 2', 'bkgnd "b" of this stack');
+    b.t('the long name of bg 2', 'bkgnd "b" of stack "teststack"');
     b.t('the id of bg 2', `${h.ids.bgB}`);
     b.t('the abbr id of bg 2', `${h.ids.bgB}`);
     b.t('the short id of bg 2', `${h.ids.bgB}`);
@@ -888,7 +889,7 @@ t.test('vpcProperties', () => {
     b.t('the name of bg 2', `bkgnd id ${h.ids.bgB}`);
     b.t('the abbr name of bg 2', `bkgnd id ${h.ids.bgB}`);
     b.t('the short name of bg 2', `bkgnd id ${h.ids.bgB}`);
-    b.t('the long name of bg 2', `bkgnd id ${h.ids.bgB} of this stack`);
+    b.t('the long name of bg 2', `bkgnd id ${h.ids.bgB} of stack "teststack"`);
     b.t('the id of bg 2', `${h.ids.bgB}`);
     b.t('the abbr id of bg 2', `${h.ids.bgB}`);
     b.t('the short id of bg 2', `${h.ids.bgB}`);
@@ -899,29 +900,29 @@ t.test('vpcProperties', () => {
     b.t('the name of cd 4', 'card "d"');
     b.t('the abbr name of cd 4', 'card "d"');
     b.t('the short name of cd 4', 'd');
-    b.t('the long name of cd 4', 'card "d" of this stack');
-    b.t('the id of cd 4', `card id ${h.ids.cdBD}`);
-    b.t('the abbr id of cd 4', `card id ${h.ids.cdBD}`);
+    b.t('the long name of cd 4', 'card "d" of stack "teststack"');
+    b.t('the id of cd 4', `${h.ids.cdBD}`);
+    b.t('the abbr id of cd 4', `${h.ids.cdBD}`);
     b.t('the short id of cd 4', `${h.ids.cdBD}`);
-    b.t('the long id of cd 4', `card id ${h.ids.cdBD} of this stack`);
+    b.t('the long id of cd 4', `card id ${h.ids.cdBD}`);
 
     /* card with no name */
     b.t('set the name of cd 4 to ""\\0', '0');
     b.t('the name of cd 4', `card id ${h.ids.cdBD}`);
     b.t('the abbr name of cd 4', `card id ${h.ids.cdBD}`);
     b.t('the short name of cd 4', `card id ${h.ids.cdBD}`);
-    b.t('the long name of cd 4', `card id ${h.ids.cdBD} of this stack`);
-    b.t('the id of cd 4', `card id ${h.ids.cdBD}`);
-    b.t('the abbr id of cd 4', `card id ${h.ids.cdBD}`);
+    b.t('the long name of cd 4', `card id ${h.ids.cdBD} of stack "teststack"`);
+    b.t('the id of cd 4', `${h.ids.cdBD}`);
+    b.t('the abbr id of cd 4', `${h.ids.cdBD}`);
     b.t('the short id of cd 4', `${h.ids.cdBD}`);
-    b.t('the long id of cd 4', `card id ${h.ids.cdBD} of this stack`);
+    b.t('the long id of cd 4', `card id ${h.ids.cdBD}`);
     b.t('set the name of cd 4 to "d"\\0', '0');
 
     /* button with a name */
     b.t('the name of cd btn "p1"', 'card button "p1"');
     b.t('the abbr name of cd btn "p1"', 'card button "p1"');
     b.t('the short name of cd btn "p1"', 'p1');
-    b.t('the long name of cd btn "p1"', 'card button "p1" of card "c" of this stack');
+    b.t('the long name of cd btn "p1"', 'card button "p1" of card "c" of stack "teststack"');
     b.t('the id of cd btn "p1"', `${h.ids.bBC1}`);
     b.t('the abbr id of cd btn "p1"', `${h.ids.bBC1}`);
     b.t('the short id of cd btn "p1"', `${h.ids.bBC1}`);
@@ -934,7 +935,7 @@ t.test('vpcProperties', () => {
     b.t(`the short name of cd btn id ${h.ids.bBC1}`, `card button id ${h.ids.bBC1}`);
     b.t(
         `the long name of cd btn id ${h.ids.bBC1}`,
-        `card button id ${h.ids.bBC1} of card "c" of this stack`
+        `card button id ${h.ids.bBC1} of card "c" of stack "teststack"`
     );
     b.t(`the id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
     b.t(`the abbr id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
@@ -946,7 +947,7 @@ t.test('vpcProperties', () => {
     b.t('the name of cd fld "p1"', 'card field "p1"');
     b.t('the abbr name of cd fld "p1"', 'card field "p1"');
     b.t('the short name of cd fld "p1"', 'p1');
-    b.t('the long name of cd fld "p1"', 'card field "p1" of card "c" of this stack');
+    b.t('the long name of cd fld "p1"', 'card field "p1" of card "c" of stack "teststack"');
     b.t('the id of cd fld "p1"', `${h.ids.fBC1}`);
     b.t('the abbr id of cd fld "p1"', `${h.ids.fBC1}`);
     b.t('the short id of cd fld "p1"', `${h.ids.fBC1}`);
@@ -959,7 +960,7 @@ t.test('vpcProperties', () => {
     b.t(`the short name of cd fld id ${h.ids.fBC1}`, `card field id ${h.ids.fBC1}`);
     b.t(
         `the long name of cd fld id ${h.ids.fBC1}`,
-        `card field id ${h.ids.fBC1} of card "c" of this stack`
+        `card field id ${h.ids.fBC1} of card "c" of stack "teststack"`
     );
     b.t(`the id of cd fld id ${h.ids.fBC1}`, `${h.ids.fBC1}`);
     b.t(`the abbr id of cd fld id ${h.ids.fBC1}`, `${h.ids.fBC1}`);
@@ -968,7 +969,7 @@ t.test('vpcProperties', () => {
     b.t(`set the name of cd fld id ${h.ids.fBC1} to "p1"\\0`, `0`);
 
     /* when nothing has names, we get different output */
-    b.t('set the name of this stack to ""\\0', '0');
+    b.t('set the name of stack 1 to ""\\0', '0');
     b.t('set the name of this bg to ""\\0', '0');
     b.t('set the name of this card to ""\\0', '0');
     b.t(`set the name of cd btn id ${h.ids.bBC1} to ""\\0`, `0`);
@@ -977,9 +978,9 @@ t.test('vpcProperties', () => {
     b.t(`the short name of cd btn id ${h.ids.bBC1}`, `card button id ${h.ids.bBC1}`);
     b.t(
         `the long name of cd btn id ${h.ids.bBC1}`,
-        `card button id ${h.ids.bBC1} of card id ${h.ids.cdBC} of this stack`
+        `card button id ${h.ids.bBC1} of card id ${h.ids.cdBC} of stack ""`
     );
-    b.t('set the name of this stack to "teststack"\\0', '0');
+    b.t('set the name of stack 1 to ""\\0', '0');
     b.t('set the name of this bg to "b"\\0', '0');
     b.t('set the name of this card to "c"\\0', '0');
     b.t(`set the name of cd btn id ${h.ids.bBC1} to "p1"\\0`, `0`);
@@ -987,15 +988,19 @@ t.test('vpcProperties', () => {
     /* the target */
     b.t(`the target`, `card button id ${h.ids.go}`);
     b.t(`the abbr target`, `card button id ${h.ids.go}`);
-    b.t(`the short target`, `go`);
+    b.t(`the short target`, `${h.ids.go}`);
     b.t(`the long target`, `card button id ${h.ids.go}`);
+    b.t(`set the compatibilitymode of this stack to true\\1`, `1`);
+    b.t(`the short target`, `go`);
+    b.t(`set the compatibilitymode of this stack to false\\1`, `1`);
 
     /* owner */
     b.t('the owner of vipercard', 'ERR:get owner');
+    b.t('the owner of stack ""', 'ERR:get owner');
     b.t('the owner of this stack', 'ERR:get owner');
     b.t('the owner of bg 1', 'stack id 921');
-    b.t('the owner of cd fld "p1"', 'card id 1005 of this stack');
-    b.t('the owner of cd btn "p1"', 'card id 1005 of this stack');
+    b.t('the owner of cd fld "p1"', 'card id 1005');
+    b.t('the owner of cd btn "p1"', 'card id 1005');
     b.t('the owner of cd btn "xyz"', 'ERR:could not find');
     b.t('the owner of cd fld "xyz"', 'ERR:could not find');
     b.t('the owner of cd 1', 'bkgnd id 1000');

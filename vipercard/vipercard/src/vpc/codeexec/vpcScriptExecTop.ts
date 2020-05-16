@@ -39,6 +39,7 @@ export class VpcExecTop {
     workQueue: VpcExecFrameStack[] = [];
     cbOnScriptError: O<(err: VpcErr) => void>;
     cbCauseUIRedraw: O<() => void>;
+    cbSetRealTool: (tl:VpcTool)=>void
     fieldsRecentlyEdited: ValHolder<{ [id: string]: boolean }> = new ValHolder({});
     silenceMessagesForUIAction: ValHolder<O<VpcTool>> = new ValHolder(undefined);
     protected justSawRepeatedMousedown = false;
@@ -65,6 +66,7 @@ export class VpcExecTop {
             !(msg instanceof VpcScriptMessageMsgBoxCode)
         ) {
             /* all messages are silenced  */
+            console.log("Message was muted.", msg.msgName)
             return;
         }
 
@@ -201,9 +203,8 @@ export class VpcExecTop {
         this.outside.Model().productOpts.setProductOpt('itemDel', ',');
         this.globals.set('$currentVisEffect', VpcValS(''));
 
-        /* nyi: new style ui actions */
         if (this.silenceMessagesForUIAction.val) {
-            /* this.vci.setTool(this.silenceMessagesForUIAction.val) */
+            this.cbSetRealTool(this.silenceMessagesForUIAction.val)
             this.silenceMessagesForUIAction.val = undefined;
         }
     }

@@ -444,9 +444,10 @@ t.test('ScriptParseFunctionCalls number of', () => {
     testExp(`the number of bg flds`, 'parses');
 });
 t.test('ScriptParseFunctionCalls invalid "number of" syntax', () => {
-    /* we now support these */
-    testExp(`the number of btns`, 'parses');
-    testExp(`the number of flds`, 'parses');
+    testExp(`the number of cd btns`, 'parses');
+    testExp(`the number of cd flds`, 'parses');
+    assertFailsParseExp(`the number of btns`, 'Exception');
+    assertFailsParseExp(`the number of flds`, 'Exception');
     assertFailsParseExp(`the number of cd cds`, `Exception`);
     assertFailsParseExp(`the number of x in "a"`, `Exception`);
     /* we now support this. it's treated as a special property like the owner of */

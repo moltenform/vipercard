@@ -568,19 +568,27 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         /* get a longer form of the id unless specifically said "short" */
         let frame = this.vci.findExecFrameStack()[1];
         let target = this.vci.getModel().findByIdUntyped(frame?.message?.targetId);
+        let compat = this.Model().stack.getB('compatibilitymode')
         checkThrow(target, 'UF|the target was not found');
 
-        /* we want as much info as possible, because although
-        we return a string, it will likely be parsed back into an object */
-        if (adjective !== PropAdjective.Short) {
-            adjective = PropAdjective.LongForParse
-        }
+        if (compat && adjective === PropAdjective.Short) {
+            return new VelRenderName(this.vci.getModel()).go(
+                target,
+                adjective,
+            );
+        } else {
+            /* we want as much info as possible, because although
+                we return a string, it will likely be parsed back into an object */
+                if (adjective !== PropAdjective.Short) {
+                    adjective = PropAdjective.LongForParse
+                }
 
             return new VelRenderId(this.vci.getModel()).go(
                 target,
-                PropAdjective.Long,
-                this.Model().stack.getB('compatibilitymode')
+                adjective,
+                compat
             );
+        }
     }
 
     /**

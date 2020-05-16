@@ -307,14 +307,15 @@ confirmed in emulator  */
     b.t('go card 1\ngo to card "d" of bg 3\\the short id of this cd', `${h.ids.cdCD}`);
 
     /* confirmed in emulator: if there are ambiguous card names,
-use whichever comes first in the stack, regardless of current bg */
+use whichever comes first in the stack, regardless of current bg
+but if you're already at that one, keep going to next */
     b.t(
         `go card id ${h.ids.cdA}\ngo to card "d"\\the short id of this cd`,
         `${h.ids.cdBD}`
     );
     b.t(
         `go card id ${h.ids.cdBD}\ngo to card "d"\\the short id of this cd`,
-        `${h.ids.cdBD}`
+        `${h.ids.cdCD}`
     );
     b.t(
         `go card id ${h.ids.cdCD}\ngo to card "d"\\the short id of this cd`,

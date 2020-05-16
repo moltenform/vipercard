@@ -201,6 +201,8 @@ t.test('03objectRenderID field', () => {
  */
 t.test('VelRenderId.parseFromString', () => {
     let b = new ScriptTestBatch();
+    /* what's most important is that we can successfully
+    parse everything from the long id of */
     /* product (not supported) */ 
     b.t(`put "${cProductName}" into x\\the short id of x`, `ERR:5:too short`)
     b.t(`put "${cAltProductName}" into x\\the short id of x`, `ERR:5:too short`)
@@ -216,8 +218,46 @@ t.test('VelRenderId.parseFromString', () => {
     b.t(`the short id of stack id 9`, `ERR:could not find`)
     b.t(`the short id of 9`, `ERR:parse err`)
     /* bg */ 
-
-    //~ finish this based on all tests above
+    b.t(`the short id of bg id ${h3.ids.bgB}`, `${h3.ids.bgB}`)
+    b.t(`the short id of bg id ${h3.ids.bgB} of stack 1`, `${h3.ids.bgB}`)
+    b.t(`the short id of bkgnd id ${h3.ids.bgB}`, `${h3.ids.bgB}`)
+    b.t(`the short id of bkgnd id ${h3.ids.bgB} of stack 1`, `${h3.ids.bgB}`)
+    b.t(`the short id of bkgnd "b"`, `${h3.ids.bgB}`)
+    b.t(`the short id of bkgnd "b" of stack 1`, `${h3.ids.bgB}`)
+    /* card */
+    b.t(`the short id of cd id ${h3.ids.cdBC}`, `${h3.ids.cdBC}`)
+    b.t(`the short id of card id ${h3.ids.cdBC}`, `${h3.ids.cdBC}`)
+    b.t(`the short id of card "c"`, `${h3.ids.cdBC}`)
+    b.t(`the short id of cd id ${h3.ids.cdBC} of bg "b"`, `${h3.ids.cdBC}`)
+    b.t(`the short id of card id ${h3.ids.cdBC} of bg "b"`, `${h3.ids.cdBC}`)
+    b.t(`the short id of card "c" of bg "b"`, `${h3.ids.cdBC}`)
+    b.t(`the short id of cd id ${h3.ids.cdBC} of bg "a"`, `ERR:could not find`)
+    b.t(`the short id of card id ${h3.ids.cdBC} of bg "a"`, `ERR:could not find`)
+    b.t(`the short id of card "c" of bg "a"`, `ERR:could not find`)
+    /* btn */
+    b.t(`go to cd id ${h3.ids.cdBC}\\1`, `1`)
+    b.t(`the short id of cd btn id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
+    b.t(`the short id of card button id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
+    b.t(`the short id of cd btn id ${h3.ids.bBC1} of cd "c"`, `${h3.ids.bBC1}`)
+    b.t(`the short id of card button id ${h3.ids.bBC1} of cd "c"`, `${h3.ids.bBC1}`)
+    b.t(`the short id of cd btn "p1"`, `${h3.ids.bBC1}`)
+    b.t(`the short id of cd btn "p1" of cd "c"`, `${h3.ids.bBC1}`)
+    b.t(`the short id of cd btn id ${h3.ids.bBC1} of cd "a"`, `ERR:could not find`)
+    b.t(`the short id of card button id ${h3.ids.bBC1} of cd "a"`, `ERR:could not find`)
+    /* fld */
+    b.t(`the short id of cd fld id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
+    b.t(`the short id of card field id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
+    b.t(`the short id of cd fld id ${h3.ids.fBC1} of cd "c"`, `${h3.ids.fBC1}`)
+    b.t(`the short id of card field id ${h3.ids.fBC1} of cd "c"`, `${h3.ids.fBC1}`)
+    b.t(`the short id of cd fld "p1"`, `${h3.ids.fBC1}`)
+    b.t(`the short id of cd fld "p1" of cd "c"`, `${h3.ids.fBC1}`)
+    b.t(`the short id of cd fld id ${h3.ids.fBC1} of cd "a"`, `ERR:could not find`)
+    b.t(`the short id of card field id ${h3.ids.fBC1} of cd "a"`, `ERR:could not find`)
+    /* should support a name with spaces */
+    b.t(`set the name of cd fld id ${h3.ids.fBC1} to "name with spaces"\\1`, `1`)
+    b.t(`the short id of cd fld "name with spaces"`, `${h3.ids.fBC1}`)
+    b.t(`the short id of cd fld "name with spaces" of cd "c"`, `${h3.ids.fBC1}`)
+    b.t(`set the name of cd fld id ${h3.ids.fBC1} to "p1"\\1`, `1`)
     b.batchEvaluate(h3, [EvaluateAsParsedFromAString]);
 })
 
