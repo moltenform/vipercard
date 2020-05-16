@@ -1,12 +1,12 @@
 
-// [base64js](https://github.com/beatgammit/base64-js)
-// this library is bundled into externalmanualbundle.js and exists on globalThis
+/* [base64js](https://github.com/beatgammit/base64-js)
+this library is bundled into externalmanualbundle.js and exists on globalThis */
 
 export declare namespace base64js {
-    // Type definitions for base64-js 1.2
-    // Project: https://github.com/beatgammit/base64-js
-    // Definitions by: Peter Safranek <https://github.com/pe8ter>
-    // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+    /* Type definitions for base64-js 1.2
+    Project: https://github.com/beatgammit/base64-js
+    Definitions by: Peter Safranek <https://github.com/pe8ter>
+    Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped */
 
     function byteLength(encoded: string): number;
     function toByteArray(encoded: string): Uint8Array;

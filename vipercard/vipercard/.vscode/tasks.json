@@ -1,10 +1,10 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558 
-    // for the documentation about the tasks.json format
-    // these are in group build, they save any unsaved changes.
+    /* See https://go.microsoft.com/fwlink/?LinkId=733558 
+    for the documentation about the tasks.json format
+    these are in group build, they save any unsaved changes.
 
-    // Note: to get the $gcc problem matcher you should install the
-    // c/c++ vscode extension
+    Note: to get the $gcc problem matcher you should install the
+    c/c++ vscode extension */
     "version": "2.0.0",
     "tasks": [
         {

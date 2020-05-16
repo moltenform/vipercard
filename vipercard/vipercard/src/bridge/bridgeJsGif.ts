@@ -1,9 +1,8 @@
 
-// [JSGIF](https://github.com/antimatter15/jsgif)
-// jsgif bare-bones typing
-// by Ben Fisher
-
-// this library is loaded dynamically
+/* [JSGIF](https://github.com/antimatter15/jsgif)
+jsgif bare-bones typing
+by Ben Fisher
+this library is loaded dynamically */
 
 export declare class GIFEncoderInterface {
     public setRepeat(n: number): void;
@@ -12,7 +11,7 @@ export declare class GIFEncoderInterface {
     public finish(): void;
     public addFrame(context: CanvasRenderingContext2D): void;
 
-    // method exposed by Ben Fisher
+    /* method exposed by Ben Fisher */
     public getUint8Array(): Uint8Array;
 }
 

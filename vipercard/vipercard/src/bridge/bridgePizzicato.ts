@@ -1,8 +1,8 @@
 
-// https://github.com/alemangui/pizzicato
-// pizzicato bare-bones typing
-// by Ben Fisher
-// this library is loaded dynamically
+/* https://github.com/alemangui/pizzicato
+pizzicato bare-bones typing
+by Ben Fisher
+this library is loaded dynamically */
 
 export declare namespace Pz {
     class Sound {

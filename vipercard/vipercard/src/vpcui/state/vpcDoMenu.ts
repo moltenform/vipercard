@@ -17,7 +17,7 @@ New_Background
 Bring_Closer
 Send_Farther
 
-////////// Go-card (all done in software)
+---- Go-card (all done in software)
 Back
 Home
 Help
@@ -27,7 +27,7 @@ Prev
 Next
 Last
 
-//// paint
+------ paint
 Wide_Lines
 Black_Lines
 White_Lines

@@ -20,7 +20,7 @@
     "tsconfig.json": true,
     "vpservermainshell.py": true,
     
-    // remove just this directory from list
+    /* remove just this directory from list */
     "0.2": true,
     "external": true,
     "dist": true,
