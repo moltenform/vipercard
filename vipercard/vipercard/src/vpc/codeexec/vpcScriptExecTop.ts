@@ -3,6 +3,7 @@
 /* auto */ import { VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
+/* auto */ import { VpcExecInternalDirectiveAbstract } from './vpcScriptExecInternalDirective';
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
@@ -40,6 +41,7 @@ export class VpcExecTop {
     cbOnScriptError: O<(err: VpcErr) => void>;
     cbCauseUIRedraw: O<() => void>;
     cbSetRealTool: (tl:VpcTool)=>void
+    directiveImpl: VpcExecInternalDirectiveAbstract
     fieldsRecentlyEdited: ValHolder<{ [id: string]: boolean }> = new ValHolder({});
     silenceMessagesForUIAction: ValHolder<O<VpcTool>> = new ValHolder(undefined);
     protected justSawRepeatedMousedown = false;
@@ -77,9 +79,9 @@ export class VpcExecTop {
             this.runStatements,
             this.constants,
             this.globals,
-            this.cardHistory,
             this.check,
-            msg
+            msg,
+            this.directiveImpl
         );
 
         let isRepeatedKeydown = newWork.originalMsg.msgName === 'afterkeydown' && newWork.originalMsg.keyRepeated;

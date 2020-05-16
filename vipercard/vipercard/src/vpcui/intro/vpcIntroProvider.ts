@@ -5,6 +5,7 @@
 /* auto */ import { VpcRuntime, VpcState } from './../state/vpcState';
 /* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
+/* auto */ import { VpcExecInternalDirectiveFull } from './../presentation/vpcPresenterInit';
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
 /* auto */ import { VpcOutsideImpl } from './../state/vpcOutsideImpl';
 /* auto */ import { VpcStateInterfaceImpl } from './vpcInterfaceImpl';
@@ -189,6 +190,8 @@ export class VpcIntroProvider {
         let pr = new VpcPresenter(fullVci, vpcState.runtime);
         fullVci.init(vpcState, pr);
         vpcState.vci = fullVci;
+        await this.yieldTime();
+        vpcState.runtime.codeExec.directiveImpl = new VpcExecInternalDirectiveFull(pr)
         await this.yieldTime();
         if (this.loc === VpcDocumentLocation.FromStaticDemo) {
             pr.cameFromDemoSoNeverPromptSave = this.identifier.replace(/\.json/g, '');

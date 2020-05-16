@@ -81,6 +81,7 @@ BuiltinCmdVpccalluntrappableerrordialog:=... <Expr>
 // it's all done in software.
 // for example, actually creating an object or actually changing current card
 // see also internalvpcmessagesdirective -- but it's a keyword, not a command
+// internalvpcmessagesdirective "whichDirective" variable
 // help. sent up the message hierarchy, usually does nothing, handled by vipercardstdlib. takes no args
 // hide. in rewrite error on mention of "menu"
 BuiltinCmdHide:=... <Object>

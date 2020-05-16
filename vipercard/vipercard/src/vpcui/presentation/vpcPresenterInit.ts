@@ -1,4 +1,6 @@
 
+/* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { RememberHistory } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { UndoManager } from './../state/vpcUndo';
 /* auto */ import { VpcAppUIToolStamp } from './../tools/vpcToolStamp';
 /* auto */ import { VpcAppUIToolSmear } from './../tools/vpcToolSmear';
@@ -11,6 +13,8 @@
 /* auto */ import { VpcAppUIToolBrowse } from './../tools/vpcToolBrowse';
 /* auto */ import { VpcAppUIToolBase } from './../tools/vpcToolBase';
 /* auto */ import { VpcRuntime } from './../state/vpcState';
+/* auto */ import { VpcExecInternalDirectiveAbstract } from './../../vpc/codeexec/vpcScriptExecInternalDirective';
+/* auto */ import { VpcSave } from './vpcSave';
 /* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcPresenterEvents } from './vpcPresenterEvents';
@@ -165,7 +169,10 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
         Util512.freezeProperty(this, 'userBounds');
         Util512.freezeProperty(this, 'layers');
 
-        
+        /* provide a callback to menuActions */
+        this.menuActions.save = new VpcSave(this);
+        this.menuActions.cbFindEditToolSelectedFldOrBtn = () => this.lyrPropPanel.selectedFldOrBtn();
+        this.menuActions.cbOnClearNonBrowseTool = () => this.getToolResponse(this.getTool()).onDeleteSelection();
         this.setUpUnbeforeloadWarning();
     }
 
@@ -246,6 +253,13 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
     }
 
     /**
+     * get the current tool
+     */
+    getTool(): VpcTool {
+        return this.vci.getOptionN('currentTool');
+    }
+
+    /**
      * get the selected vel
      */
     getSelectedFieldVel(): O<VpcElField> {
@@ -292,4 +306,25 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
     protected teardownBeforeUnloadWarning() {
         window.onbeforeunload = () => {};
     }
+}
+
+
+/**
+ * complete implementation of VpcExecInternalDirective 
+ */
+export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstract {
+    constructor(protected pr:VpcPresenterInit) {
+        super()
+    }
+
+    setGlobal(key:string, v:VpcVal) {
+        this.pr.vci.getCodeExec().globals.set(key, v)
+    }
+    getGlobal(key:string):VpcVal {
+        return this.pr.vci.getCodeExec().globals.getOrFallback(key, VpcValS(''))
+    }
+    getCardHistory():RememberHistory {
+        return this.pr.vci.getCodeExec().cardHistory
+    }
+
 }

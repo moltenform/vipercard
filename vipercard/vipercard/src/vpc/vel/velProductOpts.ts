@@ -1,5 +1,6 @@
 
 /* auto */ import { VpcStandardLibScript } from './../vpcutils/vpcStandardLibScript';
+/* auto */ import { VpcStandardLibDoMenu } from './../vpcutils/vpcStandardLibDoMenu';
 /* auto */ import { VpcElType, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElField } from './velField';
@@ -37,9 +38,8 @@ export class VpcElProductOpts extends VpcElBase {
     allowSetCurrentTool = false;
     allowSetCurrentCard = false;
     protected _itemDel = ',';
-    protected _script = VpcElProductOpts.productOptsScript;
+    protected _script = VpcStandardLibDoMenu.script + '\n' + VpcStandardLibScript.script
     protected _name = `${cProductName}`;
-    protected _longname = `Applications:${cProductName} Folder:${cProductName}`;
     constructor(id: string, parentId: string) {
         super(id, parentId);
         VpcElProductOpts.prodInit();
@@ -226,6 +226,4 @@ export class VpcElProductOpts extends VpcElBase {
             VpcElProductOpts.cachedSetters[propName]
         );
     }
-
-    static productOptsScript = VpcStandardLibScript.script;
 }

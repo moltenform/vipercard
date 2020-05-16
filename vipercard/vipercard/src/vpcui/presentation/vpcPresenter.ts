@@ -3,12 +3,9 @@
 /* auto */ import { VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
-/* auto */ import { VpcRuntime } from './../state/vpcState';
 /* auto */ import { GuessStackTrace } from './../../vpc/codeexec/vpcScriptExecTop';
-/* auto */ import { VpcSave } from './vpcSave';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
-/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, checkThrowNotifyMsg, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { StackOrderHelpers } from './../../vpc/vel/velStackOrderHelpers';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
@@ -38,14 +35,6 @@
  * main ViperCard presentation object
  */
 export class VpcPresenter extends VpcPresenterInit {
-    constructor(public vci: VpcStateInterface, protected runtime: VpcRuntime) {
-        super(vci, runtime)
-        /* provide a callback to menuActions */
-        this.menuActions.save = new VpcSave(this);
-        this.menuActions.cbFindEditToolSelectedFldOrBtn = () => this.lyrPropPanel.selectedFldOrBtn();
-        this.menuActions.cbOnClearNonBrowseTool = () => this.getToolResponse(this.getTool()).onDeleteSelection();
-    }
-
     /**
      * get the current card number
      */
@@ -59,13 +48,6 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     getToolResponse(t: VpcTool) {
         return ensureDefined(this.tlNumToResponse[t], 'Kl|not found', t);
-    }
-
-    /**
-     * get the current tool
-     */
-    getTool(): VpcTool {
-        return this.vci.getOptionN('currentTool');
     }
 
     /**

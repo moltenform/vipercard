@@ -2,21 +2,22 @@
 /* auto */ import { getChvVisitor } from './../codeparse/vpcVisitor';
 /* auto */ import { VarCollection } from './../vpcutils/vpcVarCollection';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed, tks, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcTables } from './../vpcutils/vpcTables';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
+/* auto */ import { VpcExecInternalDirectiveAbstract } from './vpcScriptExecInternalDirective';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps } from './vpcScriptExecAsync';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcCurrentScriptStage, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcBuiltinMsg, VpcElType, VpcErrStage, VpcTool, VpcVisualEffectSpec, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcElType, VpcErrStage, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
-/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, cast, getEnumToStrOrFallback, getStrToEnum, lastIfThere, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -28,8 +29,6 @@
 
 /**
  * messages and our support for them
- *
- *
  *
  * let's support, for now,
  *      openStack(already implemented) idle(already implemented) keydown(already implemented)
@@ -48,7 +47,6 @@
  * cut card: let's not support this
  * paste card: closecard newcard opencard (it's different if pasting into a
  * newbg, but unclear how that is possible)
- *
  */
 
 /**
@@ -66,9 +64,9 @@ export class VpcExecFrameStack {
         protected execStatements: ExecuteStatement,
         public constants: VarCollection,
         public globals: VarCollection,
-        public cardHistory: RememberHistory,
         public check: CheckReservedWords,
-        public originalMsg: VpcScriptMessage
+        public originalMsg: VpcScriptMessage,
+        public directiveImpl: VpcExecInternalDirectiveAbstract
     ) {
         this.execStatements.pendingOps = VpcExecFrameStack.staticPendingOps;
     }
@@ -775,61 +773,22 @@ export class VpcExecFrameStack {
         checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1].tokenType, 'Rm|');
         let directive = curLine.excerptToParse[1].image.replace(/"/g, '').toLowerCase();
         let variable: O<string>;
+        let variableSend = new ValHolder('')
         if (curLine.excerptToParse.length > 2) {
             checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2].tokenType, 'Rl|');
             variable = curLine.excerptToParse[2].image;
+            variableSend.val = curFrame.locals.get(ensureDefined(variable, 'Ri|')).readAsString()
         }
 
-        let sendMsg = '';
-        let sendMsgTarget = '';
-        let currentCardId = this.outside.GetOptionS('currentCardId');
-        if (directive === 'closeorexitfield') {
-            let seld = this.outside.GetSelectedField();
-            if (seld && seld.parentIdInternal === currentCardId) {
-                let fieldsRecent = this.outside.GetFieldsRecentlyEdited().val;
-                if (fieldsRecent[seld.idInternal]) {
-                    sendMsg = 'closefield';
-                    sendMsgTarget = seld.idInternal;
-                    fieldsRecent[seld.idInternal] = false;
-                } else {
-                    sendMsg = 'exitfield';
-                    sendMsgTarget = seld.idInternal;
-                }
-
-                /* we're changing cards, so mark the other ones false too */
-                this.outside.GetFieldsRecentlyEdited().val = {};
-            }
-        } else if (directive === 'gotocardsendnomessages') {
-            let nextCardId = curFrame.locals.get(ensureDefined(variable, 'Rk|'));
-            checkThrow(nextCardId && nextCardId.isItInteger(), 'Rj|');
-            this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
-        } else if (directive === 'viseffect') {
-            let nextCard = curFrame.locals.get(ensureDefined(variable, 'Ri|'));
-            let spec = this.globals.getOrFallback('$currentVisEffect', VpcVal.Empty).readAsString().split('|');
-            this.globals.set('$currentVisEffect', VpcValS(''));
-            if (spec.length >= 4) {
-                let parsed = VpcVisualEffectSpec.getVisualEffect(spec);
-                console.log(nextCard, parsed);
-            }
-        } else if (directive === 'returntomsgbox') {
-            this.outside.WriteToReplMessageBox('', true);
-        } else if (directive === 'applyback' || directive === 'applyforth') {
-            let fallback = () => currentCardId;
-            let cardExists = (s: string) => {
-                let ref = new RequestedVelRef(VpcElType.Card);
-                ref.lookById = Util512.parseInt(s);
-                return bool(this.outside.ElementExists(ref));
-            };
-
-            if (directive === 'applyback') {
-                this.cardHistory.walkPreviousWhileAcceptible(fallback, cardExists);
-            } else {
-                this.cardHistory.walkNextWhileAcceptible(fallback, cardExists);
-            }
-        } else {
-            checkThrow(false, 'Rh|unknown directive', directive);
+        let sendMsgParam:[string, string] = ['', '']
+        let valBefore = variableSend.val
+        this.directiveImpl.go(directive, variableSend, sendMsgParam)
+        if (valBefore !== variableSend.val) {
+            curFrame.locals.set(ensureDefined(variable, 'Ri|'), VpcValS(variableSend.val))
         }
 
+        let sendMsg = sendMsgParam[0]
+        let sendMsgTarget = sendMsgParam[1]
         if (slength(sendMsg)) {
             let theMsg = getStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, this.visitIsInternalvpcmessagesdirective.name, sendMsg);
             let found = this.getHandlerUpwardsOrThrow(
