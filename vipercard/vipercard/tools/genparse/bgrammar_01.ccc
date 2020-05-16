@@ -225,8 +225,8 @@ tkIdentifier=/[a-zA-Z][0-9a-zA-Z$_]*/
 // but let's allow card 1 of this stack because in the "go" command that is supported. 
 
 Object:={ <ObjectSpecial> | <ObjectInterpretedFromString> | <ObjectBtn> | <ObjectFld> | <ObjectCard> |    <ObjectBg> | <ObjectStack>     }                     --->ProcessOr--->RequestedVelRef
-ObjectBtn:=[<Ordinal>] {tkCard | tkBg} {tkBtn _id <Lvl6Expression> | tkBtn <Lvl6Expression> } [ <Of> <ObjectCard> ]                                       --->Custom--->RequestedVelRef
-ObjectFld:=[<Ordinal>] {tkCard | tkBg} {tkFld _id <Lvl6Expression> | tkFld <Lvl6Expression>} [ <Of> <ObjectCard> ]                                      --->Custom--->RequestedVelRef
+ObjectBtn:={ <Ordinal> {tkCard | tkBg} tkBtn | {tkCard | tkBg} {tkBtn _id <Lvl6Expression> | tkBtn <Lvl6Expression> } }  [ <Of> <ObjectCard> ]                                     --->Custom--->RequestedVelRef
+ObjectFld:={ <Ordinal> {tkCard | tkBg} tkFld | {tkCard | tkBg} {tkFld _id <Lvl6Expression> | tkFld <Lvl6Expression>} } [ <Of> <ObjectCard> ]                                   --->Custom--->RequestedVelRef
 ObjectCard:= { _recent { tkCard | tkCardPlural | tkCardAtEndOfLine} | _back | _forth | tkCard _id <Lvl6Expression> | \
                      [_marked] tkCard <Lvl6Expression> | tkCardAtEndOfLine | <Ordinal> [_marked] { tkCard | tkCardAtEndOfLine} | \
                      <Position> [_marked] { tkCard | tkCardAtEndOfLine} } [ <Of> <ObjectBg> ]  [ <Of> <ObjectStack> ]                            --->Custom--->RequestedVelRef
