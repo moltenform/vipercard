@@ -12,7 +12,7 @@
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
-/* auto */ import { VpcElSizable } from './../../vpc/vel/velBase';
+/* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
@@ -504,7 +504,7 @@ export class VpcPresenter extends VpcPresenterInit {
     /**
      * user clicked 'New button' in the ui
      */
-    makePart(type: VpcElType) {
+    makePart(type: VpcElType):VpcElBase {
         /* make a button that is tall enough to show an icon */
         const defaultBtnW = 100;
         const defaultBtnH = 58;

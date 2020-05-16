@@ -947,7 +947,6 @@ listOfAllBuiltinCommandsInOriginalProduct['send'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['if'] = true;
 /* ones we've defined */
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappablechoose'] = true;
-listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappabledomenu'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappableerrordialog'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['replace'] = true;
 
@@ -1073,7 +1072,6 @@ export const tkstr = {
     RuleBuiltinCmdDial: 'RuleBuiltinCmdDial',
     RuleBuiltinCmdDisable: 'RuleBuiltinCmdDisable',
     RuleBuiltinCmdDivide: 'RuleBuiltinCmdDivide',
-    RuleBuiltinCmdVpccalluntrappabledomenu: 'RuleBuiltinCmdVpccalluntrappabledomenu',
     RuleBuiltinCmdDrag: 'RuleBuiltinCmdDrag',
     RuleHBuiltinCmdDrag_1: 'RuleHBuiltinCmdDrag_1',
     RuleBuiltinCmdEnable: 'RuleBuiltinCmdEnable',

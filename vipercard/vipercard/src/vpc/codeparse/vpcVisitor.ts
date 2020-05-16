@@ -550,11 +550,6 @@ return this.H$BuildMap(ctx);
 }
 
 
-RuleBuiltinCmdVpccalluntrappabledomenu(ctx: VisitingContext): IntermedMapOfIntermedVals {
-return this.H$BuildMap(ctx);
-}
-
-
 RuleBuiltinCmdDrag(ctx: VisitingContext): IntermedMapOfIntermedVals {
 return this.H$BuildMap(ctx);
 }

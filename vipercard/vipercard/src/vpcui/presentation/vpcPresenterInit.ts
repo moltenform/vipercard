@@ -27,14 +27,15 @@
 /* auto */ import { VpcLyrNonModalHolder } from './../nonmodaldialogs/vpcLyrNonModalHolder';
 /* auto */ import { VpcAppLyrDragHandles } from './../panels/vpcLyrDragHandles';
 /* auto */ import { VpcStateInterface, VpcUILayer } from './../state/vpcInterface';
-/* auto */ import { VpcTool, VpcToolCtg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcMenuActions } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
+/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { ScreenConsts, getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { RepeatingTimer } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512 } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { ElementObserverToTwo } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
@@ -146,6 +147,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
 
         /* when a runtime option changes: */
         /* - set a flag in observeRuntimeOptChanges that we'll check during render */
+        this.vci.getCodeExec().directiveImpl = new VpcExecInternalDirectiveFull(this)
         this.vci.getCodeExec().cbOnScriptError = scriptErr => this.defaultShowScriptErr(scriptErr);
         this.vci.getCodeExec().cbCauseUIRedraw = () => this.lyrModelRender.uiRedrawNeeded();
         this.vci.getCodeExec().runStatements.cbAnswerMsg = (a, b, c, d, e) => this.answerMsg(a, b, c, d, e);
@@ -326,5 +328,16 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
     getCardHistory():RememberHistory {
         return this.pr.vci.getCodeExec().cardHistory
     }
-
+    
+    goMakepart(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
+        if (param.val==='btn') {
+            let vel = this.pr.makePart(VpcElType.Btn)
+            param.val = vel.getUserFacingId()
+        } else if (param.val==='fld') {
+            let vel = this.pr.makePart(VpcElType.Fld)
+            param.val = vel.getUserFacingId()
+        } else if (param.val==='card') {
+            
+        }
+    }
 }

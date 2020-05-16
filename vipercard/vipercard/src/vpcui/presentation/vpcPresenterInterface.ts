@@ -11,7 +11,8 @@
 /* auto */ import { VpcLyrNonModalHolder } from './../nonmodaldialogs/vpcLyrNonModalHolder';
 /* auto */ import { VpcAppLyrDragHandles } from './../panels/vpcLyrDragHandles';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcErr, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcErr, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { RepeatingTimer } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
@@ -59,6 +60,7 @@ export abstract class VpcPresenterInterface extends UI512Presenter {
     abstract beginScheduleFldOpenCloseEvent(evt: FocusChangedEventDetails): void;
     abstract beginScheduleFldOpenCloseEventClose(prevId: string): void;
     abstract beginScheduleFldOpenCloseEventOpen(nextId: string): void;
+    abstract makePart(type: VpcElType):VpcElBase
 
     abstract answerMsg(
         prompt: string,

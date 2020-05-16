@@ -187,17 +187,6 @@ export class ExecuteStatement {
         this.setEnabled(line, vals, false);
     }
     /**
-     * simulate a menu command
-     */
-    goVpccalluntrappabledomenu(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let exprs = vals.vals[tkstr.RuleExpr];
-        checkThrow(exprs.length === 1 || exprs.length === 2, '');
-        let firstP = cast(VpcVal, exprs[0]).readAsString();
-        let secondP = exprs.length === 1 ? '' : cast(VpcVal, exprs[1]).readAsString();
-        let result = this.outside.DoMenuAction(firstP, secondP);
-        this.outside.SetVarContents('$result', VpcValS(result));
-    }
-    /**
      * drag from {x1}, {y1} to {x2}, {y2}
      * Use the drag command for programmatically drawing pictures.
      */

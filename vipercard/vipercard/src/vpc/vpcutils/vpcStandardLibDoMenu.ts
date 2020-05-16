@@ -12,12 +12,15 @@ export const VpcStandardLibDoMenu = /* static class */ {
     script: `
 
 on domenu pa, pb
+    global doMenuResult
+    put "" into doMenuResult
     put tolowercase(pa) into pl
     if "|" in pl then
         errordialog "not a valid domenu"
     end if
     put false into handled
     put "|" & pl & "|" into key
+    put handled and domenu_edit(key, pl, pb) into handled
     put handled and domenu_movecard(key, pl, pb) into handled
     put handled and domenu_paintsetting(key, pl, pb) into handled
     put handled and domenu_changefont(key, pl, pb) into handled
@@ -27,7 +30,18 @@ on domenu pa, pb
     if not handled then
         vpccalluntrappabledomenu pl, pb
     end if
+    return doMenuResult
 end domenu
+
+on domenu_edit key, pl, pb
+    put true into ret
+    if pl == "new card" then
+    else
+        put false into ret
+    end if
+    return ret
+end domenu_edit
+
 
 on domenu_movecard key, pl, pb
     put true into ret

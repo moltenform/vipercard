@@ -1358,17 +1358,6 @@ this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleLvl1Expression)
 });
 
-RuleBuiltinCmdVpccalluntrappabledomenu = this.RULE('RuleBuiltinCmdVpccalluntrappabledomenu', () => {
-this.CONSUME1(tks.tkSyntaxMark)
-this.CONSUME2(tks.tkSyntaxMark)
-this.CONSUME3(tks.tkSyntaxMark)
-this.SUBRULE1(this.RuleExpr)
-this.OPTION1(() => {
-this.CONSUME1(tks.tkComma)
-this.SUBRULE2(this.RuleExpr)
-});
-});
-
 RuleBuiltinCmdDrag = this.RULE('RuleBuiltinCmdDrag', () => {
 this.CONSUME1(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkSyntaxMark)
