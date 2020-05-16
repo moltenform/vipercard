@@ -365,27 +365,23 @@ export class VelResolveReference {
             /* `the short id of cd 2` */
             return arr[ref.lookByAbsolute - 1];
         } else if (ref.lookByRelative) {
-            /* `the short id of first cd, the short id of next cd` */
-            let curId = this.model.getCurrentCard().idInternal;
-            if (
-                ref.cardLookAtMarkedOnly &&
-                (ref.lookByRelative === OrdinalOrPosition.Previous || ref.lookByRelative === OrdinalOrPosition.Next)
-            ) {
-                let temparr = arr.filter(cd => cd.getB('marked'));
-                checkThrow(temparr.length, 'break, not found, no marked cards');
-                /* add current one to it as a place of comparison */
-                /* we should still use findPositionFromOrdinalOrPosition
-                since we still want wrap-around behavior */
-                arr = arr.filter(cd => cd.getB('marked') || /* bool */ cd.idInternal === currCdId);
-            } else if (ref.cardLookAtMarkedOnly) {
-                arr = arr.filter(cd => cd.getB('marked'));
-                checkThrow(arr.length, 'break, not found, no marked cards');
+            arr = this.model.stack.getCardOrder().map(item => this.model.getCardById(item));
+            let keepCurCd = ref.lookByRelative === OrdinalOrPosition.Previous || ref.lookByRelative === OrdinalOrPosition.Next
+            let justMe = [this.model.getCurrentCard()]
+            if (ref.cardLookAtMarkedOnly) {
+                arr = arr.filter(cd => cd.getB('marked') || (keepCurCd && cd.idInternal === currCdId));
+                justMe = justMe.filter(cd => cd.getB('marked'));
+            }
+            if (parentBg) {
+                arr = arr.filter(cd => cd.parentIdInternal === parentBg.idInternal || (keepCurCd && cd.idInternal === currCdId));
+                justMe = justMe.filter(cd => cd.parentIdInternal === parentBg.idInternal)
             }
 
+            let curIndex = arr.findIndex(item => item.idInternal === currCdId);
             /* confirmed in emulator: */
             /* `the short id of this marked cd` should fail if this cd is not marked */
             /* `the short id of this cd of bg 2` should fail if this cd is not in bg 2 */
-            let curIndex = arr.findIndex(item => item.idInternal === curId);
+            checkThrow(!(keepCurCd && justMe.length===0 && arr.length === 1 && arr[0].idInternal === currCdId), "break, not found, this/next does not meet criteria")
             checkThrow(
                 !(ref.lookByRelative === OrdinalOrPosition.This && curIndex === -1),
                 "break, not found, 'this' card does not meet criteria"

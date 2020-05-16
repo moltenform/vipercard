@@ -117,7 +117,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (found) {
             return new VelRenderId(this.vci.getModel()).go(
                 found,
-                PropAdjective.Long,
+                PropAdjective.LongForParse,
                 this.Model().stack.getB('compatibilitymode')
             );
         } else {
@@ -569,15 +569,18 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let frame = this.vci.findExecFrameStack()[1];
         let target = this.vci.getModel().findByIdUntyped(frame?.message?.targetId);
         checkThrow(target, 'UF|the target was not found');
-        if (adjective === PropAdjective.Short) {
-            return target.getS('name') ?? '';
-        } else {
+
+        /* we want as much info as possible, because although
+        we return a string, it will likely be parsed back into an object */
+        if (adjective !== PropAdjective.Short) {
+            adjective = PropAdjective.LongForParse
+        }
+
             return new VelRenderId(this.vci.getModel()).go(
                 target,
                 PropAdjective.Long,
                 this.Model().stack.getB('compatibilitymode')
             );
-        }
     }
 
     /**
@@ -599,15 +602,17 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             owner = this.vci.getModel().getByIdUntyped(vel.parentIdInternal);
         }
 
-        if (adjective === PropAdjective.Short) {
-            return owner.getS('name') ?? '';
-        } else {
-            return new VelRenderId(this.vci.getModel()).go(
+        /* we want as much info as possible, because although
+        we return a string, it will likely be parsed back into an object */
+        if (adjective !== PropAdjective.Short) {
+            adjective = PropAdjective.LongForParse
+        }
+
+        return new VelRenderId(this.vci.getModel()).go(
                 owner,
-                PropAdjective.Long,
+                adjective,
                 this.Model().stack.getB('compatibilitymode')
             );
-        }
     }
 
     /**

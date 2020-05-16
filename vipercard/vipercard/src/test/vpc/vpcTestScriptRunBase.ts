@@ -91,8 +91,8 @@ export class ScriptTestBatch {
         no, some tests might be setup like global vars/go to card that we should keep in order */
         let ret: [string, string][] = [];
         let ms = multipliers.map(cls => new cls());
-        for (let item of input) {
-            let curItems = [item];
+        for (let itemInput of input) {
+            let curItems = [itemInput];
             for (let multiplier of ms) {
                 let first = curItems.map(item =>
                     multiplier.firstTransformation(item[0], item[1])
@@ -103,10 +103,8 @@ export class ScriptTestBatch {
                 let third = curItems.map(item =>
                     multiplier.thirdTransformation(item[0], item[1])
                 );
-                let nextCurItems: O<[string, string]>[] = [];
-                nextCurItems = nextCurItems.concat(first)
-                nextCurItems = nextCurItems.concat(second)
-                nextCurItems = nextCurItems.concat(third)
+
+                let nextCurItems = first.concat(second, third)
                 curItems = nextCurItems.filter(item=>item !== undefined) as [string, string][];
             }
 

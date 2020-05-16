@@ -197,6 +197,8 @@ export class VelRenderId {
         } else if (adjective === PropAdjective.Long) {
             let stname = this.model.stack.getS('name');
             return `card id ${userFacingId} of stack "${stname}"`;
+        } else if (adjective === PropAdjective.LongForParse) {
+            return `card id ${userFacingId}`;
         } else {
             return `card id ${userFacingId}`;
         }
@@ -207,14 +209,14 @@ export class VelRenderId {
      */
     protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective, compatMode: boolean) {
         let userFacingId = vel.getUserFacingId();
-        if (adjective === PropAdjective.Long && !compatMode) {
+        if (adjective === PropAdjective.LongForParse || (adjective === PropAdjective.Long && !compatMode)) {
             if (vel instanceof VpcElButton || vel instanceof VpcElField) {
                 let cdOrBg = vel.getS('is_bg_velement_id').length ? 'bkgnd' : 'card';
                 /* NOTE: this is ambiguous - for a bg object,
                 it won't precisely identify the object.
                 but this is the way the original product worked. */
                 let s = `${cdOrBg} ${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`;
-                if (!compatMode && vel.getS('is_bg_velement_id').length) {
+                if ((adjective === PropAdjective.LongForParse || !compatMode) && vel.getS('is_bg_velement_id').length) {
                     /* this fixes the ambiguity */
                     let parent = this.model.getByIdUntyped(vel.parentIdInternal);
                     s += ` of cd id ${parent.getUserFacingId()}`;

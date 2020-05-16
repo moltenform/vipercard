@@ -16,7 +16,7 @@ t.atest('--init--testCollection03propComputed', async () => {
     assertTrue(h3, longstr(`forgot to include the
         _testCollection03lexer_ test? put it below this test in _testTop_.ts`))
 });
-t.test('firsttest', () => {
+t.test('number property', () => {
     //~ let b = new ScriptTestBatch();
     //~ // tests here
     //~ b.batchEvaluate(h3);

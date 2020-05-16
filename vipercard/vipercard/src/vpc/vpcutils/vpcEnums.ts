@@ -34,6 +34,9 @@ export enum PropAdjective {
     Abbrev,
     Long,
     Short,
+    /* always use the long id style,
+    even if we are in compatibility mode */
+    LongForParse, 
     __AlternateForm__Abbreviated = Abbrev,
     __AlternateForm__Abbr = Abbrev
 }

@@ -183,10 +183,11 @@ this.SUBRULE1(this.RuleObjectStack)
 });
 
 RuleObjectBtn = this.RULE('RuleObjectBtn', () => {
-this.OPTION1(() => {
-this.SUBRULE1(this.RuleOrdinal)
-});
 this.OR1([
+{
+ALT: () => {
+this.SUBRULE1(this.RuleOrdinal)
+this.OR2([
 {
 ALT: () => {
 this.CONSUME1(tks.tkCard)
@@ -198,32 +199,53 @@ this.CONSUME1(tks.tkBg)
 }
 }
 ]);
-this.OR2([
+this.CONSUME1(tks.tkBtn)
+}
+},
 {
 ALT: () => {
-this.CONSUME1(tks.tkBtn)
+this.OR3([
+{
+ALT: () => {
+this.CONSUME2(tks.tkCard)
+}
+},
+{
+ALT: () => {
+this.CONSUME2(tks.tkBg)
+}
+}
+]);
+this.OR4([
+{
+ALT: () => {
+this.CONSUME2(tks.tkBtn)
 this.CONSUME1(tks._id)
 this.SUBRULE1(this.RuleLvl6Expression)
 }
 },
 {
 ALT: () => {
-this.CONSUME2(tks.tkBtn)
+this.CONSUME3(tks.tkBtn)
 this.SUBRULE2(this.RuleLvl6Expression)
 }
 }
 ]);
-this.OPTION2(() => {
+}
+}
+]);
+this.OPTION1(() => {
 this.SUBRULE1(this.RuleOf)
 this.SUBRULE1(this.RuleObjectCard)
 });
 });
 
 RuleObjectFld = this.RULE('RuleObjectFld', () => {
-this.OPTION1(() => {
-this.SUBRULE1(this.RuleOrdinal)
-});
 this.OR1([
+{
+ALT: () => {
+this.SUBRULE1(this.RuleOrdinal)
+this.OR2([
 {
 ALT: () => {
 this.CONSUME1(tks.tkCard)
@@ -235,22 +257,42 @@ this.CONSUME1(tks.tkBg)
 }
 }
 ]);
-this.OR2([
+this.CONSUME1(tks.tkFld)
+}
+},
 {
 ALT: () => {
-this.CONSUME1(tks.tkFld)
+this.OR3([
+{
+ALT: () => {
+this.CONSUME2(tks.tkCard)
+}
+},
+{
+ALT: () => {
+this.CONSUME2(tks.tkBg)
+}
+}
+]);
+this.OR4([
+{
+ALT: () => {
+this.CONSUME2(tks.tkFld)
 this.CONSUME1(tks._id)
 this.SUBRULE1(this.RuleLvl6Expression)
 }
 },
 {
 ALT: () => {
-this.CONSUME2(tks.tkFld)
+this.CONSUME3(tks.tkFld)
 this.SUBRULE2(this.RuleLvl6Expression)
 }
 }
 ]);
-this.OPTION2(() => {
+}
+}
+]);
+this.OPTION1(() => {
 this.SUBRULE1(this.RuleOf)
 this.SUBRULE1(this.RuleObjectCard)
 });

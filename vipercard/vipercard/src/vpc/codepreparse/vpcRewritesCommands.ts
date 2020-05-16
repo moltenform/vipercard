@@ -274,7 +274,7 @@ end if`;
             }
         }
 
-        let ret:ChvITk[] = [line[0]]
+        let ret:ChvITk[] = [this.rw.tokenFromEnglishTerm('mark', line[0])]
         if (fromUnmark) {
             ret.push(this.rw.tokenFromEnglishTerm('not', line[0]))
         }

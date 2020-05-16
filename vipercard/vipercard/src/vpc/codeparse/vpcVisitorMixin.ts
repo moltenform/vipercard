@@ -432,6 +432,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 /* indicate only counting marked */
                 parentRef.cardLookAtMarkedOnly = true;
             }
+            
             return VpcValN(this.outside.CountElements(VpcElType.Card, parentRef));
         }
 
