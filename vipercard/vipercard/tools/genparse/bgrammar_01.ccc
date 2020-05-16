@@ -64,6 +64,8 @@
 //      do "code" can't yet read/write local vars
 //      nearly all chunks supported except 1) negative index 2) backwards bounds 3) deleting a range besides chars
 //      use compatibility mode (off by default) to match some weird behavior in original product
+//      unless compatibility mode is turned on, "the id" is made consistent for all objects 
+//          is also more useful, since the long id actually is long than the short id.
 
             
 // aren't yet supported in software include:

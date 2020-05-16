@@ -868,7 +868,7 @@ t.test('vpcProperties', () => {
     b.t('the abbr name of this stack', 'stack "teststack"');
     b.t('the short name of this stack', 'teststack');
     b.t('the long name of this stack', 'stack "Hard Drive:teststack"');
-    b.t('the id of this stack', '921');
+    b.t('the id of this stack', 'stack id 921');
     b.t('the abbr id of this stack', '921');
     b.t('the short id of this stack', '921');
     b.t('the long id of this stack', 'stack id 921');

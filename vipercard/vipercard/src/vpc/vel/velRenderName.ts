@@ -27,14 +27,14 @@ export class VelRenderName {
      */
     go(vel: VpcElBase, adjective: PropAdjective): string {
         let type = vel.getType();
-        let methodName = 'goResolveName' + Util512.capitalizeFirst(getEnumToStrOrFallback(VpcElType, type));
+        let methodName = 'goRenderName' + Util512.capitalizeFirst(getEnumToStrOrFallback(VpcElType, type));
         return castVerifyIsStr(Util512.callAsMethodOnClass(VelRenderName.name, this, methodName, [vel, adjective], false));
     }
 
     /**
      * re-use logic for buttons and fields
      */
-    protected goResolveNameBtn(vel: VpcElButton, adjective: PropAdjective) {
+    protected goRenderNameBtn(vel: VpcElButton, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElButton, 'J[|');
         return this.goResolveBtnOrFld(vel, adjective);
     }
@@ -42,7 +42,7 @@ export class VelRenderName {
     /**
      * re-use logic for buttons and fields
      */
-    protected goResolveNameFld(vel: VpcElField, adjective: PropAdjective) {
+    protected goRenderNameFld(vel: VpcElField, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElField, 'J@|');
         return this.goResolveBtnOrFld(vel, adjective);
     }
@@ -58,7 +58,7 @@ export class VelRenderName {
             /* name exists, show the name */
             if (adjective === PropAdjective.Long) {
                 let parent = this.model.getCardById(vel.parentIdInternal);
-                return `${cdOrBg} ${typ} "${name}" of ${this.goResolveNameCard(parent, adjective)}`;
+                return `${cdOrBg} ${typ} "${name}" of ${this.goRenderNameCard(parent, adjective)}`;
             } else if (adjective === PropAdjective.Short) {
                 return `${name}`;
             } else {
@@ -69,7 +69,7 @@ export class VelRenderName {
             let userFacingId = vel.getUserFacingId();
             if (adjective === PropAdjective.Long) {
                 let parent = this.model.getCardById(vel.parentIdInternal);
-                return `${cdOrBg} ${typ} id ${userFacingId} of ${this.goResolveNameCard(parent, adjective)}`;
+                return `${cdOrBg} ${typ} id ${userFacingId} of ${this.goRenderNameCard(parent, adjective)}`;
             } else {
                 return `${cdOrBg} ${typ} id ${userFacingId}`;
             }
@@ -79,7 +79,7 @@ export class VelRenderName {
     /**
      * get the name of a card
      */
-    protected goResolveNameCard(vel: VpcElCard, adjective: PropAdjective): string {
+    protected goRenderNameCard(vel: VpcElCard, adjective: PropAdjective): string {
         checkThrow(vel instanceof VpcElCard, 'J>|');
         let name = vel.getS('name');
         let stname = this.model.stack.getS('name');
@@ -105,7 +105,7 @@ export class VelRenderName {
     /**
      * get the name of a background
      */
-    protected goResolveNameBg(vel: VpcElBg, adjective: PropAdjective) {
+    protected goRenderNameBg(vel: VpcElBg, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElBg, 'J=|');
         let name = vel.getS('name');
         let stname = this.model.stack.getS('name');
@@ -133,7 +133,7 @@ export class VelRenderName {
      * made compatible with original product.
      * we don't return 'stack id x' because original product never did that.
      */
-    protected goResolveNameStack(vel: VpcElStack, adjective: PropAdjective) {
+    protected goRenderNameStack(vel: VpcElStack, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElStack, 'J<|');
         let nm = vel.getS('name');
         if (adjective === PropAdjective.Short) {
@@ -149,10 +149,10 @@ export class VelRenderName {
      * get the name of product
      * fun fact, in emulator the "long name" of product would return filepath of the app
      */
-    protected goResolveNameProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
+    protected goRenderNameProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElProductOpts, 'J;|');
         if (adjective === PropAdjective.Long) {
-            return `Hard Drive:${cProductName}"`;
+            return `Hard Drive:${cProductName}`;
         } else {
             return `${cProductName}`;
         }
@@ -170,8 +170,8 @@ export class VelRenderId {
      * get the id
      */
     go(vel: VpcElBase, adjective: PropAdjective, compatMode: boolean) {
-        if (vel instanceof VpcElCard) {
-            return this.goCard(vel, adjective);
+        if (vel instanceof VpcElCard && compatMode) {
+            return this.goCardCompat(vel, adjective);
         } else if (vel instanceof VpcElProductOpts) {
             return this.goProduct(vel, adjective);
         } else {
@@ -190,7 +190,7 @@ export class VelRenderId {
      * confirmed in emulator that id of card is inconsistent,
      * and more verbose than other objects
      */
-    protected goCard(vel: VpcElCard, adjective: PropAdjective) {
+    protected goCardCompat(vel: VpcElCard, adjective: PropAdjective) {
         let userFacingId = vel.getUserFacingId();
         if (adjective === PropAdjective.Short) {
             return userFacingId;

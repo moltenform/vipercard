@@ -140,7 +140,7 @@ t.test('03objectRenderID stack', () => {
     b.t('the short id of this stack', `${h3.ids.stack}`)
     b.t('the long id of this stack', `${h3.ids.stack}`)
     b.t(`set the compatibilitymode of stack 1 to false\\1`, `1`)
-    b.t('the id of this stack', `stack id ${h3.ids.stack}`)
+    b.t('the id of this stack', `${h3.ids.stack}`)
     b.t('the short id of this stack', `${h3.ids.stack}`)
     b.t('the long id of this stack', `stack id ${h3.ids.stack}`)
     b.batchEvaluate(h3);
@@ -152,21 +152,24 @@ t.test('03objectRenderID bg', () => {
     b.t('the short id of bg 2', `${h3.ids.bgB}`)
     b.t('the long id of bg 2', `${h3.ids.bgB}`)
     b.t(`set the compatibilitymode of stack 1 to false\\1`, `1`)
-    b.t('the id of bg 2', `bkgnd id ${h3.ids.bgB}`)
+    b.t('the id of bg 2', `${h3.ids.bgB}`)
     b.t('the short id of bg 2', `${h3.ids.bgB}`)
     b.t('the long id of bg 2', `bkgnd id ${h3.ids.bgB}`)
     b.batchEvaluate(h3);
 })
 t.test('03objectRenderID card', () => {
-    /* this one stays the same regardless of compatmode */
-    for (let compat of [true, false]) {
-        let b = new ScriptTestBatch();
-        b.t(`set the compatibilitymode of stack 1 to ${compat}\\1`, `1`)
-        b.t(`the id of cd id ${h3.ids.cdBC}`, `card id ${h3.ids.cdBC}`)
-        b.t(`the short id of cd id ${h3.ids.cdBC}`, `${h3.ids.cdBC}`)
-        b.t(`the long id of cd id ${h3.ids.cdBC}`, `card id ${h3.ids.cdBC} of stack "Hard Drive:"`)
-        b.batchEvaluate(h3);
-    }
+    /* our compatmode this time makes it less verbose, not more,
+    to make it more consistent */
+    let b = new ScriptTestBatch();
+    b.t(`set the compatibilitymode of stack 1 to true\\1`, `1`)
+    b.t(`the id of cd id ${h3.ids.cdBC}`, `card id ${h3.ids.cdBC}`)
+    b.t(`the short id of cd id ${h3.ids.cdBC}`, `${h3.ids.cdBC}`)
+    b.t(`the long id of cd id ${h3.ids.cdBC}`, `card id ${h3.ids.cdBC} of stack ""`)
+    b.t(`set the compatibilitymode of stack 1 to false\\1`, `1`)
+    b.t(`the id of cd id ${h3.ids.cdBC}`, `${h3.ids.cdBC}`)
+    b.t(`the short id of cd id ${h3.ids.cdBC}`, `${h3.ids.cdBC}`)
+    b.t(`the long id of cd id ${h3.ids.cdBC}`, `card id ${h3.ids.cdBC}`)
+    b.batchEvaluate(h3);
 })
 t.test('03objectRenderID button', () => {
     let b = new ScriptTestBatch();
@@ -175,8 +178,7 @@ t.test('03objectRenderID button', () => {
     b.t(`the short id of cd btn id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
     b.t(`the long id of cd btn id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
     b.t(`set the compatibilitymode of stack 1 to false\\1`, `1`)
-    b = new ScriptTestBatch();
-    b.t(`the id of cd btn id ${h3.ids.bBC1}`, `card button id ${h3.ids.bBC1}`)
+    b.t(`the id of cd btn id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
     b.t(`the short id of cd btn id ${h3.ids.bBC1}`, `${h3.ids.bBC1}`)
     b.t(`the long id of cd btn id ${h3.ids.bBC1}`, `card button id ${h3.ids.bBC1}`)
     b.batchEvaluate(h3);
@@ -188,7 +190,7 @@ t.test('03objectRenderID field', () => {
     b.t(`the short id of cd fld id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
     b.t(`the long id of cd fld id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
     b.t(`set the compatibilitymode of stack 1 to false\\1`, `1`)
-    b.t(`the id of cd fld id ${h3.ids.fBC1}`, `card field id ${h3.ids.fBC1}`)
+    b.t(`the id of cd fld id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
     b.t(`the short id of cd fld id ${h3.ids.fBC1}`, `${h3.ids.fBC1}`)
     b.t(`the long id of cd fld id ${h3.ids.fBC1}`, `card field id ${h3.ids.fBC1}`)
     b.batchEvaluate(h3);
@@ -200,11 +202,11 @@ t.test('03objectRenderID field', () => {
 t.test('VelRenderId.parseFromString', () => {
     let b = new ScriptTestBatch();
     /* product (not supported) */ 
-    b.t(`put "${cProductName}" into x\\the short id of x`, `ERR:fff`)
-    b.t(`put "${cAltProductName}" into x\\the short id of x`, `ERR:fff`)
-    b.t(`put "target" into x\\the short id of x`, `ERR:fff`)
-    b.t(`put "me" into x\\the short id of x`, `ERR:fff`)
-    b.t(`put "product" into x\\the short id of x`, `ERR:fff`)
+    b.t(`put "${cProductName}" into x\\the short id of x`, `ERR:5:too short`)
+    b.t(`put "${cAltProductName}" into x\\the short id of x`, `ERR:5:too short`)
+    b.t(`put "target" into x\\the short id of x`, `ERR:5:too short`)
+    b.t(`put "me" into x\\the short id of x`, `ERR:5:too short`)
+    b.t(`put "product" into x\\the short id of x`, `ERR:5:too short`)
     b.batchEvaluate(h3);
     b = new ScriptTestBatch();
     /* stack */ 

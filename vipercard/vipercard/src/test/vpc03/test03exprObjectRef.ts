@@ -579,13 +579,13 @@ t.test('03Object Auto-insert scope for backwards compat', () => {
     );
 
     b = new ScriptTestBatch();
-    b.t(`go cd id ${h3.ids.cdBB}\\1`, `PREPARSEERR:compatibility mode`);
+    b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
     b.t(`the number of btns`, `PREPARSEERR:compatibility mode`);
     b.t(`the number of flds`, `PREPARSEERR:compatibility mode`);
-    b.t(`go cd id ${h3.ids.cdBC}\\1`, `PREPARSEERR:compatibility mode`);
+    b.t(`go cd id ${h3.ids.cdBC}\\1`, `1`);
     b.t(`the number of btns`, `PREPARSEERR:compatibility mode`);
     b.t(`the number of flds`, `PREPARSEERR:compatibility mode`);
-    b.t(`go cd id ${h3.ids.cdDE}\\1`, `PREPARSEERR:compatibility mode`);
+    b.t(`go cd id ${h3.ids.cdDE}\\1`, `1`);
     b.t(`the short id of btn 1`, `PREPARSEERR:compatibility mode`);
     b.t(`the short id of btn "de2"`, `PREPARSEERR:compatibility mode`);
     b.t(`the short id of last btn`, `PREPARSEERR:compatibility mode`);
