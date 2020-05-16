@@ -9,7 +9,7 @@
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Base';
+/* auto */ import { cProductName, callDebuggerIfNotInProduction } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, castVerifyIsStr, findStrToEnum, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -314,10 +314,10 @@ export class VelRenderId {
         }
 
         let getType = (sIn: string) => {
-            return getStrToEnum<VpcElType>(VpcElType, 'expected something like `card id 123`', sIn);
+            return getStrToEnum<VpcElType>(VpcElType, 'element type, expected "card" or "button"', sIn);
         };
 
-        checkThrow(words.length >= 3, 'too short, expected something like `card id 123`');
+        checkThrow(words.length >= 2, 'too short, expected something like `card id 123`');
         let isPartFld = findStrToEnum<VpcElType>(VpcElType, words[1]) === VpcElType.Fld;
         let isPartBtn = findStrToEnum<VpcElType>(VpcElType, words[1]) === VpcElType.Btn;
         if (isPartFld || isPartBtn) {
@@ -337,6 +337,7 @@ export class VelRenderId {
         let realType = getType(words[0]);
         ret.type = realType;
         if (words[1] === 'id') {
+            checkThrow(words.length >= 3, 'too short, expected something like `card id 123`');
             let theId = Util512.parseInt(words[2]);
             checkThrow(theId, 'Tz|invalid number. expected something like `card id 123`');
             ret.lookById = theId;

@@ -230,6 +230,12 @@ export class TestVpcScriptRunBase {
         //~ let bgbB1 = this.vcstate.createVel(bgB.idInternal, VpcElType.Btn, -1);
         //~ let bgbB2 = this.vcstate.createVel(bgB.idInternal, VpcElType.Btn, -1);
         //~ let bgbC1 = this.vcstate.createVel(bgC.idInternal, VpcElType.Btn, -1);
+        //~ bgfB1.setOnVel('name', 'p1', model);
+        //~ bgfB2.setOnVel('name', 'p2', model);
+        //~ bgfC1.setOnVel('name', 'p1', model);
+        //~ bgbB1.setOnVel('name', 'p1', model);
+        //~ bgbB2.setOnVel('name', 'p2', model);
+        //~ bgbC1.setOnVel('name', 'p1', model);
         let go = this.vcstate.createVel(cdA.idInternal, VpcElType.Btn, -1);
 
         model.stack.setOnVel('name', 'teststack', model);
@@ -251,12 +257,7 @@ export class TestVpcScriptRunBase {
         bBD1.setOnVel('name', 'p1', model);
         fCD1.setOnVel('name', 'p1', model);
         bCD1.setOnVel('name', 'p1', model);
-        //~ bgfB1.setOnVel('name', 'p1', model);
-        //~ bgfB2.setOnVel('name', 'p2', model);
-        //~ bgfC1.setOnVel('name', 'p1', model);
-        //~ bgbB1.setOnVel('name', 'p1', model);
-        //~ bgbB2.setOnVel('name', 'p2', model);
-        //~ bgbC1.setOnVel('name', 'p1', model);
+        
         go.setOnVel('name', 'go', model);
 
         this.ids = {

@@ -2,6 +2,7 @@
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './vpcVal';
 /* auto */ import { VpcOpCtg, checkThrow, checkThrowEq, checkThrowInternal } from './vpcEnums';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -252,5 +253,16 @@ export class VpcEvalHelpers {
         } else {
             return vAr.map(v => v.readAsStrictNumeric());
         }
+    }
+
+    /**
+     * from "a|b|c" to "a"&cr&"b"&cr&"c"
+     */
+    static escapeWithinString(s:string, target=new RegExp(/\|/g), replacement='cr') {
+        assertWarn(s.startsWith('"'), '')
+        assertWarn(s.endsWith('"'), '')
+        let between = s.substring(1, s.length - 1)
+        between = between.replace(target, `"&${replacement}&"`)
+        return `"${between}"`
     }
 }

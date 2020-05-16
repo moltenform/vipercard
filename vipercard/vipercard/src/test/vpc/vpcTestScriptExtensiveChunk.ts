@@ -1,4 +1,5 @@
 
+/* auto */ import { VpcEvalHelpers } from './../../vpc/vpcutils/vpcValEval';
 /* auto */ import { ScriptTestBatch, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcGranularity, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
@@ -219,9 +220,7 @@ class RunExtensiveChunkTests {
         assertTrue(pts.length === 4, 'not 4 parts?', entry);
         expecteds.push(pts[3]);
         let targetStringForInput = `"${pts[2]}"`;
-        targetStringForInput = targetStringForInput.replace(/"\|/, 'return & "');
-        targetStringForInput = targetStringForInput.replace(/\|n"/, '" & return');
-        targetStringForInput = targetStringForInput.replace(/\|/g, '" & return & "');
+        targetStringForInput = VpcEvalHelpers.escapeWithinString(targetStringForInput)
         code += `\nglobal results${i}`;
         if (pts[0] === 'READ') {
             code += `\nput ${targetStringForInput} into z`;

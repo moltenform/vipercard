@@ -1,6 +1,7 @@
 
+/* auto */ import { VpcEvalHelpers } from './../../vpc/vpcutils/vpcValEval';
 /* auto */ import { ScriptTestBatch, TestMultiplier } from './../vpc/vpcTestScriptRunBase';
-/* auto */ import { OrdinalOrPosition } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { O, cAltProductName, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, assertWarnEq, listEnumValsIncludingAlternates, longstr } from './../../ui512/utils/util512';
@@ -484,20 +485,20 @@ t.test('03ObjectCardMarked', () => {
 t.test('03ObjectBtnAndField', () => {
     let b = new ScriptTestBatch();
     /* can't read ones from the wrong card */
-    //~ b.t(`go cd id ${h3.ids.cdDE}\\1`, `1`);
-    //~ b.t(`the short id of cd btn "p1"`, `ERR:could not find`);
-    //~ b.t(`the short id of cd fld "p2"`, `ERR:could not find`);
-    //~ b.t(`the short id of cd btn "p1" of cd 1`, `ERR:could not find`);
-    //~ b.t(`the short id of cd fld "p2" of cd 1`, `ERR:could not find`);
-    //~ b.t(`the short id of cd btn "p1" of cd id ${h3.ids.cdBC}`, `${h3.ids.bBC1}`);
-    //~ b.t(`the short id of cd fld "p2" of cd id ${h3.ids.cdBC}`, `${h3.ids.fBC2}`);
+    b.t(`go cd id ${h3.ids.cdDE}\\1`, `1`);
+    b.t(`the short id of cd btn "p1"`, `ERR:could not find`);
+    b.t(`the short id of cd fld "p2"`, `ERR:could not find`);
+    b.t(`the short id of cd btn "p1" of cd 1`, `ERR:could not find`);
+    b.t(`the short id of cd fld "p2" of cd 1`, `ERR:could not find`);
+    b.t(`the short id of cd btn "p1" of cd id ${h3.ids.cdBC}`, `${h3.ids.bBC1}`);
+    b.t(`the short id of cd fld "p2" of cd id ${h3.ids.cdBC}`, `${h3.ids.fBC2}`);
     /* look by name */
     b.t(`go cd id ${h3.ids.cdDE}\\1`, `1`);
     b.t(`the short id of cd (typ) "de1"`, `(1)`);
     b.t(`the short id of cd (typ) "de2"`, `(2)`);
     b.t(`the short id of cd (typ) "DE3"`, `(3)`);
-    b.t(`the short id of cd (typ) "de1" of this bg`, `ERR:parse err`);
-    b.t(`the short id of cd (typ) "de1" of this stack`, `ERR:parse err`);
+    b.t(`the short id of cd (typ) "de1" of this bg --[[noSParse]]`, `ERR:parse err`);
+    b.t(`the short id of cd (typ) "de1" of this stack --[[noSParse]]`, `ERR:parse err`);
     b.t(`the short id of cd (typ) "xyz"`, `ERR:could not find`);
     /* look by absolute */
     b.t(`the short id of cd (typ) 1`, `(1)`);
@@ -655,30 +656,42 @@ class EvaluateThereIs extends TestMultiplier {
 }
 
 /**
- * transform it from "the short id" to "there is a"
+ * transform from
+ * the short id of card "myCard"
+ * to
+ * put "card "&quote&"myCard"&quote&"" into x; the short id of x
  */
 export class EvaluateAsParsedFromAString extends TestMultiplier {
     secondTransformation(code: string, expected: string): O<[string, string]> {
-        return undefined
-        //~ if (!code.startsWith('the short id of ') || code.includes('\\') || code.includes('--[[noSParse]]')) {
-            //~ /* might be testing a command, or going to a card */
-            //~ return undefined;
-        //~ } else {
-            //~ /* automatically skip "next", "third", etc */
-            //~ for (let key of listEnumValsIncludingAlternates(OrdinalOrPosition)) {
-                //~ if (key !=='this' && new RegExp('\\b'+key+'\\b', 'i').exec(code)) {
-                    //~ return [code, expected]
-                //~ }
-            //~ }
+        if (!code.startsWith('the short id of ') || code.includes('\\') || code.includes('--[[noSParse]]')) {
+            /* might be testing a command, or going to a card */
+            return undefined;
+        } else {
+            /* automatically skip "next", "third", etc */
+            for (let key of listEnumValsIncludingAlternates(OrdinalOrPosition)) {
+                if (key.toLowerCase() !=='this' && new RegExp('(^|\\b)'+key+'(\\b|$)', 'i').exec(code)) {
+                    return undefined
+                }
+            }
 
-            //~ code = code.substr('the short id of '.length)
-            //~ code = code.replace(/"/g, '"&quote&"')
-            //~ code = 'put "' + code + '" into x\\the short id of x'
-            //~ if (expected.startsWith('ERR:') || expected.startsWith('PREPARSEERR:')) {
-                //~ expected = 'ERR:'
-            //~ }
-            //~ return [code, expected]
-        //~ }
+            /* we don't support absolute like cd 4,
+            so look for either quotes or the string id.
+            bg 4. automatically skip "bg 4" */
+            for (let key of listEnumValsIncludingAlternates(VpcElType)) {
+                if (new RegExp('(^|\\b)'+key+'\\b [0-9]+(\\b|$)', 'i').exec(code)) {
+                    return undefined
+                }
+            }
+
+            code = '"' + code.substr('the short id of '.length) + '"'
+            code = VpcEvalHelpers.escapeWithinString(code, /"/g, 'quote')
+            code = `put ${code} into x\\the short id of x --[[${code}]]`
+            if (expected.startsWith('ERR:') || expected.startsWith('PREPARSEERR:')) {
+                expected = 'ERR:5:'
+            }
+
+            return [code, expected]
+        }
     }
 }
 
