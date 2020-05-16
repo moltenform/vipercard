@@ -19,7 +19,7 @@
  * apply changes when the user chooses something from the Font or Style menu
  */
 export class VpcChangeSelectedFont {
-    cbGetEditToolSelectedFldOrBtn: () => O<VpcElBase>;
+    
     cbGetCurrentCardId: () => string;
     cbRunScript: (s: string) => void;
 

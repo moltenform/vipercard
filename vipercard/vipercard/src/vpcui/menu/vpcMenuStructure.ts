@@ -148,24 +148,24 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
             [
                 'mnuHeaderFontStyle|lngStyle',
                 [
-                    'mnuSetFontStylePlain|lngPlain|',
-                    'mnuSetFontStyleBold|lngBold|',
-                    'mnuSetFontStyleItalic|lngItalic|',
-                    'mnuSetFontStyleUnderline|lngUnderline|',
-                    'mnuSetFontStyleOutline|lngOutline|',
-                    'mnuSetFontStyleCondense|lngCondense|',
-                    'mnuSetFontStyleExtend|lngExtend|',
-                    'mnuSetFontStyleGrayed|lngGrayed|',
+                    'mnuItemFontPlain|lngPlain|',
+                    'mnuItemFontBold|lngBold|',
+                    'mnuItemFontItalic|lngItalic|',
+                    'mnuItemFontUnderline|lngUnderline|',
+                    'mnuItemFontOutline|lngOutline|',
+                    'mnuItemFontCondense|lngCondense|',
+                    'mnuItemFontExtend|lngExtend|',
+                    'mnuItemFontGrayed|lngGrayed|',
                     '|---|',
-                    'mnuSetAlignLeft|lngAlign Left|',
-                    'mnuSetAlignCenter|lngAlign Center|',
+                    'mnuItemFontAlign Left|lngAlign Left|',
+                    'mnuItemFontAlign Center|lngAlign Center|',
                     '|---|',
-                    'mnuItemSetFontSize9|lng9|',
-                    'mnuItemSetFontSize10|lng10|',
-                    'mnuItemSetFontSize12|lng12|',
-                    'mnuItemSetFontSize14|lng14|',
-                    'mnuItemSetFontSize18|lng18|',
-                    'mnuItemSetFontSize24|lng24|'
+                    'mnuItemFont9|lng9|',
+                    'mnuItemFont10|lng10|',
+                    'mnuItemFont12|lng12|',
+                    'mnuItemFont14|lng14|',
+                    'mnuItemFont18|lng18|',
+                    'mnuItemFont24|lng24|'
                 ]
             ],
             ['topClock|lng12/28/18', 776, ['|lngPlaceholder|']],
@@ -209,8 +209,10 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
                 Ctrl-N
         */
 
-        //~ this.keyMappings['ArrowLeft'] = 'onlyIfNotInTextField/mnuOnArrowLeft';
-        //~ this.keyMappings['ArrowRight'] = 'onlyIfNotInTextField/mnuOnArrowRight';
+        this.keyMappings['ArrowLeft'] = 'onlyIfNotInTextField/mnuOnArrowLeft';
+        this.keyMappings['ArrowRight'] = 'onlyIfNotInTextField/mnuOnArrowRight';
+        this.keyMappings['ArrowUp'] = 'onlyIfNotInTextField/mnuOnArrowUp';
+        this.keyMappings['ArrowDown'] = 'onlyIfNotInTextField/mnuOnArrowDown';
         this.keyMappings['Home'] = 'onlyIfNotInTextField/mnuGoCardFirst';
         this.keyMappings['End'] = 'onlyIfNotInTextField/mnuGoCardLast';
         this.keyMappings['Backspace'] = 'onlyIfNotInTextField/mnuClear';

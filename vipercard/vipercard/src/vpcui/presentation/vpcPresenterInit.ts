@@ -11,7 +11,6 @@
 /* auto */ import { VpcAppUIToolBrowse } from './../tools/vpcToolBrowse';
 /* auto */ import { VpcAppUIToolBase } from './../tools/vpcToolBase';
 /* auto */ import { VpcRuntime } from './../state/vpcState';
-/* auto */ import { VpcSave } from './vpcSave';
 /* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcPresenterEvents } from './vpcPresenterEvents';
@@ -166,10 +165,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
         Util512.freezeProperty(this, 'userBounds');
         Util512.freezeProperty(this, 'layers');
 
-        /* provide a callback to menuActions */
-        this.menuActions.save = new VpcSave(this);
-        this.menuActions.fontChanger.cbGetEditToolSelectedFldOrBtn = () => this.lyrPropPanel.selectedFldOrBtn();
-        this.menuActions.fontChanger.cbGetCurrentCardId = () => this.vci.getCurrentCardId();
+        
         this.setUpUnbeforeloadWarning();
     }
 

@@ -11,12 +11,16 @@
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
 /* auto */ import { VpcChangeSelectedFont } from './../../vpc/vel/velFieldChangeFont';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { BrowserInfo, BrowserOSInfo, getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+
+import { VpcVal } from '../../vpc/vpcutils/vpcVal';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -28,8 +32,23 @@ export class VpcMenuActions {
     fontChanger: VpcChangeSelectedFont;
     save: VpcSaveInterface;
     msgBoxHistory = new RememberHistory();
+    cbFindEditToolSelectedFldOrBtn: () => O<VpcElBase>;
+    cbOnClearNonBrowseTool: () => void;
     constructor(protected vci: VpcStateInterface) {
         this.fontChanger = new VpcChangeSelectedFont();
+    }
+
+    /**
+     * let's implement a lot of our menu commands in vipercard itself!
+     * 1) don't need two implementations
+     * 2) exposes more actions to scripts, i.e. doMenu
+     * note: if you're not in the browse tool, we don't really want
+     * a lot of code to run, so we use silenceMessagesForUIAction
+     */
+    runMenuActionCode(s: string) {
+        this.vci.getCodeExec().silenceMessagesForUIAction.val = this.vci.getTool()
+        this.vci.setTool(VpcTool.Browse)
+        this.vci.getCodeExec().runMsgBoxCodeOrThrow(s, this.vci.getCurrentCardId(), false /* add return */);
     }
 
     /**
@@ -54,7 +73,7 @@ export class VpcMenuActions {
      * show report error window
      */
     goMnuReportErr() {
-        this.throwIfServerCodeInactive();
+        this.exitIfServerCodeInactive();
         if (getRoot().getSession()) {
             let dlg = new VpcNonModalFormSendReport(this.vci);
             this.vci.setNonModalDialog(dlg);
@@ -95,7 +114,7 @@ export class VpcMenuActions {
         if (!getVpcSessionTools().enableServerCode) {
             this.goMnuExportStack();
         } else {
-            this.throwIfServerCodeInactive();
+            this.exitIfServerCodeInactive();
             if (this.save.busy) {
                 console.log("Cannot start a new task until we've finished the other task.");
             } else {
@@ -108,7 +127,7 @@ export class VpcMenuActions {
      * begin save as
      */
     goMnuSaveAs() {
-        this.throwIfServerCodeInactive();
+        this.exitIfServerCodeInactive();
         if (this.save.busy) {
             console.log("Cannot start a new task until we've finished the other task.");
         } else {
@@ -131,7 +150,7 @@ export class VpcMenuActions {
      * share a link
      */
     goMnuShareALink() {
-        this.throwIfServerCodeInactive();
+        this.exitIfServerCodeInactive();
         if (this.save.busy) {
             console.log("Cannot start a new task until we've finished the other task.");
         } else {
@@ -185,7 +204,7 @@ export class VpcMenuActions {
      * flag stack inappropriate content
      */
     goMnuFlagStack() {
-        this.throwIfServerCodeInactive();
+        this.exitIfServerCodeInactive();
         if (this.save.busy) {
             console.log("Cannot start a new task until we've finished the other task.");
         } else {
@@ -205,35 +224,37 @@ export class VpcMenuActions {
      * create new card
      */
     goMnuNewCard() {
-        let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        let currentCard = this.vci.getModel().getCardById(currentCardId);
-        let currentBg = this.vci.getModel().getById(VpcElBg, currentCard.parentIdInternal);
-        let currentIndex = currentBg.cards.findIndex(cd => cd.idInternal === currentCardId);
-        let created = this.vci.getOutside().CreateCard(currentIndex === -1 ? 0 : currentIndex + 1);
-        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.idInternal);
+        this.runMenuActionCode('doMenu "New Card"')
+        //~ let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
+        //~ let currentCard = this.vci.getModel().getCardById(currentCardId);
+        //~ let currentBg = this.vci.getModel().getById(VpcElBg, currentCard.parentIdInternal);
+        //~ let currentIndex = currentBg.cards.findIndex(cd => cd.idInternal === currentCardId);
+        //~ let created = this.vci.getOutside().CreateCard(currentIndex === -1 ? 0 : currentIndex + 1);
+        //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.idInternal);
     }
 
     /**
      * duplicate current card
      */
     goMnuDupeCard() {
-        /* can't use copy card/paste card since it's not yet impl'd */
-        /* use this workaround instead (only copies the paint) */
-        let currentCardId = this.vci.getOptionS('currentCardId');
-        let currentCard = this.vci.getModel().getCardById(currentCardId);
-        let paint = currentCard.getS('paint');
-        this.vci.setOption('selectedVelId', '');
-        this.goMnuNewCard();
-        currentCardId = this.vci.getOptionS('currentCardId');
-        currentCard = this.vci.getModel().getCardById(currentCardId);
-        currentCard.setOnVel('paint', paint, this.vci.getModel());
+        this.runMenuActionCode('doMenu "Duplicate Card"')
+        //~ /* can't use copy card/paste card since it's not yet impl'd */
+        //~ /* use this workaround instead (only copies the paint) */
+        //~ let currentCardId = this.vci.getOptionS('currentCardId');
+        //~ let currentCard = this.vci.getModel().getCardById(currentCardId);
+        //~ let paint = currentCard.getS('paint');
+        //~ this.vci.setOption('selectedVelId', '');
+        //~ this.goMnuNewCard();
+        //~ currentCardId = this.vci.getOptionS('currentCardId');
+        //~ currentCard = this.vci.getModel().getCardById(currentCardId);
+        //~ currentCard.setOnVel('paint', paint, this.vci.getModel());
     }
 
     /**
      * show publish stack info
      */
     goMnuPublishFeatured() {
-        this.throwIfServerCodeInactive();
+        this.exitIfServerCodeInactive();
         this.showModal(
             longstr(`lngYour project could be featured on ViperCard's
                 front page! Save the project, choose 'Share a link' from
@@ -245,7 +266,7 @@ export class VpcMenuActions {
      * copy card or element
      */
     goMnuCopyCardOrVel() {
-        let selected = this.fontChanger.cbGetEditToolSelectedFldOrBtn();
+        let selected = this.cbFindEditToolSelectedFldOrBtn();
         if (selected) {
             this.vci.setOption('copiedVelId', selected.idInternal);
         } else {
@@ -290,6 +311,8 @@ export class VpcMenuActions {
      * note that we have to move away from this card first before deleting it
      */
     goMnuDelCard() {
+        this.runMenuActionCode('doMenu "Delete Card"')
+
         //~ if (this.vci.getTool() === VpcTool.Browse) {
         //~ /* previously, called a handler in productopts that
         //~ would move to a different card and delete the current card, but this is simpler */
@@ -307,56 +330,63 @@ export class VpcMenuActions {
         //~ /* RemoveCard itself will do further checks, like preventing deleting the only card */
         //~ this.vci.setCurCardNoOpenCardEvt(otherCardId);
         //~ this.vci.getOutside().RemoveCard(wasCurrentCard);
-        checkThrow(false, 'nyi');
+        //~ checkThrow(false, 'nyi');
     }
 
     /**
      * toggle wide lines option
      */
     goMnuPaintWideLines() {
-        this.vci.setOption('optWideLines', !this.vci.getOptionB('optWideLines'));
+        this.runMenuActionCode('doMenu "Wide Lines"')
+        //~ this.vci.setOption('optWideLines', !this.vci.getOptionB('optWideLines'));
     }
 
     /**
      * set black lines option
      */
     goMnuPaintBlackLines() {
-        this.vci.setOption('optPaintLineColor', clrBlack);
+        this.runMenuActionCode('doMenu "Black Lines"')
+        //~ this.vci.setOption('optPaintLineColor', clrBlack);
     }
 
     /**
      * set white lines option
      */
     goMnuPaintWhiteLines() {
-        this.vci.setOption('optPaintLineColor', clrWhite);
+        this.runMenuActionCode('doMenu "White Lines"')
+        //~ this.vci.setOption('optPaintLineColor', clrWhite);
     }
 
     /**
      * set black fill option
      */
     goMnuPaintBlackFill() {
-        this.vci.setOption('optPaintFillColor', clrBlack);
+        this.runMenuActionCode('doMenu "Black Fill"')
+        //~ this.vci.setOption('optPaintFillColor', clrBlack);
     }
 
     /**
      * set white fill option
      */
     goMnuPaintWhiteFill() {
-        this.vci.setOption('optPaintFillColor', clrWhite);
+        this.runMenuActionCode('doMenu "White Fill"')
+        //~ this.vci.setOption('optPaintFillColor', clrWhite);
     }
 
     /**
      * set no fill option
      */
     goMnuPaintNoFill() {
-        this.vci.setOption('optPaintFillColor', -1);
+        this.runMenuActionCode('doMenu "No Fill"')
+        //~ this.vci.setOption('optPaintFillColor', -1);
     }
 
     /**
      * set paint-multiple
      */
     goMnuPaintDrawMult() {
-        this.vci.setOption('optPaintDrawMult', !this.vci.getOptionB('optPaintDrawMult'));
+        this.runMenuActionCode('doMenu "Draw Multiple"')
+        //~ this.vci.setOption('optPaintDrawMult', !this.vci.getOptionB('optPaintDrawMult'));
     }
 
     /**
@@ -388,7 +418,7 @@ export class VpcMenuActions {
     }
 
     /**
-     * paste, currently has to be done from keyboard
+     * paste, has to be done from keyboard
      */
     goMnuPaste() {
         let keyname = BrowserInfo.get().os === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
@@ -399,14 +429,16 @@ export class VpcMenuActions {
      * go to first card
      */
     goMnuGoCardFirst() {
-        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.First, undefined);
+        this.runMenuActionCode('doMenu "First"')
+        //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.First, undefined);
     }
 
     /**
      * go to last card
      */
     goMnuGoCardLast() {
-        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Last, undefined);
+        this.runMenuActionCode('doMenu "Last"')
+        //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Last, undefined);
     }
 
     /**
@@ -425,54 +457,62 @@ export class VpcMenuActions {
      * left arrow, usually go left but user can override
      */
     mnuOnArrowLeft() {
-        if (this.vci.getTool() === VpcTool.Browse) {
-            this.vci.getCodeExec().runMsgBoxCodeOrThrow('arrowkey "left"', this.vci.getCurrentCardId(), false);
-        } else {
-            this.goMnuGoCardNext();
-        }
+        this.runMenuActionCode('arrowkey "left"')
     }
 
     /**
      * right arrow, usually go right but user can override
      */
     mnuOnArrowRight() {
-        if (this.vci.getTool() === VpcTool.Browse) {
-            this.vci.getCodeExec().runMsgBoxCodeOrThrow('arrowkey "right"', this.vci.getCurrentCardId(), false);
-        } else {
-            this.goMnuGoCardNext();
-        }
+        this.runMenuActionCode('arrowkey "right"')
+    }
+
+    /**
+     * up arrow, usually no-op but user can override
+     */
+    mnuOnArrowUp() {
+        this.runMenuActionCode('arrowkey "up"')
+    }
+
+    /**
+     * down arrow, usually no-op but user can override
+     */
+    mnuOnArrowDown() {
+        this.runMenuActionCode('arrowkey "down"')
     }
 
     /**
      * go to previous card
      */
     goMnuGoCardPrev() {
-        let cardNum = this.vci.getCurrentCardNum();
-        let msg = 'lngYou are already at the first card.';
-        if (cardNum <= 0) {
-            this.showModal(msg);
-        } else {
-            this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Previous, undefined);
-        }
+        this.runMenuActionCode('doMenu "Prev", "FromUI"')
+        //~ let cardNum = this.vci.getCurrentCardNum();
+        //~ let msg = 'lngYou are already at the first card.';
+        //~ if (cardNum <= 0) {
+            //~ this.showModal(msg);
+        //~ } else {
+            //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Previous, undefined);
+        //~ }
     }
 
     /**
      * go to the next card
      */
     goMnuGoCardNext() {
-        let cardNum = this.vci.getCurrentCardNum();
-        let totalCardNum = this.vci
-            .getModel()
-            .stack.bgs.map(bg => bg.cards.length)
-            .reduce(Util512.add);
+        this.runMenuActionCode('doMenu "Next", "FromUI"')
+        //~ let cardNum = this.vci.getCurrentCardNum();
+        //~ let totalCardNum = this.vci
+            //~ .getModel()
+            //~ .stack.bgs.map(bg => bg.cards.length)
+            //~ .reduce(Util512.add);
 
-        if (cardNum >= totalCardNum - 1) {
-            let msg = longstr(`lngYou are at the last-most card. You can create
-            a new card by selecting 'New Card' from the Edit menu.`);
-            this.showModal(msg);
-        } else {
-            this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Next, undefined);
-        }
+        //~ if (cardNum >= totalCardNum - 1) {
+            //~ let msg = longstr(`lngYou are at the last-most card. You can create
+            //~ a new card by selecting 'New Card' from the Edit menu.`);
+            //~ this.showModal(msg);
+        //~ } else {
+            //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Next, undefined);
+        //~ }
     }
 
     /**
@@ -496,6 +536,33 @@ export class VpcMenuActions {
     }
 
     /**
+     * new button
+     */
+    goMnuObjectsNewBtn() {
+        this.runMenuActionCode('doMenu "New Button"')
+        //~ this.makePart(VpcElType.Btn);
+    }
+
+    /**
+     * new field
+     */
+    goMnuObjectsNewFld() {
+        this.runMenuActionCode('doMenu "New Field"')
+        //~ this.makePart(VpcElType.Fld);
+    }
+
+    /**
+     * clear (either selected text or a tool-specific action)
+     */
+    goMnuClear() {
+        if (this.vci.getTool() === VpcTool.Browse) {
+            this.runMenuActionCode('doMenu "Clear"')
+        } else {
+            this.cbOnClearNonBrowseTool()
+        }
+    }
+
+    /**
      * show help examples
      */
     goMnuDlgHelpExamples() {
@@ -512,25 +579,33 @@ export class VpcMenuActions {
     }
 
     /**
-     * user has chosen something from the Font or Style menu
+     * user has chosen something without its own method
      */
-    runFontMenuActionsIfApplicable(s: string) {
+    fallbackToSetToolOrSetFont(s: string) {
         if (s.startsWith('mnuItemTool')) {
+            /* these can't go through doMenu, scripts can't set the current tool */
             let toolNumber = Util512.parseInt(s.substr('mnuItemTool'.length));
             toolNumber = toolNumber ?? VpcTool.Browse;
             this.vci.setTool(toolNumber);
-            return true;
+        } else if (s.startsWith('mnuItemFont')) {
+            let cmd = s.substr("mnuItemFont".length)
+            if (this.vci.getTool() === VpcTool.Browse) {
+                this.runMenuActionCode(`doMenu "${cmd}"`)
+            } else {
+                let vel = this.cbFindEditToolSelectedFldOrBtn();
+                this.runMenuActionCode(`doMenu "${cmd}", "setAll", ${vel ? vel.getUserFacingId() : ""} `)
+                //~ return this.fontChanger.runFontMenuActionsIfApplicable(s);
+            }
+        } else {
+            console.error("Unknown menu item")
         }
-
-        checkThrow(false, 'fontmenu not yet implemented');
-        //~ return this.fontChanger.runFontMenuActionsIfApplicable(s);
     }
 
     /**
      * sometimes we disable saving to the server. you
      * can still save to json though.
      */
-    protected throwIfServerCodeInactive() {
+    protected exitIfServerCodeInactive() {
         checkThrowNotifyMsg(
             getVpcSessionTools().enableServerCode,
             'U2|Server code currently not enabled. You can still save as a .json file, though.'

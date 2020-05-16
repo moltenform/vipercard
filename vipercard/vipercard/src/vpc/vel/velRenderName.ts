@@ -9,7 +9,7 @@
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { cProductName, callDebuggerIfNotInProduction } from './../../ui512/utils/util512Base';
+/* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, castVerifyIsStr, findStrToEnum, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
