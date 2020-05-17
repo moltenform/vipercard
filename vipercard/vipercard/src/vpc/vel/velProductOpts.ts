@@ -7,14 +7,14 @@
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
-/* auto */ import { UI512Patterns } from './../../ui512/draw/ui512DrawPatterns';
+/* auto */ import { UI512Patterns, clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -122,11 +122,23 @@ export class VpcElProductOpts extends VpcElBase {
         ];
 
         /* paint settings */
-        getters['widelines'] = [PrpTyp.Bool, 'optWideLines'];
-        getters['drawmultiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
-        getters['currentpattern'] = [PrpTyp.Num, 'currentPattern'];
+        getters['linesize'] = [PrpTyp.Num, (me: VpcElProductOpts) => {
+            return me.getB('optWideLines') ? 2 : 1
+        }];
+        getters['filled'] = [PrpTyp.Str, (me: VpcElProductOpts) => {
+            let v = me.getN('optPaintFillColor')
+            if (v===clrBlack) {
+                return 'true'
+            } else if (v===clrWhite) {
+                return 'white'
+            } else {
+                return 'false'
+            }
+        }];
+        
+        getters['multiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
+        getters['pattern'] = [PrpTyp.Num, 'currentPattern'];
         getters['linecolor'] = [PrpTyp.Num, 'optPaintLineColor'];
-        getters['fillcolor'] = [PrpTyp.Num, 'optPaintFillColor'];
     }
 
     /**
@@ -183,11 +195,28 @@ export class VpcElProductOpts extends VpcElBase {
         ];
 
         /* paint settings */
-        setters['widelines'] = [PrpTyp.Bool, 'optWideLines'];
-        setters['drawmultiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
-        setters['currentpattern'] = [PrpTyp.Num, 'currentPattern'];
+        setters['linesize'] = [PrpTyp.Num, (me: VpcElProductOpts, s: string, h: VpcHandleLinkedVels) => {
+            let n = Util512.parseInt(s)
+            if (n!==undefined && n >= 2) {
+                me.setOnVel('optWideLines', true, h)
+            } else if (n!==undefined) {
+                me.setOnVel('optWideLines', false, h)
+            }
+        }]
+        setters['filled'] = [PrpTyp.Str, (me: VpcElProductOpts, s: string, h: VpcHandleLinkedVels) => {
+            if (s.toLowerCase() === 'white') {
+                me.setOnVel('optPaintFillColor', clrWhite, h)
+            } else if (s.toLowerCase() === 'black') {
+                me.setOnVel('optPaintFillColor', clrBlack, h)
+            } else {
+                /* make transparent */
+                me.setOnVel('optPaintFillColor', -1, h)
+            }
+        }]
+
+        setters['multiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
+        setters['pattern'] = [PrpTyp.Num, 'currentPattern'];
         setters['linecolor'] = [PrpTyp.Num, 'optPaintLineColor'];
-        setters['fillcolor'] = [PrpTyp.Num, 'optPaintFillColor'];
     }
 
     /**

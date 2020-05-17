@@ -66,6 +66,7 @@
 //      use compatibility mode (off by default) to match some weird behavior in original product
 //      unless compatibility mode is turned on, "the id" is made consistent for all objects 
 //          is also more useful, since the long id actually is long than the short id.
+//      set the filled can be true, false, or "white"
 
             
 // aren't yet supported in software include:

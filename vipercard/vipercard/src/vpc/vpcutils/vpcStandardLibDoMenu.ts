@@ -118,7 +118,11 @@ on domenu_paintsetting key, pl, pb
     global doMenuResult
     put true into ret
     if pl == "wide lines"
-        set the widelines to (not the widelines)
+        if the linesize is 1 then
+            set the linesize to 2
+        else
+            set the linesize to 1
+        end if
     else if pl == "black lines"
         -- DrawPatterns_clrBlack
         set the linecolor to 0 
@@ -126,14 +130,11 @@ on domenu_paintsetting key, pl, pb
         -- DrawPatterns_clrWhite
         set the linecolor to 1
     else if pl == "no fill"
-        -- make-transparent
-        set the fillcolor to -1
+        set the filled to false
     else if pl == "black fill"
-        -- DrawPatterns_clrBlack
-        set the fillcolor to 0 
+        set the filled to true
     else if pl == "white fill"
-        -- DrawPatterns_clrWhite
-        set the fillcolor to 1
+        set the filled to 'white'
     else if pl == "multiple"
         set the drawmultiple to (not the drawmultiple)
     else
