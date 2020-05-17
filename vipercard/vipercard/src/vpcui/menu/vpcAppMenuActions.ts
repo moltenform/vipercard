@@ -6,18 +6,16 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrow, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
-/* auto */ import { VpcChangeSelectedFont } from './../../vpc/vel/velFieldChangeFont';
-/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
+/* auto */ import { VelRenderId } from './../../vpc/vel/velRenderName';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { BrowserInfo, BrowserOSInfo, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
-/* auto */ import { clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -27,13 +25,11 @@
  * respond to menu actions
  */
 export class VpcMenuActions {
-    fontChanger: VpcChangeSelectedFont;
     save: VpcSaveInterface;
     msgBoxHistory = new RememberHistory();
     cbFindEditToolSelectedFldOrBtn: () => O<VpcElBase>;
     cbOnClearNonBrowseTool: () => void;
     constructor(protected vci: VpcStateInterface) {
-        this.fontChanger = new VpcChangeSelectedFont();
     }
 
     /**
@@ -223,12 +219,6 @@ export class VpcMenuActions {
      */
     goMnuNewCard() {
         this.runMenuActionCode('doMenu "New Card"')
-        //~ let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        //~ let currentCard = this.vci.getModel().getCardById(currentCardId);
-        //~ let currentBg = this.vci.getModel().getById(VpcElBg, currentCard.parentIdInternal);
-        //~ let currentIndex = currentBg.cards.findIndex(cd => cd.idInternal === currentCardId);
-        //~ let created = this.vci.getOutside().CreateCard(currentIndex === -1 ? 0 : currentIndex + 1);
-        //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.idInternal);
     }
 
     /**
@@ -236,16 +226,6 @@ export class VpcMenuActions {
      */
     goMnuDupeCard() {
         this.runMenuActionCode('doMenu "Duplicate Card"')
-        //~ /* can't use copy card/paste card since it's not yet impl'd */
-        //~ /* use this workaround instead (only copies the paint) */
-        //~ let currentCardId = this.vci.getOptionS('currentCardId');
-        //~ let currentCard = this.vci.getModel().getCardById(currentCardId);
-        //~ let paint = currentCard.getS('paint');
-        //~ this.vci.setOption('selectedVelId', '');
-        //~ this.goMnuNewCard();
-        //~ currentCardId = this.vci.getOptionS('currentCardId');
-        //~ currentCard = this.vci.getModel().getCardById(currentCardId);
-        //~ currentCard.setOnVel('paint', paint, this.vci.getModel());
     }
 
     /**
@@ -336,7 +316,6 @@ export class VpcMenuActions {
      */
     goMnuPaintWideLines() {
         this.runMenuActionCode('doMenu "Wide Lines"')
-        //~ this.vci.setOption('optWideLines', !this.vci.getOptionB('optWideLines'));
     }
 
     /**
@@ -344,7 +323,6 @@ export class VpcMenuActions {
      */
     goMnuPaintBlackLines() {
         this.runMenuActionCode('doMenu "Black Lines"')
-        //~ this.vci.setOption('optPaintLineColor', clrBlack);
     }
 
     /**
@@ -352,7 +330,6 @@ export class VpcMenuActions {
      */
     goMnuPaintWhiteLines() {
         this.runMenuActionCode('doMenu "White Lines"')
-        //~ this.vci.setOption('optPaintLineColor', clrWhite);
     }
 
     /**
@@ -360,7 +337,6 @@ export class VpcMenuActions {
      */
     goMnuPaintBlackFill() {
         this.runMenuActionCode('doMenu "Black Fill"')
-        //~ this.vci.setOption('optPaintFillColor', clrBlack);
     }
 
     /**
@@ -368,7 +344,6 @@ export class VpcMenuActions {
      */
     goMnuPaintWhiteFill() {
         this.runMenuActionCode('doMenu "White Fill"')
-        //~ this.vci.setOption('optPaintFillColor', clrWhite);
     }
 
     /**
@@ -376,7 +351,6 @@ export class VpcMenuActions {
      */
     goMnuPaintNoFill() {
         this.runMenuActionCode('doMenu "No Fill"')
-        //~ this.vci.setOption('optPaintFillColor', -1);
     }
 
     /**
@@ -384,7 +358,6 @@ export class VpcMenuActions {
      */
     goMnuPaintDrawMult() {
         this.runMenuActionCode('doMenu "Draw Multiple"')
-        //~ this.vci.setOption('optPaintDrawMult', !this.vci.getOptionB('optPaintDrawMult'));
     }
 
     /**
@@ -428,7 +401,6 @@ export class VpcMenuActions {
      */
     goMnuGoCardFirst() {
         this.runMenuActionCode('doMenu "First"')
-        //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.First, undefined);
     }
 
     /**
@@ -436,7 +408,6 @@ export class VpcMenuActions {
      */
     goMnuGoCardLast() {
         this.runMenuActionCode('doMenu "Last"')
-        //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Last, undefined);
     }
 
     /**
@@ -472,13 +443,6 @@ export class VpcMenuActions {
      */
     goMnuGoCardPrev() {
         this.runMenuActionCode('doMenu "Prev", "FromUI"')
-        //~ let cardNum = this.vci.getCurrentCardNum();
-        //~ let msg = 'lngYou are already at the first card.';
-        //~ if (cardNum <= 0) {
-            //~ this.showModal(msg);
-        //~ } else {
-            //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Previous, undefined);
-        //~ }
     }
 
     /**
@@ -486,19 +450,6 @@ export class VpcMenuActions {
      */
     goMnuGoCardNext() {
         this.runMenuActionCode('doMenu "Next", "FromUI"')
-        //~ let cardNum = this.vci.getCurrentCardNum();
-        //~ let totalCardNum = this.vci
-            //~ .getModel()
-            //~ .stack.bgs.map(bg => bg.cards.length)
-            //~ .reduce(Util512.add);
-
-        //~ if (cardNum >= totalCardNum - 1) {
-            //~ let msg = longstr(`lngYou are at the last-most card. You can create
-            //~ a new card by selecting 'New Card' from the Edit menu.`);
-            //~ this.showModal(msg);
-        //~ } else {
-            //~ this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Next, undefined);
-        //~ }
     }
 
     /**
@@ -526,7 +477,6 @@ export class VpcMenuActions {
      */
     goMnuObjectsNewBtn() {
         this.runMenuActionCode('doMenu "New Button"')
-        //~ this.makePart(VpcElType.Btn);
     }
 
     /**
@@ -534,7 +484,6 @@ export class VpcMenuActions {
      */
     goMnuObjectsNewFld() {
         this.runMenuActionCode('doMenu "New Field"')
-        //~ this.makePart(VpcElType.Fld);
     }
 
     /**
@@ -579,8 +528,8 @@ export class VpcMenuActions {
                 this.runMenuActionCode(`doMenu "${cmd}"`)
             } else {
                 let vel = this.cbFindEditToolSelectedFldOrBtn();
-                this.runMenuActionCode(`doMenu "${cmd}", "setAll", ${vel ? vel.getUserFacingId() : ""} `)
-                //~ return this.fontChanger.runFontMenuActionsIfApplicable(s);
+                let renderVel = vel ? new VelRenderId(this.vci.getModel()).go(vel, PropAdjective.LongForParse, this.vci.getModel().stack.getB('compatibilitymode')) : ''
+                this.runMenuActionCode(`doMenu "${cmd}", "setAll|${renderVel}" `)
             }
         } else {
             console.error("Unknown menu item")

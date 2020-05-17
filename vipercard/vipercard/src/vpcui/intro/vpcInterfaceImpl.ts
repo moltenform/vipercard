@@ -6,7 +6,7 @@
 /* auto */ import { VpcPresenterEvents } from './../presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
@@ -244,13 +244,6 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      */
     getCurrentCardId() {
         return this.getOptionS('currentCardId');
-    }
-
-    /**
-     * asynchronously go to a card, if browse tool calls closecard + opencard events
-     */
-    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>) {
-        this.pr.beginSetCurCardWithOpenCardEvt(pos, idSpecific);
     }
 
     /**

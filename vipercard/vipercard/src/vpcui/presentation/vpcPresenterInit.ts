@@ -31,6 +31,7 @@
 /* auto */ import { VpcMenuActions } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
+/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ScreenConsts, getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { RepeatingTimer } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, checkIsProductionBuild } from './../../ui512/utils/util512Base';
@@ -336,8 +337,17 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         } else if (param.val==='fld') {
             let vel = this.pr.makePart(VpcElType.Fld)
             param.val = vel.getUserFacingId()
-        } else if (param.val==='card') {
-            
+        } else if (param.val==='card' || param.val==='dupecard') {
+            let paint = cur.getS('paint');
+            let currentBg = this.pr.vci.getModel().getById(VpcElBg, cur.parentIdInternal);
+            let currentIndex = currentBg.cards.findIndex(cd => cd.idInternal === cur.idInternal);
+            let vel = this.pr.vci.getOutside().CreateCard(currentIndex === -1 ? 0 : currentIndex + 1);
+            param.val = vel.getUserFacingId()
+            if (param.val==='dupecard') {
+                /* can't use copy card/paste card since it's not yet impl'd */
+                /* use this workaround instead (only copies the paint) */
+                vel.setOnVel('paint', paint, this.pr.vci.getModel());
+            }
         }
     }
 }

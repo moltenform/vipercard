@@ -6,7 +6,7 @@
 /* auto */ import { GuessStackTrace } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, checkThrowNotifyMsg, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, checkThrowNotifyMsg, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { StackOrderHelpers } from './../../vpc/vel/velStackOrderHelpers';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
@@ -17,7 +17,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, callDebuggerIfNotInProduction, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { O, callDebuggerIfNotInProduction, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
@@ -116,17 +116,6 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     /**
-     * schedules an event that will eventually set the current card,
-     * including sending closecard + opencard events
-     */
-    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>) {
-        checkThrow(false, 'nyi');
-        //~ this.vci
-        //~ .getCodeExec()
-        //~ .runMsgBoxCodeOrThrow(`go to card id ${targetCardId}`, tostring(this.getCurrentCardNum()), false);
-    }
-
-    /**
      * implement sending closeField/openField event
      *
      * places this should ideally be called, if browse tool is active:
@@ -136,7 +125,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * go to a different card
      * press Cmd+Z to undo (not yet implemented)
      * quitting the program (not yet implemented)
-     * select command  (implemented, unless a script selects a
+     * select command (implemented, unless a script selects a
      *      different field and comes back quickly)
      */
     beginScheduleFldOpenCloseEvent(evt: FocusChangedEventDetails) {

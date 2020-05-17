@@ -196,5 +196,5 @@ end goCardDestinationFromObjectId
 
 
 
-       `
+       `.replace(/\r\n/g, '\n')
 };

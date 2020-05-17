@@ -2,7 +2,7 @@
 /* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
 /* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
@@ -155,11 +155,6 @@ export interface VpcStateInterface {
      * get current card id
      */
     getCurrentCardId(): string;
-
-    /**
-     * asynchronously go to a card, if browse tool calls closecard + opencard events
-     */
-    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>): void;
 
     /**
      * go to a card without sending any closecard or opencard events

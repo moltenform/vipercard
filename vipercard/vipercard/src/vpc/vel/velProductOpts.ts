@@ -120,6 +120,13 @@ export class VpcElProductOpts extends VpcElBase {
                 return ret.toLowerCase();
             }
         ];
+
+        /* paint settings */
+        getters['widelines'] = [PrpTyp.Bool, 'optWideLines'];
+        getters['drawmultiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
+        getters['currentpattern'] = [PrpTyp.Num, 'currentPattern'];
+        getters['linecolor'] = [PrpTyp.Num, 'optPaintLineColor'];
+        getters['fillcolor'] = [PrpTyp.Num, 'optPaintFillColor'];
     }
 
     /**
@@ -174,6 +181,13 @@ export class VpcElProductOpts extends VpcElBase {
                 }
             }
         ];
+
+        /* paint settings */
+        setters['widelines'] = [PrpTyp.Bool, 'optWideLines'];
+        setters['drawmultiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
+        setters['currentpattern'] = [PrpTyp.Num, 'currentPattern'];
+        setters['linecolor'] = [PrpTyp.Num, 'optPaintLineColor'];
+        setters['fillcolor'] = [PrpTyp.Num, 'optPaintFillColor'];
     }
 
     /**

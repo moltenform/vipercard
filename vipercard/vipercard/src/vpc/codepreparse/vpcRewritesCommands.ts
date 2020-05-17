@@ -152,20 +152,14 @@ export class VpcRewriteForCommands {
         return this.rw.gen(template, line[0], [line.slice(1)]);
     }
     rewriteDoMenu(line: ChvITk[]): ChvITk[][] {
+        /* doMenu is implemented in standardlib,
+        it's just like any user handler. */
         let allImages = line.map(t => t.image).join('***') + '***';
         if (allImages.includes('***with***keys***')) {
             return [this.hBuildNyi('doMenu with keys', line[0])];
         } else if (allImages.includes('***without***dialog***')) {
             return [this.hBuildNyi('doMenu without dialog', line[0])];
         } else {
-            /* use internalvpcdeletebghelper to delete a bg */
-            /* before, we partially supported domenu by looking for string literals,
-            i.e. domenu "back" could be rewritten to go back.
-            that doesn't work if the domenu can be trapped, though.
-            current design is much better: in fact, many ui commands themselves
-            will call domenu, going through domenu will be the true implementation,
-            since it's simpler to call events like closecard and opencard.
-            see silenceMessagesForUIAction. */
             return [line];
         }
     }
