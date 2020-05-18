@@ -85,12 +85,12 @@ export const VpcStateSerialize = /* static class */ {
     /**
      * deserialize a vel, from a plain JSON object
      */
-    deserializeVel(building: VpcStateInterface, incoming: SerializedVelStructure, h: VpcHandleLinkedVels) {
+    deserializeVel(vci: VpcStateInterface, incoming: SerializedVelStructure, h: VpcHandleLinkedVels) {
         if (incoming.type === VpcElType.Stack) {
             /* the parent of a stack is always the product opts */
-            incoming.parent_id = building.getModel().productOpts.idInternal;
+            incoming.parent_id = vci.getModel().productOpts.idInternal;
             /* don't create a new element, just copy over the attrs */
-            VpcGettableSerialization.deserializeSettable(building.getModel().stack, incoming.attrs, h);
+            VpcGettableSerialization.deserializeSettable(vci.getModel().stack, incoming.attrs, h);
         } else if (
             incoming.type === VpcElType.Bg ||
             incoming.type === VpcElType.Card ||
@@ -99,11 +99,12 @@ export const VpcStateSerialize = /* static class */ {
         ) {
             /* the parent of a bg is always the stack */
             if (incoming.type === VpcElType.Bg) {
-                incoming.parent_id = building.getModel().stack.idInternal;
+                incoming.parent_id = vci.getModel().stack.idInternal;
             }
 
-            let created = building.createVel(incoming.parent_id, incoming.type, -1, incoming.id);
-            VpcGettableSerialization.deserializeSettable(created, incoming.attrs, h);
+            let creator = vci.getCodeExec().directiveImpl
+            let newVel = creator.createOneVelUsedOnlyByDeserialize(incoming.parent_id, incoming.type, -1, incoming.id);
+            VpcGettableSerialization.deserializeSettable(newVel, incoming.attrs, h);
         } else {
             assertWarn(false, 'Kx|unsupported type', incoming.type);
         }
@@ -125,9 +126,9 @@ export const VpcStateSerialize = /* static class */ {
     /**
      * deserialize from serializeVelCompressed
      */
-    deserializeVelCompressed(building: VpcStateInterface, s: string, h: VpcHandleLinkedVels): VpcElBase {
+    deserializeVelCompressed(vci: VpcStateInterface, s: string, h: VpcHandleLinkedVels): VpcElBase {
         let created: O<VpcElBase>;
-        building.doWithoutAbilityToUndo(() => {
+        vci.doWithoutAbilityToUndo(() => {
             s = UI512Compress.decompressString(s);
             let incoming = JSON.parse(s);
             assertTrue(
@@ -139,8 +140,9 @@ export const VpcStateSerialize = /* static class */ {
                 incoming.type
             );
 
-            created = building.createVel(incoming.parent_id, incoming.type, incoming.insertIndex, incoming.id);
-            VpcGettableSerialization.deserializeSettable(created, incoming.attrs, h);
+            let creator = vci.getCodeExec().directiveImpl
+            let newVel = creator.createOneVelUsedOnlyByDeserialize(incoming.parent_id, incoming.type, -1, incoming.id);
+            VpcGettableSerialization.deserializeSettable(newVel, incoming.attrs, h);
         });
 
         return ensureDefined(created, 'Kv|');

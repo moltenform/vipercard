@@ -6,7 +6,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
-/* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcTool, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
 /* auto */ import { VelRenderId } from './../../vpc/vel/velRenderName';
@@ -15,7 +15,6 @@
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
-/* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -258,30 +257,6 @@ export class VpcMenuActions {
      */
     goMnuOSAbout2() {
         this.goMnuOSAbout();
-    }
-
-    /**
-     * create many buttons
-     */
-    goMnuCreateManyButtons() {
-        let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        let first = this.vci.createVel(currentCardId, VpcElType.Btn, 0, undefined);
-        first.setOnVel('showlabel', false, this.vci.getModel());
-        first.setOnVel('autohilite', false, this.vci.getModel());
-        first.setOnVel('style', UI512BtnStyle.Transparent, this.vci.getModel());
-        first.setOnVel('name', 'sprites_n' + 0, this.vci.getModel());
-        first.setOnVel('script', '', this.vci.getModel());
-        let firstidgot = first.idInternal;
-        for (let i = 0; i < 200; i++) {
-            let v = this.vci.createVel(currentCardId, VpcElType.Btn, 0, undefined);
-            v.setOnVel('showlabel', false, this.vci.getModel());
-            v.setOnVel('autohilite', false, this.vci.getModel());
-            v.setOnVel('style', UI512BtnStyle.Transparent, this.vci.getModel());
-            v.setOnVel('name', 'sprites_n' + 0, this.vci.getModel());
-            v.setOnVel('script', '', this.vci.getModel());
-        }
-
-        this.showModal('lngFirst id: ' + firstidgot);
     }
 
     /**

@@ -6,7 +6,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElCard } from './../vel/velCard';
 /* auto */ import { VpcElBase } from './../vel/velBase';
-/* auto */ import { bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -23,6 +23,8 @@ export abstract class VpcExecInternalDirectiveAbstract {
     abstract getGlobal(key:string):VpcVal;
     abstract getCardHistory():RememberHistory;
     abstract goMakevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]):VpcElBase
+    abstract goRemovevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]):void
+    abstract createOneVelUsedOnlyByDeserialize(parentId: string, type: VpcElType, insertIndex:number, newId: O<string>):VpcElBase
 
     go(directive:string, param:ValHolder<string>, msg:[string,string]) {
         let cur = this.outside.Model().getCurrentCard()

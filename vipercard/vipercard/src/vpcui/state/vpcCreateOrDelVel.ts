@@ -73,7 +73,7 @@ export abstract class UndoableActionCreateOrDelVel {
         if (ob) {
             vel.observer = ob
         } else {
-            vel.observer =vci.getModel().stack.observer
+            vel.observer = vci.getModel().productOpts.observer
         }
 
         vci.getModel().addIdToMapOfElements(vel);
@@ -182,8 +182,9 @@ export abstract class UndoableActionCreateOrDelVel {
                 model.stack = UndoableActionCreateOrDelVel.rawMakeVelInstanceAndAddToModelMap(vci, VpcElStack.initStackId, model.productOpts.idInternal, VpcElStack, ob);
                 model.stack.setOnVel('name', 'my stack', model);
                 if (createFirstCard) {
-                    let firstBg = vci.createVel(model.stack.idInternal, VpcElType.Bg, -1);
-                    vci.createVel(firstBg.idInternal, VpcElType.Card, -1);
+                    let creator = vci.getCodeExec().directiveImpl
+                    let firstBg = creator.createOneVelUsedOnlyByDeserialize(model.stack.idInternal, VpcElType.Bg, -1, undefined);
+                    creator.createOneVelUsedOnlyByDeserialize(firstBg.idInternal, VpcElType.Card, -1, undefined);
                 }
             });
         }
