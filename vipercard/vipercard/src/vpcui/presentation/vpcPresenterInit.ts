@@ -1,6 +1,4 @@
 
-/* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { RememberHistory } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { UndoManager } from './../state/vpcUndo';
 /* auto */ import { VpcAppUIToolStamp } from './../tools/vpcToolStamp';
 /* auto */ import { VpcAppUIToolSmear } from './../tools/vpcToolSmear';
@@ -13,7 +11,6 @@
 /* auto */ import { VpcAppUIToolBrowse } from './../tools/vpcToolBrowse';
 /* auto */ import { VpcAppUIToolBase } from './../tools/vpcToolBase';
 /* auto */ import { VpcRuntime } from './../state/vpcState';
-/* auto */ import { VpcExecInternalDirectiveAbstract } from './../../vpc/codeexec/vpcScriptExecInternalDirective';
 /* auto */ import { VpcSave } from './vpcSave';
 /* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
@@ -26,25 +23,21 @@
 /* auto */ import { VpcAppLyrNotification } from './../panels/vpcLyrNotification';
 /* auto */ import { VpcLyrNonModalHolder } from './../nonmodaldialogs/vpcLyrNonModalHolder';
 /* auto */ import { VpcAppLyrDragHandles } from './../panels/vpcLyrDragHandles';
+/* auto */ import { VpcExecInternalDirectiveFull } from './vpcInternalDirectiveImpl';
 /* auto */ import { VpcStateInterface, VpcUILayer } from './../state/vpcInterface';
-/* auto */ import { VpcElType, VpcTool, VpcToolCtg, checkThrowInternal, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcTool, VpcToolCtg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcMenuActions } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
-/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
-/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
-/* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ScreenConsts, getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { RepeatingTimer } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
-/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { ElementObserverToTwo } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
-/* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
-import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference';
+
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -152,7 +145,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
 
         /* when a runtime option changes: */
         /* - set a flag in observeRuntimeOptChanges that we'll check during render */
-        this.vci.getCodeExec().directiveImpl = new VpcExecInternalDirectiveFull(this)
+        this.vci.getCodeExec().directiveImpl = new VpcExecInternalDirectiveFull(this, this.vci)
         this.vci.getCodeExec().cbOnScriptError = scriptErr => this.defaultShowScriptErr(scriptErr);
         this.vci.getCodeExec().cbCauseUIRedraw = () => this.lyrModelRender.uiRedrawNeeded();
         this.vci.getCodeExec().runStatements.cbAnswerMsg = (a, b, c, d, e) => this.answerMsg(a, b, c, d, e);
@@ -315,104 +308,3 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
     }
 }
 
-
-/**
- * complete implementation of VpcExecInternalDirective 
- */
-export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstract {
-    constructor(protected pr:VpcPresenterInit) {
-        super()
-    }
-
-    setGlobal(key:string, v:VpcVal) {
-        this.pr.vci.getCodeExec().globals.set(key, v)
-    }
-    getGlobal(key:string):VpcVal {
-        return this.pr.vci.getCodeExec().globals.getOrFallback(key, VpcValS(''))
-    }
-    getCardHistory():RememberHistory {
-        return this.pr.vci.getCodeExec().cardHistory
-    }
-    
-    goMakevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
-        if (param.val==='btn') {
-            let vel = this.makeBtnFldWithoutMsg(VpcElType.Btn)
-            param.val = vel.getUserFacingId()
-        } else if (param.val==='fld') {
-            let vel = this.makeBtnFldWithoutMsg(VpcElType.Fld)
-            param.val = vel.getUserFacingId()
-        } else if (param.val==='card' || param.val==='dupecardpaint') {
-            let paint = cur.getS('paint');
-            let currentBg = this.pr.vci.getModel().getById(VpcElBg, cur.parentIdInternal);
-            let currentIndex = currentBg.cards.findIndex(cd => cd.idInternal === cur.idInternal);
-            let indexRelativeToBg = currentIndex === -1 ? 0 : currentIndex + 1;
-            let currentCardId = this.pr.vci.getOutside().GetOptionS('currentCardId');
-            let currentCard = this.pr.vci.getModel().getCardById(currentCardId);
-            let vel = this.pr.vci.createVel(currentCard.parentIdInternal, VpcElType.Card, indexRelativeToBg);
-            param.val = vel.getUserFacingId()
-            if (param.val==='dupecardpaint') {
-                /* can't use copy card/paste card since it's not yet impl'd */
-                /* use this workaround instead (only copies the paint) */
-                vel.setOnVel('paint', paint, this.pr.vci.getModel());
-            }
-        }
-    }
-
-    goRemovevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
-        let userFacingId = param.val
-        let ref = new RequestedVelRef(VpcElType.Unknown)
-        ref.lookById = userFacingId
-        this.pr.vci.removeVel(vel);
-    }
-
-    protected makeBtnFldWithoutMsg(type:VpcElType) {
-        /* make a button that is tall enough to show an icon */
-        const defaultBtnW = 100;
-        const defaultBtnH = 58;
-        const defaultFldW = 100;
-        const defaultFldH = 100;
-        let w = 0;
-        let h = 0;
-        if (type === VpcElType.Btn) {
-            w = defaultBtnW;
-            h = defaultBtnH;
-        } else if (type === VpcElType.Fld) {
-            w = defaultFldW;
-            h = defaultFldH;
-        } else {
-            checkThrowInternal(false, '6E|wrong type ' + type);
-        }
-
-        let currentCardId = this.pr.vci.getOutside().GetOptionS('currentCardId');
-        let vel = this.pr.vci.createVel(currentCardId, type, -1) as VpcElSizable;
-        assertTrue(vel instanceof VpcElSizable, '6u|not VpcElSizable');
-        vel.setDimensions(0,0, w, h, this.pr.vci.getModel());
-        vel.setOnVel(
-            'name',
-            longstr(`my ${vpcElTypeShowInUI(vel.getType())}
-             ${this.pr.vci.getModel().stack.getNextNumberForElemName(this.pr.vci.getModel())}`),
-            this.pr.vci.getModel()
-        );
-
-        if (type === VpcElType.Btn) {
-            /* give it a style and initial script */
-            vel.setProp('style', VpcValS('roundrect'), this.pr.vci.getModel());
-            vel.setOnVel('label', lng('lngNew Button'), this.pr.vci.getModel());
-            vel.setOnVel('showlabel', true, this.pr.vci.getModel());
-            vel.setOnVel('script', 'on mouseUp\n\tanswer "the button was clicked."\nend mouseUp', this.pr.vci.getModel());
-        } else if (type === VpcElType.Fld && vel instanceof VpcElField) {
-            /* need to give it content, since we don't currently
-            draw the lines, otherwise you'd see nothing there */
-            let newTxt = FormattedText.newFromSerialized(
-                UI512DrawText.setFont('abcde\nabcde\nabcde', vel.getDefaultFontAsUi512())
-            );
-
-            vel.setCardFmTxt(newTxt, this.pr.vci.getModel());
-            vel.setProp('style', VpcValS('scrolling'), this.pr.vci.getModel());
-        } else {
-            checkThrowInternal(false, "btn or fld expected")
-        }
-
-        return vel
-    }
-}

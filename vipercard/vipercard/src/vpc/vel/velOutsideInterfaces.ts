@@ -104,11 +104,6 @@ export interface OutsideWorldRead {
      * get the current card
      */
     GetCurrentCardId(): string;
-    
-    /**
-     * a userfacingid !== internalid for background objects
-     */
-    UserFacingIdToVel(userfacingId:string):O<VpcElBase>
 }
 
 /**

@@ -7,12 +7,14 @@
 /* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
 /* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
+/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { BrowserInfo } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, NoParameterCtor, Util512, assertEq, assertWarnEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, NoParameterCtor, Util512, ValHolder, assertEq, assertWarnEq, cast, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
@@ -199,30 +201,39 @@ export class TestVpcScriptRunBase {
         assertEq(1, model.stack.bgs.length, '2f|');
         assertEq(1, model.stack.bgs[0].cards.length, '2e|');
 
+        let makeVel = (typ:string) => {
+            let creator = this.vcstate.vci.getCodeExec().directiveImpl
+            return creator.goMakevelwithoutmsg(new ValHolder(typ), model.getCurrentCard(), ['', ''])
+        }
+
+
         let bgA = model.stack.bgs[0];
-        let bgB = this.vcstate.createVel(model.stack.idInternal, VpcElType.Bg, -1);
-        let bgC = this.vcstate.createVel(model.stack.idInternal, VpcElType.Bg, -1);
+        
+        
+        let bgB = cast(VpcElBg, makeVel('bkgnd'))
+        let bgC = cast(VpcElBg, makeVel('bkgnd'))
         let cdA = bgA.cards[0];
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdA.idInternal);
-        let cdBB = this.vcstate.createVel(bgB.idInternal, VpcElType.Card, -1);
+        let cdBB = bgB.cards[0]
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBB.idInternal);
-        let cdBC = this.vcstate.createVel(bgB.idInternal, VpcElType.Card, -1);
+        let cdBC = cast(VpcElCard, makeVel('card'))
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBC.idInternal);
-        let cdBD = this.vcstate.createVel(bgB.idInternal, VpcElType.Card, -1);
+        let cdBD = cast(VpcElCard, makeVel('card'))
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBD.idInternal);
-        let cdCD = this.vcstate.createVel(bgC.idInternal, VpcElType.Card, -1);
+        let cdCD = cast(VpcElCard, makeVel('card'))
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdCD.idInternal);
 
-        let fBC1 = this.vcstate.createVel(cdBC.idInternal, VpcElType.Fld, -1);
-        let fBC2 = this.vcstate.createVel(cdBC.idInternal, VpcElType.Fld, -1);
-        let fBC3 = this.vcstate.createVel(cdBC.idInternal, VpcElType.Fld, -1);
-        let bBC1 = this.vcstate.createVel(cdBC.idInternal, VpcElType.Btn, -1);
-        let bBC2 = this.vcstate.createVel(cdBC.idInternal, VpcElType.Btn, -1);
-        let fBD1 = this.vcstate.createVel(cdBD.idInternal, VpcElType.Fld, -1);
-        let fBD2 = this.vcstate.createVel(cdBD.idInternal, VpcElType.Fld, -1);
-        let bBD1 = this.vcstate.createVel(cdBD.idInternal, VpcElType.Btn, -1);
-        let fCD1 = this.vcstate.createVel(cdCD.idInternal, VpcElType.Fld, -1);
-        let bCD1 = this.vcstate.createVel(cdCD.idInternal, VpcElType.Btn, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdBC.idInternal);
+        let fBC1 = makeVel('field')
+        let fBC2 = makeVel('field')
+        let fBC3 = makeVel('field')
+        let bBC1 = makeVel('button')
+        let bBC2 = makeVel('button')
+        let fBD1 = makeVel('field')
+        let fBD2 = makeVel('field')
+        let bBD1 = makeVel('button')
+        let fCD1 = makeVel('field')
+        let bCD1 = makeVel('button')
 
         //~ let bgfB1 = this.vcstate.createVel(bgB.idInternal, VpcElType.Fld, -1);
         //~ let bgfB2 = this.vcstate.createVel(bgB.idInternal, VpcElType.Fld, -1);
@@ -236,7 +247,8 @@ export class TestVpcScriptRunBase {
         //~ bgbB1.setOnVel('name', 'p1', model);
         //~ bgbB2.setOnVel('name', 'p2', model);
         //~ bgbC1.setOnVel('name', 'p1', model);
-        let go = this.vcstate.createVel(cdA.idInternal, VpcElType.Btn, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdA.idInternal);
+        let go = makeVel('button')
 
         model.stack.setOnVel('name', 'teststack', model);
         bgA.setOnVel('name', 'a', model);

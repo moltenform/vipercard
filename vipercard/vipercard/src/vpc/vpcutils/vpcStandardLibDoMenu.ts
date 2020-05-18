@@ -46,18 +46,6 @@ on domenu_edit key, pl, pb
             put "" into the selection
             select char 3 of theFld
         end if
-    else if pl == "new card" then
-        put "card" into sendParam
-        internalvpcmessagesdirective "makevelwithoutmsg" sendParam
-        put sendParam into doMenuResult
-        go cd id doMenuResult
-    else if pl == "duplicate card paint" then
-        put "dupecardpaint" into sendParam
-        internalvpcmessagesdirective "makevelwithoutmsg" sendParam
-        put sendParam into doMenuResult
-        go cd id doMenuResult
-    else if pl == "delete card" then
-        delete this card
     else
         put false into ret
     end if
@@ -68,13 +56,35 @@ on domenu_object key, pl, pb
     global doMenuResult
     put true into ret
     if pl == "new button" then
+        send "newButton" to this cd
         put "btn" into sendParam
         internalvpcmessagesdirective "makevelwithoutmsg" sendParam
         put sendParam into doMenuResult
     else if pl == "new field" then
+        send "newField" to this cd
         put "fld" into sendParam
         internalvpcmessagesdirective "makevelwithoutmsg" sendParam
         put sendParam into doMenuResult
+    else if pl == "new background" then
+        send "newBackground" to this stack
+        put "bkgnd" into sendParam
+        internalvpcmessagesdirective "makevelwithoutmsg" sendParam
+        put sendParam into doMenuResult
+        go cd 1 of bkgnd id doMenuResult
+    else if pl == "new card" then
+        send "newCard" to this cd
+        put "card" into sendParam
+        internalvpcmessagesdirective "makevelwithoutmsg" sendParam
+        put sendParam into doMenuResult
+        go cd id doMenuResult
+    else if pl == "duplicate card paint" then
+        send "newCard" to this cd
+        put "dupecardpaint" into sendParam
+        internalvpcmessagesdirective "makevelwithoutmsg" sendParam
+        put sendParam into doMenuResult
+        go cd id doMenuResult
+    else if pl == "delete card" then
+        delete this card
     else
         put false into ret
     end if

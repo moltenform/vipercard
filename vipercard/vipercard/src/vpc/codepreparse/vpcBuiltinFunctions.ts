@@ -655,11 +655,13 @@ export class VpcBuiltinFunctions {
 
     /**
      * what is the long id of this object, by id? return empty if object not found
+     * supports both internalId and userfacingId
      */
     callObjectbyid(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let id = args[0].readAsStrictInteger()
-        let vel = this.readoutside.UserFacingIdToVel(id.toString())
-        RequestedVelRef
+        let ref = new RequestedVelRef(VpcElType.Unknown);
+        ref.lookById = args[0].readAsStrictInteger()
+        ref.partIsCdOrBg = true
+        let s = this.readoutside.ElementExists(ref)
         return VpcValS(s ?? '');
     }
 
@@ -668,6 +670,7 @@ export class VpcBuiltinFunctions {
      */
     protected getFullNameById(id: string, adjective: PropAdjective, type: VpcElType) {
         let ref = new RequestedVelRef(type);
+        ref.partIsCdOrBg = true
         let idn = VpcValS(id).readAsStrictInteger(this.tmpArr);
         ref.lookById = idn;
         let fullname = this.readoutside.GetProp(ref, 'name', adjective, undefined);

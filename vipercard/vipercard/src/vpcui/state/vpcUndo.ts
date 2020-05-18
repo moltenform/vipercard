@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcStateSerialize } from './vpcStateSerialize';
-/* auto */ import { TypeOfUndoAction, VpcStateInterface } from './vpcInterface';
+/* auto */ import { TypeOfUndoAction, UndoableActionPlaceholder, VpcStateInterface } from './vpcInterface';
 /* auto */ import { VpcElType, checkThrow, checkThrowEq, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { UndoableActionCreateOrDelVel } from './vpcCreateOrDelVel';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
@@ -53,7 +53,7 @@ export interface UndoableAction {
 /**
  * an action creating a vel, thin wrapper around UndoableActionCreateOrDelVel
  */
-export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implements UndoableAction {
+export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implements UndoableAction, UndoableActionPlaceholder {
     constructor(id: string, parentId: string, type: VpcElType, isBg: boolean, insertIndex = -1 /* default to add-to-end */) {
         super(id, parentId, type, isBg, insertIndex);
     }

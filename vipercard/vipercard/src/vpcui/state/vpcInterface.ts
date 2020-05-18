@@ -2,7 +2,7 @@
 /* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
 /* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
-/* auto */ import { VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
@@ -81,14 +81,9 @@ export interface VpcStateInterface {
     rawRevive(vel: VpcElBase): void;
 
     /**
-     * create a new vel and add it to the model
+     * perform a changeSeenCreationDeletion
      */
-    createVel(parentId: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase;
-
-    /**
-     * remove vel from the model
-     */
-    removeVel(vel: VpcElBase): void;
+    doChangeSeenCreationDeletion(action:UndoableActionPlaceholder):void
 
     /**
      * don't record changes made for undo, and assert that no changes were made
@@ -237,6 +232,12 @@ export interface VpcStateInterface {
      * releases memory by nulling out everything owned by the class
      */
     destroy(): void;
+}
+
+/**
+ * will become a UndoableActionCreateVel
+ */
+export interface UndoableActionPlaceholder {
 }
 
 /**

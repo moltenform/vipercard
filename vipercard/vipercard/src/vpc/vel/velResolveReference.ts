@@ -11,6 +11,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { O, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertWarnEq, cast, getEnumToStrOrFallback } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -42,14 +43,6 @@ export class VelResolveReference {
             return target;
         } else if (ref.cardIsRecentHistory) {
             return this.getFromCardRecentHistory(ref, cardHistory);
-        } else if (ref.partIsCdOrBg) {
-            let tryIt = () => { try {
-                return this.go(ref, me, target, cardHistory)
-                } catch (e) {
-                }
-                return undefined
-            }
-            
         }
 
         /* combine parents into one chain */
@@ -190,6 +183,8 @@ export class VelResolveReference {
         if (found && found.getType() !== VpcElType.Fld && found.getType() !== VpcElType.Btn) {
             checkThrow(!ref.partIsBg, 'does not make sense to belong to bg');
             checkThrow(!ref.partIsCd, 'does not make sense to belong to cd');
+        } else if (found) {
+            assertWarn(ref.partIsCd || ref.partIsBg || ref.partIsCdOrBg, "expect to look up by cd or by bg")
         }
 
         if (ref.partIsCd) {

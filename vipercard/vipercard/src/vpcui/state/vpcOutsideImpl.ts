@@ -318,6 +318,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             let renderer = new VelRenderId(this.vci.getModel());
             adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
             return VpcValS(renderer.go(vel, adjective, this.Model().stack.getB('compatibilitymode')));
+        } else if (prop === 'internalid') {
+            /* put the internalid of cd btn 1 into x 
+            for bg elements, id !== internalid */
+            return VpcValS(vel.idInternal);
         } else if (prop === 'number') {
             /* put the number of card "myCard" into x */
             let renderer = new VelGetNumberProperty(this.vci.getModel());
@@ -519,30 +523,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
-     * a userfacingid !== internalid for background objects
-     */
-    UserFacingIdToVel(userfacingId:string):O<VpcElBase> {
-        let id = args[0].readAsStrictNumeric();
-        let request = new RequestedVelRef(VpcElType.Unknown);
-        request.lookById = id;
-        let s = this.readoutside.ElementExists(request);
-        if (!s) {
-            /* try interpreting it as a bg element */
-            let request = new RequestedVelRef(VpcElType.Unknown);
-            request.lookById = id;
-            request.partIsBg = true
-            s = this.readoutside.ElementExists(request);
-        }
-    }
-
-    /**
-     * perform a "domenu" action
-     */
-    DoMenuAction(arg1: string, arg2: string): string {
-        checkThrow(false, 'nyi');
-    }
-
-    /**
      * put the target into x (the vel that was interacted with)
      * note that for bg elements this is ambiguous, but we follow
      * the behavior of the original product.
@@ -586,24 +566,34 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
 
         let owner: VpcElBase;
         if (vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length) {
-            /* it's a bg object, so return the bg. we can get the card easily. */
+            /* it's a bg object, indicate this by returning in the form "cd x of bg y". */
             let card = this.vci.getModel().getCardById(vel.parentIdInternal);
-            owner = this.vci.getModel().getById(VpcElBg, card.parentIdInternal);
-        } else {
-            owner = this.vci.getModel().getByIdUntyped(vel.parentIdInternal);
-        }
-
-        /* we want as much info as possible, because although
-        we return a string, it will likely be parsed back into an object */
-        if (adjective !== PropAdjective.Short) {
-            adjective = PropAdjective.LongForParse
-        }
-
-        return new VelRenderId(this.vci.getModel()).go(
-                owner,
+            let bg = this.vci.getModel().getById(VpcElBg, card.parentIdInternal);
+            adjective = PropAdjective.LongForParse /* don't use "short" */
+            return new VelRenderId(this.vci.getModel()).go(
+                card,
+                adjective,
+                this.Model().stack.getB('compatibilitymode')
+            ) + ' of ' + new VelRenderId(this.vci.getModel()).go(
+                card,
                 adjective,
                 this.Model().stack.getB('compatibilitymode')
             );
+        } else {
+            owner = this.vci.getModel().getByIdUntyped(vel.parentIdInternal);
+
+            /* we want as much info as possible, because although
+            we return a string, it will likely be parsed back into an object */
+            if (adjective !== PropAdjective.Short) {
+                adjective = PropAdjective.LongForParse
+            }
+
+            return new VelRenderId(this.vci.getModel()).go(
+                    owner,
+                    adjective,
+                    this.Model().stack.getB('compatibilitymode')
+                );
+        }
     }
 
     /**

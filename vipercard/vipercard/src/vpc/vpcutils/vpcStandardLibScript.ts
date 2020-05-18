@@ -145,20 +145,26 @@ function goCardDestinationFromObjectId nextId
 end goCardDestinationFromObjectId
 
 -- 'delete cd btn 1' becomes this:
-on internalvpcdeletevelhelper userFacingId
-    if objectById(userFacingId) == "" then
+on internalvpcdeletevelhelper internalId, userfacingId
+    if objectById(internalId) == "" then
         errorDialog "delete failed, object not found"
     end if
     -- 1) send messages
-    put word 1 of objectById(userFacingId) into objType
-    if word 2 of objectById(userFacingId) is "button" then
-        if objType is "bkgnd" then errorDialog "not yet supported"
-        send "deleteButton" to (the owner of cd btn id userFacingId)
-    else if word 2 of objectById(userFacingId) is "field" then
-        if objType is "bkgnd" then errorDialog "not yet supported"
-        send "deleteField" to (the owner of cd fld id userFacingId)
+    put word 1 of objectById(internalId) into objType
+    if word 2 of objectById(internalId) is "button" then
+        if objType is "bkgnd" then
+            send "deleteButton" to bkgnd btn id userfacingId
+        else
+            send "deleteButton" to cd btn id userfacingId
+        end if
+    else if word 2 of objectById(internalId) is "field" then
+        if objType is "bkgnd" then
+            send "deleteField" to bkgnd fld id userfacingId
+        else
+            send "deleteField" to cd fld id userfacingId
+        end if
     else if objType == "card" then
-        if userFacingId == the short id of this cd then
+        if internalId == the short id of this cd then
             put the short id of this cd into prevCd
             go next
             if the short id of this cd is prevCd then
@@ -166,9 +172,9 @@ on internalvpcdeletevelhelper userFacingId
             end if
         end if
 
-        send "deleteCard" to this cd
-        if the number of cds in (the owner of cd id userFacingId) is 1 then
-            send "deleteBackground" to this cd
+        send "deleteCard" to cd id internalId
+        if the number of cds in (the owner of cd id internalId) is 1 then
+            send "deleteBackground" to cd id internalId
         end if
     else if objType != "bkgnd" then
         errorDialog "Cannot delete this type of object"
@@ -176,9 +182,9 @@ on internalvpcdeletevelhelper userFacingId
 
     -- 2) remove it
     if objType == "bkgnd" then
-        internalvpcdeletevelhelper_bg userFacingId
+        internalvpcdeletevelhelper_bg internalId
     else
-        put userFacingId into sendParam
+        put internalId into sendParam
         internalvpcmessagesdirective "removevelwithoutmsg" sendParam
         return sendParam
     end if

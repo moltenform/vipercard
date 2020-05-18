@@ -1,4 +1,5 @@
 
+/* auto */ import { UndoableActionCreateVel } from './../state/vpcUndo';
 /* auto */ import { VpcState } from './../state/vpcState';
 /* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
@@ -6,7 +7,7 @@
 /* auto */ import { VpcPresenterEvents } from './../presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcElType, VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
@@ -136,17 +137,10 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     }
 
     /**
-     * create a new vel and add it to the model
+     * perform a changeSeenCreationDeletion
      */
-    createVel(parentId: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase {
-        return this.vcstate.createVel(parentId, type, insertIndex, specifyId);
-    }
-
-    /**
-     * remove vel from the model
-     */
-    removeVel(vel: VpcElBase) {
-        this.vcstate.removeVel(vel);
+    doChangeSeenCreationDeletion(action:UndoableActionCreateVel):void {
+        this.vcstate.undoManager.changeSeenCreationDeletion(action);
     }
 
     /**

@@ -144,7 +144,7 @@ export class VpcRewriteForCommands {
                 return this.hReturnNyiIfMenuMentionedOutsideParens(line);
         } else {
 /* rewrite to internalvpcdeletevelhelper */
-return this.rw.gen(`internalvpcdeletevelhelper the short id of %ARG0%`,line[0], [line.slice(1)]  )
+return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0%, the short id of %ARG0%`,line[0], [line.slice(1)]  )
         }
     }
     rewriteDisable(line: ChvITk[]): ChvITk[][] {
@@ -223,17 +223,16 @@ return this.rw.gen(`internalvpcdeletevelhelper the short id of %ARG0%`,line[0], 
         if (line.length === 2 && (line[1].tokenType === tks.tkOrdinal || line[1].tokenType === tks.tkPosition)) {
             template = `
 if there is a %ARG0% card then
-    internalvpcmovecardhelper ( the short id of %ARG0% card ) , ${shouldSuspendHistory}
+    internalvpcmovecardhelper ( the internalid of %ARG0% card ) , ${shouldSuspendHistory}
 else
     internalvpcmovecardhelper -1000 , ${shouldSuspendHistory}
 end if`;
         } else {
             /* the id might refer to a bg or stack, we will correctly handle that.
-            also note that `the id of back` is correctly understood.
-            to match the product, we need to say 'short id' */
+            also note that `the id of back` is correctly understood. */
             template = `
 if there is a %ARG0% then
-    internalvpcmovecardhelper  ( the short id of %ARG0% ) , ${shouldSuspendHistory}
+    internalvpcmovecardhelper  ( the internalid of %ARG0% ) , ${shouldSuspendHistory}
 else
     internalvpcmovecardhelper -1000 , ${shouldSuspendHistory}
 end if`;
