@@ -181,6 +181,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
      * append the results
      */
     appendToOutput(sToAdd: string, truncEllipses: boolean) {
+        FormattedText.throwIfContainsControlCharacters(sToAdd)
         let results = this.showResults.getFmTxt().toUnformatted();
         if (truncEllipses && results.endsWith(' ...')) {
             results = results.slice(0, -1 * ' ...'.length);

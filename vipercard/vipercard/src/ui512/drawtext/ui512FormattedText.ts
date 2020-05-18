@@ -1,7 +1,7 @@
 
 /* auto */ import { BrowserOSInfo } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertTrue, assertWarn } from './../utils/util512Assert';
+/* auto */ import { assertTrue, assertWarn, checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { assertEq, assertWarnEq } from './../utils/util512';
 /* auto */ import { TranslateCharset } from './ui512TranslateCharset';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
@@ -50,6 +50,7 @@ export class FormattedText {
 
     setCharAt(i: number, n: number) {
         assertTrue(!this.locked, '3o|locked');
+        FormattedText.throwIfContainsControlCharacters(String.fromCharCode(n))
         this.charArray[i] = n;
     }
 
@@ -77,6 +78,7 @@ export class FormattedText {
                 0
             )} in font description`
         );
+        FormattedText.throwIfContainsControlCharacters(String.fromCharCode(char))
         this.charArray.push(char);
         this.fontArray.push(font);
     }
@@ -186,6 +188,7 @@ export class FormattedText {
      * from a plain-text string to formattedtext.
      */
     static newFromUnformatted(s: string) {
+        FormattedText.throwIfContainsControlCharacters(s)
         s = FormattedText.filterAndConvertNewlines(s);
         return FormattedText.newFromSerialized(s);
     }
@@ -256,7 +259,9 @@ export class FormattedText {
                 currentFont = this.fontArray[i];
             }
 
-            s += String.fromCharCode(this.charAt(i));
+            let c = String.fromCharCode(this.charAt(i))
+            FormattedText.throwIfContainsControlCharacters(c)
+            s += c;
         }
 
         return s;
@@ -303,6 +308,7 @@ export class FormattedText {
     toUnformatted() {
         let ret = this.charArray.map(c => String.fromCharCode(c)).join('');
         assertEq(this.len(), ret.length, '3Y|');
+        FormattedText.throwIfContainsControlCharacters(ret)
         return ret;
     }
 
@@ -310,9 +316,18 @@ export class FormattedText {
      * a substring as plain text, stripping all formatting
      */
     toUnformattedSubstr(from: number, len: number) {
-        return this.charArray
+        let ret = this.charArray
             .slice(from, from + len)
             .map(c => String.fromCharCode(c))
             .join('');
+            FormattedText.throwIfContainsControlCharacters(ret)
+            return ret;
+    }
+
+    /**
+     * we shouldn't allow special characters most places
+     */
+    static throwIfContainsControlCharacters(s:string) {
+        checkThrow512(!s.includes(specialCharFontChange), "Text cannot include this character.")
     }
 }

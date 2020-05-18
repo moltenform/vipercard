@@ -144,6 +144,7 @@ export abstract class VpcElBase extends UI512Settable {
                     mappedProp(this, val.readAsString(), higher);
                 } else {
                     assertTrue(typeof mappedProp === 'string', '4&|prop name not a string');
+                    FormattedText.throwIfContainsControlCharacters(val.readAsString())
                     this.setOnVel(mappedProp, val.readAsString(), higher);
                 }
             } else if (type === PrpTyp.Num) {

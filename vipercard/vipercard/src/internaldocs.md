@@ -260,7 +260,29 @@ stack
         * handle the second two cases in parsing, see the `RuleHUnaryPropertyGet` visitor and `goSet()` in `execStatement.ts` 
         * possible alternate approach: special-case `the target` everywhere, so it's not a normal function call like it is now.
 
-   
+## Exception handling
+
+```
+We don't want any exception to be accidentally swallowed silently.
+It's not enough to just put an alert in assertTrue,
+because this won't cover base javascript errors like null-dereference.
+It's important to show errors visibly so not to silently fall into
+a bad state, and also we can log into local storage.
+So, EVERY TOP OF THE CALL STACK must catch errors and send them to respondUI512Error
+This includes:
+         events from the browser (e.g. via golly)
+             make sure they are wrapped in trycatch
+         onload callbacks
+             for images, json, server requests, dynamic script loading
+             look for "addEventListener" and "onload"
+             make sure they are wrapped in showMsgIfExceptionThrown
+         setinterval and settimeout. use eslint ban / ban to stop them.
+             use syncToAsyncAfterPause instead
+         all async code
+             use syncToAsyncTransition
+         placeCallbackInQueue
+             already ok because it's under the drawframe event.
+```
 
 
 
