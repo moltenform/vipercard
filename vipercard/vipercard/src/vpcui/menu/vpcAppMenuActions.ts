@@ -252,6 +252,13 @@ export class VpcMenuActions {
     }
 
     /**
+     * paste card or element
+     */
+    goMnuPasteCardOrVel() {
+        this.runMenuActionCode('doMenu "Paste Card Or Vel"')
+    }
+
+    /**
      * show about dialog
      * (another method, each menuitem must have an id that is unique)
      */

@@ -6,15 +6,18 @@
 /* auto */ import { RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcElType, checkThrow, checkThrowInternal, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrow, checkThrowInternal, checkThrowNotifyMsg, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
+/* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
+/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, cast, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
@@ -58,6 +61,24 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
 
         param.val = vel.getUserFacingId()
         return vel
+    }
+
+    goPastecardorvel(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
+        let id = this.vci.getOptionS('copiedVelId');
+        let found = this.vci.getModel().findByIdUntyped(id);
+        if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
+            let dupe = this.makeBtnFldWithoutMsg(found.getType());
+            VpcGettableSerialization.copyPropsOver(found, dupe);
+
+            /* move it a bit */
+            let amtToMove = Util512Higher.getRandIntInclusiveWeak(10, 50);
+            dupe.setOnVel('x', Math.min(ScreenConsts.xAreaWidth, dupe.getN('x') + amtToMove), this.vci.getModel())
+            dupe.setOnVel('y', Math.min(ScreenConsts.yAreaHeight, dupe.getN('y') + amtToMove), this.vci.getModel())
+        } else if (id && id.length) {
+            checkThrowNotifyMsg(false, 'U9|Pasting this type of element is not yet supported.');
+        } else {
+            checkThrowNotifyMsg(false, 'U8|Nothing has been copied.');
+        }
     }
 
     goRemovevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {

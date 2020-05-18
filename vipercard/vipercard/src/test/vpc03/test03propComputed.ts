@@ -17,7 +17,8 @@ t.atest('--init--testCollection03propComputed', async () => {
         _testCollection03lexer_ test? put it below this test in _testTop_.ts`))
 });
 t.test('number property', () => {
-    //~ let b = new ScriptTestBatch();
-    //~ // tests here
-    //~ b.batchEvaluate(h3);
+    let b = new ScriptTestBatch();
+    b.t(`the number of cd btn id ${h3.ids.cdA}`, `1`)
+    
+    b.batchEvaluate(h3);
 });

@@ -19,8 +19,7 @@ t.atest('--init--testCollection03exprPseudoObject', async () => {
     );
 });
 t.test('03exprPseudoObject a', () => {
-    //~ let b = new ScriptTestBatch();
-    //~ // tests here
-    //~ assertTrue;
-    //~ b.batchEvaluate(h3);
+    let b = new ScriptTestBatch();
+    b.t('the short id of the target', `${h3.ids.cdA}`)
+    b.batchEvaluate(h3);
 });

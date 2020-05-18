@@ -83,6 +83,10 @@ on domenu_object key, pl, pb
         internalvpcmessagesdirective "makevelwithoutmsg" sendParam
         put sendParam into doMenuResult
         go cd id doMenuResult
+    else if pl == "paste card or vel" then
+        put "" into sendParam
+        internalvpcmessagesdirective "pastecardorvel" sendParam
+        put sendParam into doMenuResult
     else if pl == "delete card" then
         delete this card
     else

@@ -8,11 +8,9 @@
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
 /* auto */ import { VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowNotifyMsg, cleanExceptionMsg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { StackOrderHelpers } from './../../vpc/vel/velStackOrderHelpers';
-/* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
-/* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
-/* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
@@ -475,21 +473,6 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     /**
-     * paste vel that was copied
-     */
-    pasteVel() {
-        let id = this.vci.getOptionS('copiedVelId');
-        let found = this.vci.getModel().findByIdUntyped(id);
-        if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
-            this.pasteVelImpl(id);
-        } else if (id && id.length) {
-            checkThrowNotifyMsg(false, 'U9|Pasting this type of element is not yet supported.');
-        } else {
-            checkThrowNotifyMsg(false, 'U8|Nothing has been copied.');
-        }
-    }
-
-    /**
      * after the user clicked 'New button' in the ui
      */
     selectANewBtnFld(vel:VpcElBase, setPos:boolean):void {
@@ -509,31 +492,6 @@ export class VpcPresenter extends VpcPresenterInit {
         /* update before tool is set */
         this.lyrPropPanel.updateUI512Els();
         this.setTool(vel.getType() === VpcElType.Btn ? VpcTool.Button : VpcTool.Field);
-    }
-
-    /**
-     * paste implementation
-     */
-    pasteVelImpl(originalid: string) {
-        //~ let orig = this.vci.getModel().findByIdUntyped(originalid);
-        //~ if (orig && (orig.getType() === VpcElType.Btn || orig.getType() === VpcElType.Fld)) {
-            //~ let dupe = this.makeBtnFldWithoutMsg(orig.getType());
-            //~ let dupeSizable = dupe as VpcElSizable;
-            //~ checkThrow(dupeSizable instanceof VpcElSizable, 'Ke|');
-            //~ VpcGettableSerialization.copyPropsOver(orig, dupe);
-
-            //~ /* move it a bit */
-            //~ let amtToMove = Util512Higher.getRandIntInclusiveWeak(10, 50);
-            //~ dupeSizable.setDimensions(
-                //~ Math.min(ScreenConsts.xAreaWidth, dupe.getN('x') + amtToMove),
-                //~ Math.min(ScreenConsts.yAreaHeight, dupe.getN('y') + amtToMove),
-                //~ dupe.getN('w'),
-                //~ dupe.getN('h'),
-                //~ this.vci.getModel()
-            //~ );
-        //~ } else {
-            //~ checkThrowNotifyMsg(false, "U7|Can't paste this.");
-        //~ }
     }
 
     /**
@@ -633,8 +591,6 @@ export class VpcPresenter extends VpcPresenterInit {
         let method = Util512.isMethodOnClass(this.menuActions, 'go' + Util512.capitalizeFirst(s));
         if (method !== undefined) {
             method.apply(this.menuActions, [this.vci]);
-        } else if (s === 'mnuPasteCardOrVel') {
-            this.pasteVel();
         } else {
             this.menuActions.fallbackToSetToolOrSetFont(s)
         }
