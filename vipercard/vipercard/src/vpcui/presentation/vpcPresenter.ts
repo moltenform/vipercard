@@ -103,6 +103,8 @@ export class VpcPresenter extends VpcPresenterInit {
             this.vci.getModel().productOpts.allowSetCurrentCard = false;
 
             if (wasCard !== nextId) {
+                this.vci.setOption('selectedVelId', '');
+                this.vci.setOption('viewingScriptVelId', '');
                 /* remember history, for go back and go forth */
                 let suspended = this.vci.getCodeExec().globals.find('internalvpcmovecardimplsuspendhistory');
                 if (suspended === undefined || suspended.readAsString() !== '1') {

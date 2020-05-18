@@ -138,7 +138,14 @@ export class VpcRewriteForCommands {
         return [this.hBuildNyi('the debug command', line[0])];
     }
     rewriteDelete(line: ChvITk[]): ChvITk[][] {
-        return this.hReturnNyiIfMenuMentionedOutsideParens(line);
+        checkThrow(line.length > 1, "not enough args")
+        if (line[1]?.tokenType === tks.tkChunkGranularity || line[1]?.tokenType === tks.tkOrdinal && line[2]?.tokenType === tks.tkChunkGranularity 
+            || line[1]?.tokenType === tks._the && line[2]?.tokenType === tks.tkOrdinal && line[3]?.tokenType === tks.tkChunkGranularity) {
+                return this.hReturnNyiIfMenuMentionedOutsideParens(line);
+        } else {
+/* rewrite to internalvpcdeletevelhelper */
+return this.rw.gen(`internalvpcdeletevelhelper the short id of %ARG0%`,line[0], [line.slice(1)]  )
+        }
     }
     rewriteDisable(line: ChvITk[]): ChvITk[][] {
         return this.hReturnNyiIfMenuMentionedOutsideParens(line);

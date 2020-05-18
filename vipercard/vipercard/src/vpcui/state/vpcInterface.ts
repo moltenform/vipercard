@@ -81,11 +81,6 @@ export interface VpcStateInterface {
     rawRevive(vel: VpcElBase): void;
 
     /**
-     * create a new vel on its own
-     */
-    rawCreate<T extends VpcElBase>(velId: string, parentId: string, ctr: { new (...args: any[]): T }): T;
-
-    /**
      * create a new vel and add it to the model
      */
     createVel(parentId: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase;

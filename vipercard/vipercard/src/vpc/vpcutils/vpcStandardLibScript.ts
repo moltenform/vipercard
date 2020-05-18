@@ -1,6 +1,10 @@
 
+/* auto */ import { OrdinalOrPosition, checkThrow } from './vpcEnums';
+
 /* (c) 2019 moltenform(Ben Fisher) */
-/* Released under the MIT license */
+/* Released under the GPLv3 license */
+
+
 
 /**
  * some of ViperCard is implemented in ViperCard!
@@ -118,6 +122,32 @@ on internalvpcmovecardhelper nextId, shouldSuspendHistory
     end if
 end internalvpcmovecardhelper
 
+on internalvpcdeletevelhelper velId
+    if objectById(nextId) == "" then
+        errorDialog "delete failed, object not found"
+    end if
+    put word 1 of objectById(nextId) into objType
+    if word 2 of objectById(nextId) is "button" then
+    else if word 2 of objectById(nextId) is "field" then
+    else if objType == "card" then
+        //~ /* either go forwards or backwards, as long as we're somewhere else */
+        //~ let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
+        //~ let wasCurrentCard = this.vci.getModel().getCardById(wasCurrentCardId);
+        //~ let otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Previous);
+        //~ if (otherCardId === wasCurrentCardId) {
+        //~ otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Next);
+        //~ }
+
+        //~ /* RemoveCard itself will do further checks, like preventing deleting the only card */
+        //~ this.vci.setCurCardNoOpenCardEvt(otherCardId);
+        //~ this.vci.getOutside().RemoveCard(wasCurrentCard);
+        //~ checkThrow(false, 'nyi');
+    else if objType == "bkgnd" then
+    else
+        errorDialog "Cannot delete this type of object"
+    end if
+end internalvpcdeletevelhelper
+
 function goCardDestinationFromObjectId nextId
     if objectById(nextId) == "" then
         -- returns "" if the object does not exist
@@ -143,30 +173,31 @@ function goCardDestinationFromObjectId nextId
     end if
 end goCardDestinationFromObjectId
 
---on internalvpcdeletebghelper bgId
---    if the short id of (the owner of this cd) is bgId then
---        -- try to find the first card that's not not in the bg and go there
---        put "" into found
---        repeat with x = 1 to the number of cards
---            if the short id of (the owner of cd x) is not bgId then
---                put the short id of cd x into found
---                exit repeat
---            end if
---        end repeat
---        if not found then
---            answer "Could not delete background. Exiting script."
---            exit to vipercard
---        end if
---        go to card id found
---    end if
---    put "" into toDelete
---    repeat with x = 1 to the number of cards in bg id bgId
---        put the short id of cd x of bg id bgId into line x of toDelete
---    end repeat
---    repeat with x = 1 to the number of lines in toDelete
---        doMenu "deletecard", line x of toDelete
---    end repeat
---end internalvpcdeletebghelper
+
+
+on internalvpcdeletebghelper bgId
+    if the short id of (the owner of this cd) is bgId then
+        -- try to find the first card that's not not in the bg and go there
+        put "" into found
+        repeat with x = 1 to the number of cards
+            if the short id of (the owner of cd x) is not bgId then
+                put the short id of cd x into found
+                exit repeat
+            end if
+        end repeat
+        if length(found) <= 0 then
+             errorDialog "Cannot delete this background, is it the only background?"
+        end if
+        go to card id found
+    end if
+    put "" into toDelete
+    repeat with x = 1 to the number of cards in bg id bgId
+        put the short id of cd x of bg id bgId into line x of toDelete
+    end repeat
+    repeat with x = 1 to the number of lines in toDelete
+        internalvpcdeletevelhelper line x of toDelete
+    end repeat
+end internalvpcdeletebghelper
 
 
 --on internalvpcnewbghelper

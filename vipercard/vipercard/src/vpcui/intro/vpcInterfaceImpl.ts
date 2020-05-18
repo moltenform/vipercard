@@ -136,18 +136,6 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     }
 
     /**
-     * create a new vel on its own
-     */
-    rawCreate<T extends VpcElBase>(velId: string, parentId: string, ctr: { new (...args: any[]): T }): T {
-        this.causeFullRedraw();
-        let vel = new ctr(velId, parentId);
-        checkThrow(vel instanceof VpcElBase, `8*|must be a VpcElBase`);
-        vel.observer = this.vcstate.runtime.useThisObserverForVpcEls;
-        this.vcstate.model.addIdToMapOfElements(vel);
-        return vel;
-    }
-
-    /**
      * create a new vel and add it to the model
      */
     createVel(parentId: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase {

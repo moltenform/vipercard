@@ -2,6 +2,7 @@
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { ChvITk, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
+/* auto */ import { VpcExecInternalDirectiveAbstract } from './vpcScriptExecInternalDirective';
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
@@ -27,11 +28,12 @@
 export class ExecuteStatement {
     cbAskMsg: O<FnAskMsgCallback>;
     cbAnswerMsg: O<FnAnswerMsgCallback>;
+    cbStopCodeRunning: O<VoidFn>;
 
     outside: OutsideWorldReadWrite;
-    cbStopCodeRunning: O<VoidFn>;
     pendingOps: VpcPendingAsyncOps;
     h = new VpcScriptExecuteStatementHelpers();
+    directiveImpl: VpcExecInternalDirectiveAbstract
 
     /**
      * execute a single line of code

@@ -209,10 +209,10 @@ export class VpcIntroProvider {
     /**
      * construct the presenter object
      */
-    protected async initPrUI(pr: VpcPresenter, serializedSavedData: string, fullVci: VpcStateInterfaceImpl, vpcState: VpcState) {
+    protected async initPrUI(pr: VpcPresenter, serializedSavedData: string, fullVci: VpcStateInterfaceImpl, vcstate: VpcState) {
         /* load saved data */
         if (serializedSavedData.length) {
-            UndoableActionCreateOrDelVel.ensureModelNotEmpty(fullVci, false);
+            UndoableActionCreateOrDelVel.ensureModelNotEmpty(fullVci, false, vcstate.runtime.useThisObserverForVpcEls);
             await this.yieldTime();
             let serVel = JSON.parse(serializedSavedData);
             await this.yieldTime();
@@ -223,21 +223,21 @@ export class VpcIntroProvider {
             await this.yieldTime();
         } else {
             /* only call this *after* the presenter has set up useThisObserverForVpcEls */
-            vpcState.model.uuid = Util512Higher.weakUuid();
+            vcstate.model.uuid = Util512Higher.weakUuid();
             await this.yieldTime();
-            UndoableActionCreateOrDelVel.ensureModelNotEmpty(fullVci, true);
+            UndoableActionCreateOrDelVel.ensureModelNotEmpty(fullVci, true, vcstate.runtime.useThisObserverForVpcEls);
             await this.yieldTime();
         }
 
         await this.yieldTime();
         pr.initUI();
         await this.yieldTime();
-        vpcState.runtime.outside.vci = pr.vci;
+        vcstate.runtime.outside.vci = pr.vci;
         await this.yieldTime();
 
         /* go to the first card (but don't send opencard yet) */
         fullVci.doWithoutAbilityToUndo(() => {
-            let card = vpcState.model.stack.bgs[0].cards[0].idInternal;
+            let card = vcstate.model.stack.bgs[0].cards[0].idInternal;
             pr.setCurCardNoOpenCardEvt(card);
         });
     }

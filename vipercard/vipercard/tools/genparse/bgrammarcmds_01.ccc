@@ -45,7 +45,8 @@ BuiltinCmdClick:=... tkIdentifier <HBuiltinCmdDrag_1> [ tkSyntaxMark tkIdentifie
 // create.  show NYI in rewrite. say domenu "new button" to create a button etc.
 // debug. show NYI in rewrite
 // delete. in rewrite error on mention of "menu"
-BuiltinCmdDelete:=... { <HChunk> <HSimpleContainer> | <Object> }                                   
+// delete object is done in software, see internalvpcdeletevelhelper
+BuiltinCmdDelete:=... <HChunk> <HSimpleContainer>
 // plays a phone dial number
 BuiltinCmdDial:=... <Expr>                                                                           
 // disable a button. in rewrite error on mention of "menu"

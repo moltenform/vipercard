@@ -6,7 +6,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
-/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
 /* auto */ import { VelRenderId } from './../../vpc/vel/velRenderName';
@@ -290,25 +290,6 @@ export class VpcMenuActions {
      */
     goMnuDelCard() {
         this.runMenuActionCode('doMenu "Delete Card"')
-
-        //~ if (this.vci.getTool() === VpcTool.Browse) {
-        //~ /* previously, called a handler in productopts that
-        //~ would move to a different card and delete the current card, but this is simpler */
-        //~ this.vci.setTool(VpcTool.Button);
-        //~ }
-
-        //~ /* either go forwards or backwards, as long as we're somewhere else */
-        //~ let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        //~ let wasCurrentCard = this.vci.getModel().getCardById(wasCurrentCardId);
-        //~ let otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Previous);
-        //~ if (otherCardId === wasCurrentCardId) {
-        //~ otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Next);
-        //~ }
-
-        //~ /* RemoveCard itself will do further checks, like preventing deleting the only card */
-        //~ this.vci.setCurCardNoOpenCardEvt(otherCardId);
-        //~ this.vci.getOutside().RemoveCard(wasCurrentCard);
-        //~ checkThrow(false, 'nyi');
     }
 
     /**

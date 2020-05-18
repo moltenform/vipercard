@@ -11,6 +11,7 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertWarnEq } from './../../ui512/utils/util512';
+/* auto */ import { ElementObserver } from './../../ui512/elements/ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -63,6 +64,23 @@ export abstract class UndoableActionCreateOrDelVel {
     }
 
     /**
+     * create a new vel on its own
+     */
+    protected static rawMakeVelAndAddToModel<T extends VpcElBase>(vci: VpcStateInterface, velId: string, parentId: string, ctr: { new (...args: any[]): T }, ob?:ElementObserver): T {
+        vci.causeFullRedraw();
+        let vel = new ctr(velId, parentId);
+        checkThrow(vel instanceof VpcElBase, `8*|must be a VpcElBase`);
+        if (ob) {
+            vel.observer = ob
+        } else {
+            vel.observer =vci.getModel().stack.observer
+        }
+        
+        vci.getModel().addIdToMapOfElements(vel);
+        return vel;
+    }
+
+    /**
      * find index in array
      */
     protected determineIndexInAr(vel: VpcElBase, vci: VpcStateInterface) {
@@ -77,11 +95,24 @@ export abstract class UndoableActionCreateOrDelVel {
     }
 
     /**
-     * create a vel
+     * create a vel, supports creating a bg vel
      */
     protected create(vci: VpcStateInterface) {
+        if (this.isBg && (this.type === VpcElType.Btn||this.type === VpcElType.Fld)) {
+            let userFacingId = vci.getModel().stack.getNextId(vci.getModel())
+            checkThrow(false, "not yet implemented")
+        } else {
+            return this.createImpl(vci)
+        }
+    }
+
+    /**
+     * create a vel
+     */
+    protected createImpl(vci: VpcStateInterface) {
+        vci.causeFullRedraw();
         let ctr = UndoableActionCreateOrDelVel.getConstructor(this.type);
-        let vel = vci.rawCreate(this.velId, this.parentId, ctr);
+        let vel = UndoableActionCreateOrDelVel.rawMakeVelAndAddToModel(vci, this.velId, this.parentId, ctr);
         let ar = UndoableActionCreateOrDelVel.getChildVelsArray(this.parentId, vci, vel.getType());
         if (this.insertIndex === -1) {
             /* note, save this for undo posterity */
@@ -96,10 +127,6 @@ export abstract class UndoableActionCreateOrDelVel {
         );
 
         ar.splice(this.insertIndex, 0, vel);
-        //~ if (isBg) {
-        //~ /* create the linked ones */
-        //~ let userFacingId = this.vcstate.model.stack.getNextId(this.vcstate.model)
-        //~ }
 
         if (vel.getType() === VpcElType.Card) {
             vci.getModel().copyBgVelsOnNewCard(vel);
@@ -108,7 +135,7 @@ export abstract class UndoableActionCreateOrDelVel {
             let found = order.findIndex(s => s === vci.getCurrentCardId());
             found = found === -1 ? order.length - 1 : found;
             order.splice(found + 1, 0, vel.idInternal);
-            vci.getModel().stack.alterCardOrder(currentOrder => order, vci.getModel());
+            vci.getModel().stack.alterCardOrder(oldOrder => order, vci.getModel());
         }
     }
 
@@ -121,24 +148,30 @@ export abstract class UndoableActionCreateOrDelVel {
         let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentIdInternal, vci, vel.getType());
         assertWarnEq(vel.idInternal, ar[this.insertIndex].idInternal, '6b|');
         assertWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
-        ar.splice(this.insertIndex, 1);
-        vci.getModel().removeIdFromMapOfElements(vel.idInternal);
-        if (vel.getType() === VpcElType.Card) {
-            vci.getModel().stack.alterCardOrder(list => list.filter(s => s !== vel.idInternal), vci.getModel());
+        /* for safety, delete by id */
+        let index = ar.findIndex(v=>v.idInternal === this.velId)
+        if (index !== -1) {
+            ar.splice(index, 1);
+            vci.getModel().removeIdFromMapOfElements(vel.idInternal);
+            if (vel.getType() === VpcElType.Card) {
+                vci.getModel().stack.alterCardOrder(list => list.filter(s => s !== vel.idInternal), vci.getModel());
+            }
         }
     }
 
     /**
      * ensure model is not empty, create a productOpts and stack object if either is missing.
      */
-    static ensureModelNotEmpty(vci: VpcStateInterface, createFirstCard: boolean) {
+    static ensureModelNotEmpty(vci: VpcStateInterface, createFirstCard: boolean, ob:ElementObserver) {
+        vci.causeFullRedraw();
         let model = vci.getModel();
         if (!model.productOpts) {
             vci.doWithoutAbilityToUndo(() => {
-                model.productOpts = vci.rawCreate(
+                model.productOpts = UndoableActionCreateOrDelVel.rawMakeVelAndAddToModel(vci,
                     VpcElStack.initProductOptsId,
                     '(VpcElProductOpts has no parent)',
-                    VpcElProductOpts
+                    VpcElProductOpts,
+                    ob
                 );
             });
         }
@@ -146,7 +179,7 @@ export abstract class UndoableActionCreateOrDelVel {
         if (!model.stack) {
             vci.doWithoutAbilityToUndo(() => {
                 /* create a new stack */
-                model.stack = vci.rawCreate(VpcElStack.initStackId, model.productOpts.idInternal, VpcElStack);
+                model.stack = UndoableActionCreateOrDelVel.rawMakeVelAndAddToModel(vci, VpcElStack.initStackId, model.productOpts.idInternal, VpcElStack, ob);
                 model.stack.setOnVel('name', 'my stack', model);
                 if (createFirstCard) {
                     let firstBg = vci.createVel(model.stack.idInternal, VpcElType.Bg, -1);
@@ -154,5 +187,7 @@ export abstract class UndoableActionCreateOrDelVel {
                 }
             });
         }
+
+        model.stack.observer = ob
     }
 }
