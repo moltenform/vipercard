@@ -104,6 +104,11 @@ export interface OutsideWorldRead {
      * get the current card
      */
     GetCurrentCardId(): string;
+    
+    /**
+     * a userfacingid !== internalid for background objects
+     */
+    UserFacingIdToVel(userfacingId:string):O<VpcElBase>
 }
 
 /**
@@ -113,26 +118,6 @@ export interface OutsideWorldRead {
  * this interface helps with layering.
  */
 export interface OutsideWorldReadWrite extends OutsideWorldRead {
-    /**
-     * create a vel and add it to the model
-     */
-    CreatePart(type: VpcElType, x: number, y: number, w: number, h: number): VpcElBase;
-
-    /**
-     * create a card and add it to the model
-     */
-    CreateCard(indexRelativeToBg: number): VpcElBase;
-
-    /**
-     * remove a vel from the model
-     */
-    RemovePart(vel: VpcElBase): void;
-
-    /**
-     * remove a card
-     */
-    RemoveCard(vel: VpcElBase): void;
-
     /**
      * resolve reference to a vel
      */

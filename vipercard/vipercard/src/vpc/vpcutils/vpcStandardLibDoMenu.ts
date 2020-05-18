@@ -48,12 +48,12 @@ on domenu_edit key, pl, pb
         end if
     else if pl == "new card" then
         put "card" into sendParam
-        internalvpcmessagesdirective "makepart" sendParam
+        internalvpcmessagesdirective "makevelwithoutmsg" sendParam
         put sendParam into doMenuResult
         go cd id doMenuResult
-    else if pl == "duplicate card" then
-        put "dupecard" into sendParam
-        internalvpcmessagesdirective "makepart" sendParam
+    else if pl == "duplicate card paint" then
+        put "dupecardpaint" into sendParam
+        internalvpcmessagesdirective "makevelwithoutmsg" sendParam
         put sendParam into doMenuResult
         go cd id doMenuResult
     else if pl == "delete card" then
@@ -64,6 +64,22 @@ on domenu_edit key, pl, pb
     return ret
 end domenu_edit
 
+on domenu_object key, pl, pb
+    global doMenuResult
+    put true into ret
+    if pl == "new button" then
+        put "btn" into sendParam
+        internalvpcmessagesdirective "makevelwithoutmsg" sendParam
+        put sendParam into doMenuResult
+    else if pl == "new field" then
+        put "fld" into sendParam
+        internalvpcmessagesdirective "makevelwithoutmsg" sendParam
+        put sendParam into doMenuResult
+    else
+        put false into ret
+    end if
+    return ret
+end domenu_object
 
 on domenu_movecard key, pl, pb
     put true into ret
@@ -96,23 +112,6 @@ on domenu_movecard key, pl, pb
     end if
     return ret
 end domenu_movecard
-
-on domenu_object key, pl, pb
-    global doMenuResult
-    put true into ret
-    if pl == "new button" then
-        put "btn" into sendParam
-        internalvpcmessagesdirective "makepart" sendParam
-        put sendParam into doMenuResult
-    else if pl == "new field" then
-        put "fld" into sendParam
-        internalvpcmessagesdirective "makepart" sendParam
-        put sendParam into doMenuResult
-    else
-        put false into ret
-    end if
-    return ret
-end domenu_object
 
 on domenu_paintsetting key, pl, pb
     global doMenuResult

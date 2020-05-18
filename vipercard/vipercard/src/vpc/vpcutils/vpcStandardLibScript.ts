@@ -17,20 +17,16 @@ export const VpcStandardLibScript = /* static class */ {
     handlersImplementedInSoftware: {
         push: true,
         pop: true,
-        internalvpcdeletebghelper: true,
         choose: true,
         domenu: true,
         help: true
     },
 
     script: `
--- we don't need default handlers for "on mousedown" etc...
--- we have a list of handlers where it's always ok if they are missing (equivalent).
--- perhaps a slight benefit, because events like "idle" won't create a stack frame
+-- we could put a default "on mousedown" here, but instead we designate
+-- messages like mousedown to become a no-op if they are missing, for perf.
 
-
--- "trappable" messages can go here.
--- note that they won't be trapped unless the current tool is the browse tool
+-- MESSAGES THAT THE USER CAN OVERRIDE ---------------------
 on choose whichTool
     vpccalluntrappablechoose whichTool
 end choose
@@ -51,7 +47,6 @@ on arrowkey direction
     end if
 end arrowkey
 
--- implementation of push and pop
 on push
     global internalvpcpushimpl
     put return & the short id of this cd after internalvpcpushimpl
@@ -81,8 +76,10 @@ function internalvpcpushimplgetlastonstack
     return the short id of cd 1
 end internalvpcpushimplgetlastonstack
 
--- it's simpler to send these messages in code
+-- HELPERS FOR MOVING, CREATING, DELETING OBJECTS
+-- it's much simpler to send messages in code
 
+-- 'go cd 1' becomes this:
 on internalvpcmovecardhelper nextId, shouldSuspendHistory
     -- cache card id in case another gotocard happens
     -- order confirmed for all of these, in the product
@@ -122,32 +119,6 @@ on internalvpcmovecardhelper nextId, shouldSuspendHistory
     end if
 end internalvpcmovecardhelper
 
-on internalvpcdeletevelhelper velId
-    if objectById(nextId) == "" then
-        errorDialog "delete failed, object not found"
-    end if
-    put word 1 of objectById(nextId) into objType
-    if word 2 of objectById(nextId) is "button" then
-    else if word 2 of objectById(nextId) is "field" then
-    else if objType == "card" then
-        //~ /* either go forwards or backwards, as long as we're somewhere else */
-        //~ let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        //~ let wasCurrentCard = this.vci.getModel().getCardById(wasCurrentCardId);
-        //~ let otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Previous);
-        //~ if (otherCardId === wasCurrentCardId) {
-        //~ otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Next);
-        //~ }
-
-        //~ /* RemoveCard itself will do further checks, like preventing deleting the only card */
-        //~ this.vci.setCurCardNoOpenCardEvt(otherCardId);
-        //~ this.vci.getOutside().RemoveCard(wasCurrentCard);
-        //~ checkThrow(false, 'nyi');
-    else if objType == "bkgnd" then
-    else
-        errorDialog "Cannot delete this type of object"
-    end if
-end internalvpcdeletevelhelper
-
 function goCardDestinationFromObjectId nextId
     if objectById(nextId) == "" then
         -- returns "" if the object does not exist
@@ -173,9 +144,51 @@ function goCardDestinationFromObjectId nextId
     end if
 end goCardDestinationFromObjectId
 
+-- 'delete cd btn 1' becomes this:
+on internalvpcdeletevelhelper userFacingId
+    if objectById(userFacingId) == "" then
+        errorDialog "delete failed, object not found"
+    end if
+    -- 1) send messages
+    put word 1 of objectById(userFacingId) into objType
+    if word 2 of objectById(userFacingId) is "button" then
+        if objType is "bkgnd" then errorDialog "not yet supported"
+        send "deleteButton" to (the owner of cd btn id userFacingId)
+    else if word 2 of objectById(userFacingId) is "field" then
+        if objType is "bkgnd" then errorDialog "not yet supported"
+        send "deleteField" to (the owner of cd fld id userFacingId)
+    else if objType == "card" then
+        if userFacingId == the short id of this cd then
+            put the short id of this cd into prevCd
+            go next
+            if the short id of this cd is prevCd then
+                errorDialog "delete failed, cannot delete this card (only card in stack?)"
+            end if
+        end if
+
+        send "deleteCard" to this cd
+        if the number of cds in (the owner of cd id userFacingId) is 1 then
+            send "deleteBackground" to this cd
+        end if
+    else if objType != "bkgnd" then
+        errorDialog "Cannot delete this type of object"
+    end if
+
+    -- 2) remove it
+    if objType == "bkgnd" then
+        internalvpcdeletevelhelper_bg userFacingId
+    else
+        put userFacingId into sendParam
+        internalvpcmessagesdirective "removevelwithoutmsg" sendParam
+        return sendParam
+    end if
+end internalvpcdeletevelhelper
 
 
-on internalvpcdeletebghelper bgId
+
+
+
+on internalvpcdeletevelhelper_bg bgId
     if the short id of (the owner of this cd) is bgId then
         -- try to find the first card that's not not in the bg and go there
         put "" into found
@@ -195,9 +208,9 @@ on internalvpcdeletebghelper bgId
         put the short id of cd x of bg id bgId into line x of toDelete
     end repeat
     repeat with x = 1 to the number of lines in toDelete
-        internalvpcdeletevelhelper line x of toDelete
+        delete cd id (line x of toDelete)
     end repeat
-end internalvpcdeletebghelper
+end internalvpcdeletevelhelper_bg
 
 
 --on internalvpcnewbghelper

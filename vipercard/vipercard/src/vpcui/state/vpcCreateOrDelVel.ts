@@ -66,7 +66,7 @@ export abstract class UndoableActionCreateOrDelVel {
     /**
      * create a new vel on its own
      */
-    protected static rawMakeVelAndAddToModel<T extends VpcElBase>(vci: VpcStateInterface, velId: string, parentId: string, ctr: { new (...args: any[]): T }, ob?:ElementObserver): T {
+    protected static rawMakeVelInstanceAndAddToModelMap<T extends VpcElBase>(vci: VpcStateInterface, velId: string, parentId: string, ctr: { new (...args: any[]): T }, ob?:ElementObserver): T {
         vci.causeFullRedraw();
         let vel = new ctr(velId, parentId);
         checkThrow(vel instanceof VpcElBase, `8*|must be a VpcElBase`);
@@ -75,7 +75,7 @@ export abstract class UndoableActionCreateOrDelVel {
         } else {
             vel.observer =vci.getModel().stack.observer
         }
-        
+
         vci.getModel().addIdToMapOfElements(vel);
         return vel;
     }
@@ -112,7 +112,7 @@ export abstract class UndoableActionCreateOrDelVel {
     protected createImpl(vci: VpcStateInterface) {
         vci.causeFullRedraw();
         let ctr = UndoableActionCreateOrDelVel.getConstructor(this.type);
-        let vel = UndoableActionCreateOrDelVel.rawMakeVelAndAddToModel(vci, this.velId, this.parentId, ctr);
+        let vel = UndoableActionCreateOrDelVel.rawMakeVelInstanceAndAddToModelMap(vci, this.velId, this.parentId, ctr);
         let ar = UndoableActionCreateOrDelVel.getChildVelsArray(this.parentId, vci, vel.getType());
         if (this.insertIndex === -1) {
             /* note, save this for undo posterity */
@@ -167,7 +167,7 @@ export abstract class UndoableActionCreateOrDelVel {
         let model = vci.getModel();
         if (!model.productOpts) {
             vci.doWithoutAbilityToUndo(() => {
-                model.productOpts = UndoableActionCreateOrDelVel.rawMakeVelAndAddToModel(vci,
+                model.productOpts = UndoableActionCreateOrDelVel.rawMakeVelInstanceAndAddToModelMap(vci,
                     VpcElStack.initProductOptsId,
                     '(VpcElProductOpts has no parent)',
                     VpcElProductOpts,
@@ -179,7 +179,7 @@ export abstract class UndoableActionCreateOrDelVel {
         if (!model.stack) {
             vci.doWithoutAbilityToUndo(() => {
                 /* create a new stack */
-                model.stack = UndoableActionCreateOrDelVel.rawMakeVelAndAddToModel(vci, VpcElStack.initStackId, model.productOpts.idInternal, VpcElStack, ob);
+                model.stack = UndoableActionCreateOrDelVel.rawMakeVelInstanceAndAddToModelMap(vci, VpcElStack.initStackId, model.productOpts.idInternal, VpcElStack, ob);
                 model.stack.setOnVel('name', 'my stack', model);
                 if (createFirstCard) {
                     let firstBg = vci.createVel(model.stack.idInternal, VpcElType.Bg, -1);
@@ -188,6 +188,7 @@ export abstract class UndoableActionCreateOrDelVel {
             });
         }
 
+        model.productOpts.observer = ob
         model.stack.observer = ob
     }
 }

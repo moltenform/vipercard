@@ -42,6 +42,14 @@ export class VelResolveReference {
             return target;
         } else if (ref.cardIsRecentHistory) {
             return this.getFromCardRecentHistory(ref, cardHistory);
+        } else if (ref.partIsCdOrBg) {
+            let tryIt = () => { try {
+                return this.go(ref, me, target, cardHistory)
+                } catch (e) {
+                }
+                return undefined
+            }
+            
         }
 
         /* combine parents into one chain */

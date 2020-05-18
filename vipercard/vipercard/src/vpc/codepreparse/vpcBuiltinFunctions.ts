@@ -657,10 +657,9 @@ export class VpcBuiltinFunctions {
      * what is the long id of this object, by id? return empty if object not found
      */
     callObjectbyid(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let id = args[0].readAsStrictNumeric();
-        let request = new RequestedVelRef(VpcElType.Unknown);
-        request.lookById = id;
-        let s = this.readoutside.ElementExists(request);
+        let id = args[0].readAsStrictInteger()
+        let vel = this.readoutside.UserFacingIdToVel(id.toString())
+        RequestedVelRef
         return VpcValS(s ?? '');
     }
 

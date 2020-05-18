@@ -224,8 +224,8 @@ export class VpcMenuActions {
     /**
      * duplicate current card
      */
-    goMnuDupeCard() {
-        this.runMenuActionCode('doMenu "Duplicate Card"')
+    goMnuDupeCardPaint() {
+        this.runMenuActionCode('doMenu "Duplicate Card Paint"')
     }
 
     /**

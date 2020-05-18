@@ -116,20 +116,13 @@ export class VpcAppLyrToolbox extends VpcUILayer {
             this.vci.performMenuAction('mnuGoCardNext');
         } else if (id === 'dupeCardOrStatus') {
             if (!this.vci.isCodeRunning()) {
-                this.dupeCard();
+                this.vci.performMenuAction('mnuDupeCard');
             }
         } else if (id === 'makeAnimOrStatus') {
             if (!this.vci.isCodeRunning()) {
                 this.vci.performMenuAction('mnuExportGif');
             }
         }
-    }
-
-    /**
-     * duplicate card
-     */
-    protected dupeCard() {
-        this.vci.performMenuAction('mnuDupeCard');
     }
 
     /**

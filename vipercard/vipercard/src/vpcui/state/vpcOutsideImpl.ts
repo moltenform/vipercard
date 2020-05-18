@@ -20,7 +20,7 @@
 /* auto */ import { VpcFontSpecialChunk } from './../../vpc/vel/velFieldChangeFont';
 /* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
-/* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
@@ -43,40 +43,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     vci: VpcStateInterface;
     constructor() {
         this.builtinFns = new VpcBuiltinFunctions(this as OutsideWorldRead);
-    }
-
-    /**
-     * create a vel and add it to the model
-     */
-    CreatePart(type: VpcElType, x: number, y: number, w: number, h: number) {
-        let currentCardId = this.GetOptionS('currentCardId');
-        let el = this.vci.createVel(currentCardId, type, -1) as VpcElSizable;
-        assertTrue(el instanceof VpcElSizable, '6u|not VpcElSizable');
-        el.setDimensions(x, y, w, h, this.Model());
-        return el;
-    }
-
-    /**
-     * create a card and add it to the model
-     */
-    CreateCard(indexRelativeToBg: number) {
-        let currentCardId = this.GetOptionS('currentCardId');
-        let currentCard = this.vci.getModel().getCardById(currentCardId);
-        return this.vci.createVel(currentCard.parentIdInternal, VpcElType.Card, indexRelativeToBg);
-    }
-
-    /**
-     * remove a vel from the model
-     */
-    RemovePart(vel: VpcElBase) {
-        this.vci.removeVel(vel);
-    }
-
-    /**
-     * remove a card
-     */
-    RemoveCard(vel: VpcElBase) {
-        this.vci.removeVel(vel);
     }
 
     /**
@@ -550,6 +516,23 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     GetFieldsRecentlyEdited() {
         return this.vci.getCodeExec().fieldsRecentlyEdited;
+    }
+
+    /**
+     * a userfacingid !== internalid for background objects
+     */
+    UserFacingIdToVel(userfacingId:string):O<VpcElBase> {
+        let id = args[0].readAsStrictNumeric();
+        let request = new RequestedVelRef(VpcElType.Unknown);
+        request.lookById = id;
+        let s = this.readoutside.ElementExists(request);
+        if (!s) {
+            /* try interpreting it as a bg element */
+            let request = new RequestedVelRef(VpcElType.Unknown);
+            request.lookById = id;
+            request.partIsBg = true
+            s = this.readoutside.ElementExists(request);
+        }
     }
 
     /**

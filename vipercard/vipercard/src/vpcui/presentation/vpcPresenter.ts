@@ -1,15 +1,14 @@
 
-/* auto */ import { VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { VpcValN } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { GuessStackTrace } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
-/* auto */ import { VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, checkThrowNotifyMsg, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowNotifyMsg, cleanExceptionMsg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { StackOrderHelpers } from './../../vpc/vel/velStackOrderHelpers';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
-/* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
@@ -19,13 +18,11 @@
 /* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, callDebuggerIfNotInProduction, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
-/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
-/* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -493,54 +490,16 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     /**
-     * user clicked 'New button' in the ui
+     * after the user clicked 'New button' in the ui
      */
-    makePart(type: VpcElType):VpcElBase {
-        /* make a button that is tall enough to show an icon */
-        const defaultBtnW = 100;
-        const defaultBtnH = 58;
-        const defaultFldW = 100;
-        const defaultFldH = 100;
-        let w = 0;
-        let h = 0;
-        if (type === VpcElType.Btn) {
-            w = defaultBtnW;
-            h = defaultBtnH;
-        } else if (type === VpcElType.Fld) {
-            w = defaultFldW;
-            h = defaultFldH;
-        } else {
-            checkThrowInternal(false, '6E|wrong type ' + type);
+    selectANewBtnFld(vel:VpcElBase, setPos:boolean):void {
+        if (setPos) {
+            let newX = this.userBounds[0] + Util512Higher.getRandIntInclusiveWeak(20, 200);
+            let newY = this.userBounds[1] + Util512Higher.getRandIntInclusiveWeak(20, 200);
+            vel.setOnVel('x', newX, this.vci.getModel())
+            vel.setOnVel('y', newY, this.vci.getModel())
         }
-
-        let newX = this.userBounds[0] + Util512Higher.getRandIntInclusiveWeak(20, 200);
-        let newY = this.userBounds[1] + Util512Higher.getRandIntInclusiveWeak(20, 200);
-        let vel = this.vci.getOutside().CreatePart(type, newX, newY, w, h);
-        vel.setOnVel(
-            'name',
-            longstr(`my ${vpcElTypeShowInUI(vel.getType())}
-             ${this.vci.getModel().stack.getNextNumberForElemName(this.vci.getModel())}`),
-            this.vci.getModel()
-        );
-
-        if (type === VpcElType.Btn) {
-            /* give it a style and initial script */
-            vel.setProp('style', VpcValS('roundrect'), this.vci.getModel());
-            vel.setOnVel('label', lng('lngNew Button'), this.vci.getModel());
-            vel.setOnVel('showlabel', true, this.vci.getModel());
-            vel.setOnVel('script', 'on mouseUp\n\tanswer "the button was clicked."\nend mouseUp', this.vci.getModel());
-        } else {
-            /* need to give it content, since we don't currently
-            draw the lines, otherwise you'd see nothing there */
-            let velFld = vel as VpcElField;
-            let newTxt = FormattedText.newFromSerialized(
-                UI512DrawText.setFont('abcde\nabcde\nabcde', velFld.getDefaultFontAsUi512())
-            );
-
-            velFld.setCardFmTxt(newTxt, this.vci.getModel());
-            velFld.setProp('style', VpcValS('scrolling'), this.vci.getModel());
-        }
-
+        
         /* save *before* setting selectedVelId */
         this.lyrPropPanel.saveChangesToModel(false);
         this.lyrPropPanel.updateUI512Els();
@@ -549,33 +508,32 @@ export class VpcPresenter extends VpcPresenterInit {
 
         /* update before tool is set */
         this.lyrPropPanel.updateUI512Els();
-        this.setTool(type === VpcElType.Btn ? VpcTool.Button : VpcTool.Field);
-        return vel;
+        this.setTool(vel.getType() === VpcElType.Btn ? VpcTool.Button : VpcTool.Field);
     }
 
     /**
      * paste implementation
      */
     pasteVelImpl(originalid: string) {
-        let orig = this.vci.getModel().findByIdUntyped(originalid);
-        if (orig && (orig.getType() === VpcElType.Btn || orig.getType() === VpcElType.Fld)) {
-            let dupe = this.makePart(orig.getType());
-            let dupeSizable = dupe as VpcElSizable;
-            checkThrow(dupeSizable instanceof VpcElSizable, 'Ke|');
-            VpcGettableSerialization.copyPropsOver(orig, dupe);
+        //~ let orig = this.vci.getModel().findByIdUntyped(originalid);
+        //~ if (orig && (orig.getType() === VpcElType.Btn || orig.getType() === VpcElType.Fld)) {
+            //~ let dupe = this.makeBtnFldWithoutMsg(orig.getType());
+            //~ let dupeSizable = dupe as VpcElSizable;
+            //~ checkThrow(dupeSizable instanceof VpcElSizable, 'Ke|');
+            //~ VpcGettableSerialization.copyPropsOver(orig, dupe);
 
-            /* move it a bit */
-            let amtToMove = Util512Higher.getRandIntInclusiveWeak(10, 50);
-            dupeSizable.setDimensions(
-                Math.min(ScreenConsts.xAreaWidth, dupe.getN('x') + amtToMove),
-                Math.min(ScreenConsts.yAreaHeight, dupe.getN('y') + amtToMove),
-                dupe.getN('w'),
-                dupe.getN('h'),
-                this.vci.getModel()
-            );
-        } else {
-            checkThrowNotifyMsg(false, "U7|Can't paste this.");
-        }
+            //~ /* move it a bit */
+            //~ let amtToMove = Util512Higher.getRandIntInclusiveWeak(10, 50);
+            //~ dupeSizable.setDimensions(
+                //~ Math.min(ScreenConsts.xAreaWidth, dupe.getN('x') + amtToMove),
+                //~ Math.min(ScreenConsts.yAreaHeight, dupe.getN('y') + amtToMove),
+                //~ dupe.getN('w'),
+                //~ dupe.getN('h'),
+                //~ this.vci.getModel()
+            //~ );
+        //~ } else {
+            //~ checkThrowNotifyMsg(false, "U7|Can't paste this.");
+        //~ }
     }
 
     /**

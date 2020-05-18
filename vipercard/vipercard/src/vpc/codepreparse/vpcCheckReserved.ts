@@ -26,7 +26,8 @@ export class CheckReservedWords {
         return (
             bool(findStrToEnum(VpcBuiltinMsg, s)) ||
             listOfAllBuiltinEventsInOriginalProduct[s] ||
-            VpcStandardLibScript.handlersImplementedInSoftware[s]
+            VpcStandardLibScript.handlersImplementedInSoftware[s] ||
+            s.includes('vpcinternal')
         );
     }
 
