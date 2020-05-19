@@ -18,7 +18,7 @@ on domenu itemName, pb
     global doMenuResult
     put "" into doMenuResult
     put tolowercase(itemName) into pl
-    if "|" in pl then
+    if "|" is in pl then
         errordialog ("not a valid domenu" && pl)
     end if
     put false into handled
@@ -130,25 +130,25 @@ end domenu_movecard
 on domenu_paintsetting key, pl, pb
     global doMenuResult
     put true into ret
-    if pl == "wide lines"
+    if pl == "wide lines" then
         if the linesize is 1 then
             set the linesize to 2
         else
             set the linesize to 1
         end if
-    else if pl == "black lines"
+    else if pl == "black lines" then
         -- DrawPatterns_clrBlack
         set the linecolor to 0 
-    else if pl == "white lines"
+    else if pl == "white lines" then
         -- DrawPatterns_clrWhite
         set the linecolor to 1
-    else if pl == "no fill"
+    else if pl == "no fill" then
         set the filled to false
-    else if pl == "black fill"
+    else if pl == "black fill" then
         set the filled to true
-    else if pl == "white fill"
-        set the filled to 'white'
-    else if pl == "multiple"
+    else if pl == "white fill" then
+        set the filled to "white"
+    else if pl == "multiple" then
         set the drawmultiple to (not the drawmultiple)
     else
         put false into ret

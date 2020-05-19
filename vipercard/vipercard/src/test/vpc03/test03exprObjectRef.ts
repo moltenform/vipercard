@@ -301,6 +301,9 @@ t.test('03ObjectCard', () => {
     b.t(`the short id of cd 1`, `${h3.ids.cdA}`);
     b.t(`the short id of cd 2`, `${h3.ids.cdBB}`);
     b.t(`the short id of cd 3`, `${h3.ids.cdBC}`);
+    b.t(`the short id of cd 8`, `${h3.ids.cdDF}`);
+    b.t(`the short id of cd 9`, `${h3.ids.cdDG}`);
+    b.t(`the short id of cd 10`, `${h3.ids.cdDH}`);
     b.t(`the short id of cd 99`, `ERR:could not find`);
     b.t(`the short id of cd 1 of bg 2`, `${h3.ids.cdBB}`);
     b.t(`the short id of cd 2 of bg 2`, `${h3.ids.cdBC}`);

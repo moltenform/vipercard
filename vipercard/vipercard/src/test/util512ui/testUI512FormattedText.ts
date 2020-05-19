@@ -7,7 +7,7 @@
 /* auto */ import { TextFontSpec, TextFontStyling, largeArea, specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { DrawTextArgs } from './../../ui512/drawtext/ui512DrawTextArgs';
 /* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -83,13 +83,10 @@ t.test('FormattedTextNewFromUnformatted.EmptyStringIsOK', () => {
     assertEq(undefined, txt.fontAt(0), 'BT|');
 });
 t.test('FormattedTextNewFromUnformatted.ShouldStripSpecialCharFontChange', () => {
-    let txt = FormattedText.newFromUnformatted(
+    assertThrows('', 'cannot include', ()=>
+    FormattedText.newFromUnformatted(
         `${specialCharFontChange}a${specialCharFontChange}`
-    );
-    assertEq('a', txt.toUnformatted(), 'BS|');
-    assertEq(1, txt.len(), 'BR|');
-    assertEq('a'.charCodeAt(0), txt.charAt(0), 'BQ|');
-    assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), 'BP|');
+    ));
 });
 t.test('FormattedTextNewFromSerialized.Complex', () => {
     let ser = longstr(

@@ -144,7 +144,7 @@ export class VpcRewriteForCommands {
                 return this.hReturnNyiIfMenuMentionedOutsideParens(line);
         } else {
 /* rewrite to internalvpcdeletevelhelper */
-return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0%, the short id of %ARG0%`,line[0], [line.slice(1)]  )
+return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0% , the short id of %ARG0%`,line[0], [line.slice(1)]  )
         }
     }
     rewriteDisable(line: ChvITk[]): ChvITk[][] {
@@ -341,7 +341,9 @@ put the result %ARG0%`;
             and you try to use it as a variable. "put 4 into length"
             you'd get the error message NotAllInputParsed exception,
             which doesn't make too much sense, let's try to give you a better error message */
-            checkCommonMistakenVarNames(arLast(line));
+            if (arLast(line).tokenType !== tks._selection) {
+                checkCommonMistakenVarNames(arLast(line));
+            }
         } else {
             /* you can say `put 1+1` to add to the message box */
             foundPreposition = line.length;

@@ -37,6 +37,7 @@
 /* auto */ import { testCollectionUI512Composites } from './../util512ui/testUI512Composites';
 /* auto */ import { testCollectionUI512CodeEditor } from './../util512ui/testUI512CodeEditor';
 /* auto */ import { testCollectionExternalLibs } from './../util512/testExternalLibs';
+/* auto */ import { testCollection03propComputed } from './../vpc03/test03propComputed';
 /* auto */ import { testCollection03objectRenderName } from './../vpc03/test03objectRenderName';
 /* auto */ import { testCollection03lexer } from './../vpc03/test03lexer';
 /* auto */ import { testCollection03exprPseudoObjects } from './../vpc03/test03exprPseudoObjects';
@@ -68,6 +69,7 @@ export const SimpleUtil512Tests = /* static class */ {
             testCollection03exprPseudoObjects,
             testCollection03objectRenderName,
             testCollection03exprObjectRef,
+            testCollection03propComputed,
             testCollection03chunkAdditional,
             testCollection03chunkBasic,
             testCollection03lexer,

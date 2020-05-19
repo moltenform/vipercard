@@ -534,7 +534,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let compat = this.Model().stack.getB('compatibilitymode')
         checkThrow(target, 'UF|the target was not found');
 
-        if (compat && adjective === PropAdjective.Short) {
+        if (compat) {
             return new VelRenderName(this.vci.getModel()).go(
                 target,
                 adjective,
@@ -558,15 +558,22 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * put the owner of cd btn 1 into x, it returns a string, that can then be used as an object
      */
     protected getOwnerFullString(vel: O<VpcElBase>, adjective: PropAdjective) {
-        /* get a longer form of the id unless specifically said "short" */
         checkThrow(vel, 'UE|the object was not found');
         if (vel.getType() === VpcElType.Stack || vel.getType() === VpcElType.Product) {
             checkThrow(false, 'UD|Cannot get owner of this type of object.');
         }
 
-        let owner: VpcElBase;
-        if (vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length) {
-            /* it's a bg object, indicate this by returning in the form "cd x of bg y". */
+        let owner = this.vci.getModel().getByIdUntyped(vel.parentIdInternal);
+        if (vel.getType() === VpcElType.Card && this.Model().stack.getB('compatibilitymode')) {
+            /* compat with original product */
+            return new VelRenderName(this.vci.getModel()).go(
+                owner,
+                adjective,
+            );
+        }
+        else if (vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length) {
+            /* it's a bg object, indicate this by returning in the form "cd x of bg y".
+            the parent of a bg object is still the card, though. */
             let card = this.vci.getModel().getCardById(vel.parentIdInternal);
             let bg = this.vci.getModel().getById(VpcElBg, card.parentIdInternal);
             adjective = PropAdjective.LongForParse /* don't use "short" */
@@ -575,13 +582,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
                 adjective,
                 this.Model().stack.getB('compatibilitymode')
             ) + ' of ' + new VelRenderId(this.vci.getModel()).go(
-                card,
+                bg,
                 adjective,
                 this.Model().stack.getB('compatibilitymode')
             );
         } else {
-            owner = this.vci.getModel().getByIdUntyped(vel.parentIdInternal);
-
             /* we want as much info as possible, because although
             we return a string, it will likely be parsed back into an object */
             if (adjective !== PropAdjective.Short) {
