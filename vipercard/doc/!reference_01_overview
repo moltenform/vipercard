@@ -173,6 +173,64 @@ put x`
 is also supported.
 
 
+
+=====
+Lists/arrays
+=====
+
+Here's a common way to create a list:
+
+`put "" into myList
+repeat with x = 1 to 5
+    put 0 into line x of myList
+end repeat`
+
+Append a number to the list:
+
+`put newline & 20 after myList`
+
+Insert a number in the list (if the line doesn't yet
+exist, it will be added)
+
+`put 6 into line 8 of myList`
+
+Add 10 to each element of the list:
+
+`repeat with x = 1 to the number of lines in myList
+    put (line x of myList) + 10 into line x of myList
+end repeat
+`
+
+`myList` is a normal variable, it can be passed as an 
+argument and so on.
+
+^Two-dimensional lists^
+
+Here's a common way to create a 2-d list:
+`put "" into myList
+repeat with x = 1 to 5
+    repeat with y = 1 to 5
+        put 0 into item x of line y of myList
+    end repeat
+end repeat`
+
+Insert a new number into the list (it's ok if the 
+line or item does not yet exist, it will be created):
+
+`put 3 into item 6 of line 8`
+
+Add 10 to each element of the list:
+
+`repeat with y = 1 to the number of lines in myList
+    repeat with x = 1 to the number of items in line y of myList
+        if length(item x of line y of theLine) > 0 theLine
+            add 10 to item x of line y of theLine
+        end if
+    end repeat
+end repeat
+`
+
+
 =====
 Variables
 =====
@@ -255,6 +313,312 @@ set the topleft of cd btn "myBtn" to "1, 2"
 or
 set the top of cd btn "myBtn" to 1
 set the left of cd btn "myBtn" to 2
+`
+
+=====
+Writing functions
+=====
+An example of how to define and call a custom function:
+`function myAddition p1, p2
+    return p1 + p2
+end myAddition
+on mouseUp
+    put myAddition(1,2) into x
+end mouseUp`
+
+An example of how to define and call a custom handler:
+`on showMessage p1, p2
+    put p1 into cd fld "results1"
+    put p2 into cd fld "results2"
+end showMessage
+on mouseUp
+    showMessage "hello", "world"
+end mouseUp`
+
+You can define variadic functions (that accept any number of 
+values), see the documentation for the paramCount() function.
+
+No error is thrown if the incorrect number of arguments is given. 
+Missing arguments are given the empty string ("").
+`myAddition(7, 8, 9) -- the extra argument 9 is ignored
+myAddition(7, 8) -- p1 is assigned 7, p2 is assigned 8
+myAddition(7) -- p1 is assigned 7, p2 is assigned ""
+myAddition() -- p1 is assigned "", p2 is assigned ""`
+
+You can use recursion.
+
+You can place common code in the current card's script,
+or the stack's script, so that it can be called by many objects.
+This is because of the message hierarchy:
+
+Messages bubble upwards from a button or field, to the parent card, 
+to the stack, until they are handled.
+If you click on a button:
+    A mouseUp message is created
+    Script of the button is examined. 
+    If there is an 'on mouseUp' handler,
+        Run the code in the mouseUp handler.
+        If the handler completes, stop running code, we're done.
+        If the handler calls 'pass mouseUp', continue:
+    Script of the current card is examined.
+    If there is an 'on mouseUp' handler,
+        Run the code in the mouseUp handler.
+        If the handler completes, stop running code, we're done.
+        If the handler calls 'pass mouseUp', continue:
+    Script of the current stack is examined.
+    If there is an 'on mouseUp' handler,
+        Run the code in the mouseUp handler.
+
+Similarly, if you are typing text in a field, and type the letter 'a':
+    A afterKeyUp message is created
+    Script of the current field is examined.
+    If there is an 'on afterKeyUp' handler,
+        Run the code in the afterKeyUp handler.
+        If the handler completes, stop running code, we're done.
+        If the handler calls 'pass afterKeyUp', continue:
+    Script of the current card is examined.
+    If there is an 'on afterKeyUp' handler,
+        Run the code in the afterKeyUp handler.
+        If the handler completes, stop running code, we're done.
+        If the handler calls 'pass afterKeyUp', continue:
+    Script of the current stack is examined.
+    If there is an 'on afterKeyUp' handler,
+        Run the code in the mouseUp handler.
+
+Calling `exit to ViperCard` passes the message up to ViperCard
+to be handled, and then exits all code execution. So it has two uses,
+it will exit all code execution, and will also fall back to the  
+
+  has two uses. It is often used to
+, similar to 'return' . It will also 
+See documentation of the 'pass' command for an example.
+
+Calls to custom commands and procedures also bubble upwards 
+in the same way. A function in the stack's script can be called 
+from any handler on a card, field, or button. A function in the 
+card's script can be called from any handler in a field or button.
+So, it is useful to put commonly used utility code in a stack 
+script so that it can be called from anywhere.
+
+
+=====
+Text and Chunks
+=====
+
+^Lines^
+
+Use `newline` to refer to a new line character.
+Let's say you wanted two lines of text in a field, you would use 
+the following:
+`put "first line" & newline & "second line" into cd fld "myFld"`
+
+(You shouldn't have to be concerned with platform 
+differences: the constants 'return', 'cr', 'linefeed' are present for 
+compatibility, but they are all equivalent. For convenience,
+copying and pasting text in and out of ViperCard will automatically
+translate newline characters, for example if you are running windows,
+when you copy text we'll automatically convert to \r\n newlines so 
+it will work seemlessly with other software. Internally,
+ASCII 10 represents newline.)
+
+^Chunks^
+
+ViperCard can process text by using chunks.
+If you have a tab-separated list you can get the nth item like this:
+
+`
+put "ab" & tab & "cd" & tab & "ef" into myList
+set the itemDelimiter to tab
+put 2 into n
+answer "Result:" & item n of myList
+`
+If you have a comma-separated list you can get the nth item like this:
+
+`
+put "ab,cd,ef" into myList
+set the itemDelimiter to ","
+put 2 into n
+answer "Result:" & item n of myList
+`
+
+More advanced examples:
+
+`
+answer char 2 of "abcd"
+answer char (n + 1) of "abcd"
+answer char 2 to 4 of "abcd"
+
+answer item 2 of "ab,cd,ef,gh"
+answer item (n + 1) of "ab,cd,ef,gh"
+answer item 2 to 4 of "ab,cd,ef,gh"
+
+answer first item of "ab,cd,ef,gh"
+answer last item of "ab,cd,ef,gh"
+answer any item of "ab,cd,ef,gh"
+
+put "ab" & newline & "cd" & newline & "ef" into myList
+answer line 2 of myList
+answer line (n + 1) of myList
+answer line 2 to 3 of myList
+`
+
+Recursive scopes:
+`
+put "ab,cd" & newline & "ef,gh" & newline & "ij,kl" into myList
+
+answer item 2 of line 2 of myList
+answer char 2 of line 2 of myList
+answer char 2 of item 2 of line 2 of myList
+
+answer char 2 to 3 of item 2 to 3 of line 2 to 3 of myList
+`
+
+
+^Modifying by chunk^
+
+`
+put "abcd" into x
+put "A" into char 2 of x
+put "A" into char 2 to 4 of x
+
+put "10,20,30" into myList
+put "A" into item 2 of myList
+put "A" into item 2 to 3 of myList
+multiply item 2 of myList by 5
+add 1 to item 2 of myList
+
+put "A" into first item of myList
+put "A" into last item of myList
+put "A" into any item of myList
+
+put "A" into before item 2 of myList
+put "A" into after item 2 of myList
+put "A" into before char 2 of item 2 of myList
+
+put "A" into before item 2 of cd fld "myFld"
+put "A" into after item 2 of cd fld "myFld"
+put "A" into before char 2 of item 2 of cd fld "myFld"
+
+put "ab,cd" & newline & "ef,gh" & newline & "ij,kl" into myList
+put "A" into item 2 of line 2 of myList
+put "A" into char 2 of line 2 of myList
+put "A" into char 2 of item 2 of line 2 of myList
+
+put "A" into char 2 to 3 of item 2 to 3 of line 2 to 3 of myList
+`
+
+^Backwards compatiblity^
+
+We went to much effort to maintain fidelity with HyperCard's
+chunk processing. All of the above can be done with words:
+
+`
+put "ab cd ef" into x
+answer word 2 of x
+answer word 2 to 3 of x
+put "A" into word 2 of x
+put "A" into word 2 to 3 of x
+put "A" into char 2 to 3 of word 2 to 3 of x
+`
+
+To enable full compatibility with HyperCard, go to `Object->Stack info...`
+and turn on compatibility mode. Chunk handling will now be identical
+(including the non-intuitive behavior seen below).
+
+`
+-- if compatibility mode is on:
+-- we follow HyperCard's non-intuitive behavior for the following:
+put "ab,cd" & newline & "ef,gh" & newline & "ij,kl" into myList
+put "A" into item 3 of item 4 of myList
+put "A" into item 3 of char 2 of myList
+delete item 3 of item 4 of myList
+delete item 3 of char 2 of myList
+add 1 to item 3 of item 4 of myList
+add 1 to item 3 of char 2 of myList
+answer item 0 of myList
+put "A" into item 0 of myList
+answer item 4 to 1 of myList
+put "A" into item 4 to 1 of myList
+
+
+-- The only known cases we don't support (we'll throw a runtime error):
+answer item -1 of myList
+put "A" into item -1 of myList
+delete item -1 of myList
+answer char 2 of item 4 to 1 of myList
+put "A" into char 2 of item 4 to 1 of myList
+delete char 2 of item 4 to 1 of myList
+delete item 2 to 3 of myList
+`
+
+See also documentation for the `delete` command.
+
+
+=====
+Structure
+=====
+
+^Loops^
+`repeat with x = 1 to 3
+    ...other code here...
+end repeat`
+
+Refer to `repeat` under "syntax" for more information.
+
+^If statements^
+`if x > 1 then
+    ...other code here...
+else
+    ...other code here...
+end if`
+Refer to `if` under "syntax" for more information.
+
+
+^Scripts^
+No code can exist outside of a handler or function.
+
+^Handlers^
+Handlers look like this
+    `on mouseup 
+        answer "hello world"
+    end mouseup`
+and respond to an event message.
+    
+^Functions^
+Functions look like this
+    `function myAddition p1, p2
+        return p1 + p2
+    end myAddition`
+They can then be called with code like
+`put myAddition(1,2) into x`
+Functions inside of functions are not supported.
+
+
+^Statements^
+You cannot have a line that is just
+    `sqrt(0.5)`
+with no command, this is a syntax error.
+    
+Statements occur on separate lines, there's no way to have 
+more than one statement on a line.
+    
+^Expressions^
+A set of computations such as `1+2+3+4` or 
+`sqrt(0.5) + sqrt(0.6)` is an expression. Most places that 
+take a value can be given an expression, for example,
+`go card 2
+-- is the same as
+put 1 into x
+go card (x + 1)
+
+put "abc" into cd fld "myFld1"
+put "abc" into cd fld (prefix & "1")
+
+put "a" into line 4 of myList
+put "a" into line (x+1) of myList
+
+set the left of cd btn "myBtn" to x
+set the left of cd btn "myBtn" to (45 + 50 * cos(theta))
 `
 
 =====

@@ -1,0 +1,64 @@
+=====
+(Compatibility)
+=====
+These are provided for compatibility with HyperCard. They might have hard-coded values/reduced functionality, and are unlikely to be useful in new scripts.
+
+
+
+=====
+diskSpace()
+=====
+(Deprecated and hard-coded).
+Examples:
+
+put diskSpace() into x
+
+
+=====
+exp1(x)
+=====
+(e to the power of x) minus 1.
+
+Examples:
+
+put exp1(0.5) into x
+
+
+=====
+heapSpace()
+=====
+(Deprecated and hard-coded).
+Examples:
+
+put heapSpace() into x
+
+=====
+ln1(x)
+=====
+Natural logarithm of (x + 1)
+Examples:
+
+put ln1(0.5) into x
+
+=====
+stackSpace()
+=====
+(Deprecated and hard-coded).
+Examples:
+
+put stackSpace() into x
+
+
+=====
+systemVersion()
+=====
+(Deprecated and hard-coded).
+To get the current software version, use
+put the version into x
+or
+put the long version into x
+instead.
+
+Examples:
+
+put systemVersion() into x

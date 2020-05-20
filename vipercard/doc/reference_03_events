@@ -259,3 +259,9 @@ end closeField
 on exitField
     hide cd btn "indicateCurrentlyEditingField"
 end exitField
+
+=====
+on___doMenu
+=====
+
+Hold the Shift key to bypass a customized doMenu.
