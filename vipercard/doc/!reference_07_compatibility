@@ -3,7 +3,47 @@
 =====
 These are provided for compatibility with HyperCard. They might have hard-coded values/reduced functionality, and are unlikely to be useful in new scripts.
 
+=====
+abbrev id
+=====
 
+Examples:
+
+put the abbrev id of cd fld "myFld" into z
+
+
+=====
+abbrev name
+=====
+
+Examples:
+
+put the abbrev name of cd fld "myFld" into z
+
+=====
+arrowKey {direction}
+=====
+       sends an arrowKey message. by default,
+       arrowKey "left" goes to the previous card,
+       and arrowKey "right" goes to the next card,
+       but this can be overridden in a card script
+       or stack script.
+
+=====
+bottom
+=====
+Equivalent to the top of the object + the height of the object.
+Examples:
+
+put the bottom of cd fld "myFld" into z
+
+=====
+botright
+=====
+
+Examples:
+
+put the botright of cd btn "myBtn" into z
 
 =====
 diskSpace()
@@ -12,6 +52,17 @@ diskSpace()
 Examples:
 
 put diskSpace() into x
+
+
+
+=====
+environment
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the environment into z
 
 
 =====
@@ -23,6 +74,31 @@ Examples:
 
 put exp1(0.5) into x
 
+=====
+freesize
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the freesize of this stack into z
+
+=====
+get {expression}
+=====
+        Evaluates any expression and saves the result to the variable "it".
+
+        The 'put' command is typically more useful.
+
+        Examples:
+
+        get 2+3
+        put it into x
+        answer x -- shows 5
+
+        get the width of cd btn "myBtn"
+        put it into x
+        answer x -- shows the width of the specified button
 
 =====
 heapSpace()
@@ -33,6 +109,14 @@ Examples:
 put heapSpace() into x
 
 =====
+id
+=====
+
+Examples:
+
+put the id of cd fld "myFld" into z
+
+=====
 ln1(x)
 =====
 Natural logarithm of (x + 1)
@@ -41,12 +125,66 @@ Examples:
 put ln1(0.5) into x
 
 =====
+long name
+=====
+
+Examples:
+
+put the long name of cd fld "myFld" into z
+
+=====
+name
+=====
+
+Examples:
+
+put the name of cd fld "myFld" into z
+
+=====
+right
+=====
+Equivalent to the left of the object + the width of the object.
+Examples:
+
+put the right of cd fld "myFld" into z
+
+=====
+size
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the size of this stack into z
+
+=====
+stacksinuse
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the stacksinuse into z
+
+
+=====
 stackSpace()
 =====
 (Deprecated and hard-coded).
 Examples:
 
 put stackSpace() into x
+
+
+=====
+suspended
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the suspended into z
+
 
 
 =====
@@ -62,3 +200,20 @@ instead.
 Examples:
 
 put systemVersion() into x
+
+=====
+version
+=====
+
+Examples:
+
+put the version into z
+
+
+=====
+long version
+=====
+
+Examples:
+
+put the long version into z

@@ -1,7 +1,7 @@
 
 
 =====
-operators
+(operators)
 =====
 Here are the operators that can be used.
 `2 * 3`
@@ -68,7 +68,7 @@ been skipped.
 
 
 =====
-constants
+(constants)
 =====
 The following constants are defined:
 `
@@ -101,9 +101,18 @@ linefeed`
 
 
 =====
-operators
+global {variableName}
 =====
+        Indicates that a variable is a global.
+        1) it can be accessed from any other script
+        2) the contents are saved even after the function is complete.
+        The contents are lost when the stack is exited, however, and are not saved to disk or as part of the stack.
 
+        Examples:
+
+        global currentData1, currentData2
+        put "stored 1" into currentData1
+        put "stored 2" into currentData2
 
 
 =====
@@ -225,5 +234,109 @@ exit to ViperCard
             myHandler
             answer "and even this will never get called"
         end mouseUp
-        on 
 
+=====
+next___repeat
+=====
+        Inside a loop, go back to the top of the loop, skipping the next 
+        line(s) of code. Equivalent to "continue" in C.
+
+        Examples:
+
+        repeat with x = 1 to 3
+            if x == 2 then
+                next repeat
+            end if
+            answer x
+        end repeat
+        -- displays 1
+        -- displays 3
+        -- and does not display 2
+
+=====
+pass
+=====
+        Exits the current function and calls a function higher in the
+        message hierarchy. For example, if a button has the script
+        `on mouseUp
+            answer "button handling the event"
+        end mouseUp
+        and the current card has the script
+        on mouseUp
+            answer "card handling the event"
+        end mouseUp`
+        and the button is clicked,
+        only the button's code will be run.
+
+        If you want both to be run, you can use the pass command.
+        If a button has the script
+        `on mouseUp
+            answer "button handling the event"
+            pass mouseUp
+            -- any code here will be skipped
+        end mouseUp`
+        and the current card has the script
+        `on mouseUp
+            answer "card handling the event"
+        end mouseUp`
+        and the button is clicked,
+        both will be run.
+
+
+=====
+repeat
+=====
+        Use to create a loop.
+
+        Examples:
+
+        repeat with x = 1 to 5
+            answer "x is now" & x
+        end repeat
+
+        repeat with x = 5 down to 1
+            answer "x is now" & x
+        end repeat
+
+        repeat 3 times
+            answer "hi"
+        end repeat
+
+        repeat forever
+            answer "this is an infinite loop"
+        end repeat
+
+        put 0 into counter
+        repeat forever
+            answer "but not this"
+            add 1 to counter
+            if counter > 3 then
+                exit repeat
+            end if
+        end repeat
+
+        put 0 into counter
+        repeat until counter > 3
+            add 1 to counter
+        end repeat
+
+        put 0 into counter
+        repeat while counter <= 3
+            add 1 to counter
+        end repeat
+
+=====
+return {expression}
+=====
+        return a value from the current function.
+        Note: no lines of code after the return statement will be run.
+
+        Examples:
+
+        function myAddition p1, p2
+            return p1 + p2
+            answer "this line will never be reached"
+        end myAddition
+        on mouseUp
+            put myAddition(1,2) into x
+        end mouseUp
