@@ -1,4 +1,111 @@
 
+
+=====
+operators
+=====
+Here are the operators that can be used.
+`2 * 3`
+    multiplication
+`2 / 3`
+    division
+`2 $caret$ 3`
+    raise to the third power
+`7 div 5`
+    truncated division
+`7 mod 5`
+    modulo
+`2 > 3`
+    greater than
+`2 < 3`
+    less than
+`2 >= 3`
+    greater than or equal to
+`2 <= 3`
+    less than or equal to
+`2  ==  3`
+    equal to
+`2  !=  3`
+    not equal to
+`"abc" is "def"`
+    equal to
+`"abc" is not "def"`
+    not equal to
+`"abc" is in "123abcdef"`
+    does string contain another string
+`"abc" is not in "123abcdef"`
+    string is not in another string
+`2 + 3`
+    addition
+`2 - 3`
+    subtraction
+
+`&` and `&&` combine two strings (concatenation).
+`put "a" & "b" into x
+answer x -- displays "ab"
+put "a" && "b" into x
+answer x -- displays "a b"`
+
+You can also use `a = b`, which is equivalent to `a == b`
+
+^Logical operators^
+
+The constants 'true' and 'false' are used often.
+Internally there is no distinct boolean type, but the strings 
+"true" and "false" are interpreted as true and false respectively.
+`true and false`
+    logical and
+`true or false`
+    logical or
+`not true`
+    logical not
+
+Logical operations are not guaranteed to be short-circuiting.
+in other words,
+`put (true or myfunction()) into x`
+still will call `myfunction`, when it hypothetically could have 
+been skipped.
+
+
+
+=====
+constants
+=====
+The following constants are defined:
+`
+pi
+newline
+tab
+empty
+quote
+one
+two
+three
+four
+five
+six
+seven
+eight
+nine
+ten
+colon
+comma
+true
+false
+up
+down
+space
+return
+cr
+formfeed
+linefeed`
+
+
+=====
+operators
+=====
+
+
+
 =====
 if/then
 =====

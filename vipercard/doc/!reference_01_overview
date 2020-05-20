@@ -1,0 +1,396 @@
+=====
+Introduction
+=====
+
+Welcome to ViperCard, an open source re-creation and re-imagination of 1987's HyperCard.
+
+If you are new, the example videos will be helpful -- from the Help menu (the icon with a ? in the upper right corner of the screen), select "Examples & Tutorials".
+
+
+
+=====
+Scripting Overview
+=====
+All objects (all buttons, fields, and cards) have an associated set of code called a "script."
+
+Here is an example script:
+`on mouseUp
+    answer "hello, world"
+end mouseUp`
+
+If this script is placed in a button, and the Browse tool is chosen
+(looks like a hand), the code will be run when the button is clicked.
+
+A line of code beginning with -- is ignored.
+This is often used to write explanatory comments.
+It can also be used to temporarily "disable" some code.
+You can press Cmd+Q in the script editor to quickly
+comment-out or uncomment a line.
+
+`on mouseUp
+    -- this line is a comment
+    answer "hello, world"
+end mouseUp`
+
+
+The indentation helps readability, but it is not mandatory.
+The code editor will automatically add indentation
+whenever you press Tab or Enter.
+
+A long line of code can be continued with a backslash, e.g.
+
+`answer ("here is how to continue" & \
+    "code across two lines")`
+
+
+The language is not case sensitive. "on mouseup" and 
+"on mouseUp" are equivalent.
+
+A common data type is a string (a sequence of text).
+
+`put "abc" into x`
+
+Double-quotes ("), not single-quotes ('), must be used.
+A string with length 0, "", is perfectly valid and used often to 
+represent a missing value. You may see this referred to as 
+an 'empty string'. You can easily test for an empty string 
+with code like:
+`if x is "" then
+    answer "empty string"
+end if`
+
+To include a double-quote character in a string, use the quote constant,
+
+`answer (quote & "a" & quote) -- displays "a"`
+
+Valid numbers include 123, 123.456, and scientific notation like 
+1.23e6 which means 1.23 multiplied by (10 to the 6th power).
+Numbers can be in the range [-1e18, 1e18], if a number is 
+taken outside this range a runtime error will be thrown.
+Division by zero, logarithm of a negative, and so on will also 
+cause a runtime error.
+
+`sqrt(0.5)` is a function call meaning to take the square root 
+of 0.5. `sqrt` is a built-in function, but we can also write a 
+user-defined function. `sum(1, 2)` is a function call that 
+adds 1 and 2 and returns 3. A comma separates the 
+values sent. Function calls can be nested, for example,
+`sum(1, sum(2, 3))`.
+
+Buttons and fields are referred to as "objects".
+Cards are also a type of object.
+And, the entire project, referred to as a "stack", is an object.
+
+A script can set properties of an object with syntax like:
+`set the width of cd btn "myBtn" to 450`
+One can also refer to an object by id:
+`set the width of cd btn id 1234 to 450`
+
+When you are in the Browse tool and you interact with the page 
+by clicking on buttons or pressing keystrokes, this causes 
+messages to be fired, for example:
+
+If you click a button, and if that button has a script that happens
+to have a function called "on mouseUp" defined, then the code in
+that function will be run.
+
+The documentation here has a list of Commands, Event Handlers, 
+and properties that can be set.
+
+=====
+Helpful Examples
+=====
+The tutorial videos show helpful example code.
+            
+=====
+Expressions
+=====
+
+You can use expressions like `put 1+2+3+4 into x` or
+`put sqrt(0.5) + sqrt(0.6) into y` in your code.
+
+Expressions can use parentheses to contain
+any level of nested sub-expressions, for example,
+
+`sqrt(0.5)
+sqrt(0.5 + sqrt(0.6))
+sqrt(0.5 + sqrt(0.6 + sqrt(0.7)))`
+are all valid.
+
+Parentheses are used to dictate the order of operations, since
+`3*(4+5)`
+gives a different answer than
+`(3*4)+5`
+
+Parentheses are also used for grouping an expression.
+for example, we needed to get the (n + 1)th line of a 
+variable, we would type `(line (n + 1) of x)`
+
+Do not type something like
+`answer (line n + 1 of x) -- this is hard to read.`
+which is unclear,
+`answer (line (n + 1) of x) -- this is preferred.`
+
+In the expression `2 + 3`, the symbol `+` is called an operator. 
+ViperCard also has logical operators like `and`, `or`, and `not`.
+See the `operators` page in the Syntax documentation section
+for more information.
+
+
+=====
+Message Box (recommended)
+=====
+
+Open the Message Box by choosing 'Message Box' from the Go menu, or by pressing Cmd+M.
+
+The message box can be used to quickly try out snippets of code. For example, if you want to evaluate some math, you can open the message box, type `put 12*34`, and press Enter. The result will be shown below.
+
+As another example, if you have two buttons, and you want to align the left sides of the buttons, you can type `set the left of cd btn 2 to the left of cd btn 1`, and press Enter, and the action will be performed.
+
+You can use the Up and Down arrow keys to see previously typed commands.
+
+You can use a semicolon to combine many lines, for example `put 2 into x; put x * 3`
+
+You can use the message box to check or change the contents of a global variable. In fact, any variable mentioned in the message box will be assumed to be a global, so you can write `put 4 into myGlobal` without first needing to declare `global myGlobal`.
+
+In your script, you can add debugging statements that trace a value and show it in the message box, as long as the message box is currently open.
+
+`
+put 45 * 56 into x
+-- if the msg box is open, will show the value of x
+-- otherwise, the line is ignored
+put x into the msg box
+-- code will continue running
+`
+
+The shortened form,
+
+`
+put 45 * 56 into x
+-- if the msg box is open, will show the value of x
+put x`
+
+is also supported.
+
+
+=====
+Variables
+=====
+
+Use a statement like 
+
+`put 3 into x`
+
+to put the value "3" into a
+variable named "x". You don't need to first declare x as a variable.
+
+Variable names and function names are case insensitive.
+
+Variable names cannot begin with a numeral, and can contain 
+underscores but no other punctuation. Certain words cannot be 
+used as variable names because they are already keywords 
+or built-in functions. For example, you cannot have a variable 
+named "line" because this is a keyword. You cannot have a 
+variable named "result" because this is a built-in function.
+
+If you try to read from a variable before it has been introduced, 
+a runtime error will occur. `put notSeenBefore into x` will cause
+an error unless there is a statement assigning a value to `notSeenBefore`.
+
+Use "global" to declare a variable as a global.
+1) it can be accessed from any other script
+2) its contents are saved even after the function is complete.
+
+For example,
+
+`global coordX, coordY
+put 1 into coordX
+put 2 into coordY`
+
+If another script says
+`global coordX, coordY
+answer coordX, coordY`
+it will read the values that were set.
+
+Global variables are, though, reset when you close the stack (the values 
+are not saved as part of the project.)
+
+^Data types^
+
+A runtime error can be thrown if a value has the wrong 
+type, e.g.
+`put "abc" + 4 into z`
+causes a runtime error!
+The addition operator requires numbers, and so creates a 
+runtime error when getting the string `"abc"`.
+
+If you need to convert from a text type to a number, you
+can use the functions `strToNumber` and `numberToStr`. For example,
+`ask "please enter a number"
+put it into x
+if strToNumber(x) is not false then
+    answer "the number plus one is" && (strToNumber(x) + 1)
+end if
+`
+
+For `if` and `else if`, only `true` or `false` are accepted,
+any other value is a runtime error. For example, to check that 
+a string is not empty, you cannot say `if myVar then`, you 
+have to say something like `if length(myVar) > 0 then`
+
+Note that equality checks account for different data types:
+`if (456 is "456.00") then answer "yes" -- answers yes
+
+A "point" data type is two numbers separated by a comma. 
+If you have code like
+`put 1 into x
+put 2 into y`
+You can write:
+`set the topleft of cd btn "myBtn" to x, y`
+
+This is the same as writing
+`
+set the topleft of cd btn "myBtn" to 1, 2
+set the topleft of cd btn "myBtn" to "1, 2"
+or
+set the top of cd btn "myBtn" to 1
+set the left of cd btn "myBtn" to 2
+`
+
+=====
+Tips & Shortcuts
+=====
+
+General tips
+
+-   If your script is caught in an infinite loop, click the Stop button (black rectangle) to stop the script
+-   See more error details, when in the Script Editor, by clicking on the error excerpt
+-   Double-click the eraser tool to clear paint on the current card
+
+Keyboard shortcuts when editing text,
+
+-   Cmd+C to copy
+-   Cmd+X to cut
+-   Cmd+V to paste
+-   Cmd+A to select all
+-   Cmd+Backspace to delete entire word
+-   PageUp / PageDown to scroll one page
+-   Shift+PageUp / Shift+PageDown to select one page
+-   Home to move to start of line
+-   Shift+Home to select to start of line
+-   Cmd+Home to move to the start
+-   Cmd+Shift+Home to select to the start
+-   Left Arrow to move to the left
+-   Shift+Left Arrow to select to the left
+-   Cmd+Left Arrow to move left one word
+-   Cmd+Shift+Left Arrow to select left one word
+-   Cmd+Arrow Up to scroll up
+-   Cmd+Arrow Down to scroll down
+-   Cmd+D to duplicate the current line
+-   Cmd+L to delete the current line
+-   Cmd+Q to quickly comment-out or uncomment the current line
+-   Cmd+Q when many lines are selected to comment-out all of them
+-   Cmd+Q to comment-out a block of code
+-   Tab key, to auto-indent code in a script
+
+Some of the main differences between ViperCard and HyperCard:
+-  ViperCard is open source software that can run in any modern web browser
+-  you can export stacks as a modern json format
+-  art-stamps feature for adding clip art
+-  new animation features like save-to-gif
+-  in ViperCard you have to hit Save to save changes
+-  but in ViperCard you have extensive undo history and can even undo changes made by a script
+
+A few of the differences between ViperCard and HyperCard:
+- You can use `--[[block comments]]` that span many lines.
+- You can write `exit to ViperCard` instead of `exit to HyperCard`
+- You must specify `cd` or `bg` when referring to a button or field, unless compatibility mode is enabled (Object->Stack Info)
+- Currently: message chain for key events is different, on afterkeydown to indicate cannot prevent default action.
+- Scripts only run when browse tool is active; you can exit an infinite loop by changing the current tool
+- You cannot read a variable that has not been set. `put unsetVar into x` causes a runtime error.
+- hilite and checkmark are separate properties
+- label and name are separate properties
+- You can't have a variable named id, short, long, first, and so on.
+- The `choose` command sets the emulated current tool, not the actual tool, and is limited to certain paint operations
+- The newline character is \n and not \r
+
+
+
+=====
+Credits
+=====
+
+ViperCard
+https://github.com/moltenform/vipercard
+Copyright (C) 2020 Ben Fisher
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. 
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+ViperCard uses the following libraries:
+
+Chevrotain
+    https://github.com/SAP/chevrotain
+    Apache License 2.0
+
+FileSaver.js
+    https://github.com/eligrey/FileSaver.js
+    MIT License
+
+Golly
+    https://github.com/dannygarcia/golly
+    MIT License
+
+js-lru
+    https://github.com/rsms/js-lru
+    MIT License
+
+Clipboard.js
+    https://github.com/zenorocha/clipboard.js
+    MIT License
+    
+base64js
+    https://github.com/beatgammit/base64-js
+    MIT License
+            
+JSGIF
+    https://github.com/antimatter15/jsgif
+    MIT License
+    
+Bresenham easy.filter
+    http://members.chello.at/easyfilter/bresenham.html
+    written permission of author
+    
+lz-string
+    https://github.com/pieroxy/lz-string
+    MIT License
+
+Pizzicato
+    https://github.com/alemangui/pizzicato
+    MIT License
+
+Bowser
+    https://github.com/lancedikson/bowser
+    MIT License
+
+types-text-encoding 
+    https://www.npmjs.com/package/@types/text-encoding
+    MIT License
+
+deep-freeze
+    https://github.com/substack/deep-freeze
+    Public domain
+
+pbkdf2 gist by Chris Veness
+
+description of Mac OS Roman character set
+    https://en.wikipedia.org/wiki/Mac_OS_Roman
+    http://creativecommons.org/licenses/by-sa/3.0/
+    Creative Commons Attribution-ShareAlike
+
+and a small excerpt from the SciTE code editor,
+ported from C++ to TypeScript by Ben Fisher
+SciTE
+    https://www.scintilla.org/License.txt
+
