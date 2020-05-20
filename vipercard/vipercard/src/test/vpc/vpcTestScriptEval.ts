@@ -1378,14 +1378,14 @@ t.test('builtinFunctions', () => {
     b.t('commandkey()', 'ERR:not a key event');
     b.t('optionkey()', 'ERR:not a key event');
     b.t('shiftkey()', 'ERR:not a key event');
-    b.t('clickh()', `${h.simClickX - userBounds[0]}`);
-    b.t('clickv()', `${h.simClickY - userBounds[1]}`);
-    b.t('clickloc()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
+    //~ b.t('clickh()', `${h.simClickX - userBounds[0]}`);
+    //~ b.t('clickv()', `${h.simClickY - userBounds[1]}`);
+    //~ b.t('clickloc()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
     b.t('mouse()', `up`);
     b.t('mouseclick()', `true`);
-    b.t('mouseh()', `${h.simMouseX - userBounds[0]}`);
-    b.t('mousev()', `${h.simMouseY - userBounds[1]}`);
-    b.t('mouseloc()', `${h.simMouseX - userBounds[0]},${h.simMouseY - userBounds[1]}`);
+    //~ b.t('mouseh()', `${h.simMouseX - userBounds[0]}`);
+    //~ b.t('mousev()', `${h.simMouseY - userBounds[1]}`);
+    //~ b.t('mouseloc()', `${h.simMouseX - userBounds[0]},${h.simMouseY - userBounds[1]}`);
     b.t('param(0)', ``);
     b.t('param(1)', ``);
     b.t('param(2)', ``);
@@ -1395,9 +1395,9 @@ t.test('builtinFunctions', () => {
     b.t('tool()', `browse`);
 
     /* casing */
-    b.t('CLICKLOC()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
-    b.t('clIcKloC()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
-    b.t('ClickLoc()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
+    //~ b.t('CLICKLOC()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
+    //~ b.t('clIcKloC()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
+    //~ b.t('ClickLoc()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
 
     b.batchEvaluate(h);
 });

@@ -1,10 +1,13 @@
 
-/* auto */ import { ScriptTestBatch, TestMultiplier } from './../vpc/vpcTestScriptRunBase';
-/* auto */ import { O, cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { arLast, longstr } from './../../ui512/utils/util512';
+/* auto */ import { ScriptTestBatch } from './../vpc/vpcTestScriptRunBase';
+/* auto */ import { PropAdjective } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
+/* auto */ import { cProductName, vpcVersion } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { h3 } from './test03lexer';
+
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -104,7 +107,7 @@ t.test('03owner computed property', () => {
         b.t(`the owner of cd fld id ${h3.ids.fBC1}`, `card id ${h3.ids.cdBC}`)
         b.t(`the long owner of cd fld id ${h3.ids.fBC1}`, `card id ${h3.ids.cdBC}`)
         b.t(`the short owner of cd fld id ${h3.ids.fBC1}`, `${h3.ids.cdBC}`)
-        b.batchEvaluate(h3, [EvaluateAndParseString]);
+        b.batchEvaluate(h3);
     }
 })
 t.test('03target computed property', () => {
@@ -118,21 +121,48 @@ t.test('03target computed property', () => {
     b.t(`the target`, `card button id ${h3.ids.go}`)
     b.t(`the long target`, `card button id ${h3.ids.go}`)
     b.t(`the short target`, `go`)
-    b.batchEvaluate(h3, [EvaluateAndParseString]);
+    b.batchEvaluate(h3);
+})
+t.test('03date computed property', () => {
+    let b = new ScriptTestBatch()
+    b.t(`global d1\\1`, `1`)
+    b.t(`put d1 & "~" & the date after d1\\1`, `1`)
+    b.t(`put d1 & "~" & the short date after d1\\1`, `1`)
+    b.t(`put d1 & "~" & the abbrev date after d1\\1`, `1`)
+    b.t(`put d1 & "~" & the long date after d1\\1`, `1`)
+    b.t(`put d1 & "~" & the English date after d1\\1`, `1`)
+    b.batchEvaluate(h3);
+    let d1 = h3.vcstate.vci.getCodeExec().globals.get('d1')
+    let pts = d1.readAsString().split('~')
+    assertWarn('' === pts[0], '')
+    assertWarn(/[0-9]+\/[0-9]+\/[0-9]+/.test(pts[1]), '')
+    assertWarn(/[0-9]+\/[0-9]+\/[0-9]+/.test(pts[2]), '')
+    assertWarn(/[a-zA-Z]{3}, [a-zA-Z]{3} [0-9]+, [0-9]+/.test(pts[3]), '')
+    assertWarn(/[a-zA-Z]+, [a-zA-Z]+ [0-9]+, [0-9]+/.test(pts[4]), '')
+    assertWarn(/[a-zA-Z]+, [a-zA-Z]+ [0-9]+, [0-9]+/.test(pts[5]), '')
+    let testDateUtils:any = Util512.shallowClone(VpcBuiltinFunctionsDateUtils)
+    testDateUtils._getDateCurrent = () => {
+        return [1, 0, 1900]
+    }
+    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Abbrev), '')
+    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Empty), '')
+    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Long), '')
+    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Short), '')
+    testDateUtils._getDateCurrent = () => {
+        return [31, 11, 2025]
+    }
+    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Abbrev), '')
+    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Empty), '')
+    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Long), '')
+    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Short), '')
+})
+t.test('03version computed property', () => {
+    let b = new ScriptTestBatch()
+    b.t(`the version`, `${vpcVersion}`)
+    b.t(`the short version`, vpcVersion[0] + '.' + vpcVersion[1])
+    b.t(`the long version`, `${vpcVersion}`)
+    b.batchEvaluate(h3);
 })
 
 
 
-/* test both getting owner and that the returned string can be parsed as an object */
-class EvaluateAndParseString extends TestMultiplier {
-    secondTransformation(code: string, expected: string): O<[string, string]> {
-        if (code.startsWith('the ') && expected.includes(' ')) {
-            let ownerId = arLast(expected.split(' of ')[0].split(' '))
-            code = `the short id of "${expected}"`
-            expected = ownerId
-            return [code, expected]
-        } else {
-            return undefined
-        }
-    }
-}

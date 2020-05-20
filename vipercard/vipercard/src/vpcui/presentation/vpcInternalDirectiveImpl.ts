@@ -134,7 +134,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         }
 
         let currentCardId = this.vci.getOutside().GetOptionS('currentCardId');
-        let vel = this.createOneVelUsedOnlyByDeserialize(currentCardId, type, -1) as VpcElSizable;
+        let vel = this.createOneVelUsedOnlyByDeserialize(currentCardId, type, -1);
         assertTrue(vel instanceof VpcElSizable, '6u|not VpcElSizable');
         vel.setDimensions(0,0, w, h, this.vci.getModel());
         vel.setOnVel(

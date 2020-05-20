@@ -616,7 +616,7 @@ export class VpcExecFrameStack {
 
     /**
      * 'send' has both an expression and a target object,
-     * so can't use the same old evalRequestedExpression
+     * so can't use the typical evalRequestedExpression
      */
     protected visitSendStatement(curLine: VpcCodeLine, parsed: VpcParsed): [VpcVal, VpcElBase] {
         assertTrue(this.cacheParsedCST.parser[tkstr.RuleCmdSend] === curLine.getParseRule(), 'Ru|expected "send" parse rule');
@@ -628,7 +628,8 @@ export class VpcExecFrameStack {
             'Rt|visitSendStatement expected both RuleExpr and RuleObject'
         );
 
-        let val = visited.vals.RuleExpr[0] as VpcVal;
+        let isDo = visited.vals[tkstr.tkStringLiteral] && visited.vals[tkstr.tkStringLiteral][0] === 'do'
+        let val = visited.vals.RuleExpr[0];
         checkThrow(val instanceof VpcVal, 'Rs|visitSendStatement expected a string.');
         let newLineAndLowercaseCode = '\n' + val.readAsString().toLowerCase();
         checkThrow(
@@ -637,7 +638,7 @@ export class VpcExecFrameStack {
             is an interesting idea, but it's not supported yet.`
         );
 
-        let velRef = visited.vals.RuleObject[0] as RequestedVelRef;
+        let velRef = visited.vals.RuleObject[0];
         checkThrow(velRef instanceof RequestedVelRef, 'Rq|visitSendStatement expected vel reference.');
         let vel = ensureDefined(this.outside.ResolveVelRef(velRef), "Rp|target of 'send' not found");
 

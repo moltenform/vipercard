@@ -252,7 +252,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             if (jsonData) {
                 this.referenceShowData(grp, btm, ctg, jsonData);
             } else {
-                let url = '/resources03a/docs/v03/ref' + sectionId + '.json';
+                let url = '/resources03a/docs/ref' + sectionId + '.json';
                 let afn = async () => {
                     let obj = await Util512Higher.asyncLoadJson(url);
                     assertTrue(obj.entries, 'KW|');

@@ -13,6 +13,14 @@
 export const VpcStandardLibDoMenu = /* static class */ {
     script: `
 
+on vpcinternaluntrappabledomenu itemName, pb
+    if the shiftKey is down then
+        domenu itemName, pb
+    else
+        send "domenu "&quote&"itemName"&quote&", "&quote&pb&quote to this cd
+    end if
+end vpcinternaluntrappabledomenu
+
 on domenu itemName, pb
 
     global doMenuResult

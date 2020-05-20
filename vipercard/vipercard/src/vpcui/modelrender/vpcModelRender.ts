@@ -185,12 +185,10 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         this.grp.removeAllEls();
         for (let i = 0, len = currentCard.parts.length; i < len; i++) {
             let part = currentCard.parts[i];
-            let partAsBtn = part as VpcElButton;
-            let partAsField = part as VpcElField;
-            if (partAsBtn instanceof VpcElButton) {
-                this.buildBtnFromScratch(partAsBtn, currentCardId);
-            } else if (partAsField instanceof VpcElField) {
-                this.buildFldFromScratch(partAsField, currentCardId);
+            if (part instanceof VpcElButton) {
+                this.buildBtnFromScratch(part, currentCardId);
+            } else if (part instanceof VpcElField) {
+                this.buildFldFromScratch(part, currentCardId);
             } else {
                 checkThrowInternal(false, '6*|invalid part type');
             }
@@ -318,9 +316,8 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             } else if (ui512propname !== undefined) {
                 target.set(ui512propname, newVal);
             } else if (propName === UI512PublicSettable.fmtTxtVarName) {
-                let newvAsText = newVal as FormattedText;
-                assertTrue(newvAsText instanceof FormattedText, '6)|bad formatted text', vel.idInternal);
-                target.setFmTxt(newvAsText);
+                assertTrue(newVal instanceof FormattedText, '6)|bad formatted text', vel.idInternal);
+                target.setFmTxt(newVal);
             } else {
                 /* it's a property that doesn't impact rendering. that's ok. */
             }

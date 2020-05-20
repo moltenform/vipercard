@@ -1320,19 +1320,8 @@ RuleBuiltinCmdDelete = this.RULE('RuleBuiltinCmdDelete', () => {
 this.CONSUME1(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkSyntaxMark)
 this.CONSUME3(tks.tkSyntaxMark)
-this.OR1([
-{
-ALT: () => {
 this.SUBRULE1(this.RuleHChunk)
 this.SUBRULE1(this.RuleHSimpleContainer)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObject)
-}
-}
-]);
 });
 
 RuleBuiltinCmdDial = this.RULE('RuleBuiltinCmdDial', () => {
@@ -1652,6 +1641,7 @@ RuleCmdSend = this.RULE('RuleCmdSend', () => {
 this.CONSUME1(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkSyntaxMark)
 this.CONSUME3(tks.tkSyntaxMark)
+this.CONSUME1(tks.tkStringLiteral)
 this.SUBRULE1(this.RuleExpr)
 this.CONSUME1(tks._to)
 this.SUBRULE1(this.RuleObject)

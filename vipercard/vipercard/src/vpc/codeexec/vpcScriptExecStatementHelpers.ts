@@ -139,8 +139,8 @@ export class VpcScriptExecuteStatementHelpers {
     findChildMap(vals: IntermedMapOfIntermedVals, nm: string): O<IntermedMapOfIntermedVals> {
         let got = vals.vals[nm];
         if (got) {
-            let gotAsMap = got[0] as IntermedMapOfIntermedVals;
             checkThrowEq(1, got.length, '7d|expected length 1');
+            let gotAsMap = got[0];
             checkThrow(gotAsMap instanceof IntermedMapOfIntermedVals, '7c|wrong type');
             return gotAsMap;
         } else {
@@ -154,8 +154,8 @@ export class VpcScriptExecuteStatementHelpers {
     findChildVal(vals: IntermedMapOfIntermedVals, nm: string): O<VpcVal> {
         let got = vals.vals[nm];
         if (got) {
-            let gotAsVal = got[0] as VpcVal;
             checkThrowEq(1, got.length, '7b|expected length 1');
+            let gotAsVal = got[0];
             checkThrow(gotAsVal instanceof VpcVal, '7a|wrong type');
             return gotAsVal;
         } else {
@@ -184,8 +184,8 @@ export class VpcScriptExecuteStatementHelpers {
     findChildVelRef(vals: IntermedMapOfIntermedVals, nm: string): O<RequestedVelRef> {
         let got = vals.vals[nm];
         if (got) {
-            let gotAsVelRef = got[0] as RequestedVelRef;
             checkThrowEq(1, got.length, '7X|expected length 1');
+            let gotAsVelRef = got[0];
             checkThrow(gotAsVelRef instanceof RequestedVelRef, '7W|wrong type');
             return gotAsVelRef;
         } else {

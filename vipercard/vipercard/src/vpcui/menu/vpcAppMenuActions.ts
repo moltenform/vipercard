@@ -217,14 +217,14 @@ export class VpcMenuActions {
      * create new card
      */
     goMnuNewCard() {
-        this.runMenuActionCode('doMenu "New Card"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Card"')
     }
 
     /**
      * duplicate current card
      */
     goMnuDupeCardPaint() {
-        this.runMenuActionCode('doMenu "Duplicate Card Paint"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Duplicate Card Paint"')
     }
 
     /**
@@ -255,7 +255,7 @@ export class VpcMenuActions {
      * paste card or element
      */
     goMnuPasteCardOrVel() {
-        this.runMenuActionCode('doMenu "Paste Card Or Vel"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Paste Card Or Vel"')
     }
 
     /**
@@ -271,56 +271,56 @@ export class VpcMenuActions {
      * note that we have to move away from this card first before deleting it
      */
     goMnuDelCard() {
-        this.runMenuActionCode('doMenu "Delete Card"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Delete Card"')
     }
 
     /**
      * toggle wide lines option
      */
     goMnuPaintWideLines() {
-        this.runMenuActionCode('doMenu "Wide Lines"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Wide Lines"')
     }
 
     /**
      * set black lines option
      */
     goMnuPaintBlackLines() {
-        this.runMenuActionCode('doMenu "Black Lines"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Black Lines"')
     }
 
     /**
      * set white lines option
      */
     goMnuPaintWhiteLines() {
-        this.runMenuActionCode('doMenu "White Lines"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "White Lines"')
     }
 
     /**
      * set black fill option
      */
     goMnuPaintBlackFill() {
-        this.runMenuActionCode('doMenu "Black Fill"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Black Fill"')
     }
 
     /**
      * set white fill option
      */
     goMnuPaintWhiteFill() {
-        this.runMenuActionCode('doMenu "White Fill"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "White Fill"')
     }
 
     /**
      * set no fill option
      */
     goMnuPaintNoFill() {
-        this.runMenuActionCode('doMenu "No Fill"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "No Fill"')
     }
 
     /**
      * set paint-multiple
      */
     goMnuPaintDrawMult() {
-        this.runMenuActionCode('doMenu "Draw Multiple"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Draw Multiple"')
     }
 
     /**
@@ -363,14 +363,14 @@ export class VpcMenuActions {
      * go to first card
      */
     goMnuGoCardFirst() {
-        this.runMenuActionCode('doMenu "First"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "First"')
     }
 
     /**
      * go to last card
      */
     goMnuGoCardLast() {
-        this.runMenuActionCode('doMenu "Last"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Last"')
     }
 
     /**
@@ -405,14 +405,14 @@ export class VpcMenuActions {
      * go to previous card
      */
     goMnuGoCardPrev() {
-        this.runMenuActionCode('doMenu "Prev", "FromUI"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Prev", "FromUI"')
     }
 
     /**
      * go to the next card
      */
     goMnuGoCardNext() {
-        this.runMenuActionCode('doMenu "Next", "FromUI"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Next", "FromUI"')
     }
 
     /**
@@ -439,14 +439,14 @@ export class VpcMenuActions {
      * new button
      */
     goMnuObjectsNewBtn() {
-        this.runMenuActionCode('doMenu "New Button"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Button"')
     }
 
     /**
      * new field
      */
     goMnuObjectsNewFld() {
-        this.runMenuActionCode('doMenu "New Field"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Field"')
     }
 
     /**
@@ -454,7 +454,7 @@ export class VpcMenuActions {
      */
     goMnuClear() {
         if (this.vci.getTool() === VpcTool.Browse) {
-            this.runMenuActionCode('doMenu "Clear"')
+            this.runMenuActionCode('vpcinternaluntrappabledomenu "Clear"')
         } else {
             this.cbOnClearNonBrowseTool()
         }

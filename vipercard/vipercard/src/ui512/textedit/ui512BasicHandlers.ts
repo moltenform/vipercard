@@ -3,8 +3,10 @@
 /* auto */ import { getRoot } from './../utils/util512Higher';
 /* auto */ import { checkIsProductionBuild } from './../utils/util512Base';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
-/* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
+/* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512ElementWithHighlight } from './../elements/ui512Element';
+
+import { ModifierKeys } from '../utils/utilsKeypressHelpers';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -87,7 +89,9 @@ export class BasicHandlers {
         pr: UI512PresenterWithMenuInterface,
         d: MouseMoveEventDetails
     ) {
-        pr.trackMouse = [d.mouseX, d.mouseY];
+        pr.trackMouse[0] = d.mouseX
+        pr.trackMouse[1] = d.mouseY
+        pr.trackMetaKeys = d.mods
         d.elNext = pr.app.coordsToElement(d.mouseX, d.mouseY);
         d.elPrev = pr.app.coordsToElement(d.prevMouseX, d.prevMouseY);
     }
@@ -171,14 +175,23 @@ export class BasicHandlers {
     }
 
     /**
+     * track keyup events
+     */
+    static trackKeyUp(
+        pr: UI512PresenterWithMenuInterface,
+        d: KeyUpEventDetails
+    ) {
+        pr.trackMetaKeys = d.mods
+    }
+
+    /**
      * define a few global shortcut keys.
-     * (we used to track keydown for cmd, option, and shift,
-     * but it was too easy for these events to be stuck or missed if key released offscreen)
      */
     static basicKeyShortcuts(
         pr: UI512PresenterWithMenuInterface,
         d: KeyDownEventDetails
     ) {
+        pr.trackMetaKeys = d.mods
         if (!d.repeated) {
             let wasShortcut = true;
             let runTestsShortcut = checkIsProductionBuild() ? 'Opt+Shift+T' : 'Opt+T';

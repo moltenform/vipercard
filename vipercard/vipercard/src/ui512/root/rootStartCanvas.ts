@@ -131,7 +131,10 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         button: number,
         buttons: number,
         prevMouseX: number,
-        prevMouseY: number
+        prevMouseY: number,
+        ctrlKey: boolean,
+        altKey: boolean,
+        shiftKey: boolean,
     ) => {
         try {
             let details = new MouseMoveEventDetails(
@@ -141,6 +144,14 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
                 prevMouseX,
                 prevMouseY
             );
+            let mods = ui512TranslateModifiers(
+                browserOSInfo,
+                ctrlKey,
+                shiftKey,
+                altKey,
+                false
+            );
+            details.mods = mods
             root.event(details);
             if (buttons !== root.mouseButtonsExpected) {
                 root.sendMissedEvents(buttons);

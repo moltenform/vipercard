@@ -350,7 +350,7 @@ return this.H$BuildMap(ctx);
                 checkThrowInternal(false, `<?|RuleExpr:${operatorListLen},${ctx.RuleLvl1Expression.length}.`);
             }
 
-            let total = this.visit(ctx.RuleLvl1Expression[0]) as VpcVal;
+            let total = this.visit(ctx.RuleLvl1Expression[0]);
             checkThrow(total instanceof VpcVal, '<@|RuleExpr: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpLogicalOrAnd;
             for (let i = 0; i < operatorListLen; i++) {
@@ -375,7 +375,7 @@ return this.H$BuildMap(ctx);
                 checkThrowInternal(false, `<^|RuleLvl1Expression:${operatorListLen},${ctx.RuleLvl2Expression.length}.`);
             }
 
-            let total = this.visit(ctx.RuleLvl2Expression[0]) as VpcVal;
+            let total = this.visit(ctx.RuleLvl2Expression[0]);
             checkThrow(total instanceof VpcVal, '<_|RuleLvl1Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpEqualityGreaterLessOrContains;
             for (let i = 0; i < operatorListLen; i++) {
@@ -402,7 +402,7 @@ return this.H$BuildMap(ctx);
                 checkThrowInternal(false, `<}|RuleLvl3Expression:${operatorListLen},${ctx.RuleLvl4Expression.length}.`);
             }
 
-            let total = this.visit(ctx.RuleLvl4Expression[0]) as VpcVal;
+            let total = this.visit(ctx.RuleLvl4Expression[0]);
             checkThrow(total instanceof VpcVal, '<~|RuleLvl3Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpStringConcat;
             for (let i = 0; i < operatorListLen; i++) {
@@ -427,7 +427,7 @@ return this.H$BuildMap(ctx);
                 checkThrowInternal(false, `=2|RuleLvl4Expression:${operatorListLen},${ctx.RuleLvl5Expression.length}.`);
             }
 
-            let total = this.visit(ctx.RuleLvl5Expression[0]) as VpcVal;
+            let total = this.visit(ctx.RuleLvl5Expression[0]);
             checkThrow(total instanceof VpcVal, '=3|RuleLvl4Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpPlusMinus;
             for (let i = 0; i < operatorListLen; i++) {
@@ -452,7 +452,7 @@ return this.H$BuildMap(ctx);
                 checkThrowInternal(false, `=6|RuleLvl5Expression:${operatorListLen},${ctx.RuleLvl6Expression.length}.`);
             }
 
-            let total = this.visit(ctx.RuleLvl6Expression[0]) as VpcVal;
+            let total = this.visit(ctx.RuleLvl6Expression[0]);
             checkThrow(total instanceof VpcVal, '=7|RuleLvl5Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpMultDivideExpDivMod;
             for (let i = 0; i < operatorListLen; i++) {

@@ -49,7 +49,7 @@ export abstract class UI512Element extends UI512PublicSettable {
     }
 
     getFmTxt(): FormattedText {
-        let got = (this as any)['_' + UI512PublicSettable.fmtTxtVarName] as FormattedText;
+        let got = (this as any)['_' + UI512PublicSettable.fmtTxtVarName];
         assertTrue(
             got instanceof FormattedText,
             `2&|did not get formatted text as expected`

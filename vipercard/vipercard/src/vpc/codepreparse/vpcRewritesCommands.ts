@@ -155,7 +155,7 @@ return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0% , the sh
         return [line];
     }
     rewriteDo(line: ChvITk[]): ChvITk[][] {
-        let template = `send ( %ARG0% ) to me`;
+        let template = `send "do" ( %ARG0% ) to me`;
         return this.rw.gen(template, line[0], [line.slice(1)]);
     }
     rewriteDoMenu(line: ChvITk[]): ChvITk[][] {
@@ -377,6 +377,10 @@ put the result %ARG0%`;
         } else {
             return [line];
         }
+    }
+    rewriteSend(line: ChvITk[]): ChvITk[][] {
+        line.splice(1, 0, BuildFakeTokens.makeStringLiteral(line[0], 'send'))
+        return [line]
     }
     rewriteSave(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the save command', line[0])];

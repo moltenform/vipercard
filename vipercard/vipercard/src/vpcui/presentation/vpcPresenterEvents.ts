@@ -101,6 +101,7 @@ export const VpcPresenterEvents = /* static class */ {
         ];
 
         pr.listeners[UI512EventType.KeyUp] = [
+            BasicHandlers.trackKeyUp,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.respondKeyUp,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool

@@ -1,4 +1,5 @@
 
+/* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, RepeatingTimer, UI512IsPresenterInterface, VoidFn } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
@@ -32,6 +33,7 @@ export abstract class UI512PresenterBase
     private currentFocus: O<string>;
     app: UI512Application;
     trackMouse = [-1, -1];
+    trackMetaKeys = ModifierKeys.None
     trackPressedBtns: boolean[] = Util512.repeat(this.maxMouseButtons, false);
     trackClickedIds: O<string>[] = Util512.repeat(this.maxMouseButtons, undefined);
     listeners: { [t: number]: FnEventCallback[] } = {};
@@ -55,6 +57,7 @@ export abstract class UI512PresenterBase
         if (other.trackMouse !== undefined) {
             this.trackMouse = other.trackMouse;
             this.trackPressedBtns = other.trackPressedBtns;
+            this.trackMetaKeys = other.trackMetaKeys
         }
     }
 

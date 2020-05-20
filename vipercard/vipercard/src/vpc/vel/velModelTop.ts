@@ -145,15 +145,12 @@ export class VpcModelTop implements VpcHandleLinkedVels {
      * get child arrays
      */
     static getChildArrays(vel: VpcElBase): VpcElBase[][] {
-        let velAsCard = vel as VpcElCard;
-        let velAsBg = vel as VpcElBg;
-        let velAsStack = vel as VpcElStack;
-        if (velAsCard instanceof VpcElCard) {
-            return [velAsCard.parts];
-        } else if (velAsBg instanceof VpcElBg) {
-            return [velAsBg.cards];
-        } else if (velAsStack instanceof VpcElStack) {
-            return [velAsStack.bgs];
+        if (vel instanceof VpcElCard) {
+            return [vel.parts];
+        } else if (vel instanceof VpcElBg) {
+            return [vel.cards];
+        } else if (vel instanceof VpcElStack) {
+            return [vel.bgs];
         } else {
             return [];
         }

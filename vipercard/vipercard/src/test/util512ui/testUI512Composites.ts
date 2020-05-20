@@ -203,7 +203,7 @@ end1`.replace(/\r\n/g, '\n')
         this.simulateKey(pr, 'ArrowRight', '', true, false);
 
         pr.useOSClipboard = false;
-        let clipManager = pr.clipManager as ClipManager;
+        let clipManager = pr.clipManager;
         assertTrue(clipManager instanceof ClipManager, '9p|');
         clipManager.simClipboard = '';
         this.simulateKey(pr, 'C', 'c', false, true);

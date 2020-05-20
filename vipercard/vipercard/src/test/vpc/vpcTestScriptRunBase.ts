@@ -8,7 +8,6 @@
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
 /* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
-/* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { BrowserInfo } from './../../ui512/utils/util512Higher';
@@ -148,10 +147,6 @@ export class TestVpcScriptRunBase {
     ids: { [key: string]: string } = {};
     evalHelpers = new VpcEvalHelpers();
     initedAppl = false;
-    simMouseX: number;
-    simMouseY: number;
-    simClickX: number;
-    simClickY: number;
     /* are bg vels supported yet */
     useBg = false;
     readonly customFunc = 'function';
@@ -300,17 +295,6 @@ export class TestVpcScriptRunBase {
             //~ bgbC1: bgbC1.idInternal,
             go: go.idInternal
         };
-
-        let b = go as VpcElButton;
-        assertTrue(b instanceof VpcElButton, '2c|not a button');
-        let userBounds = this.pr.userBounds;
-
-        /* make the button location more realistic, it should be within userBounds */
-        b.setDimensions(userBounds[0] + 1, userBounds[1] + 1, 30, 30, this.vcstate.model);
-        this.simMouseX = b.getN('x') + 5;
-        this.simMouseY = b.getN('y') + 6;
-        this.simClickX = b.getN('x') + 7;
-        this.simClickY = b.getN('y') + 8;
     }
 
     protected onScriptErr(
@@ -396,7 +380,8 @@ export class TestVpcScriptRunBase {
         expectErrMsg?: string,
         expectErrLine?: number,
         expectPreparseErr?: boolean,
-        addNoHandler?: boolean
+        addNoHandler?: boolean,
+        targetId=this.ids.go
     ) {
         let caughtErr: O<VpcErr>;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
@@ -418,18 +403,19 @@ export class TestVpcScriptRunBase {
         built = built.replace(/{BSLASH}/g, '\\');
         built = FormattedText.fromExternalCharset(built, BrowserInfo.get().os);
 
-        let btnGo = this.vcstate.model.getById(VpcElButton, this.ids.go);
+        let vel = this.vcstate.model.getByIdUntyped(targetId);
         this.vcstate.vci.doWithoutAbilityToUndo(() =>
-            btnGo.setOnVel('script', built, this.vcstate.model)
+            vel.setOnVel('script', built, this.vcstate.model)
         );
 
-        /* fake a click inside btnGo */
+        /* fake a click inside a btn, usually btnGo */
         assertEq(VpcTool.Browse, this.pr.getTool(), 'HY|');
-        this.pr.trackMouse = [this.simMouseX, this.simMouseY];
+        let cursorX = vel.ui512GettableHas('x') ? vel.getN('x') + 1 : this.pr.userBounds[0] + 100
+        let cursorY = vel.ui512GettableHas('y') ? vel.getN('y') + 1 : this.pr.userBounds[1] + 100
+        this.pr.trackMouse = [cursorX, cursorY];
         let fakeEvent = new MouseUpEventDetails(
             1,
-            this.simClickX,
-            this.simClickY,
+            cursorX, cursorY,
             0,
             ModifierKeys.None
         );
@@ -437,7 +423,7 @@ export class TestVpcScriptRunBase {
         VpcPresenterEvents.scheduleScriptMsgImpl(
             this.pr,
             fakeEvent,
-            btnGo.idInternal,
+            vel.idInternal,
             false
         );
 
@@ -673,7 +659,7 @@ export enum BatchType {
  * by overriding only secondTransformation, you are multiplying the number
  * of tests by two.
  * each transformation can elect to skip a test, just return undefined
- * you can also override both,
+ * you can also override both, for example, to remove a marker.
  */
 export abstract class TestMultiplier {
     firstTransformation(code: string, expected: string): O<[string, string]> {
