@@ -301,7 +301,7 @@ window['GOLLY'] = function(params) {
     listenOn.addEventListener('mousemove', function(e) {
         var x = e.pageX - _privateParts['offset'].x;
         var y = e.pageY - _privateParts['offset'].y;
-        var shouldContinue = _this['mousemove'](x, y, e.button, e.buttons, _privateParts['pmouseX'], _privateParts['pmouseY']);
+        _this['mousemove'](x, y, e.button, e.buttons, _privateParts['pmouseX'], _privateParts['pmouseY'], e.ctrlKey, e.altKey, e.shiftKey);
         _privateParts['pmouseX'] = x;
         _privateParts['pmouseY'] = y;
     }, false);
