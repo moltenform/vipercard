@@ -259,7 +259,7 @@ go {relativePosition}
         mid
         prev
 
-        ('go back' and 'go forth' are present for backwards compatibility, but are not recommended for use in new code)
+        ('go back' and 'go forth' are supported for compatibility with old scripts.)
 
 
 =====
@@ -495,3 +495,8 @@ wait {number} [seconds|milliseconds|ms|ticks]
         
         wait until the mouseH > 120
         wait until the shiftKey
+=====
+visual___effect
+=====
+        This feature will arrive in a future version...
+        

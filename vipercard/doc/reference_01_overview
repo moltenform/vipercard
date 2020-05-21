@@ -42,6 +42,14 @@ A long line of code can be continued with a backslash, e.g.
 `answer ("here is how to continue" & \
     "code across two lines")`
 
+To have a comment spanning many lines, do this,
+
+`on mouseUp
+    --[[this line is a comment
+    and so is this
+    and also this]]
+    answer "hello, world"
+end mouseUp`
 
 The language is not case sensitive. "on mouseup" and 
 "on mouseUp" are equivalent.
@@ -552,6 +560,62 @@ delete item 2 to 3 of myList
 `
 
 See also documentation for the `delete` command.
+
+=====
+Referring to objects
+=====
+Ways to refer to a stack:
+`
+this stack
+stack 1
+stack "name"
+`
+Ways to refer to a background:
+`
+this background
+prev background
+next background
+first background
+second background
+last background
+bg 1
+bg id 1234
+bg "name"
+`
+Ways to refer to a card:
+`
+this card
+prev card
+next card
+first card
+second card
+last card
+card 1
+card id 1234
+card "name"
+`
+Ways to refer to a button or field:
+`
+cd btn id 1234
+cd btn "myBtn"
+cd btn 2
+first cd btn
+any cd btn
+last cd btn
+`
+Other ways to refer to objects:
+`
+answer the name of the target
+answer the name of me
+answer the name of the owner of cd btn id 1234
+put "cd btn id 1234" into x
+answer the name of x
+
+function whichObject
+    return "cd btn id 1234"
+end whichObject
+answer the name of whichObject()
+`
 
 
 =====
