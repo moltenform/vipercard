@@ -1,5 +1,5 @@
 
- 
+
 ============================================================
 ========================= (Compatibility)
 ============================================================
@@ -29,11 +29,7 @@ put the abbrev name of cd fld "myFld" into z
 ========================= arrowKey {direction}
 ============================================================
 
-       sends an arrowKey message. by default,
-       arrowKey "left" goes to the previous card,
-       and arrowKey "right" goes to the next card,
-       but this can be overridden in a card script
-       or stack script.
+Sends an arrowKey message. by default, arrowKey "left" goes to the previous card, and arrowKey "right" goes to the next card, but this can be overridden in a card script or stack script.
 
 ============================================================
 ========================= bottom
@@ -111,19 +107,19 @@ put the freesize of this stack into z
 ========================= get {expression}
 ============================================================
 
-        Evaluates any expression and saves the result to the variable "it".
+Evaluates any expression and saves the result to the variable "it".
 
-        The 'put' command is typically more useful.
+The 'put' command is typically more useful.
 
-        Examples:
+Examples:
 
-        get 2+3
-        put it into x
-        answer x -- shows 5
+get 2+3
+put it into x
+answer x -- shows 5
 
-        get the width of cd btn "myBtn"
-        put it into x
-        answer x -- shows the width of the specified button
+get the width of cd btn "myBtn"
+put it into x
+answer x -- shows the width of the specified button
 
 ============================================================
 ========================= heapSpace()
@@ -134,14 +130,6 @@ Examples:
 
 put heapSpace() into x
 
-============================================================
-========================= id
-============================================================
-
-
-Examples:
-
-put the id of cd fld "myFld" into z
 
 ============================================================
 ========================= ln1(x)
@@ -160,16 +148,6 @@ put ln1(0.5) into x
 Examples:
 
 put the long name of cd fld "myFld" into z
-
-============================================================
-========================= name
-============================================================
-
-
-Examples:
-
-put the name of cd fld "myFld" into z
-
 
 ============================================================
 ========================= mark
@@ -289,9 +267,9 @@ put the suspended into z
 
 (Deprecated and hard-coded).
 To get the current software version, use
-put the version into x
+`put the version into x`
 or
-put the long version into x
+`put the long version into x`
 instead.
 
 Examples:
@@ -304,7 +282,9 @@ put systemVersion() into x
 ============================================================
 
 Fully functional, might not be useful.
+
 Sets the "marked" property on a card to false.
+
 Examples:
 
 unmark card id 1234

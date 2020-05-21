@@ -25,9 +25,7 @@ put atan(0.5) into x
 ========================= charToNum(x)
 ============================================================
 
-From ascii-like number to a character.
-Note that characters in a field are displayed in Mac OS Roman
-encoding.
+From ascii-like number to a character. Note that characters in a field are displayed in Mac OS Roman encoding.
 
 Note that the newline character is always \n (10).
 Examples:
@@ -188,8 +186,7 @@ end if
 ========================= keyChar()
 ============================================================
 
-In an afterkeydown or afterkeyup handler, check the character.
-Is affected by shift.
+In an afterkeydown or afterkeyup handler, check the character. Is affected by shift.
 Examples:
 
 put keyChar() into x
@@ -252,8 +249,7 @@ put log2(0.5) into x
 ========================= max(...)
 ============================================================
 
-Supports any number of arguments.
-You can also provide a comma-delimited string.
+Supports any number of arguments. You can also provide a comma-delimited string.
 Examples:
 
 put max(1,2,3) into x
@@ -277,8 +273,7 @@ set the width of me to 100
 ========================= min()
 ============================================================
 
-Supports any number of arguments.
-You can also provide a comma-delimited string.
+Supports any number of arguments. You can also provide a comma-delimited string.
 Examples:
 
 put min(1,2,3) into x
@@ -288,8 +283,7 @@ put min("45,49,40") into x -- returns 40
 ========================= mouse()
 ============================================================
 
-Is the mouse button currently down.
-Returns one of the constants `down` or `up`
+Is the mouse button currently down. Returns one of the constants `down` or `up`.
 Examples:
 
 if the mouse is down then
@@ -375,9 +369,7 @@ put numberToStr(0.5) into x
 ========================= numToChar(x)
 ============================================================
 
-From a character to an ascii-like number.
-Note that characters in a field are displayed in Mac OS Roman
-encoding.
+From a character to an ascii-like number. Note that characters in a field are displayed in Mac OS Roman encoding.
 
 Note that the newline character is always \n (10).
 Examples:
@@ -389,9 +381,7 @@ put numToChar("a") into x
 ========================= offset(needle, haystack)
 ============================================================
 
-Search for a string within a string, and return the position where found.
-If not found, returns 0.
-(one-based indexing).
+Search for a string within a string, and return the position where found. If not found, returns 0. (one-based indexing).
 Examples:
 
 put offset("b", "abc") into x
@@ -413,9 +403,7 @@ end if
 ========================= param(n)
 ============================================================
 
-Get the nth value passed into the current procedure. Can be used
-to build a function that takes any number of arguments, 
-see example.
+Get the nth value passed into the current procedure. Can be used to build a function that takes any number of arguments,  see example.
 
 Examples:
 
@@ -435,9 +423,7 @@ end mouseUp
 ========================= paramCount()
 ============================================================
 
-Get the number of values passed into the current procedure.
-Can be used to build a function that takes any number of 
-arguments, see example.
+Get the number of values passed into the current procedure. Can be used to build a function that takes any number of arguments, see example.
 
 Examples:
 
@@ -492,8 +478,7 @@ end mouseUp
 ========================= round(x)
 ============================================================
 
-Returns integer nearest to number. Odd integers plus 0.5 
-round up, even integers plus 0.5 round down.
+Returns integer nearest to number. Odd integers plus 0.5 round up, even integers plus 0.5 round down.
 Examples:
 
 put round(1.7) into x
@@ -521,8 +506,7 @@ put seconds() into x
 ========================= selectedChunk()
 ============================================================
 
-Current selection, looks something like 'char 2 to 4 of cd fld id 
-1234'.
+Current selection, looks something like 'char 2 to 4 of cd fld id 1234'.
 
 Examples:
 
@@ -533,8 +517,7 @@ put selectedChunk() into x
 ========================= selectedField()
 ============================================================
 
-The field that contains current selected text, looks something 
-like 'cd fld id 1234'.
+The field that contains current selected text, looks something like 'cd fld id 1234'.
 
 Examples:
 
@@ -596,9 +579,7 @@ put sin(0.5 * pi) into x
 ========================= strToNumber(x)
 ============================================================
 
-Parse string to number.
-Supports scientific notation.
-If cannot be parsed, returns "false"
+Parse string to number. Supports scientific notation. If cannot be parsed, returns "false"
 Examples:
 
 put strToNumber("12") into x
@@ -640,12 +621,8 @@ put tan(0.125 * pi) into x
 ============================================================
 
 Refers to the object that was most recently acted on.
-Here's one reason why this can be useful:
-If you have many buttons that all basically perform the same 
-action, you could have an 'on mouseup' handler in the card script
-instead of a separate script within each button. This script in the
-card could check the target to see which, if any, of the buttons
-were clicked.
+
+Here's one reason why this can be useful: If you have many buttons that all basically perform the same action, you could have an 'on mouseup' handler in the card script instead of a separate script within each button. This script in the card could check the target to see which, if any, of the buttons were clicked.
 
 Related to 'me', but not the same.
 
@@ -685,6 +662,7 @@ put ticks() into x
 ============================================================
 
 The current simulated tool, as set by the `choose` command. (The `choose` command can be used to draw lines and shapes).
+
 The actual current tool will be the browse tool when any script is running.
 
 Examples:
@@ -697,9 +675,7 @@ answer tool() -- shows "pencil"
 ========================= trunc(x)
 ============================================================
 
-Get integer part of a number.
-i.e. for positive numbers, always round down to the nearest 
-integer.
+Get integer part of a number. i.e. for positive numbers, always round down to the nearest integer.
 
 Examples:
 
@@ -713,15 +689,14 @@ put trunc(0.5) into x
 
 Computes the total cost of an annuity now that will pay you one unit per period, over the specific number of periods.
 
-You want to purchase an annuity that pays you $10,000 a year for 10 years. The interest rate is 10%. How much will it cost you now?
-The amount loaned is 10000 * annuity(0.10, 10), or 61445.67.
+You want to purchase an annuity that pays you $10,000 a year for 10 years. The interest rate is 10%. How much will it cost you now? The amount loaned is 10000 * annuity(0.10, 10), or 61445.67.
+
 ============================================================
 ========================= compound(rate, periods)
 ============================================================
 
 
-Returns the value of one unit of principal invested at the interest rate
-and compounded over the specified number of periods.
+Returns the value of one unit of principal invested at the interest rate and compounded over the specified number of periods.
 
 Example: $100 invested for 20 years at 10% interest compounded yearly:
 

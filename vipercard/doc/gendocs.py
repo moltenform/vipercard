@@ -11,7 +11,7 @@ sys.path.append('../tools')
 from ts_exports_util import *
 
 outloc = '../vipercard/resources/docs/'
-
+look for lines starting with *
 
 specialCharFontChange = "\x02"
 

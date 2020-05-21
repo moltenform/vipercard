@@ -5,19 +5,14 @@
 ========================= any object: id
 ============================================================
 
-The id uniquely identifies an object. In ViperCard,
-all objects will have different ids, even if they
-are different types or are on different cards.
+The id uniquely identifies an object. In ViperCard, all objects will have different ids, even if they are different types or are on different cards.
 
-If you put the long id of an object
-into a variable, you can use that variable
-to refer to the object.
+If you put the long id of an object into a variable, you can use that variable to refer to the object.
 
 `put the long id of card id 1011 into z
 set the name of z to "changed"`
 
-The short id of an object is just the number.
-For example the short id of card id 1011 is 1011.
+The short id of an object is just the number. For example the short id of card id 1011 is 1011.
 
 `put the short id of card id 1011 into z
 set the name of cd id z to "changed"`
@@ -50,9 +45,7 @@ answer the number of card 4 -- 4
 ========================= any object: owner
 ============================================================
 
-Gets the parent object. Btns and flds belong to cards,
-cards belong to backgrounds, and backgrounds belong
-to the stack.
+Gets the parent object. Btns and flds belong to cards, cards belong to backgrounds, and backgrounds belong to the stack.
 
 Examples:
 
@@ -65,6 +58,7 @@ set the name of the owner of cd btn "myBtn" to "changed"
 ============================================================
 
 Does the button turn black when you click on it?
+
 Examples:
 
 put the autohilite of cd btn "myBtn" into z
@@ -83,8 +77,8 @@ set the checkmark of cd btn "myBtn" to true.
 ========================= btn: enabled
 ============================================================
 
-If a button is not enabled, it is greyed out and
-can't be clicked.
+If a button is not enabled, it is greyed out and can't be clicked.
+
 Examples:
 
 set the enabled of cd btn "myBtn" to true
@@ -95,8 +89,8 @@ set the enabled of cd btn "myBtn" to false
 ========================= btn: left
 ============================================================
 
-The x coordinate of the top left corner of the object, in pixels.
-I.e. the distance from the left of the screen to the object.
+The x coordinate of the top left corner of the object, in pixels. I.e. the distance from the left of the screen to the object.
+
 Examples:
 
 set the left of cd btn "myBtn" to 4
@@ -154,9 +148,7 @@ put the icon of cd btn "myBtn" into z
 ========================= btn: rect, rectangle
 ============================================================
 
-Four numbers representing the left, top, bottom, and right coordinates.
-I.e. the first two numbers are the coordinates of the top left corner,
-and the last two numbers are the coordinates of the bottom right corner.
+Four numbers representing the left, top, bottom, and right coordinates. I.e. the first two numbers are the coordinates of the top left corner, and the last two numbers are the coordinates of the bottom right corner.
 Examples:
 
 set the rect of cd btn "myBtn" to 45,56,67,78
@@ -249,8 +241,7 @@ set the textstyle of cd btn "myBtn" to "bold"
 ========================= btn: top
 ============================================================
 
-The y coordinate of the top left corner of the object, in pixels.
-I.e. the distance from the top of the screen to the object.
+The y coordinate of the top left corner of the object, in pixels. I.e. the distance from the top of the screen to the object.
 Examples:
 
 put the top of cd btn "myBtn" into z
@@ -351,8 +342,7 @@ put the defaulttextstyle of cd fld "myFld" into z
 ========================= fld: left
 ============================================================
 
-The x coordinate of the top left corner of the object, in pixels.
-I.e. the distance from the left of the screen to the object.
+The x coordinate of the top left corner of the object, in pixels. I.e. the distance from the left of the screen to the object.
 Examples:
 
 set the left of cd fld "myFld" to 4
@@ -372,8 +362,7 @@ put the location of cd fld "myFld" into z
 ========================= fld: locktext
 ============================================================
 
-You can't type new text into a 'locked' field.
-You can still set the contents via a script.
+You can't type new text into a 'locked' field. You can still set the contents via a script.
 Examples:
 
 set the locktext of cd fld "myFld" to true
@@ -392,9 +381,7 @@ put the height of cd fld "myFld" into z
 ========================= fld: rect, rectangle
 ============================================================
 
-Four numbers representing the left, top, bottom, and right coordinates.
-I.e. the first two numbers are the coordinates of the top left corner,
-and the last two numbers are the coordinates of the bottom right corner.
+Four numbers representing the left, top, bottom, and right coordinates. I.e. the first two numbers are the coordinates of the top left corner, and the last two numbers are the coordinates of the bottom right corner.
 Examples:
 
 set the rect of cd fld "myFld" to 45,56,67,78
@@ -460,8 +447,7 @@ We now support getting and setting by chunk!
 `set the textfont of char 3 to 4 of cd fld "myFld" to "geneva"
 put the textfont of char 3 to 4 of cd fld "myFld" into z`
 
-When querying for a property and there are multiple values,
-returns the string "mixed".
+When querying for a property and there are multiple values, returns the string "mixed".
 
 
 ============================================================
@@ -477,8 +463,7 @@ We now support getting and setting by chunk!
 `set the textsize of char 3 to 4 of cd fld "myFld" to "geneva"
 put the textsize of char 3 to 4 of cd fld "myFld" into z`
 
-When querying for a property and there are multiple values,
-returns the string "mixed".
+When querying for a property and there are multiple values, returns the string "mixed".
 
 
 ============================================================
@@ -496,16 +481,14 @@ We now support getting and setting by chunk!
 `set the textstyle of char 3 to 4 of cd fld "myFld" to "bold"
 put the textstyle of char 3 to 4 of cd fld "myFld" into z`
 
-When querying for a property and there are multiple values,
-returns the string "mixed".
+When querying for a property and there are multiple values, returns the string "mixed".
 
 
 ============================================================
 ========================= fld: top
 ============================================================
 
-The y coordinate of the top left corner of the object, in pixels.
-I.e. the distance from the top of the screen to the object.
+The y coordinate of the top left corner of the object, in pixels. I.e. the distance from the top of the screen to the object.
 Examples:
 
 put the top of cd fld "myFld" into z

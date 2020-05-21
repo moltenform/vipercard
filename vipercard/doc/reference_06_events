@@ -7,11 +7,10 @@
 
 
 Called when a key is pressed.
-You can use the functions `keyChar()`,  `shiftKey()`,  `optionKey()`, 
-and `commandKey()`, to determine which key(s) where pressed.
 
-`keyRepeated()` can be used to see if the key event comes from
-the key having been held down.
+You can use the functions `keyChar()`,  `shiftKey()`,  `optionKey()`, and `commandKey()`, to determine which key(s) where pressed.
+
+`keyRepeated()` can be used to see if the key event comes from the key having been held down.
 
 Examples:
 
@@ -30,8 +29,8 @@ end afterKeyDown
 
 
 Called when a key is pressed and released.
-You can use the functions keyChar(), shiftKey(), optionKey(), and
-commandKey(), to determine which key(s) where pressed.
+
+You can use the functions keyChar(), shiftKey(), optionKey(), and commandKey(), to determine which key(s) where pressed.
 
 Examples:
 
@@ -81,9 +80,9 @@ end closeCard
 Sent when the user clicks on a field to select it, types text into the field, and then de-selects the field.
 
 If the browse tool is active, this message will be sent by the following:
-When typing text into a field, click outside the field
-When typing text into a field, press Enter
-When typing text into a field, go to a different card
+* When typing text into a field, click outside the field
+* When typing text into a field, press Enter
+* When typing text into a field, go to a different card
 
 See also: `openField` and `exitField`.
 
@@ -109,9 +108,9 @@ end closeField
 Sent when the user clicks on a field to select it, does not type text into the field, and then de-selects the field.
 
 If the browse tool is active, this message will be sent by the following:
-When a field is selected, click outside the field
-When a field is selected, press Enter
-When a field is selected, go to a different card
+* When a field is selected, click outside the field
+* When a field is selected, press Enter
+* When a field is selected, go to a different card
 
 It's possible for exitField to be sent to the field more than once if some of the above actions happen at the same time.
 
@@ -141,22 +140,16 @@ end exitField
 
 Sent repeatedly to the current card. Can be used for a game loop.
 
-(Note that to terminate a script that is being called repeatedly, 
-you can change to the button or field tool.)
+(Note that to terminate a script that is being called repeatedly, you can change to the button or field tool.)
 
-To get faster idle calls, at the expense of heavier cpu usage,
-use
-`set the idlerate to "faster"`
+To get faster idle calls, at the expense of heavier cpu usage, use `set the idlerate to "faster"`
 
 
 ============================================================
 ========================= on___mouseDoubleClick
 ============================================================
 
-Remember that scripts are only run when you're in the Browse
-tool (hand-shape). Create a button, edit its script, and type the example below.
-Now when you choose the browse tool and double-click the
-button, your code will run.
+Remember that scripts are only run when you're in the Browse tool (hand-shape). Create a button, edit its script, and type the example below. Now when you choose the browse tool and double-click the button, your code will run.
 
 Examples:
 
@@ -168,11 +161,7 @@ end mouseDoubleClick
 ========================= on___mouseDown
 ============================================================
 
-Remember that scripts are only run when you're in the
-Browse tool (hand-shape). Called whenever the mouse is 
-pressed down onto the object. Create a button, edit its script, and type the 
-example below. Now when you choose the browse tool and 
-click the button, your code will run.
+Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse is pressed down onto the object. Create a button, edit its script, and type the example below. Now when you choose the browse tool and click the button, your code will run.
 
 Examples:
 
@@ -184,44 +173,51 @@ end mouseDown
 ========================= on___mouseEnter
 ============================================================
 
-Remember that scripts are only run when you're in the Browse tool
-(hand-shape). Called whenever the mouse enters the object.
+Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse enters the object.
+
+Examples:
+
+on mouseEnter
+    set the icon of me to 12
+end mouseDown
 
 ============================================================
 ========================= on___mouseLeave
 ============================================================
 
-Remember that scripts are only run when you're in the Browse tool
-(hand-shape). Called whenever the mouse leaves the object.
+Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse leaves the object.
 
+Examples:
+
+on mouseLeave
+    set the icon of me to 10
+end mouseLeave
 
 ============================================================
 ========================= on___mouseUp
 ============================================================
 
-Remember that scripts are only run when you're in the Browse tool
-(hand-shape). Called whenever the mouse is clicked. To be precise,
-when the mouse is pressed down onto the object, and released on
-the same object. Create a button, edit its script, type the example below. 
-Now when you choose the browse tool and click the button, 
-your code will run.
+Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse is clicked. To be precise, when the mouse is pressed down onto the object, and released on the same object. Create a button, edit its script, type the example below. Now when you choose the browse tool and click the button, your code will run.
 
 Examples:
 
 on mouseUp
-    answer "code is running."
+    answer "hello, world."
 end mouseUp
 
 ============================================================
 ========================= on___mouseWithin
 ============================================================
 
-Called repeatedly when the cursor is inside the object.
-You can use the mouseloc() function to get the position of the 
-cursor. This can be used to create drag/drop effects.
+Called repeatedly when the cursor is inside the object. You can use the mouseloc() function to get the position of the cursor. This can be used to create drag/drop effects.
 
-(Note that to terminate a script that is being called repeatedly, 
-you can change to the button or field tool.)
+(Note that to terminate a script that is being called repeatedly, you can change to the button or field tool.)
+
+Examples:
+
+on mouseWithin
+    set the loc of cd btn "follow" to the mouseLoc
+end mouseWithin
 
 ============================================================
 ========================= on___openBackground
@@ -285,8 +281,8 @@ end openStack
 ========================= trappable: on___doMenu
 ============================================================
 
+You can make a custom doMenu handler that overrides the default one.
 
-You can make a custom doMenu handler.
 Hold the Shift key to bypass a customized doMenu.
 
 Examples:
