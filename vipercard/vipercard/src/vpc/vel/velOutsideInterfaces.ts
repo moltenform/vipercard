@@ -104,6 +104,11 @@ export interface OutsideWorldRead {
      * get the current card
      */
     GetCurrentCardId(): string;
+
+    /**
+     * get information about mouse and keyboard state
+     */
+    GetMouseAndKeyState(mouseCoords:[number, number], buttons:ValHolder<boolean[]>, mods:ValHolder<ModifierKeys>):void
 }
 
 /**

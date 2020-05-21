@@ -5,10 +5,11 @@
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
+/* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, findEnumToStr, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, findEnumToStr, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Lines } from './../../ui512/textedit/ui512TextLines';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -83,6 +84,7 @@ export class VpcBuiltinFunctions {
         mouseh: 0,
         mouseloc: 0,
         mousev: 0,
+        objectbyid: 1,
         param: 1,
         paramcount: 0,
         params: 0,
@@ -91,8 +93,7 @@ export class VpcBuiltinFunctions {
         selectedfield: 0,
         selectedline: 0,
         selectedtext: 0,
-        tool: 0,
-        objectbyid: 1
+        tool: 0
     };
 
     /**
@@ -419,15 +420,11 @@ export class VpcBuiltinFunctions {
         key is pressed.
      */
     callCmdkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        if (!frmMsg || frmMsg.cmdKey === undefined) {
-            checkThrow(
-                false,
-                longstr(`Ja|not a key event - function can only be
-                    called in a handler like 'on afterkeydown'`)
-            );
-        } else {
-            return VpcValBool(frmMsg && frmMsg.cmdKey);
-        }
+        let mouseCoords:[number, number] = [0,0]
+        let buttons = new ValHolder([false])
+        let mods = new ValHolder(ModifierKeys.None)
+        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        return VpcValBool((mods.val & ModifierKeys.Cmd)!==0)
     }
 
     /**
@@ -435,15 +432,11 @@ export class VpcBuiltinFunctions {
         key is pressed.
      */
     callOptionkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        if (!frmMsg || frmMsg.optionKey === undefined) {
-            checkThrow(
-                false,
-                longstr(`JZ|not a key event - function can only be called
-                    in a handler like 'on afterkeydown'`)
-            );
-        } else {
-            return VpcValBool(frmMsg && frmMsg.optionKey);
-        }
+        let mouseCoords:[number, number] = [0,0]
+        let buttons = new ValHolder([false])
+        let mods = new ValHolder(ModifierKeys.None)
+        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        return VpcValBool((mods.val & ModifierKeys.Opt)!==0)
     }
 
     /**
@@ -451,15 +444,11 @@ export class VpcBuiltinFunctions {
         key is pressed.
      */
     callShiftkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        if (!frmMsg || frmMsg.shiftKey === undefined) {
-            checkThrow(
-                false,
-                longstr(`JY|not a key event - function can only be called
-                    in a handler like 'on afterkeydown'`)
-            );
-        } else {
-            return VpcValBool(frmMsg && frmMsg.shiftKey);
-        }
+        let mouseCoords:[number, number] = [0,0]
+        let buttons = new ValHolder([false])
+        let mods = new ValHolder(ModifierKeys.None)
+        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        return VpcValBool((mods.val & ModifierKeys.Shift)!==0)
     }
 
     /**
@@ -520,7 +509,12 @@ export class VpcBuiltinFunctions {
      * Is the mouse button currently down.
      */
     callMouse(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return frmMsg && frmMsg.mouseIsDown ? VpcValS('down') : VpcValS('up');
+        let mouseCoords:[number, number] = [0,0]
+        let buttons = new ValHolder([false])
+        let mods = new ValHolder(ModifierKeys.None)
+        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        let isDown = buttons.val && buttons.val[0]
+        return VpcValS(isDown ? 'down' : 'up')
     }
 
     /**
@@ -534,21 +528,31 @@ export class VpcBuiltinFunctions {
      * The x coordinate of mouse location.
      */
     callMouseh(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return VpcValN(frmMsg.mouseLoc[0]);
+        let mouseCoords:[number, number] = [0,0]
+        let buttons = new ValHolder([false])
+        let mods = new ValHolder(ModifierKeys.None)
+        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        return VpcValN(mouseCoords[0]);
     }
 
     /**
      * The y coordinate of mouse location.
      */
     callMousev(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return VpcValN(frmMsg.mouseLoc[1]);
+        let mouseCoords:[number, number] = [0,0]
+        let buttons = new ValHolder([false])
+        let mods = new ValHolder(ModifierKeys.None)
+        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        return VpcValN(mouseCoords[1]);
     }
 
     /**
      * The coordinates of mouse location.
      */
     callMouseloc(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return VpcValS(`${frmMsg.mouseLoc[0]},${frmMsg.mouseLoc[1]}`);
+        let h = this.callMouseh(args, frmMsg, frmParams)
+        let v = this.callMousev(args, frmMsg, frmParams)
+        return VpcValS(`${h.readAsString()},${v.readAsString()}`);
     }
 
     /**

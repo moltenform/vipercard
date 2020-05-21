@@ -7,7 +7,6 @@
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
-/* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, coalesceIfFalseLike, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { arLast, cast, slength } from './../../ui512/utils/util512';
@@ -537,15 +536,10 @@ export const VpcPresenterEvents = /* static class */ {
 
         let whichMsg = isOnIdleEvent ? VpcBuiltinMsg.Idle : getMsgFromEvtType(d.type());
         let msg = new VpcScriptMessage(targetVelId, whichMsg);
-        msg.mouseLoc = [pr.trackMouse[0] - pr.userBounds[0], pr.trackMouse[1] - pr.userBounds[1]];
-        msg.mouseIsDown = pr.trackPressedBtns[0];
         msg.cardWhenFired = pr.vci.getOptionS('currentCardId');
         msg.causedByUserAction = true;
 
         if (d instanceof KeyEventDetails) {
-            msg.cmdKey = (d.mods & ModifierKeys.Cmd) !== 0;
-            msg.shiftKey = (d.mods & ModifierKeys.Shift) !== 0;
-            msg.optionKey = (d.mods & ModifierKeys.Opt) !== 0;
             msg.keyChar = d.keyChar;
             msg.keyMods = d.mods;
             msg.keyRepeated = d.repeated;

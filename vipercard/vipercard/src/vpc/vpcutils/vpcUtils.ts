@@ -39,11 +39,6 @@ export class VpcScriptMessage {
     keyMods: O<ModifierKeys>;
     keyChar: O<string>;
     keyRepeated: O<boolean>;
-    cmdKey: O<boolean>;
-    optionKey: O<boolean>;
-    shiftKey: O<boolean>;
-    mouseLoc: number[] = [-1, -1];
-    mouseIsDown = false;
     msg: VpcBuiltinMsg;
     msgName: string;
     cardWhenFired: O<string>;

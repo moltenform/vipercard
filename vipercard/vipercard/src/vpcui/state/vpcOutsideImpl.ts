@@ -24,7 +24,7 @@
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, assertEq, longstr, slength } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, assertEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
@@ -481,6 +481,17 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     CommitSimulatedClicks(queue: UI512PaintDispatch[]): void {
         this.vci.commitSimulatedClicks(queue);
+    }
+
+    /**
+     * get mouse and keyboard state
+     */
+    GetMouseAndKeyState(mouseCoords:[number, number], buttons:ValHolder<boolean[]>, mods:ValHolder<ModifierKeys>) {
+        let pr = this.vci.getPresenter()
+        mouseCoords[0] = pr.trackMouse[0]
+        mouseCoords[1] = pr.trackMouse[1]
+        buttons.val = pr.trackPressedBtns.slice()
+        mods.val = pr.trackMetaKeys
     }
 
     /**
