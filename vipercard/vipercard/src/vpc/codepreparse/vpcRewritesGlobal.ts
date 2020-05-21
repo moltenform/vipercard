@@ -49,28 +49,62 @@ export const VpcRewritesGlobal = /* static class */ {
         return line;
     },
 
+    /* these ones appear in tutorials/old demo stacks and so should be fixed */
+    fixOldSyntaxFor: {
+        result: 1,
+        paramcount: 1,
+        params: 1,
+        target: 1,
+        time: 1,
+        clickh: 1,
+        clickv: 1,
+        clickloc: 1,
+        mouseh: 1,
+        mousev: 1,
+        mouse: 1,
+        mouseloc: 1,
+        keychar: 1,
+        version: 1,
+        systemversion: 1,
+        tool: 1,
+    },
+
+    _shouldOmit(line: ChvITk[], i:number) {
+        /* omit "the" if it is in "hilite of the target" */
+        /* see "Pseudo-functions that refer to objects" in internaldocs.md */
+        if ( i >= 2 &&
+            (line[i - 2].tokenType === tks.tkAllUnaryPropertiesIfNotAlready ||
+                line[i - 2].tokenType === tks.tkUnaryVipercardProperties ||
+                line[i - 2].tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready) &&
+            line[i - 1].tokenType === tks.tkOfOnly &&
+            line[i].tokenType === tks._the &&
+            line[i + 1].tokenType === tks._target) {
+                return false
+            }
+        
+        /* transform 'the params()' into 'the params' */
+        if (i >= 2 && line[i].tokenType === tks.tkLParen && this.fixOldSyntaxFor[line[i-1].image] && line[i-2].tokenType === tks._the) {
+            return false
+        } else if (i >= 3 && line[i].tokenType === tks.tkRParen && line[i-1].tokenType === tks.tkLParen && this.fixOldSyntaxFor[line[i-2].image] && line[i-3].tokenType === tks._the) {
+            return false
+        }
+
+        return true
+    },
+
     /**
      * 1) from "short id of fld 1" to "short id of bg fld 1"
      * do this in software, at parse time it is difficult to clear
      * the ambiguity: the name of cd fld 1 could be parsed either way.
      * 2) go from 'the hilite of the target' to 'the hilite of target' for compat.
      *      see bgrammar_01.ccc for an explanation of why
+     * 3) go from 'the params()' to 'the params' for compat with old vipercard scripts.
      */
     rewriteSpecifyCdOrBgPart(line: ChvITk[], rw: VpcSuperRewrite, compatMode: boolean): ChvITk[] {
         let ret: ChvITk[] = [];
         for (let i = 0; i < line.length - 1; i++) {
-            /* omit "the" if it is in "hilite of the target" */
-            /* see "Pseudo-functions that refer to objects" in internaldocs.md */
-            if (
-                !(
-                    i >= 2 &&
-                    (line[i - 2].tokenType === tks.tkAllUnaryPropertiesIfNotAlready ||
-                        line[i - 2].tokenType === tks.tkUnaryVipercardProperties ||
-                        line[i - 2].tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready) &&
-                    line[i - 1].tokenType === tks.tkOfOnly &&
-                    line[i].tokenType === tks._the &&
-                    line[i + 1].tokenType === tks._target
-                )
+            
+            if (! this._shouldOmit(line, i)
             ) {
                 ret.push(line[i]);
             }

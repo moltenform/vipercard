@@ -371,9 +371,14 @@ t.test('ScriptParseFunctionCalls fn call with no args', () => {
     testExp(`not the time`, 'parses');
     testExp(`the target`, 'parses');
     testExp(`the long target`, 'parses');
+    /* we specifically support these in rewrites for backwards compat */
+    testExp(`the time()`, 'parses');
+    testExp(`not the time()`, 'parses');
+    testExp(`not the target()`, 'parses');
     /* we used to accept this, but we don't anymore */
-    assertFailsParseExp(`the time()`, 'NotAllInputParsed');
-    assertFailsParseExp(`not the time()`, 'NotAllInputParsed');
+    assertFailsParseExp(`the myFunction()`, 'NotAllInputParsed');
+    assertFailsParseExp(`the keyrepeated()`, 'NotAllInputParsed');
+    assertFailsParseExp(`the objectById()`, 'NotAllInputParsed');
 });
 t.test('ScriptParseFunctionCalls ensure that invalid fn calls are rejected', () => {
     assertFailsParseExp(`time() time()`, `NotAllInputParsedException`);
@@ -420,18 +425,10 @@ t.test('ScriptParseFunctionCalls allowed without parens', () => {
     );
 });
 t.test('ScriptParseFunctionCalls1', () => {
-    t.say(
-        longstr(`ScriptParseFunctionCalls but
-        parens are ok too if you want, as long as there is no adjective`)
-    );
     testExp(`the target`, 'parses');
     testExp(`the params`, 'parses');
     testExp(`the paramcount`, 'parses');
     testExp(`not the paramcount + 1`, 'parses');
-    assertFailsParseExp(`the target()`, 'Exception');
-    assertFailsParseExp(`the params()`, 'Exception');
-    assertFailsParseExp(`the paramcount()`, 'Exception');
-    assertFailsParseExp(`not the paramcount() + 1`, 'Exception');
 });
 t.test('ScriptParseFunctionCalls number of', () => {
     testExp(`the number of words of "a"`, 'parses');

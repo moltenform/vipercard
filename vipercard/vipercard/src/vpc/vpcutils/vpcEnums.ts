@@ -13,7 +13,7 @@
  * SortType for the "sort" command
  * text sorting (default), compares text, not case sensitive.
  * numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
- * international sorting, compares text using international locale.
+ * international sorting, not yet supported.
  */
 export enum SortType {
     __isUI512Enum = 1,

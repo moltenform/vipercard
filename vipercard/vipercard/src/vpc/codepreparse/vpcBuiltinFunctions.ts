@@ -424,7 +424,7 @@ export class VpcBuiltinFunctions {
         let buttons = new ValHolder([false])
         let mods = new ValHolder(ModifierKeys.None)
         this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
-        return VpcValBool((mods.val & ModifierKeys.Cmd)!==0)
+        return VpcValS((mods.val & ModifierKeys.Cmd)!==0 ? 'down' : 'up')
     }
 
     /**
@@ -436,7 +436,7 @@ export class VpcBuiltinFunctions {
         let buttons = new ValHolder([false])
         let mods = new ValHolder(ModifierKeys.None)
         this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
-        return VpcValBool((mods.val & ModifierKeys.Opt)!==0)
+        return VpcValS((mods.val & ModifierKeys.Opt)!==0 ? 'down' : 'up')
     }
 
     /**
@@ -448,7 +448,7 @@ export class VpcBuiltinFunctions {
         let buttons = new ValHolder([false])
         let mods = new ValHolder(ModifierKeys.None)
         this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
-        return VpcValBool((mods.val & ModifierKeys.Shift)!==0)
+        return VpcValS((mods.val & ModifierKeys.Shift)!==0 ? 'down' : 'up')
     }
 
     /**

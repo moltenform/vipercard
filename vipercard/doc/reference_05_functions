@@ -85,11 +85,11 @@ put clickv() into x
 Check if this modifier key is pressed.
 Examples:
 
-if commandKey() then
+if the commandKey is down then
     answer "cmd key is down"
 end if
 -- same as
-if cmdKey() then
+if the cmdKey is down then
     answer "cmd key is down"
 end if
 
@@ -203,11 +203,11 @@ Examples:
 
 put keyChar() into x
 on afterKeyDown
-    if keyChar() is "i" and not shiftKey() and \
-            optionKey() and not commandKey() then
+    if keyChar() is "i" and the shiftKey is up and \
+            the optionKey is down and the commandKey is up then
         answer "you pressed option-i"
-    else if keyChar() is "U" and shiftKey() and \
-            not optionKey() and not commandKey() then
+    else if keyChar() is "U" and the shiftKey is down and \
+            the optionKey is up and the commandKey is up then
         answer "you pressed shift-u"
     end if
 end afterKeyDown
@@ -420,7 +420,7 @@ put offset("b", "abc") into x
 Check if this modifier key is pressed.
 Examples:
 
-if optionKey() then
+if the optionKey is down then
     answer "opt key is down"
 end if
 
@@ -576,7 +576,7 @@ put selectedText() into x
 Check if this modifier key is pressed.
 Examples:
 
-if shiftKey() then
+if the shiftKey is down then
     answer "shift key is down"
 end if
 

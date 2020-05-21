@@ -14,7 +14,7 @@ export const ChunkResolutionSort = /* static class */ {
      * sort a container by chunks.
      * text sorting (default), compares text, not case sensitive.
      * numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
-     * international sorting, compares text using current locale.
+     * international sorting, not yet supported.
      */
     applySort(cont: WritableContainer, itemDel: string, type: VpcGranularity, sortType: SortType, ascend: boolean) {
         let splitBy: string;

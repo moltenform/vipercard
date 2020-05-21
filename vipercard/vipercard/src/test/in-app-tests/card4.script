@@ -1,37 +1,37 @@
 
 on afterkeydown
 	put "keydn " into s
-	if shiftkey() then
+	if the shiftkey is down then
 		put "shft+" after s
 	end if
-	if optionkey() then
+	if the optionkey is down then
 		put "opt+" after s
 	end if
-	if cmdkey() then
+	if the cmdkey is down then
 		put "cmd+" after s
 	end if
-	put the keychar() after s
+	put the keychar after s
 	log s
 end afterkeydown
 
 on afterkeyup
 	put "keyup " into s
-	if shiftkey() then
+	if the shiftkey is down then
 		put "shft+" after s
 	end if
-	if optionkey() then
+	if the optionkey is down then
 		put "opt+" after s
 	end if
-	if cmdkey() then
+	if the cmdkey is down then
 		put "cmd+" after s
 	end if
-	put the keychar() after s
+	put the keychar after s
 	log s
 end afterkeyup
 
 on idle
-	put the mouseh() into mx
-	put the mousev() into my
+	put the mouseh into mx
+	put the mousev into my
 	if mx > the left of cd btn "testOnIdle" and \
 		mx < the right of cd btn "testOnIdle" and \
 			my > the top of cd btn "testOnIdle" and \

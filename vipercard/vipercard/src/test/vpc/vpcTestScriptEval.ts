@@ -1374,10 +1374,10 @@ t.test('builtinFunctions', () => {
     b.t('xyz(1,2)', 'ERR:no handler');
 
     /* uses outside world */
-    b.t('cmdkey()', 'ERR:not a key event');
-    b.t('commandkey()', 'ERR:not a key event');
-    b.t('optionkey()', 'ERR:not a key event');
-    b.t('shiftkey()', 'ERR:not a key event');
+    b.t('cmdkey()', 'up');
+    b.t('commandkey()', 'up');
+    b.t('optionkey()', 'up');
+    b.t('shiftkey()', 'up');
     //~ b.t('clickh()', `${h.simClickX - userBounds[0]}`);
     //~ b.t('clickv()', `${h.simClickY - userBounds[1]}`);
     //~ b.t('clickloc()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
@@ -1393,6 +1393,12 @@ t.test('builtinFunctions', () => {
     b.t('params()', ``);
     b.t('result()', ``);
     b.t('tool()', `browse`);
+
+    /* compatibility with old code/tutorial code */
+    b.t('put the clickH() into x\\1', `1`);
+    b.t('put the clickV() into y\\1', `1`);
+    b.t('put the clickLoc() into xy\\1', `1`);
+    
 
     /* casing */
     //~ b.t('CLICKLOC()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);

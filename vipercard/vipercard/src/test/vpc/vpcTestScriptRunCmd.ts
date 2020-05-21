@@ -723,7 +723,6 @@ t.test('execCommands get', () => {
     b.t('get xyz()\\it', `ERR:no handler`);
     b.t('get the environment\\it', `development`);
     b.t('get the systemversion\\it', `7.55`);
-    b.t('get the systemversion()\\it', `ERR:parse err`);
     b.t('get abs(-2)\\it', `2`);
     b.t('get sum(3,4,5)\\it', `12`);
     b.t('get - char 1 to 2 of 345\\it', `-34`);
