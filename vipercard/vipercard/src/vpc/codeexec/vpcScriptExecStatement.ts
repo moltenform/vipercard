@@ -1,5 +1,6 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { VpcExecInternalDirectiveAbstract } from './vpcScriptExecInternalDirective';
@@ -38,18 +39,18 @@ export class ExecuteStatement {
     /**
      * execute a single line of code
      */
-    go(line: VpcCodeLine, visitResult: VpcIntermedValBase, blocked: ValHolder<AsyncCodeOpState>) {
+    go(line: VpcCodeLine, visitResult: VpcIntermedValBase, blocked: ValHolder<AsyncCodeOpState>, msg:VpcScriptMessage) {
         checkThrowEq(VpcLineCategory.Statement, line.ctg, '7h|not a statement');
         let firstToken = line.firstToken;
         let method = 'go' + Util512.capitalizeFirst(firstToken.image);
-        Util512.callAsMethodOnClass(ExecuteStatement.name, this, method, [line, visitResult, blocked], false);
+        Util512.callAsMethodOnClass(ExecuteStatement.name, this, method, [line, visitResult, blocked, msg], false);
     }
 
     /**
      * add {number} to [chunk of] {container}
      * Adds the value of number to the number in a container.
      */
-    goAdd(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goAdd(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         this.h.goMathAlter(line, vals, (a: number, b: number) => a + b);
     }
     /**
@@ -104,7 +105,7 @@ export class ExecuteStatement {
     /**
      * Play the system beep sound.
      */
-    goBeep(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goBeep(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         VpcAudio.beep();
     }
     /**
@@ -112,7 +113,7 @@ export class ExecuteStatement {
      * Use the choose command for programmatically drawing pictures.
      * Doesn't set the actual tool, which is always Browse when scripts are running.
      */
-    goVpccalluntrappablechoose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goVpccalluntrappablechoose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let term = ensureDefined(this.h.findChildVal(vals, tkstr.RuleExpr), '5G|');
         let tool = this.getWhichTool(term.readAsString());
         let ctg = getToolCategory(tool);
@@ -139,13 +140,13 @@ export class ExecuteStatement {
      * click at {x}, {y}
      * Use the click command for programmatically drawing pictures.
      */
-    goClick(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        return this.h.clickOrDrag(line, vals, 'at');
+    goClick(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>, msg:VpcScriptMessage) {
+        return this.h.clickOrDrag(line, vals, 'at', msg);
     }
     /**
      * delete char {i} of {container}
      */
-    goDelete(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goDelete(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         if (vals.vals.RuleObject && vals.vals.RuleObject.length) {
             checkThrow(false, "5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
@@ -179,32 +180,32 @@ export class ExecuteStatement {
      * divide [chunk of] {container} by {number}
      * Divides the number in a container by a number.
      */
-    goDivide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goDivide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         this.h.goMathAlter(line, vals, (a: number, b: number) => a / b);
     }
     /**
      * disable a vel
      */
-    goDisable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goDisable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         this.setEnabled(line, vals, false);
     }
     /**
      * drag from {x1}, {y1} to {x2}, {y2}
      * Use the drag command for programmatically drawing pictures.
      */
-    goDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        return this.h.clickOrDrag(line, vals, 'from');
+    goDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>, msg:VpcScriptMessage) {
+        return this.h.clickOrDrag(line, vals, 'from', msg);
     }
     /**
      * enable a vel
      */
-    goEnable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goEnable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         this.setEnabled(line, vals, true);
     }
     /**
      * show an error, appears as a script error conveniently
      */
-    goVpccalluntrappableerrordialog(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goVpccalluntrappableerrordialog(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let args = this.h.getChildVpcVals(vals, tkstr.RuleExpr, true);
         let s = args[0].readAsString();
         checkThrowNotifyMsg(false, 'aa|' + s);
@@ -212,7 +213,7 @@ export class ExecuteStatement {
     /**
      * hide command. hide an object or the menubar
      */
-    goHide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goHide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let ref = this.h.findChildVelRef(vals, tkstr.RuleObject);
         let identifier = this.h.findChildStr(vals, tkstr.tkIdentifier);
         if (ref) {
@@ -230,7 +231,7 @@ export class ExecuteStatement {
     /**
      * lock screen
      */
-    goLock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goLock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
         checkThrow(params[0] === 'screen', 'R<|only support lock screen');
         this.outside.SetOption('screenLocked', true);
@@ -238,7 +239,7 @@ export class ExecuteStatement {
     /**
      * mark cards
      */
-    goMark(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goMark(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
         let shouldMark = !bool(vals.vals[tkstr._not]?.length)
         if (params[0] === 'all') {
@@ -258,7 +259,7 @@ export class ExecuteStatement {
      * multiply [chunk of] {container} by {number}
      * Multiplies the number in a container by a number.
      */
-    goMultiply(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goMultiply(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         this.h.goMathAlter(line, vals, (a: number, b: number) => a * b);
     }
     /**
@@ -268,7 +269,7 @@ export class ExecuteStatement {
      * first, and then
      *      play "mySound"
      */
-    goPlay(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goPlay(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let args = this.h.getChildVpcVals(vals, tkstr.RuleExpr, true);
         let whichSound = args[0].readAsString();
         let isJustLoadIdentifier =
@@ -291,7 +292,7 @@ export class ExecuteStatement {
      * put {expression} into {container}
      * Evaluates any expression and saves the result to a variable or container.
      */
-    goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         /* for performance, visiting a put returns a flat array */
         let ar = vals as any;
         let val = cast(VpcVal, ar[0]);
@@ -305,7 +306,7 @@ export class ExecuteStatement {
     /**
      * reset paint/ menubar
      */
-    goReset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goReset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
         checkThrow(params[0] === 'paint', 'R:|only support reset paint');
         checkThrow(false, "52|the 'reset' command is not yet implemented.");
@@ -313,7 +314,7 @@ export class ExecuteStatement {
     /**
      * replace text
      */
-    goReplace(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goReplace(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let exprs = vals.vals[tkstr.RuleExpr];
         let expr1 = exprs[0];
         let expr2 = exprs[1];
@@ -330,7 +331,7 @@ export class ExecuteStatement {
     /**
      * selects text
      */
-    goSelect(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goSelect(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals);
         if (params[0] === 'empty') {
             checkThrow(false, 'R+|nyi: deselecting text');
@@ -344,7 +345,7 @@ export class ExecuteStatement {
     /**
      * set the {property} of {button|field} to {value}
      */
-    goSet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goSet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let velRef = this.h.findChildVelRef(vals, tkstr.RuleObject);
         let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk);
         let tk = ensureDefined(vals.vals[tkstr.RuleHCouldBeAPropertyToSet], 'R(|')[0];
@@ -396,7 +397,7 @@ export class ExecuteStatement {
     /**
      * show {button|field}
      */
-    goShow(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goShow(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let identifiers = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
         if (identifiers && identifiers[0] === 'menubar') {
             this.outside.SetOption('fullScreen', false);
@@ -416,7 +417,7 @@ export class ExecuteStatement {
     /**
      * sort (has been rewritten to add string literal params)
      */
-    goSort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goSort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals);
         checkThrowEq(2, params.length, 'R%|');
         let itemDel = this.outside.GetItemDelim();
@@ -433,13 +434,13 @@ export class ExecuteStatement {
      * subtract [chunk of] {container} from {number}
      * Subtracts a number from the number in a container.
      */
-    goSubtract(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goSubtract(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         this.h.goMathAlter(line, vals, (a: number, b: number) => a - b);
     }
     /**
      * unlock screen
      */
-    goUnlock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+    goUnlock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
         checkThrow(params[0] === 'screen', 'R!|only support lock screen');
         this.outside.SetOption('screenLocked', false);

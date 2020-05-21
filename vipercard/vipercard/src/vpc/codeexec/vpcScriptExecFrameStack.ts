@@ -362,7 +362,7 @@ export class VpcExecFrameStack {
         VpcCurrentScriptStage.origClass = undefined;
         VpcCurrentScriptStage.latestVelID = curFrame.meId;
         VpcCurrentScriptStage.dynamicCodeOrigin = curFrame.dynamicCodeOrigin;
-        this.execStatements.go(curLine, visited, blocked);
+        this.execStatements.go(curLine, visited, blocked, curFrame.message);
         if (blocked.val === AsyncCodeOpState.AllowNext) {
             curFrame.next();
         }

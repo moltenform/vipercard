@@ -78,7 +78,6 @@ export class VpcBuiltinFunctions {
         keychar: 0,
         clickh: 0,
         clickloc: 0,
-        clicklocacquire: 0,
         clickv: 0,
         mouse: 0,
         mouseclick: 0,
@@ -504,19 +503,6 @@ export class VpcBuiltinFunctions {
     }
 
     /**
-     * update clickloc
-     */
-    callClicklocacquire(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let clicked:[number, number, number] = [0,0,0]
-        let buttons = new ValHolder([false])
-        let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState([0,0], clicked, buttons, mods)
-        frmMsg.clickLoc[0] = clicked[0]
-        frmMsg.clickLoc[1] = clicked[1]
-        /* don't update lastSeenClicked, this doesn't count as a mouseclick() */
-    }
-
-    /**
      * Is the mouse button currently down.
      */
     callMouse(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
@@ -538,7 +524,8 @@ export class VpcBuiltinFunctions {
         let ret = false
         if (clicked[2] !== frmMsg.lastSeenClickId) {
             ret = true
-            this.callClicklocacquire(args, frmMsg, frmParams)
+            frmMsg.clickLoc[0] = clicked[0]
+            frmMsg.clickLoc[1] = clicked[1]    
             /* reset the mouseclick so subsequent calls return false */
             frmMsg.lastSeenClickId = clicked[2]
         }

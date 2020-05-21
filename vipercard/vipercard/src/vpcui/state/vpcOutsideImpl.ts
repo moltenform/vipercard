@@ -475,12 +475,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
 
         let frStack = this.getExecFrameStack()[0];
         frStack.paintQueue.push(args);
-        
-        /* add click to the pr's click tracking.
-        confirmed in emulator that it uses first coordinates. */
-        this.vci.getPresenter().trackLastClick[0] = args.xPts[0]
-        this.vci.getPresenter().trackLastClick[1] = args.yPts[0]
-        this.vci.getPresenter().trackLastClick[2] += 1
     }
 
     /**
