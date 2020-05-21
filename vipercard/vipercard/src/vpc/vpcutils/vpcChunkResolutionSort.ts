@@ -1,7 +1,7 @@
 
 /* auto */ import { WritableContainer } from './vpcUtils';
 /* auto */ import { SortType, VpcGranularity, checkThrow } from './vpcEnums';
-/* auto */ import { util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { getEnumToStrOrFallback, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -47,12 +47,8 @@ export const ChunkResolutionSort = /* static class */ {
                 b = b.toLowerCase();
                 return a < b ? -1 : a > b ? 1 : 0;
             };
-        } else if (sortType === SortType.International) {
-            sorter = (a, b) => {
-                return a.localeCompare(b);
-            };
         } else {
-            checkThrow(false, `5.|Don't yet support sorting by style ${sortType}`);
+            checkThrow(false, `5.|Don't yet support sorting by style ${getEnumToStrOrFallback(SortType, sortType)}`);
         }
 
         split.sort(sorter);
