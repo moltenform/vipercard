@@ -1,15 +1,19 @@
-=====
-abs(x)
-=====
+
+ 
+============================================================
+========================= abs(x)
+============================================================
+
 Absolute value.
 Examples:
 
 put abs(-0.5) into x
 put abs(0.5) into x
 
-=====
-atan(x)
-=====
+============================================================
+========================= atan(x)
+============================================================
+
 
 Arctangent, in radians.
 Examples:
@@ -17,9 +21,10 @@ Examples:
 put atan(0.5) into x
 
 
-=====
-charToNum(x)
-=====
+============================================================
+========================= charToNum(x)
+============================================================
+
 From ascii-like number to a character.
 Note that characters in a field are displayed in Mac OS Roman
 encoding.
@@ -31,18 +36,20 @@ put charToNum(97) into x
 
 
 
-=====
-clickh()
-=====
+============================================================
+========================= clickh()
+============================================================
+
 In a mousedown or mouseup handler, get click x coordinate.
 Examples:
 
 put clickh() into x
 
 
-=====
-clickloc()
-=====
+============================================================
+========================= clickloc()
+============================================================
+
 In a mousedown or mouseup handler, get click x,y coordinates.
 
 Examples:
@@ -50,9 +57,10 @@ Examples:
 put clickloc() into x
 
 
-=====
-clickv()
-=====
+============================================================
+========================= clickv()
+============================================================
+
 In a mousedown or mouseup handler, get click y coordinate.
 
 Examples:
@@ -60,9 +68,10 @@ Examples:
 put clickv() into x
 
 
-=====
-commandKey()
-=====
+============================================================
+========================= commandKey()
+============================================================
+
 Check if this modifier key is pressed.
 Examples:
 
@@ -75,9 +84,10 @@ if cmdKey() then
 end if
 
 
-=====
-contains
-=====
+============================================================
+========================= contains
+============================================================
+
 Can you find a string within a string?
 
 Examples:
@@ -86,18 +96,20 @@ if "abc" contains "b" then
     answer "yes"
 end if
 
-=====
-cos(x)
-=====
+============================================================
+========================= cos(x)
+============================================================
+
 
 Examples:
 
 put cos(0.5 * pi) into x
 
-=====
-date()
-the {adjective} date
-=====
+============================================================
+========================= date()
+========================= the {adjective} date
+============================================================
+
 
 Returns the current date.
 
@@ -110,9 +122,10 @@ the short date
 the long date
 the English date
 
-=====
-exp(x)
-=====
+============================================================
+========================= exp(x)
+============================================================
+
 e to the power of x.
 Examples:
 
@@ -120,18 +133,20 @@ put exp(0.5) into x
 
 
 
-=====
-exp2(x)
-=====
+============================================================
+========================= exp2(x)
+============================================================
+
 2 to the power of x.
 
 Examples:
 
 put exp2(0.5) into x
 
-=====
-is___a
-=====
+============================================================
+========================= is___a
+============================================================
+
 Check the type of an expression.
 
 Examples:
@@ -152,9 +167,10 @@ if x is a rect then
     answer "e"
 end if
 
-=====
-is___in
-=====
+============================================================
+========================= is___in
+============================================================
+
 Can you find a string within a string?
 Examples:
 
@@ -168,9 +184,10 @@ if "b" is within "abc" then
 end if
 
 
-=====
-keyChar()
-=====
+============================================================
+========================= keyChar()
+============================================================
+
 In an afterkeydown or afterkeyup handler, check the character.
 Is affected by shift.
 Examples:
@@ -186,9 +203,10 @@ on afterKeyDown
     end if
 end afterKeyDown
 
-=====
-keyRepeated()
-=====
+============================================================
+========================= keyRepeated()
+============================================================
+
 In an afterkeydown handler, did this event come from the user holding the key down?
 Examples:
 
@@ -196,9 +214,10 @@ if not keyRepeated() then
     add 1 to uniqueKeyPresses
 end if
 
-=====
-length(s)
-=====
+============================================================
+========================= length(s)
+============================================================
+
 Returns the length of a string, in characters.
 
 Examples:
@@ -207,9 +226,10 @@ answer length("abc") -- displays 3
 answer the length of "" -- displays 0
 answer the length of "abc" -- displays 3
 
-=====
-ln(x)
-=====
+============================================================
+========================= ln(x)
+============================================================
+
 
 Examples:
 
@@ -219,17 +239,19 @@ put ln(0.5) into x
 
 
 
-=====
-log2(x)
-=====
+============================================================
+========================= log2(x)
+============================================================
+
 Base-2 logarithm.
 Examples:
 
 put log2(0.5) into x
 
-=====
-max(...)
-=====
+============================================================
+========================= max(...)
+============================================================
+
 Supports any number of arguments.
 You can also provide a comma-delimited string.
 Examples:
@@ -237,9 +259,10 @@ Examples:
 put max(1,2,3) into x
 put max("45,49,40") into x -- returns 49
 
-=====
-me
-=====
+============================================================
+========================= me
+============================================================
+
 Refers to the object that owns the current script.
 
 Similar to, but distinct from 'target'.
@@ -250,9 +273,10 @@ put the id of me into theTarget
 
 set the width of me to 100
 
-=====
-min()
-=====
+============================================================
+========================= min()
+============================================================
+
 Supports any number of arguments.
 You can also provide a comma-delimited string.
 Examples:
@@ -260,9 +284,10 @@ Examples:
 put min(1,2,3) into x
 put min("45,49,40") into x -- returns 40
 
-=====
-mouse()
-=====
+============================================================
+========================= mouse()
+============================================================
+
 Is the mouse button currently down.
 Returns one of the constants `down` or `up`
 Examples:
@@ -271,9 +296,10 @@ if the mouse is down then
     answer "mouse button is clicked"
 end if
 
-=====
-mouseclick()
-=====
+============================================================
+========================= mouseclick()
+============================================================
+
 Are we currently handling a mousedown or mouseup event.
 
 Examples:
@@ -282,18 +308,20 @@ put mouseclick() into x
 
 
 
-=====
-mouseh()
-=====
+============================================================
+========================= mouseh()
+============================================================
+
 The x coordinate of the current mouse location.
 Examples:
 
 put mouseh() into x
 
 
-=====
-mouseloc()
-=====
+============================================================
+========================= mouseloc()
+============================================================
+
 The coordinates of the current mouse location.
 
 Examples:
@@ -301,9 +329,10 @@ Examples:
 put mouseloc() into x
 
 
-=====
-mousev()
-=====
+============================================================
+========================= mousev()
+============================================================
+
 The y coordinate of the current mouse location.
 
 Examples:
@@ -311,9 +340,10 @@ Examples:
 put mousev() into x
 
 
-=====
-number
-=====
+============================================================
+========================= number
+============================================================
+
 ^Count parts of text^
 `answer the number of chars in "abc"`
 `answer the number of items in "a,b,c"`
@@ -332,17 +362,19 @@ end repeat`
 `put the number of cd fld id 1234 into x
 put "abc" into cd fld x`
 
-=====
-numberToStr(x)
-=====
+============================================================
+========================= numberToStr(x)
+============================================================
+
 Convert number to string.
 Examples:
 
 put numberToStr(0.5) into x
 
-=====
-numToChar(x)
-=====
+============================================================
+========================= numToChar(x)
+============================================================
+
 From a character to an ascii-like number.
 Note that characters in a field are displayed in Mac OS Roman
 encoding.
@@ -353,9 +385,10 @@ Examples:
 put numToChar("a") into x
 
 
-=====
-offset(needle, haystack)
-=====
+============================================================
+========================= offset(needle, haystack)
+============================================================
+
 Search for a string within a string, and return the position where found.
 If not found, returns 0.
 (one-based indexing).
@@ -365,9 +398,10 @@ put offset("b", "abc") into x
 -- x is now 2.
 
 
-=====
-optionKey()
-=====
+============================================================
+========================= optionKey()
+============================================================
+
 Check if this modifier key is pressed.
 Examples:
 
@@ -375,9 +409,10 @@ if optionKey() then
     answer "opt key is down"
 end if
 
-=====
-param(n)
-=====
+============================================================
+========================= param(n)
+============================================================
+
 Get the nth value passed into the current procedure. Can be used
 to build a function that takes any number of arguments, 
 see example.
@@ -396,9 +431,10 @@ on mouseUp
     mySumOfNumbers 1, 2, 3
 end mouseUp
 
-=====
-paramCount()
-=====
+============================================================
+========================= paramCount()
+============================================================
+
 Get the number of values passed into the current procedure.
 Can be used to build a function that takes any number of 
 arguments, see example.
@@ -417,27 +453,30 @@ on mouseUp
     mySumOfNumbers 1, 2, 3
 end mouseUp
 
-=====
-params()
-=====
+============================================================
+========================= params()
+============================================================
+
 Get all of the values passed into the current procedure.
 Examples:
 
 put params() into x
 
 
-=====
-random(n)
-=====
+============================================================
+========================= random(n)
+============================================================
+
 n must be an integer.
 Returns random value between 1 and n.
 Examples:
 
 put random(20) into roll
 
-=====
-result()
-=====
+============================================================
+========================= result()
+============================================================
+
 The return value of the last called function or procedure.
 Examples:
 
@@ -449,35 +488,39 @@ on mouseUp
     answer the result
 end mouseUp
 
-=====
-round(x)
-=====
+============================================================
+========================= round(x)
+============================================================
+
 Returns integer nearest to number. Odd integers plus 0.5 
 round up, even integers plus 0.5 round down.
 Examples:
 
 put round(1.7) into x
 
-=====
-screenRect()
-=====
+============================================================
+========================= screenRect()
+============================================================
+
 
 Examples:
 
 put screenRect() into x
 
 
-=====
-seconds()
-=====
+============================================================
+========================= seconds()
+============================================================
+
 Seconds since January 1, 1904.
 Examples:
 
 put seconds() into x
 
-=====
-selectedChunk()
-=====
+============================================================
+========================= selectedChunk()
+============================================================
+
 Current selection, looks something like 'char 2 to 4 of cd fld id 
 1234'.
 
@@ -486,9 +529,10 @@ Examples:
 put selectedChunk() into x
 
 
-=====
-selectedField()
-=====
+============================================================
+========================= selectedField()
+============================================================
+
 The field that contains current selected text, looks something 
 like 'cd fld id 1234'.
 
@@ -497,27 +541,30 @@ Examples:
 put selectedField() into x
 
 
-=====
-selectedLine()
-=====
+============================================================
+========================= selectedLine()
+============================================================
+
 The number of the line of the current selected text.
 Examples:
 
 put selectedLine() into x
 
 
-=====
-selectedText()
-=====
+============================================================
+========================= selectedText()
+============================================================
+
 The value of the current selected text.
 
 Examples:
 
 put selectedText() into x
 
-=====
-shiftKey()
-=====
+============================================================
+========================= shiftKey()
+============================================================
+
 Check if this modifier key is pressed.
 Examples:
 
@@ -526,26 +573,29 @@ if shiftKey() then
 end if
 
 
-=====
-sqrt(x)
-=====
+============================================================
+========================= sqrt(x)
+============================================================
+
 
 Examples:
 
 put sqrt(0.5) into x
 
-=====
-sin(x)
-=====
+============================================================
+========================= sin(x)
+============================================================
+
 
 Examples:
 
 put sin(0.5 * pi) into x
 
 
-=====
-strToNumber(x)
-=====
+============================================================
+========================= strToNumber(x)
+============================================================
+
 Parse string to number.
 Supports scientific notation.
 If cannot be parsed, returns "false"
@@ -562,9 +612,10 @@ end if
 
 
 
-=====
-sum()
-=====
+============================================================
+========================= sum()
+============================================================
+
 
 Supports any number of arguments.
 You can also provide a comma-delimited string.
@@ -574,18 +625,20 @@ put sum(1,2,3) into x
 put sum("1,2,3") into x -- returns 6
 
 
-=====
-tan(x)
-=====
+============================================================
+========================= tan(x)
+============================================================
+
 
 Examples:
 
 put tan(0.125 * pi) into x
 
 
-=====
-target
-=====
+============================================================
+========================= target
+============================================================
+
 Refers to the object that was most recently acted on.
 Here's one reason why this can be useful:
 If you have many buttons that all basically perform the same 
@@ -603,9 +656,10 @@ set the width of the target to 100
 put the short id of the target into x
 
 
-=====
-there___is___a
-=====
+============================================================
+========================= there___is___a
+============================================================
+
 Check for the existence of an object.
 
 Examples:
@@ -617,17 +671,19 @@ if there is not a cd btn id 12345 then
     answer "not found"
 end if
 
-=====
-ticks()
-=====
+============================================================
+========================= ticks()
+============================================================
+
 Ticks (60th of a second) since January 1, 1904.
 Examples:
 
 put ticks() into x
 
-=====
-tool()
-=====
+============================================================
+========================= tool()
+============================================================
+
 The current simulated tool, as set by the `choose` command. (The `choose` command can be used to draw lines and shapes).
 The actual current tool will be the browse tool when any script is running.
 
@@ -637,9 +693,10 @@ choose pencil tool
 answer tool() -- shows "pencil"
 
 
-=====
-trunc(x)
-=====
+============================================================
+========================= trunc(x)
+============================================================
+
 Get integer part of a number.
 i.e. for positive numbers, always round down to the nearest 
 integer.
@@ -650,16 +707,18 @@ put trunc(0.5) into x
 
 
 
-=====
-annuity(rate, periods)
-=====
+============================================================
+========================= annuity(rate, periods)
+============================================================
+
 Computes the total cost of an annuity now that will pay you one unit per period, over the specific number of periods.
 
 You want to purchase an annuity that pays you $10,000 a year for 10 years. The interest rate is 10%. How much will it cost you now?
 The amount loaned is 10000 * annuity(0.10, 10), or 61445.67.
-=====
-compound(rate, periods)
-=====
+============================================================
+========================= compound(rate, periods)
+============================================================
+
 
 Returns the value of one unit of principal invested at the interest rate
 and compounded over the specified number of periods.

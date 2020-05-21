@@ -1,6 +1,9 @@
-=====
-Introduction
-=====
+
+ 
+============================================================
+========================= Introduction
+============================================================
+
 
 Welcome to ViperCard, an open source re-creation and re-imagination of 1987's HyperCard.
 
@@ -8,9 +11,10 @@ If you are new, the example videos will be helpful -- from the Help menu (the ic
 
 
 
-=====
-Scripting Overview
-=====
+============================================================
+========================= Scripting Overview
+============================================================
+
 All objects (all buttons, fields, and cards) have an associated set of code called a "script."
 
 Here is an example script:
@@ -105,14 +109,16 @@ that function will be run.
 The documentation here has a list of Commands, Event Handlers, 
 and properties that can be set.
 
-=====
-Helpful Examples
-=====
+============================================================
+========================= Helpful Examples
+============================================================
+
 The tutorial videos show helpful example code.
             
-=====
-Expressions
-=====
+============================================================
+========================= Expressions
+============================================================
+
 
 You can use expressions like `put 1+2+3+4 into x` or
 `put sqrt(0.5) + sqrt(0.6) into y` in your code.
@@ -145,9 +151,10 @@ See the `operators` page in the Syntax documentation section
 for more information.
 
 
-=====
-Message Box (recommended)
-=====
+============================================================
+========================= Message Box (recommended)
+============================================================
+
 
 Open the Message Box by choosing 'Message Box' from the Go menu, or by pressing Cmd+M.
 
@@ -182,9 +189,10 @@ is also supported.
 
 
 
-=====
-Lists/arrays
-=====
+============================================================
+========================= Lists/arrays
+============================================================
+
 
 Here's a common way to create a list:
 
@@ -239,9 +247,10 @@ end repeat
 `
 
 
-=====
-Variables
-=====
+============================================================
+========================= Variables
+============================================================
+
 
 Use a statement like 
 
@@ -323,9 +332,10 @@ set the top of cd btn "myBtn" to 1
 set the left of cd btn "myBtn" to 2
 `
 
-=====
-Writing functions
-=====
+============================================================
+========================= Writing functions
+============================================================
+
 An example of how to define and call a custom function:
 `function myAddition p1, p2
     return p1 + p2
@@ -409,9 +419,10 @@ So, it is useful to put commonly used utility code in a stack
 script so that it can be called from anywhere.
 
 
-=====
-Text and Chunks
-=====
+============================================================
+========================= Text and Chunks
+============================================================
+
 
 ^Lines^
 
@@ -561,9 +572,10 @@ delete item 2 to 3 of myList
 
 See also documentation for the `delete` command.
 
-=====
-Referring to objects
-=====
+============================================================
+========================= Referring to objects
+============================================================
+
 Ways to refer to a stack:
 `
 this stack
@@ -618,9 +630,10 @@ answer the name of whichObject()
 `
 
 
-=====
-Structure
-=====
+============================================================
+========================= Structure
+============================================================
+
 
 ^Loops^
 `repeat with x = 1 to 3
@@ -685,9 +698,10 @@ set the left of cd btn "myBtn" to x
 set the left of cd btn "myBtn" to (45 + 50 * cos(theta))
 `
 
-=====
-Tips & Shortcuts
-=====
+============================================================
+========================= Tips & Shortcuts
+============================================================
+
 
 General tips
 
@@ -744,9 +758,10 @@ A few of the differences between ViperCard and HyperCard:
 
 
 
-=====
-Credits
-=====
+============================================================
+========================= Credits
+============================================================
+
 
 ViperCard
 https://github.com/moltenform/vipercard

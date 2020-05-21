@@ -1,6 +1,9 @@
-=====
-add {number} to [chunk of] {container}
-=====
+
+ 
+============================================================
+========================= add {number} to [chunk of] {container}
+============================================================
+
         Adds the value of number to the number in a container.
 
         Examples:
@@ -13,10 +16,11 @@ add {number} to [chunk of] {container}
         add 3 to item 2 of x
         answer x -- will display "1,5,3"
 
-=====
-answer {text}
-answer {text} with {option1} or {option2} [or {option3}]
-=====
+============================================================
+========================= answer {text}
+========================= answer {text} with {option1} or {option2} [or {option3}]
+============================================================
+
         Displays a dialog box.
         The button that is pressed (1, 2, or 3) will be assigned to the variable "it".
 
@@ -32,10 +36,11 @@ answer {text} with {option1} or {option2} [or {option3}]
             answer "clicked cancel"
         end if
 
-=====
-ask {text}
-ask {text} with {defaulttext}
-=====
+============================================================
+========================= ask {text}
+========================= ask {text} with {defaulttext}
+============================================================
+
         Displays a dialog box allowing the user to type in a response.
         The text typed will be assigned to the variable "it".
         If the user clicks Cancel, the result will be an empty string "".
@@ -46,15 +51,17 @@ ask {text} with {defaulttext}
         put it into favColor
         answer "you chose" && favColor
 
-=====
-beep
-=====
+============================================================
+========================= beep
+============================================================
+
 
         Play the system beep sound.
 
-=====
-choose {toolname} tool
-=====
+============================================================
+========================= choose {toolname} tool
+============================================================
+
 
         You can use the choose command to programmatically draw shapes and lines.
 
@@ -85,9 +92,10 @@ choose {toolname} tool
         
         for compatibility, the old `choose tool 3` form is also supported.
 
-=====
-click at {x}, {y}
-=====
+============================================================
+========================= click at {x}, {y}
+============================================================
+
         Use the click command for programmatically drawing pictures.
         Remember to first use the choose command to indicate what to 
         draw.
@@ -99,9 +107,10 @@ click at {x}, {y}
         -- this draws a pixel at the coordinates x=10, y=20
 
 
-=====
-create
-=====
+============================================================
+========================= create
+============================================================
+
         Use `domenu "create button"` or `domenu "create field"` to create a button.
 
 Examples:
@@ -111,9 +120,10 @@ put the result into newBtn
 set the name of newBtn to "my new button"
 set the loc of newBtn to 30, 30
 
-=====
-do {expression}
-=====
+============================================================
+========================= do {expression}
+============================================================
+
         Take a string, and execute it as if it were a ViperCard script.
 
         Similar to eval() in other languages.
@@ -124,9 +134,10 @@ do {expression}
         put quote & "abc" & quote after buildScript
         do buildScript
      
-=====
-dial {number}
-=====
+============================================================
+========================= dial {number}
+============================================================
+
         The dial command generates touch-tone sounds for the digits in the number, through the speaker. To dial the phone from ViperCard, you must either hold the handset up to the speaker of your computer or use a device that feeds computer audio output to the telephone.
 
         Note: If you include a hypen in the number, place the entire expression in quotation marks. Otherwise, ViperCard performs a subtraction before dialing the number.
@@ -139,15 +150,17 @@ dial {number}
         wait 4 seconds
         dial "555-1234"
 
-=====
-disable {button}
-=====
+============================================================
+========================= disable {button}
+============================================================
+
         Disables a button (sets the "enabled" property to true, so that the
         button no longer responds to clicks).
 
-=====
-divide [chunk of] {container} by {number}
-=====
+============================================================
+========================= divide [chunk of] {container} by {number}
+============================================================
+
         Divides the number in a container by a number.
 
         Examples:
@@ -161,11 +174,12 @@ divide [chunk of] {container} by {number}
         answer x -- will display "1,4,3"
 
 
-=====
-delete char {i} of {container}
-delete char {i} to {j} of {container}
-delete btn|fld
-=====
+============================================================
+========================= delete char {i} of {container}
+========================= delete char {i} to {j} of {container}
+========================= delete btn|fld
+============================================================
+
 
         `put "abcde" into x`
         `delete char 2 of x`
@@ -204,9 +218,10 @@ delete btn|fld
         delete card 14
 
 
-=====
-drag from {x1}, {y1} to {x2}, {y2}
-=====
+============================================================
+========================= drag from {x1}, {y1} to {x2}, {y2}
+============================================================
+
         Use the drag command for programmatically drawing pictures.
         Remember to first use the choose command to indicate what to 
         draw.
@@ -218,17 +233,19 @@ drag from {x1}, {y1} to {x2}, {y2}
         -- this draws a line starting at the coordinates (10,20) 
         -- ending at (30,40)
 
-=====
-enable {button}
-=====
+============================================================
+========================= enable {button}
+============================================================
+
         Enables a button (sets the "enabled" property to false, so that the
         button is no longer disabled).
 
-=====
-go {number}
-go {ordinal}
-go {relativePosition}
-=====
+============================================================
+========================= go {number}
+========================= go {ordinal}
+========================= go {relativePosition}
+============================================================
+
         Go to a different card.
 
         Examples:
@@ -262,15 +279,17 @@ go {relativePosition}
         ('go back' and 'go forth' are supported for compatibility with old scripts.)
 
 
-=====
-hide {button|field}
-=====
+============================================================
+========================= hide {button|field}
+============================================================
+
         Hides a button or field.
         (sets the "visible" to false)
 
-=====
-multiply [chunk of] {container} by {number}
-=====
+============================================================
+========================= multiply [chunk of] {container} by {number}
+============================================================
+
         Multiplies the number in a container by a number.
 
         Examples:
@@ -283,14 +302,16 @@ multiply [chunk of] {container} by {number}
         multiply item 2 of x by 3
         answer x -- will display "1,36,3"
 
-=====
-lock___screen
-=====
+============================================================
+========================= lock___screen
+============================================================
+
         This feature will arrive in a future version...
         
-=====
-play
-=====
+============================================================
+========================= play
+============================================================
+
 
         Play a sound effect.
 
@@ -333,9 +354,10 @@ play
         glider_1_Yow!
         glider_1_Zap`
 
-=====
-put {expression} into {container}
-=====
+============================================================
+========================= put {expression} into {container}
+============================================================
+
         Evaluates any expression and saves the result to a variable or 
         container.
 
@@ -363,9 +385,10 @@ put {expression} into {container}
         put x into the msg box
 
 
-=====
-replace {string} with {string} in {container}
-=====
+============================================================
+========================= replace {string} with {string} in {container}
+============================================================
+
         Replace all occurrences of a string.
 
         Examples:
@@ -379,9 +402,10 @@ replace {string} with {string} in {container}
         put "_" into replacement
         replace search with replacement in cd fld "myFld"
         
-=====
-send {expression} to {object}
-=====
+============================================================
+========================= send {expression} to {object}
+============================================================
+
         Take a string, and execute it as if it were a ViperCard script in the context of an object.
 
         Messages in ViperCard automatically travel upwards from button to card, background, and then stack.
@@ -409,11 +433,12 @@ send {expression} to {object}
         send "myCompute 3, 4" to cd btn "mathUtils" of card "otherCard"
         put the result into x
 
-=====
-set the {property} of {button|field} to {value}
-set the {property} to {value}
-set the {chunkproperty} of {chunk} of {field} to {value}
-=====
+============================================================
+========================= set the {property} of {button|field} to {value}
+========================= set the {property} to {value}
+========================= set the {chunkproperty} of {chunk} of {field} to {value}
+============================================================
+
         Use the set command to change a property.
 
         Some example properties:
@@ -429,18 +454,20 @@ set the {chunkproperty} of {chunk} of {field} to {value}
 
 
 
-=====
-show {button|field}
-=====
+============================================================
+========================= show {button|field}
+============================================================
+
         Shows a button or field.
         (sets the "visible" to true)
 
-=====
-sort [lines|items|chars] of {container}
-sort [lines|items|chars] of {container} [descending|ascending]
-sort [lines|items|chars] of {container} [numeric|text|international]
-sort [lines|items|chars] of {container} by {expression}
-=====
+============================================================
+========================= sort [lines|items|chars] of {container}
+========================= sort [lines|items|chars] of {container} [descending|ascending]
+========================= sort [lines|items|chars] of {container} [numeric|text|international]
+========================= sort [lines|items|chars] of {container} by {expression}
+============================================================
+
         New in ViperCard 0.3: 'sort by each' expressions.
 
         Sort styles:
@@ -460,9 +487,10 @@ sort [lines|items|chars] of {container} by {expression}
         sort items of x by char 2 of each
         answer x -- displays "ca,bb,ac"
 
-=====
-subtract [chunk of] {container} from {number}
-=====
+============================================================
+========================= subtract [chunk of] {container} from {number}
+============================================================
+
         Subtracts a number from the number in a container.
 
         Examples:
@@ -475,15 +503,17 @@ subtract [chunk of] {container} from {number}
         subtract 3 from item 2 of x
         answer x -- will display "1,9,3"
         
-=====
-unlock___screen
-=====
+============================================================
+========================= unlock___screen
+============================================================
+
         This feature will arrive in a future version...
         
 
-=====
-wait {number} [seconds|milliseconds|ms|ticks]
-=====
+============================================================
+========================= wait {number} [seconds|milliseconds|ms|ticks]
+============================================================
+
         Pauses the script.
 
         Examples:
@@ -495,8 +525,9 @@ wait {number} [seconds|milliseconds|ms|ticks]
         
         wait until the mouseH > 120
         wait until the shiftKey
-=====
-visual___effect
-=====
+============================================================
+========================= visual___effect
+============================================================
+
         This feature will arrive in a future version...
         

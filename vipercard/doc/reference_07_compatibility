@@ -1,53 +1,62 @@
-=====
-(Compatibility)
-=====
+
+ 
+============================================================
+========================= (Compatibility)
+============================================================
+
 These are provided for compatibility with HyperCard. They might have hard-coded values/reduced functionality, and are unlikely to be useful in new scripts.
 
-=====
-abbrev id
-=====
+============================================================
+========================= abbrev id
+============================================================
+
 
 Examples:
 
 put the abbrev id of cd fld "myFld" into z
 
 
-=====
-abbrev name
-=====
+============================================================
+========================= abbrev name
+============================================================
+
 
 Examples:
 
 put the abbrev name of cd fld "myFld" into z
 
-=====
-arrowKey {direction}
-=====
+============================================================
+========================= arrowKey {direction}
+============================================================
+
        sends an arrowKey message. by default,
        arrowKey "left" goes to the previous card,
        and arrowKey "right" goes to the next card,
        but this can be overridden in a card script
        or stack script.
 
-=====
-bottom
-=====
+============================================================
+========================= bottom
+============================================================
+
 Equivalent to the top of the object + the height of the object.
 Examples:
 
 put the bottom of cd fld "myFld" into z
 
-=====
-botright
-=====
+============================================================
+========================= botright
+============================================================
+
 
 Examples:
 
 put the botright of cd btn "myBtn" into z
 
-=====
-diskSpace()
-=====
+============================================================
+========================= diskSpace()
+============================================================
+
 (Deprecated and hard-coded).
 Examples:
 
@@ -55,9 +64,10 @@ put diskSpace() into x
 
 
 
-=====
-environment
-=====
+============================================================
+========================= environment
+============================================================
+
 (Deprecated and hard-coded, for backwards compatibility only)
 
 Examples:
@@ -66,9 +76,10 @@ put the environment into z
 
 
 
-=====
-errorDialog
-=====
+============================================================
+========================= errorDialog
+============================================================
+
 
 Causes a runtime error at the current line.
 
@@ -76,27 +87,30 @@ Examples:
 
 errorDialog "Not a number"
 
-=====
-exp1(x)
-=====
+============================================================
+========================= exp1(x)
+============================================================
+
 (e to the power of x) minus 1.
 
 Examples:
 
 put exp1(0.5) into x
 
-=====
-freesize
-=====
+============================================================
+========================= freesize
+============================================================
+
 (Deprecated and hard-coded, for backwards compatibility only)
 
 Examples:
 
 put the freesize of this stack into z
 
-=====
-get {expression}
-=====
+============================================================
+========================= get {expression}
+============================================================
+
         Evaluates any expression and saves the result to the variable "it".
 
         The 'put' command is typically more useful.
@@ -111,50 +125,56 @@ get {expression}
         put it into x
         answer x -- shows the width of the specified button
 
-=====
-heapSpace()
-=====
+============================================================
+========================= heapSpace()
+============================================================
+
 (Deprecated and hard-coded).
 Examples:
 
 put heapSpace() into x
 
-=====
-id
-=====
+============================================================
+========================= id
+============================================================
+
 
 Examples:
 
 put the id of cd fld "myFld" into z
 
-=====
-ln1(x)
-=====
+============================================================
+========================= ln1(x)
+============================================================
+
 Natural logarithm of (x + 1)
 Examples:
 
 put ln1(0.5) into x
 
-=====
-long name
-=====
+============================================================
+========================= long name
+============================================================
+
 
 Examples:
 
 put the long name of cd fld "myFld" into z
 
-=====
-name
-=====
+============================================================
+========================= name
+============================================================
+
 
 Examples:
 
 put the name of cd fld "myFld" into z
 
 
-=====
-mark
-=====
+============================================================
+========================= mark
+============================================================
+
 Fully functional, might not be useful.
 Sets the "marked" property on a card to true.
 Examples:
@@ -172,9 +192,10 @@ second marked card
 last marked card
 `
 
-=====
-on___errorDialog
-=====
+============================================================
+========================= on___errorDialog
+============================================================
+
 
 (Included for compatibility, unlikely to be useful for writing scripts).
 
@@ -183,18 +204,20 @@ to show a script error at the offending line. If you write your own errorDialog
 handler you can catch these events. However, because nearly all errors do not
 go through errorDialog, this is unlikely to be useful.
 
-=====
-right
-=====
+============================================================
+========================= right
+============================================================
+
 Equivalent to the left of the object + the width of the object.
 Examples:
 
 put the right of cd fld "myFld" into z
 
 
-=====
-pop
-=====
+============================================================
+========================= pop
+============================================================
+
 Functional but not recommended in new code.
 
 Examples:
@@ -204,9 +227,10 @@ go to card 7
 pop card into x
 go to card x
 
-=====
-push
-=====
+============================================================
+========================= push
+============================================================
+
 Functional but not recommended in new code.
 
 Examples:
@@ -216,18 +240,20 @@ go to card 7
 pop card
 
 
-=====
-size
-=====
+============================================================
+========================= size
+============================================================
+
 (Deprecated and hard-coded, for backwards compatibility only)
 
 Examples:
 
 put the size of this stack into z
 
-=====
-stacksinuse
-=====
+============================================================
+========================= stacksinuse
+============================================================
+
 (Deprecated and hard-coded, for backwards compatibility only)
 
 Examples:
@@ -235,18 +261,20 @@ Examples:
 put the stacksinuse into z
 
 
-=====
-stackSpace()
-=====
+============================================================
+========================= stackSpace()
+============================================================
+
 (Deprecated and hard-coded).
 Examples:
 
 put stackSpace() into x
 
 
-=====
-suspended
-=====
+============================================================
+========================= suspended
+============================================================
+
 (Deprecated and hard-coded, for backwards compatibility only)
 
 Examples:
@@ -255,9 +283,10 @@ put the suspended into z
 
 
 
-=====
-systemVersion()
-=====
+============================================================
+========================= systemVersion()
+============================================================
+
 (Deprecated and hard-coded).
 To get the current software version, use
 put the version into x
@@ -270,9 +299,10 @@ Examples:
 put systemVersion() into x
 
 
-=====
-unmark
-=====
+============================================================
+========================= unmark
+============================================================
+
 Fully functional, might not be useful.
 Sets the "marked" property on a card to false.
 Examples:
@@ -280,18 +310,20 @@ Examples:
 unmark card id 1234
 unmark all cards
 
-=====
-version
-=====
+============================================================
+========================= version
+============================================================
+
 
 Examples:
 
 put the version into z
 
 
-=====
-long version
-=====
+============================================================
+========================= long version
+============================================================
+
 
 Examples:
 

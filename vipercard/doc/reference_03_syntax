@@ -1,8 +1,10 @@
 
+ 
 
-=====
-(operators)
-=====
+============================================================
+========================= (operators)
+============================================================
+
 Here are the operators that can be used.
 `2 * 3`
     multiplication
@@ -67,9 +69,10 @@ been skipped.
 
 
 
-=====
-(constants)
-=====
+============================================================
+========================= (constants)
+============================================================
+
 The following constants are defined:
 `
 pi
@@ -100,9 +103,10 @@ formfeed
 linefeed`
 
 
-=====
-global {variableName}
-=====
+============================================================
+========================= global {variableName}
+============================================================
+
         Indicates that a variable is a global.
         1) it can be accessed from any other script
         2) the contents are saved even after the function is complete.
@@ -115,9 +119,10 @@ global {variableName}
         put "stored 2" into currentData2
 
 
-=====
-if/then
-=====
+============================================================
+========================= if/then
+============================================================
+
 
         Use to run certain code based on a condition that can be true or false.
 
@@ -164,9 +169,10 @@ if/then
         end if
         `
 
-=====
-if/then on a single-line
-=====
+============================================================
+========================= if/then on a single-line
+============================================================
+
 
        This is implemented in 0.3.
        
@@ -179,9 +185,10 @@ if/then on a single-line
         if 3+3 is 7 then answer "it is not"
         else answer "it is"
 
-=====
-exit___repeat
-=====
+============================================================
+========================= exit___repeat
+============================================================
+
         Exit the current loop.
         Equivalent to "break" in C.
 
@@ -196,9 +203,10 @@ exit___repeat
         -- displays 1
         -- and does not display 2 or 3
 
-=====
-exit currentHandler
-=====
+============================================================
+========================= exit currentHandler
+============================================================
+
         Skips to the end of the current handler, skipping over all subsequent lines 
         of code. Similar to return, but does not point to a value.
 
@@ -214,9 +222,10 @@ exit currentHandler
             put x * 2 into cd fld "fld1"
         end mouseUp
 
-=====
-exit to ViperCard
-=====
+============================================================
+========================= exit to ViperCard
+============================================================
+
         Exits the current handler and passes the message up to ViperCard.
         Typically, this stops code execution completely.
 
@@ -235,9 +244,10 @@ exit to ViperCard
             answer "and even this will never get called"
         end mouseUp
 
-=====
-next___repeat
-=====
+============================================================
+========================= next___repeat
+============================================================
+
         Inside a loop, go back to the top of the loop, skipping the next 
         line(s) of code. Equivalent to "continue" in C.
 
@@ -253,9 +263,10 @@ next___repeat
         -- displays 3
         -- and does not display 2
 
-=====
-pass
-=====
+============================================================
+========================= pass
+============================================================
+
         Exits the current function and calls a function higher in the
         message hierarchy. For example, if a button has the script
         `on mouseUp
@@ -283,9 +294,10 @@ pass
         both will be run.
 
 
-=====
-repeat
-=====
+============================================================
+========================= repeat
+============================================================
+
         Use to create a loop.
 
         Examples:
@@ -325,9 +337,10 @@ repeat
             add 1 to counter
         end repeat
 
-=====
-return {expression}
-=====
+============================================================
+========================= return {expression}
+============================================================
+
         return a value from the current function.
         Note: no lines of code after the return statement will be run.
 
