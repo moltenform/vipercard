@@ -734,9 +734,8 @@ end sum1d
 function sum2d arr
     put 0 into total
     repeat with y = 1 to the number of lines in arr
-        put line y of arr into vy
-        repeat with x = 1 to the number of items in vy
-            put item x of vy into v
+        repeat with x = 1 to the number of items in line y of arr
+            put item x of line y of arr into v
             if length(v) > 0 then add v to total
         end repeat
     end repeat
