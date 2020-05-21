@@ -108,7 +108,7 @@ export interface OutsideWorldRead {
     /**
      * get information about mouse and keyboard state
      */
-    GetMouseAndKeyState(mouseCoords:[number, number], buttons:ValHolder<boolean[]>, mods:ValHolder<ModifierKeys>):void
+    GetMouseAndKeyState(mouseCoords:[number, number], trackClick:[number, number, number], buttons:ValHolder<boolean[]>, mods:ValHolder<ModifierKeys>):void
 }
 
 /**

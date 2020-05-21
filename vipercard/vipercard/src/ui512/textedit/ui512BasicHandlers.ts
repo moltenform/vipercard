@@ -6,8 +6,6 @@
 /* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512ElementWithHighlight } from './../elements/ui512Element';
 
-import { ModifierKeys } from '../utils/utilsKeypressHelpers';
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -36,6 +34,9 @@ export class BasicHandlers {
         pr: UI512PresenterWithMenuInterface,
         d: MouseUpEventDetails
     ) {
+        pr.trackLastClick[0] = d.mouseX
+        pr.trackLastClick[1] = d.mouseY
+        pr.trackLastClick[2] += 1
         if (d.button >= 0 && d.button < pr.trackPressedBtns.length) {
             pr.trackPressedBtns[d.button] = false;
         } else {

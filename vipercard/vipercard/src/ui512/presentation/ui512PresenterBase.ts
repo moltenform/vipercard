@@ -36,6 +36,7 @@ export abstract class UI512PresenterBase
     trackMetaKeys = ModifierKeys.None
     trackPressedBtns: boolean[] = Util512.repeat(this.maxMouseButtons, false);
     trackClickedIds: O<string>[] = Util512.repeat(this.maxMouseButtons, undefined);
+    trackLastClick:[number, number, number] = [0, 0, 0]
     listeners: { [t: number]: FnEventCallback[] } = {};
     callbackQueueForIdle: O<VoidFn>[] = [];
     needRedraw = true;

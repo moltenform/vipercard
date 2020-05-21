@@ -78,6 +78,7 @@ export class VpcBuiltinFunctions {
         keychar: 0,
         clickh: 0,
         clickloc: 0,
+        clicklocacquire: 0,
         clickv: 0,
         mouse: 0,
         mouseclick: 0,
@@ -420,10 +421,9 @@ export class VpcBuiltinFunctions {
         key is pressed.
      */
     callCmdkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let mouseCoords:[number, number] = [0,0]
         let buttons = new ValHolder([false])
         let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        this.readoutside.GetMouseAndKeyState([0,0], [0,0,0], buttons, mods)
         return VpcValS((mods.val & ModifierKeys.Cmd)!==0 ? 'down' : 'up')
     }
 
@@ -432,10 +432,9 @@ export class VpcBuiltinFunctions {
         key is pressed.
      */
     callOptionkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let mouseCoords:[number, number] = [0,0]
         let buttons = new ValHolder([false])
         let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        this.readoutside.GetMouseAndKeyState([0,0], [0,0,0], buttons, mods)
         return VpcValS((mods.val & ModifierKeys.Opt)!==0 ? 'down' : 'up')
     }
 
@@ -444,10 +443,9 @@ export class VpcBuiltinFunctions {
         key is pressed.
      */
     callShiftkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let mouseCoords:[number, number] = [0,0]
         let buttons = new ValHolder([false])
         let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        this.readoutside.GetMouseAndKeyState([0,0], [0,0,0], buttons, mods)
         return VpcValS((mods.val & ModifierKeys.Shift)!==0 ? 'down' : 'up')
     }
 
@@ -506,22 +504,46 @@ export class VpcBuiltinFunctions {
     }
 
     /**
+     * update clickloc
+     */
+    callClicklocacquire(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+        let clicked:[number, number, number] = [0,0,0]
+        let buttons = new ValHolder([false])
+        let mods = new ValHolder(ModifierKeys.None)
+        this.readoutside.GetMouseAndKeyState([0,0], clicked, buttons, mods)
+        frmMsg.clickLoc[0] = clicked[0]
+        frmMsg.clickLoc[1] = clicked[1]
+        /* don't update lastSeenClicked, this doesn't count as a mouseclick() */
+    }
+
+    /**
      * Is the mouse button currently down.
      */
     callMouse(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let mouseCoords:[number, number] = [0,0]
         let buttons = new ValHolder([false])
         let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        this.readoutside.GetMouseAndKeyState([0,0], [0,0,0], buttons, mods)
         let isDown = buttons.val && buttons.val[0]
         return VpcValS(isDown ? 'down' : 'up')
     }
 
     /**
-     * Are we currently handling a mousedown or mouseup event.
+     * Was the mouse clicked?
      */
     callMouseclick(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return VpcValBool(frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1);
+        let clicked:[number, number, number] = [0,0,0]
+        let buttons = new ValHolder([false])
+        let mods = new ValHolder(ModifierKeys.None)
+        this.readoutside.GetMouseAndKeyState([0,0], clicked, buttons, mods)
+        let ret = false
+        if (clicked[2] !== frmMsg.lastSeenClickId) {
+            ret = true
+            this.callClicklocacquire(args, frmMsg, frmParams)
+            /* reset the mouseclick so subsequent calls return false */
+            frmMsg.lastSeenClickId = clicked[2]
+        }
+
+        return VpcValBool(ret);
     }
 
     /**
@@ -531,7 +553,7 @@ export class VpcBuiltinFunctions {
         let mouseCoords:[number, number] = [0,0]
         let buttons = new ValHolder([false])
         let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        this.readoutside.GetMouseAndKeyState(mouseCoords, [0,0,0], buttons, mods)
         return VpcValN(mouseCoords[0]);
     }
 
@@ -542,7 +564,7 @@ export class VpcBuiltinFunctions {
         let mouseCoords:[number, number] = [0,0]
         let buttons = new ValHolder([false])
         let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState(mouseCoords, buttons, mods)
+        this.readoutside.GetMouseAndKeyState(mouseCoords, [0,0,0], buttons, mods)
         return VpcValN(mouseCoords[1]);
     }
 

@@ -104,6 +104,7 @@ export interface UI512PresenterInterface {
     trackPressedBtns: boolean[];
     trackClickedIds: O<string>[];
     trackMetaKeys: ModifierKeys
+    trackLastClick: [number, number, number]
     listeners: { [t: number]: FnEventCallback[] };
     callbackQueueForIdle: O<VoidFn>[];
     needRedraw: boolean;

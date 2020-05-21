@@ -543,14 +543,19 @@ export const VpcPresenterEvents = /* static class */ {
             msg.keyChar = d.keyChar;
             msg.keyMods = d.mods;
             msg.keyRepeated = d.repeated;
-        } else if (
+        }
+        
+        if (
             d instanceof MouseDownEventDetails ||
             d instanceof MouseUpEventDetails ||
             d instanceof MouseDownDoubleEventDetails
         ) {
             msg.clickLoc = [d.mouseX - pr.userBounds[0], d.mouseY - pr.userBounds[1]];
+        } else {
+            msg.clickLoc = [pr.trackLastClick[0] - pr.userBounds[0], pr.trackLastClick[1] - pr.userBounds[1]]
         }
 
+        msg.lastSeenClickId = pr.trackLastClick[2]
         pr.vci.getCodeExec().scheduleCodeExec(msg);
     }
 };

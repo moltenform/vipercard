@@ -467,6 +467,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             )
         );
         let args = this.MakeUI512PaintDispatchFromCurrentOptions(false, mods);
+        checkThrow(argsGiven.length % 2 === 0, "expected even #")
         for (let i = 0; i < argsGiven.length; i += 2) {
             args.xPts.push(argsGiven[i]);
             args.yPts.push(argsGiven[i + 1]);
@@ -474,6 +475,12 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
 
         let frStack = this.getExecFrameStack()[0];
         frStack.paintQueue.push(args);
+        
+        /* add click to the pr's click tracking.
+        confirmed in emulator that it uses first coordinates. */
+        this.vci.getPresenter().trackLastClick[0] = args.xPts[0]
+        this.vci.getPresenter().trackLastClick[1] = args.yPts[0]
+        this.vci.getPresenter().trackLastClick[2] += 1
     }
 
     /**
@@ -486,10 +493,13 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     /**
      * get mouse and keyboard state
      */
-    GetMouseAndKeyState(mouseCoords:[number, number], buttons:ValHolder<boolean[]>, mods:ValHolder<ModifierKeys>) {
+    GetMouseAndKeyState(mouseCoords:[number, number],  trackClick:[number, number, number], buttons:ValHolder<boolean[]>, mods:ValHolder<ModifierKeys>) {
         let pr = this.vci.getPresenter()
         mouseCoords[0] = pr.trackMouse[0]
         mouseCoords[1] = pr.trackMouse[1]
+        trackClick[0] = pr.trackLastClick[0]
+        trackClick[1] = pr.trackLastClick[1]
+        trackClick[2] = pr.trackLastClick[2]
         buttons.val = pr.trackPressedBtns.slice()
         mods.val = pr.trackMetaKeys
     }

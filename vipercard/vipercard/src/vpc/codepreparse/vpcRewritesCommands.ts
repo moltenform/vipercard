@@ -110,7 +110,8 @@ export class VpcRewriteForCommands {
     }
     rewriteClick(line: ChvITk[]): ChvITk[][] {
         this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
-        return [line];
+        let a = this.rw.gen('put clicklocacquire ( ) %INTO% c%UNIQUE%', line[0])
+        return [line].concat(a);
     }
     rewriteClose(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the close command', line[0])];
@@ -172,7 +173,8 @@ return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0% , the sh
     }
     rewriteDrag(line: ChvITk[]): ChvITk[][] {
         this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
-        return [line];
+        let a = this.rw.gen('put clicklocacquire ( ) %INTO% c%UNIQUE%', line[0])
+        return [line].concat(a);
     }
     rewriteEdit(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the edit command', line[0])];
