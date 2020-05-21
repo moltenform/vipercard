@@ -76,7 +76,7 @@
 //      put the sin of 4 into x is now supported
 //      put sin of 4 into x is now supported, and even the sin of cd fld 1
 //      continued lines can use logical not / cool os roman symbols
-//      put "a" into fld 1 and put "a" into bg fld 1 both work
+//      put "a" into fld 1 and put "a" into bg fld 1 both work, if compat mode is on
 //      cd btn "abc" is now case insensitive
 //      unsupported commands like "close" are not syntax errors, they will be shown at runtime
 //      "send" is more efficient, doesn't need to recompile the whole script, just the snippet

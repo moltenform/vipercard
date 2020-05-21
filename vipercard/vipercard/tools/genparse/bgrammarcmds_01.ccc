@@ -145,8 +145,8 @@ BuiltinCmdVisual:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLit
 // or "wait until/while" which we should just expand into a while loop. note that "second" is a tkOrdinal
 BuiltinCmdWait:=... <Expr> [ { tkIdentifier | tkOrdinal  } ]
 // write. set NYI during rewrites
-// used internally
-CmdSend:=... <Expr> _to <Object>                    --->BuildMap
+// used internally. tkStringLiteral is "send" or "do"
+CmdSend:=... tkStringLiteral <Expr> _to <Object>                    --->BuildMap
 InternalCmdRequestEval:=... <Expr>             --->Custom--->any
 InternalCmdUserHandler:=... MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP             --->Custom--->any
 
