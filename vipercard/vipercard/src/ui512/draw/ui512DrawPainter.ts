@@ -173,6 +173,10 @@ export class UI512PainterCvDataAndPatterns extends UI512PainterCvData {
         if (needsPatternSupport(color)) {
             const dim = 8;
             let patternstring = UI512Patterns.patterns[color];
+            if (!patternstring) {
+                patternstring = UI512Patterns.defaultPatternData()
+            }
+
             assertEq(dim * dim, slength(patternstring), '3B|');
             let xmod = (x + offsetpatternx) % dim;
             let ymod = (y + offsetpatterny) % dim;

@@ -12,8 +12,8 @@ export const clrTransp = 2;
  * table of patterns.
  * currently held as strings, probably could be faster, but works well enough for now.
  */
-export class UI512Patterns {
-    static readonly patterns: { [key: number]: string } = {
+export const UI512Patterns = /* static class */ {
+    patterns: {
         100: '1111111111111111111111111111111111111111111111111111111111111111',
         101: '1101111111111110111101111011111111111011011111111110111111111101',
         102: '1111111111111111111111111111111111111111011111111111111111111111',
@@ -63,13 +63,17 @@ export class UI512Patterns {
         146: '0010001000000100100011000111010000100010000101111001100000010000',
         147: '0100010010001000000100010010001001000100100010000001000100100010',
         148: '1111111111101111111111111011101111111111111011111111111111111111'
-    };
+    },
 
-    static readonly defaultPattern = 'pattern148';
-    static readonly defaultLineColor = clrBlack;
-    static readonly defaultFillColor = -1;
-    static readonly c0 = '0'.charCodeAt(0);
-    static readonly c1 = '1'.charCodeAt(0);
+    defaultPatternData() {
+        return UI512Patterns.patterns[148]
+    },
+
+    defaultPattern: 'pattern148',
+    defaultLineColor: clrBlack,
+    defaultFillColor: -1,
+    c0: '0'.charCodeAt(0),
+    c1: '1'.charCodeAt(0)
 }
 
 /**
