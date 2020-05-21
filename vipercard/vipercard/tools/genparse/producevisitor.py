@@ -149,7 +149,7 @@ class MakingVisitors(object):
                 checkThrowInternal(false, `%MARK%%METHODNAME%:${operatorListLen},${ctx.%NEXTRULE%.length}.`);
             }
 
-            let total = this.visit(ctx.%NEXTRULE%[0]) as VpcVal;
+            let total = this.visit(ctx.%NEXTRULE%[0]);
             checkThrow(total instanceof VpcVal, '%MARK%%METHODNAME%: first not a vpcval');
             const oprulecategory = VpcOpCtg.%OPCATEGORY%;
             for (let i = 0; i < operatorListLen; i++) {
