@@ -1,6 +1,6 @@
 
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { O, tostring } from './../utils/util512Base';
+/* auto */ import { O, tostring, bool } from './../utils/util512Base';
 /* auto */ import { ensureDefined } from './../utils/util512Assert';
 /* auto */ import { AnyParameterCtor, OrderedHash } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
@@ -40,6 +40,21 @@ export class UI512Application implements UI512ApplicationInterface {
     }
 
     /**
+     * return index where condition is true
+     */
+    findIndex(fn:(a:UI512ElGroup)=>boolean):number {
+        let i = 0
+        for (let grp of this.groups.iter()) {
+            if (fn(grp)) {
+                return i
+            }
+
+            i++
+        }
+        return -1
+    }
+
+    /**
      * loop over groups. in z-order from background to foreground.
      */
     iterGrps() {
@@ -57,9 +72,14 @@ export class UI512Application implements UI512ApplicationInterface {
      * add a group to the application.
      * for convenience, attaches our Observer to the new group
      */
-    addGroup(grp: UI512ElGroup, context = ChangeContext.Default) {
+    addGroup(grp: UI512ElGroup, index = -1, context = ChangeContext.Default) {
         grp.observer = this.observer;
-        this.groups.insertNew(grp.id, grp);
+        if (index === -1) {
+            this.groups.insertNew(grp.id, grp);
+        } else {
+            this.groups.insertAt(grp.id, grp, index)
+        }
+
         this.observer.changeSeen(context, grp.id, '(addgrp)', 0, 0);
     }
 

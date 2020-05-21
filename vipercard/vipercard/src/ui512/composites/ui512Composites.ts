@@ -102,7 +102,7 @@ export abstract class UI512CompBase {
     /**
      * create the UI of this composite
      */
-    create(pr: UI512PresenterBase, app: UI512Application) {
+    create(pr: UI512PresenterBase, app: UI512Application, index=-1) {
         assertEq(
             0,
             this.children.length,
@@ -110,7 +110,7 @@ export abstract class UI512CompBase {
         );
         if (!app.findGroup(this.grpId)) {
             let grp = new UI512ElGroup(this.grpId, app.observer);
-            app.addGroup(grp);
+            app.addGroup(grp, index);
         }
 
         this.createSpecific(app);

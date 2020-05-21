@@ -41,7 +41,9 @@ export class VpcLyrNonModalHolder extends VpcUILayer {
         }
 
         if (form && form instanceof VpcNonModalBase) {
-            form.create(this.pr, this.vci.UI512App());
+            /* create it beneath the menubar! */
+            let index=this.vci.UI512App().findIndex((grp)=>grp.id.includes('menu'))
+            form.create(this.pr, this.vci.UI512App(), index);
             this.current = form;
         } else if (form) {
             checkThrowInternal(false, 'KY|expected VpcFormNonModalDialogBase.');
