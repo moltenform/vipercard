@@ -52,6 +52,18 @@ Examples:
 put the owner of cd btn "myBtn" into z
 set the name of the owner of cd btn "myBtn" to "changed"
 
+============================================================
+========================= any object: script
+============================================================
+
+It's unlikely to be useful, but a script can dynamically change the contents of another script.
+Examples:
+
+put return & "on newCode" & return & "answer 234" & \
+    return & "end newCode" into newCode
+put the script of cd btn id 123 into oldCode
+set the script of cd btn id 123 to oldCode & newCode
+send "newCode" to cd btn id 123
 
 ============================================================
 ========================= btn: autohilite
@@ -154,14 +166,6 @@ Examples:
 set the rect of cd btn "myBtn" to 45,56,67,78
 set the rectangle of cd btn "myBtn" to 45,56,67,78
 
-============================================================
-========================= btn: script
-============================================================
-
-
-Examples:
-
-put the script of cd btn "myBtn" into z
 
 ============================================================
 ========================= btn: showlabel
@@ -274,6 +278,7 @@ The width of the object on screen, in pixels.
 Examples:
 
 put the width of cd btn "myBtn" into z
+
 
 ============================================================
 ========================= fld: alltext
@@ -524,6 +529,46 @@ put the visible of cd fld "myFld" into z
 
 
 ============================================================
+========================= global: cursor
+============================================================
+
+Sets the current cursor.
+
+Examples:
+
+-- show the watch
+set the cursor to "watch"
+wait 2 seconds
+
+-- spinning ball
+repeat with x = 1 to 30
+    set the cursor to "busy"
+    wait 0.2 seconds
+end repeat
+
+put the cursor into x
+
+
+============================================================
+========================= global: filled
+============================================================
+
+The color/opacity for drawing. Currently can be "true" for black, "false" for transparent, or "white" for white.
+
+============================================================
+========================= global: lineColor
+============================================================
+
+The lineColor for drawing. Currently can be 0 (black) or 1 (white).
+
+============================================================
+========================= global: lineSize
+============================================================
+
+The linesize for drawing. Currently can be 1 (thin) or 2 (thicker).
+
+
+============================================================
 ========================= global: itemdelimiter
 ============================================================
 
@@ -545,3 +590,16 @@ Examples:
 
 set the idlerate to "default"
 set the idlerate to "faster"
+
+============================================================
+========================= global: multiple
+============================================================
+
+The "draw multiple" setting for drawing. Does not yet affect script drawing.
+
+============================================================
+========================= global: pattern
+============================================================
+
+The current pattern number.
+

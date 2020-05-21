@@ -6,6 +6,12 @@
 
 These are provided for compatibility with HyperCard. They might have hard-coded values/reduced functionality, and are unlikely to be useful in new scripts.
 
+You can enable compatibility mode for a stack by choosing `Object->Stack info...` and clicking `Compatibility` in the panel on the right. This setting is saved with the stack and makes these changes for compatibility.
+* You can say `btn 2` instead of `cd btn 2`
+* You can say `put "A" into item 3 of char 2 of x` which doesn't usually make sense
+* You can say `put "new" into item 4 of line 3 of x` and get more intuitive behavior
+* Reverts to the unhelpful `long id`; also the `target` can be ambiguous for bg objects.
+
 ============================================================
 ========================= abbrev id
 ============================================================
@@ -169,6 +175,15 @@ first marked card
 second marked card
 last marked card
 `
+============================================================
+========================= marked
+============================================================
+
+You can mark a card.
+Examples:
+
+answer the marked of cd 4
+set the marked of cd 4 to true
 
 ============================================================
 ========================= on___errorDialog
