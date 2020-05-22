@@ -4,6 +4,8 @@ this is a generated file, changes will be lost.
 
 [Overview](./reference_01_overview.md) | [Commands](./reference_02_commands.md) | [Syntax](./reference_03_syntax.md) | Properties | [Functions](./reference_05_functions.md) | [Event Handlers](./reference_06_events.md) | [Compatibility](./reference_07_compatibility.md)
 
+
+
 ## any object: id
 
 
@@ -14,7 +16,6 @@ If you put the long id of an object into a variable, you can use that variable t
 
 ```
 put the long id of card id 1011 into z
-
 set the name of z to "changed"
 ```
 
@@ -24,45 +25,42 @@ The short id of an object is just the number. For example the short id of card i
 
 ```
 put the short id of card id 1011 into z
-
 set the name of cd id z to "changed"
 ```
+
+
 
 ## any object: name
 
 
 You can get or set the name of an object.
 
-
 ```
 
 doMenu "New Button"
-
 set the name of the result to "my new button"
 
 set the name of cd btn id 1011 to "changed"
-
 answer the short name of cd btn id 1011 -- "changed"
 
-
 ```
+
+
 
 ## any object: number
 
 
 You can get the number of an object.
 
-
 ```
 
 answer the number of cd fld 2 -- 2
-
 answer the number of cd btn 3 -- 3
-
 answer the number of card 4 -- 4
 
-
 ```
+
+
 
 ## any object: owner
 
@@ -71,16 +69,16 @@ Gets the parent object. Btns and flds belong to cards, cards belong to backgroun
 
 Examples:
 
-
 ```
 
 
 put the owner of cd btn "myBtn" into z
-
 set the name of the owner of cd btn "myBtn" to "changed"
 
 
 ```
+
+
 
 ## any object: script
 
@@ -89,22 +87,19 @@ It's unlikely to be useful, but a script can dynamically change the contents of 
 
 Examples:
 
-
 ```
 
 
 put return & "on newCode" & return & "answer 234" & \
-
-return & "end newCode" into newCode
-
+    return & "end newCode" into newCode
 put the script of cd btn id 123 into oldCode
-
 set the script of cd btn id 123 to oldCode & newCode
-
 send "newCode" to cd btn id 123
 
 
 ```
+
+
 
 ## btn: autohilite
 
@@ -112,7 +107,6 @@ send "newCode" to cd btn id 123
 Does the button turn black when you click on it?
 
 Examples:
-
 
 ```
 
@@ -123,12 +117,13 @@ put the autohilite of cd btn "myBtn" into z
 
 ```
 
+
+
 ## btn: checkmark
 
 
 
 Examples:
-
 
 ```
 
@@ -138,6 +133,8 @@ set the checkmark of cd btn "myBtn" to true.
 
 ```
 
+
+
 ## btn: enabled
 
 
@@ -145,17 +142,17 @@ If a button is not enabled, it is greyed out and can't be clicked.
 
 Examples:
 
-
 ```
 
 
 set the enabled of cd btn "myBtn" to true
-
 set the enabled of cd btn "myBtn" to false
 
 
 
 ```
+
+
 
 ## btn: left
 
@@ -163,7 +160,6 @@ set the enabled of cd btn "myBtn" to false
 The x coordinate of the top left corner of the object, in pixels. I.e. the distance from the left of the screen to the object.
 
 Examples:
-
 
 ```
 
@@ -174,13 +170,14 @@ set the left of cd btn "myBtn" to 4
 
 ```
 
+
+
 ## btn: loc, location
 
 
 The coordinates of the center of the object.
 
 Examples:
-
 
 ```
 
@@ -191,13 +188,14 @@ put the location of cd btn "myBtn" into z
 
 ```
 
+
+
 ## btn: height
 
 
 The height of the object on screen, in pixels.
 
 Examples:
-
 
 ```
 
@@ -208,12 +206,13 @@ put the height of cd btn "myBtn" into z
 
 ```
 
+
+
 ## btn: hilite
 
 
 
 Examples:
-
 
 ```
 
@@ -223,12 +222,13 @@ put the hilite of cd btn "myBtn" into z
 
 ```
 
+
+
 ## btn: label
 
 
 
 Examples:
-
 
 ```
 
@@ -239,13 +239,14 @@ put the label of cd btn "myBtn" into z
 
 ```
 
+
+
 ## btn: icon
 
 
 Number of the icon.
 
 Examples:
-
 
 ```
 
@@ -255,6 +256,8 @@ put the icon of cd btn "myBtn" into z
 
 ```
 
+
+
 ## btn: rect, rectangle
 
 
@@ -262,17 +265,17 @@ Four numbers representing the left, top, bottom, and right coordinates. I.e. the
 
 Examples:
 
-
 ```
 
 
 set the rect of cd btn "myBtn" to 45,56,67,78
-
 set the rectangle of cd btn "myBtn" to 45,56,67,78
 
 
 
 ```
+
+
 
 ## btn: showlabel
 
@@ -281,7 +284,6 @@ Is the label text shown?
 
 Examples:
 
-
 ```
 
 
@@ -289,6 +291,8 @@ put the showlabel of cd btn "myBtn" into z
 
 
 ```
+
+
 
 ## btn: style
 
@@ -319,7 +323,6 @@ Radio
 
 Examples:
 
-
 ```
 
 
@@ -328,6 +331,8 @@ set the style of cd btn "myBtn" to "Shadow"
 
 ```
 
+
+
 ## btn: textalign
 
 
@@ -335,17 +340,17 @@ Set alignment of the label text.
 
 Examples:
 
-
 ```
 
 
 set the textalign of cd btn "myBtn" to "left"
-
 set the textalign of cd btn "myBtn" to "center"
 
 
 
 ```
+
+
 
 ## btn: textfont
 
@@ -353,7 +358,6 @@ set the textalign of cd btn "myBtn" to "center"
 Set typeface of the label text.
 
 Examples:
-
 
 ```
 
@@ -364,13 +368,14 @@ set the textfont of cd btn "myBtn" to "courier"
 
 ```
 
+
+
 ## btn: textsize
 
 
 Set size of the label text.
 
 Examples:
-
 
 ```
 
@@ -381,13 +386,14 @@ set the textsize of cd btn "myBtn" to 24
 
 ```
 
+
+
 ## btn: textstyle
 
 
 Set style of the label text.
 
 Examples:
-
 
 ```
 
@@ -398,13 +404,14 @@ set the textstyle of cd btn "myBtn" to "bold"
 
 ```
 
+
+
 ## btn: top
 
 
 The y coordinate of the top left corner of the object, in pixels. I.e. the distance from the top of the screen to the object.
 
 Examples:
-
 
 ```
 
@@ -416,13 +423,14 @@ put the top of cd btn "myBtn" into z
 
 ```
 
+
+
 ## btn: topleft
 
 
 The x,y coordinates of the upper left corner.
 
 Examples:
-
 
 ```
 
@@ -432,13 +440,14 @@ set the topleft of cd btn "myBtn" to 34, 56
 
 ```
 
+
+
 ## btn: visible
 
 
 Hide or show the object.
 
 Examples:
-
 
 ```
 
@@ -448,13 +457,14 @@ set the visible of cd btn "myBtn" to false
 
 ```
 
+
+
 ## btn: width
 
 
 The width of the object on screen, in pixels.
 
 Examples:
-
 
 ```
 
@@ -465,13 +475,14 @@ put the width of cd btn "myBtn" into z
 
 ```
 
+
+
 ## fld: alltext
 
 
 Get or set all contents of the field.
 
 Examples:
-
 
 ```
 
@@ -482,13 +493,14 @@ put the alltext of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: dontwrap
 
 
 Wrap text onto different lines.
 
 Examples:
-
 
 ```
 
@@ -498,13 +510,14 @@ put the dontwrap of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: enabled
 
 
 A disabled field is greyed out and can't be edited.
 
 Examples:
-
 
 ```
 
@@ -514,6 +527,8 @@ put the enabled of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: defaulttextfont
 
 
@@ -521,7 +536,6 @@ put the enabled of cd fld "myFld" into z
 If the user deletes all text in a field and then types a letter, the font of this letter will be determined by the defaulttextfont.
 
 Examples:
-
 
 ```
 
@@ -532,6 +546,8 @@ put the defaulttextfont of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: defaulttextsize
 
 
@@ -539,7 +555,6 @@ put the defaulttextfont of cd fld "myFld" into z
 If the user deletes all text in a field and then types a letter, the size of this letter will be determined by the defaulttextsize.
 
 Examples:
-
 
 ```
 
@@ -549,6 +564,8 @@ put the defaulttextsize of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: defaulttextstyle
 
 
@@ -556,7 +573,6 @@ put the defaulttextsize of cd fld "myFld" into z
 If the user deletes all text in a field and then types a letter, the style of this letter will be determined by the defaulttextstyle.
 
 Examples:
-
 
 ```
 
@@ -567,13 +583,14 @@ put the defaulttextstyle of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: left
 
 
 The x coordinate of the top left corner of the object, in pixels. I.e. the distance from the left of the screen to the object.
 
 Examples:
-
 
 ```
 
@@ -584,13 +601,14 @@ set the left of cd fld "myFld" to 4
 
 ```
 
+
+
 ## fld: loc, location
 
 
 The coordinates of the center of the object.
 
 Examples:
-
 
 ```
 
@@ -601,6 +619,8 @@ put the location of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: locktext
 
 
@@ -608,16 +628,16 @@ You can't type new text into a 'locked' field. You can still set the contents vi
 
 Examples:
 
-
 ```
 
 
 set the locktext of cd fld "myFld" to true
-
 put "still can change" into cd fld "myFld"
 
 
 ```
+
+
 
 ## fld: height
 
@@ -625,7 +645,6 @@ put "still can change" into cd fld "myFld"
 The height of the object on screen, in pixels.
 
 Examples:
-
 
 ```
 
@@ -635,6 +654,8 @@ put the height of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: rect, rectangle
 
 
@@ -642,17 +663,17 @@ Four numbers representing the left, top, bottom, and right coordinates. I.e. the
 
 Examples:
 
-
 ```
 
 
 set the rect of cd fld "myFld" to 45,56,67,78
-
 set the rectangle of cd fld "myFld" to 45,56,67,78
 
 
 
 ```
+
+
 
 ## fld: scroll
 
@@ -660,7 +681,6 @@ set the rectangle of cd fld "myFld" to 45,56,67,78
 The vertical scroll position.
 
 Examples:
-
 
 ```
 
@@ -670,13 +690,14 @@ put the scroll of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: singleline
 
 
 Field is a single line, cannot contain newlines.
 
 Examples:
-
 
 ```
 
@@ -687,6 +708,8 @@ put the singleline of cd fld "myFld" into z
 
 
 ```
+
+
 
 ## fld: style
 
@@ -705,7 +728,6 @@ Scrolling
 
 Examples:
 
-
 ```
 
 
@@ -714,6 +736,8 @@ set the style of cd fld "myFld" to "shadow"
 
 ```
 
+
+
 ## fld: textalign
 
 
@@ -721,17 +745,17 @@ Set alignment of text
 
 Examples:
 
-
 ```
 
 
 set the textalign of cd fld "myFld" to "left"
-
 set the textalign of cd fld "myFld" to "center"
 
 
 
 ```
+
+
 
 ## fld: textfont
 
@@ -739,25 +763,23 @@ set the textalign of cd fld "myFld" to "center"
 
 By default, applies the property to the entire field.
 
-
 ```
 set the textfont of cd fld "myFld" to "chicago"
-
 put the textfont of cd fld "myFld" into z
 ```
 
 
 We now support getting and setting by chunk!
 
-
 ```
 set the textfont of char 3 to 4 of cd fld "myFld" to "geneva"
-
 put the textfont of char 3 to 4 of cd fld "myFld" into z
 ```
 
 
 When querying for a property and there are multiple values, returns the string "mixed".
+
+
 
 ## fld: textsize
 
@@ -765,25 +787,23 @@ When querying for a property and there are multiple values, returns the string "
 
 By default, applies the property to the entire field.
 
-
 ```
 set the textsize of cd fld "myFld" to "chicago"
-
 put the textsize of cd fld "myFld" into z
 ```
 
 
 We now support getting and setting by chunk!
 
-
 ```
 set the textsize of char 3 to 4 of cd fld "myFld" to "geneva"
-
 put the textsize of char 3 to 4 of cd fld "myFld" into z
 ```
 
 
 When querying for a property and there are multiple values, returns the string "mixed".
+
+
 
 ## fld: textstyle
 
@@ -791,29 +811,25 @@ When querying for a property and there are multiple values, returns the string "
 
 By default, applies the property to the entire field.
 
-
 ```
 set the textstyle of cd fld "myFld" to "bold"
-
 set the textstyle of cd fld "myFld" to "bold,italic"
-
 set the textstyle of cd fld "myFld" to "plain"
-
 put the textstyle of cd fld "myFld" into z
 ```
 
 
 We now support getting and setting by chunk!
 
-
 ```
 set the textstyle of char 3 to 4 of cd fld "myFld" to "bold"
-
 put the textstyle of char 3 to 4 of cd fld "myFld" into z
 ```
 
 
 When querying for a property and there are multiple values, returns the string "mixed".
+
+
 
 ## fld: top
 
@@ -821,7 +837,6 @@ When querying for a property and there are multiple values, returns the string "
 The y coordinate of the top left corner of the object, in pixels. I.e. the distance from the top of the screen to the object.
 
 Examples:
-
 
 ```
 
@@ -833,13 +848,14 @@ put the top of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: topleft
 
 
 The x,y coordinates of the upper left corner.
 
 Examples:
-
 
 ```
 
@@ -849,13 +865,14 @@ set the topleft of cd fld "myFld" to 34, 56
 
 ```
 
+
+
 ## fld: width
 
 
 The width of the object on screen, in pixels.
 
 Examples:
-
 
 ```
 
@@ -865,13 +882,14 @@ put the width of cd fld "myFld" into z
 
 ```
 
+
+
 ## fld: visible
 
 
 Show or hide the object.
 
 Examples:
-
 
 ```
 
@@ -882,6 +900,8 @@ put the visible of cd fld "myFld" into z
 
 ```
 
+
+
 ## global: cursor
 
 
@@ -889,24 +909,17 @@ Sets the current cursor.
 
 Examples:
 
-
 ```
 
 
 -- show the watch
-
 set the cursor to "watch"
-
 wait 2 seconds
 
 -- spinning ball
-
 repeat with x = 1 to 30
-
-set the cursor to "busy"
-
-wait 0.2 seconds
-
+    set the cursor to "busy"
+    wait 0.2 seconds
 end repeat
 
 put the cursor into x
@@ -915,18 +928,26 @@ put the cursor into x
 
 ```
 
+
+
 ## global: filled
 
 
 The color/opacity for drawing. Currently can be "true" for black, "false" for transparent, or "white" for white.
+
+
 ## global: lineColor
 
 
 The lineColor for drawing. Currently can be 0 (black) or 1 (white).
+
+
 ## global: lineSize
 
 
 The linesize for drawing. Currently can be 1 (thin) or 2 (thicker).
+
+
 
 ## global: itemdelimiter
 
@@ -934,21 +955,19 @@ The linesize for drawing. Currently can be 1 (thin) or 2 (thicker).
 
 Examples:
 
-
 ```
 
 
 put the itemdelimiter into z
-
 set the itemdel to tab
-
 answer item 2 of "a"&tab&"b"&tab&"c"
-
 set the itemdel to ","
 
 
 
 ```
+
+
 
 ## global: idlerate
 
@@ -956,21 +975,23 @@ set the itemdel to ","
 
 Examples:
 
-
 ```
 
 
 set the idlerate to "default"
-
 set the idlerate to "faster"
 
 
 ```
 
+
+
 ## global: multiple
 
 
 The "draw multiple" setting for drawing. Does not yet affect script drawing.
+
+
 ## global: pattern
 
 

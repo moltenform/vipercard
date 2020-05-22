@@ -1,5 +1,5 @@
 
-from gendocs2 import *
+from gendocs import *
 
 def addFormattingMarkdown(s):
     # first, escape characters that happen to be markdown formatters
@@ -9,9 +9,6 @@ def addFormattingMarkdown(s):
     # s = s.replace('*', '\\*')
     # s = s.replace('_', '\\_')
     # s = s.replace('~', '\\~')
-    
-    # need to double newlines! except for * lists
-    s = re.sub(r'(\S) *\n *([^*\s])', r'\1'+'\n\n'+r'\2', s)
     
     # then do formatting
     s = s.replace('^', '**')
@@ -28,6 +25,15 @@ def addFormattingMarkdown(s):
     
 
     s = s.replace('$caret$', '^').replace('$backtic1$', '`').replace('$backtic$', '\\`')
+    
+    # need to double newlines! except for * lists. and not inside a ``` block
+    pts = s.split('```')
+    for i, item in enumerate(pts):
+        if i%2==0:
+            pts[i] = re.sub(r'(\S) *\n *([^*\s])', r'\1'+'\n\n'+r'\2', pts[i])
+    
+    s = '```'.join(pts)
+    
     return s
 
 
@@ -39,8 +45,9 @@ this is a generated file, changes will be lost.
     out+='\n\n'+myHeaderLinks+'\n\n'
     for item in section:
         shortTitle, title, body = item
-        out += f'## {title}\n\n'
+        out += f'\n\n## {title}\n\n'
         out += addFormattingMarkdown(body)
+    
     
     trace('write to', outfile)
     files.writeall(outfile, out, encoding='utf-8')

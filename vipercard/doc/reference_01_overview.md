@@ -4,11 +4,15 @@ this is a generated file, changes will be lost.
 
 Overview | [Commands](./reference_02_commands.md) | [Syntax](./reference_03_syntax.md) | [Properties](./reference_04_properties.md) | [Functions](./reference_05_functions.md) | [Event Handlers](./reference_06_events.md) | [Compatibility](./reference_07_compatibility.md)
 
+
+
 ## Introduction
 
 
 
 Welcome to ViperCard, an open source re-creation and re-imagination of 1987's HyperCard. We suggest first watching the example videos.
+
+
 
 
 
@@ -19,12 +23,9 @@ All objects (all buttons, fields, and cards) have an associated set of code call
 
 Here is an example script:
 
-
 ```
 on mouseUp
-
-answer "hello, world"
-
+    answer "hello, world"
 end mouseUp
 ```
 
@@ -36,11 +37,8 @@ A line of code beginning with -- is ignored. This is often used to write explana
 
 ```
 on mouseUp
-
--- this line is a comment
-
-answer "hello, world"
-
+    -- this line is a comment
+    answer "hello, world"
 end mouseUp
 ```
 
@@ -53,8 +51,7 @@ A long line of code can be continued with a backslash, e.g.
 
 ```
 answer ("here is how to continue" & \
-
-"code across two lines")
+    "code across two lines")
 ```
 
 
@@ -63,15 +60,10 @@ To have a comment spanning many lines, do this,
 
 ```
 on mouseUp
-
---[[this line is a comment
-
-and so is this
-
-and also this]]
-
-answer "hello, world"
-
+    --[[this line is a comment
+    and so is this
+    and also this]]
+    answer "hello, world"
 end mouseUp
 ```
 
@@ -91,9 +83,7 @@ Double-quotes ("), not single-quotes ('), must be used. A string with length 0, 
 
 ```
 if x is "" then
-
-answer "empty string"
-
+    answer "empty string"
 end if
 ```
 
@@ -133,6 +123,8 @@ set the width of cd btn id 1234 to 450
 When you are in the Browse tool and you interact with the page by clicking on buttons or pressing keystrokes, this causes messages to be fired. If you click a button, and if that button has a script that happens to have a function called `on mouseUp` defined, then the code inside `on mouseUp` will be run.
 
 The documentation here has a list of Commands, Event Handlers, and Properties that can be set.
+
+
 ## Helpful Examples
 
 
@@ -140,23 +132,15 @@ The tutorial videos show helpful example code.
 
 Example 1:
 
-
 ```
 
 -- after creating a field called "myFld":
-
 -- create a btn and put this in its script:
-
 on mouseUp
-
--- when you click button "Go", you get 10 points!
-
-put cd fld "myFld" into score
-
-put (score + 10) into score
-
-put score into cd fld "myFld"
-
+    -- when you click button "Go", you get 10 points!
+    put cd fld "myFld" into score
+    put (score + 10) into score
+    put score into cd fld "myFld"
 end mouseUp
 
 
@@ -165,70 +149,49 @@ end mouseUp
 
 Example 2:
 
-
 ```
 
 -- after creating a btn called "fish":
-
 -- create a btn and put this in its script:
-
 on mouseUp
-
--- when you click this, the fish moves
-
-put the top of cd btn "fish" into y
-
-subtract 10 from y
-
-set the top of cd btn "fish" to y
-
+    -- when you click this, the fish moves
+    put the top of cd btn "fish" into y
+    subtract 10 from y
+    set the top of cd btn "fish" to y
 end mouseUp
 
 
 ```
 
-
 Example 3:
-
 
 ```
 
 -- create interactive art.
-
 -- put this in the card script,
-
--- then when you choose the browse tool and
-
+-- then when you choose the browse tool and 
 -- click on the card, it will draw lines.
 
 on mouseUp
-
-put the clickH into X
-
-put the clickV into y
+    put the clickH into X
+    put the clickV into y
     
     -- choose the line tool to draw lines
-
-choose "line" tool
+    choose "line" tool
     
     -- make a loop that will repeat 10 times
-
-repeat 10 times
-
-put random(80) into randx
-
-put random(80) into randy
-
--- will get random # between 1 and 80
-
-drag from x, y to (x + randx), (y + randy)
-
-end repeat
-
+    repeat 10 times
+        put random(80) into randx
+        put random(80) into randy
+        -- will get random # between 1 and 80
+        drag from x, y to (x + randx), (y + randy)
+    end repeat
 end mouseUp
   
 
 ```
+
+
 
 
 ## Expressions
@@ -242,25 +205,19 @@ Expressions can use parentheses to contain any level of nested sub-expressions, 
 
 ```
 sqrt(0.5)
-
 sqrt(0.5 + sqrt(0.6))
-
 sqrt(0.5 + sqrt(0.6 + sqrt(0.7)))
 ```
-
 
 are all valid.
 
 Parentheses are used to dictate the order of operations, since
 
-
 ```
 3*(4+5)
 ```
 
-
 gives a different answer than
-
 
 ```
 (3*4)+5
@@ -271,14 +228,11 @@ Parentheses are also used for grouping an expression. For example, we needed to 
 
 Do not type something like
 
-
 ```
 answer (line n + 1 of x) -- this is hard to read.
 ```
 
-
 which is unclear,
-
 
 ```
 answer (line (n + 1) of x) -- this is preferred.
@@ -292,6 +246,8 @@ ViperCard also has logical operators like `and`, `or`, and `not`.
 See the `operators` page in the Syntax documentation section
 
 for more information.
+
+
 
 ## Message Box
 
@@ -314,17 +270,11 @@ In your script, you can add debugging statements that trace a value and show it 
 
 ```
 
-
 put 45 * 56 into x
-
 -- if the msg box is open, will show the value of x
-
 -- otherwise, the line is ignored
-
 put x into the msg box
-
 -- code will continue running
-
 
 ```
 
@@ -334,16 +284,15 @@ The shortened form,
 
 ```
 
-
 put 45 * 56 into x
-
 -- if the msg box is open, will show the value of x
-
 put x
 ```
 
 
 is also supported.
+
+
 
 
 ## Lists/arrays
@@ -355,11 +304,8 @@ Here's a common way to create a list:
 
 ```
 put "" into myList
-
 repeat with x = 1 to 5
-
-put 0 into line x of myList
-
+    put 0 into line x of myList
 end repeat
 ```
 
@@ -385,11 +331,8 @@ Add 10 to each element of the list:
 
 ```
 repeat with x = 1 to the number of lines in myList
-
-put (line x of myList) + 10 into line x of myList
-
+    put (line x of myList) + 10 into line x of myList
 end repeat
-
 
 ```
 
@@ -400,18 +343,12 @@ end repeat
 
 Here's a common way to create a 2-d list:
 
-
 ```
 put "" into myList
-
 repeat with x = 1 to 5
-
-repeat with y = 1 to 5
-
-put 0 into item x of line y of myList
-
-end repeat
-
+    repeat with y = 1 to 5
+        put 0 into item x of line y of myList
+    end repeat
 end repeat
 ```
 
@@ -429,21 +366,16 @@ Add 10 to each element of the list:
 
 ```
 repeat with y = 1 to the number of lines in myList
-
-repeat with x = 1 to the number of items in line y of myList
-
-if length(item x of line y of theLine) > 0 theLine
-
-add 10 to item x of line y of theLine
-
-end if
-
+    repeat with x = 1 to the number of items in line y of myList
+        if length(item x of line y of theLine) > 0 theLine
+            add 10 to item x of line y of theLine
+        end if
+    end repeat
 end repeat
-
-end repeat
-
 
 ```
+
+
 
 
 ## Variables
@@ -477,22 +409,17 @@ For example,
 
 ```
 global coordX, coordY
-
 put 1 into coordX
-
 put 2 into coordY
 ```
 
 
 If another script says
 
-
 ```
 global coordX, coordY
-
 answer coordX, coordY
 ```
-
 
 it will read the values that were set.
 
@@ -506,28 +433,20 @@ A runtime error can be thrown if a value has the wrong
 
 type, e.g.
 
-
 ```
 put "abc" + 4 into z
 ```
-
 
 causes a runtime error! The addition operator requires numbers, and so creates a runtime error when getting the string `"abc"`.
 
 If you need to convert from a text type to a number, you can use the functions `strToNumber` and `numberToStr`. For example,
 
-
 ```
 ask "please enter a number"
-
 put it into x
-
 if strToNumber(x) is not false then
-
-answer "the number plus one is" && (strToNumber(x) + 1)
-
+    answer "the number plus one is" && (strToNumber(x) + 1)
 end if
-
 
 ```
 
@@ -544,74 +463,53 @@ if (456 is "456.00") then answer "yes" -- answers yes
 
 A "point" data type is two numbers separated by a comma. You can write:
 
-
 ```
 
 put 1 into x
-
 put 2 into y
-
 set the topleft of cd btn "myBtn" to x, y
-
 
 ```
 
 
 This is the same as writing
 
-
 ```
 
 set the topleft of cd btn "myBtn" to 1, 2
-
 set the topleft of cd btn "myBtn" to "1, 2"
-
 or
-
 set the top of cd btn "myBtn" to 1
-
 set the left of cd btn "myBtn" to 2
 
-
 ```
+
+
 
 ## Writing functions
 
 
 An example of how to define and call a custom function:
 
-
 ```
 function myAddition p1, p2
-
-return p1 + p2
-
+    return p1 + p2
 end myAddition
-
 on mouseUp
-
-put myAddition(1,2) into x
-
+    put myAddition(1,2) into x
 end mouseUp
 ```
 
 
 An example of how to define and call a custom handler:
 
-
 ```
 on showMessage p1, p2
-
-put p1 into cd fld "results1"
-
-put p2 into cd fld "results2"
-
+    put p1 into cd fld "results1"
+    put p2 into cd fld "results2"
 end showMessage
-
 on mouseUp
-
-showMessage "hello", "world"
-
+    showMessage "hello", "world"
 end mouseUp
 ```
 
@@ -620,14 +518,10 @@ You can define variadic functions (that accept any number of values), see the do
 
 No error is thrown if the incorrect number of arguments is given. Missing arguments are given the empty string ("").
 
-
 ```
 myAddition(7, 8, 9) -- the extra argument 9 is ignored
-
 myAddition(7, 8) -- p1 is assigned 7, p2 is assigned 8
-
 myAddition(7) -- p1 is assigned 7, p2 is assigned ""
-
 myAddition() -- p1 is assigned "", p2 is assigned ""
 ```
 
@@ -675,6 +569,8 @@ See documentation of the 'pass' command for more information.
 
 Calls to custom commands and procedures also bubble upwards in the same way. A function in the stack's script can be called from any handler on a card, field, or button. A function in the card's script can be called from any handler in a field or button. So, it is useful to put commonly used utility code in a stack script so that it can be called from anywhere.
 
+
+
 ## Text and Chunks
 
 
@@ -702,15 +598,10 @@ ViperCard can process text by using chunks. If you have a tab-separated list you
 
 ```
 
-
 put "ab" & tab & "cd" & tab & "ef" into myList
-
 set the itemDelimiter to tab
-
 put 2 into n
-
 answer "Result:" & item n of myList
-
 
 ```
 
@@ -719,15 +610,10 @@ If you have a comma-separated list you can get the nth item like this:
 
 ```
 
-
 put "ab,cd,ef" into myList
-
 set the itemDelimiter to ","
-
 put 2 into n
-
 answer "Result:" & item n of myList
-
 
 ```
 
@@ -737,52 +623,37 @@ More advanced examples:
 
 ```
 
-
 answer char 2 of "abcd"
-
 answer char (n + 1) of "abcd"
-
 answer char 2 to 4 of "abcd"
 
 answer item 2 of "ab,cd,ef,gh"
-
 answer item (n + 1) of "ab,cd,ef,gh"
-
 answer item 2 to 4 of "ab,cd,ef,gh"
 
 answer first item of "ab,cd,ef,gh"
-
 answer last item of "ab,cd,ef,gh"
-
 answer any item of "ab,cd,ef,gh"
 
 put "ab" & newline & "cd" & newline & "ef" into myList
-
 answer line 2 of myList
-
 answer line (n + 1) of myList
-
 answer line 2 to 3 of myList
-
 
 ```
 
 
 Recursive scopes:
 
-
 ```
 
 put "ab,cd" & newline & "ef,gh" & newline & "ij,kl" into myList
 
 answer item 2 of line 2 of myList
-
 answer char 2 of line 2 of myList
-
 answer char 2 of item 2 of line 2 of myList
 
 answer char 2 to 3 of item 2 to 3 of line 2 to 3 of myList
-
 
 ```
 
@@ -793,51 +664,34 @@ answer char 2 to 3 of item 2 to 3 of line 2 to 3 of myList
 
 ```
 
-
 put "abcd" into x
-
 put "A" into char 2 of x
-
 put "A" into char 2 to 4 of x
 
 put "10,20,30" into myList
-
 put "A" into item 2 of myList
-
 put "A" into item 2 to 3 of myList
-
 multiply item 2 of myList by 5
-
 add 1 to item 2 of myList
 
 put "A" into first item of myList
-
 put "A" into last item of myList
-
 put "A" into any item of myList
 
 put "A" into before item 2 of myList
-
 put "A" into after item 2 of myList
-
 put "A" into before char 2 of item 2 of myList
 
 put "A" into before item 2 of cd fld "myFld"
-
 put "A" into after item 2 of cd fld "myFld"
-
 put "A" into before char 2 of item 2 of cd fld "myFld"
 
 put "ab,cd" & newline & "ef,gh" & newline & "ij,kl" into myList
-
 put "A" into item 2 of line 2 of myList
-
 put "A" into char 2 of line 2 of myList
-
 put "A" into char 2 of item 2 of line 2 of myList
 
 put "A" into char 2 to 3 of item 2 to 3 of line 2 to 3 of myList
-
 
 ```
 
@@ -849,19 +703,12 @@ We went to much effort to maintain fidelity with HyperCard's chunk processing. A
 
 ```
 
-
 put "ab cd ef" into x
-
 answer word 2 of x
-
 answer word 2 to 3 of x
-
 put "A" into word 2 of x
-
 put "A" into word 2 to 3 of x
-
 put "A" into char 2 to 3 of word 2 to 3 of x
-
 
 ```
 
@@ -871,169 +718,112 @@ To enable full compatibility with HyperCard, go to `Object->Stack info...` and t
 
 ```
 
-
 -- if compatibility mode is on:
-
 -- we follow HyperCard's non-intuitive behavior for the following:
-
 put "ab,cd" & newline & "ef,gh" & newline & "ij,kl" into myList
-
 put "A" into item 3 of item 4 of myList
-
 put "A" into item 3 of char 2 of myList
-
 delete item 3 of item 4 of myList
-
 delete item 3 of char 2 of myList
-
 add 1 to item 3 of item 4 of myList
-
 add 1 to item 3 of char 2 of myList
-
 answer item 0 of myList
-
 put "A" into item 0 of myList
-
 answer item 4 to 1 of myList
-
 put "A" into item 4 to 1 of myList
 
 
 -- The only known cases we don't support (we'll throw a runtime error):
-
 answer item -1 of myList
-
 put "A" into item -1 of myList
-
 delete item -1 of myList
-
 answer char 2 of item 4 to 1 of myList
-
 put "A" into char 2 of item 4 to 1 of myList
-
 delete char 2 of item 4 to 1 of myList
-
 delete item 2 to 3 of myList
-
 
 ```
 
 
 See also documentation for the `delete` command.
+
+
 ## Referring to objects
 
 
 Ways to refer to a stack:
 
-
 ```
 
 this stack
-
 stack 1
-
 stack "name"
-
 
 ```
 
 Ways to refer to a background:
 
-
 ```
 
 this background
-
 prev background
-
 next background
-
 first background
-
 second background
-
 last background
-
 bg 1
-
 bg id 1234
-
 bg "name"
-
 
 ```
 
 Ways to refer to a card:
 
-
 ```
 
 this card
-
 prev card
-
 next card
-
 first card
-
 second card
-
 last card
-
 card 1
-
 card id 1234
-
 card "name"
-
 
 ```
 
 Ways to refer to a button or field:
 
-
 ```
 
 cd btn id 1234
-
 cd btn "myBtn"
-
 cd btn 2
-
 first cd btn
-
 any cd btn
-
 last cd btn
-
 
 ```
 
 Other ways to refer to objects:
 
-
 ```
 
 answer the name of the target
-
 answer the name of me
-
 answer the name of the owner of cd btn id 1234
-
 put "cd btn id 1234" into x
-
 answer the name of x
 
 function whichObject
-
-return "cd btn id 1234"
-
+    return "cd btn id 1234"
 end whichObject
-
 answer the name of whichObject()
 
-
 ```
+
+
 
 
 ## Structure
@@ -1042,12 +832,9 @@ answer the name of whichObject()
 
 **Loops**
 
-
 ```
 repeat with x = 1 to 3
-
-...other code here...
-
+    ...other code here...
 end repeat
 ```
 
@@ -1056,19 +843,13 @@ Refer to `repeat` under "syntax" for more information.
 
 **If statements**
 
-
 ```
 if x > 1 then
-
-...other code here...
-
+    ...other code here...
 else
-
-...other code here...
-
+    ...other code here...
 end if
 ```
-
 
 Refer to `if` under "syntax" for more information.
 
@@ -1081,15 +862,11 @@ No code can exist outside of a handler or function.
 
 Handlers look like this
 
-
-```
-on mouseup
+`on mouseup
 
 answer "hello world"
 
-end mouseup
-```
-
+end mouseup`
 
 and respond to an event message.
     
@@ -1097,23 +874,17 @@ and respond to an event message.
 
 Functions look like this
 
-
-```
-function myAddition p1, p2
+`function myAddition p1, p2
 
 return p1 + p2
 
-end myAddition
-```
-
+end myAddition`
 
 They can then be called with code like
-
 
 ```
 put myAddition(1,2) into x
 ```
-
 
 Functions inside of functions are not supported.
 
@@ -1122,11 +893,7 @@ Functions inside of functions are not supported.
 
 You cannot have a line that is just
 
-
-```
-sqrt(0.5)
-```
-
+`sqrt(0.5)`
 
 with no command, this is a syntax error.
     
@@ -1139,27 +906,22 @@ A set of computations such as `1+2+3+4` or `sqrt(0.5) + sqrt(0.6)` is an express
 
 ```
 go card 2
-
 -- is the same as
-
 put 1 into x
-
 go card (x + 1)
 
 put "abc" into cd fld "myFld1"
-
 put "abc" into cd fld (prefix & "1")
 
 put "a" into line 4 of myList
-
 put "a" into line (x+1) of myList
 
 set the left of cd btn "myBtn" to x
-
 set the left of cd btn "myBtn" to (45 + 50 * cos(theta))
 
-
 ```
+
+
 
 ## Tips & Shortcuts
 
@@ -1217,6 +979,8 @@ A few of the differences between ViperCard and HyperCard:
 * You can't have a variable named id, short, long, first, and so on.
 * The `choose` command sets the emulated current tool, not the actual tool, and is limited to certain paint operations
 * The newline character is \n and not \r
+
+
 
 
 ## Credits

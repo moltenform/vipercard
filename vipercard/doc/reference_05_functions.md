@@ -4,6 +4,8 @@ this is a generated file, changes will be lost.
 
 [Overview](./reference_01_overview.md) | [Commands](./reference_02_commands.md) | [Syntax](./reference_03_syntax.md) | [Properties](./reference_04_properties.md) | Functions | [Event Handlers](./reference_06_events.md) | [Compatibility](./reference_07_compatibility.md)
 
+
+
 ## abs(x)
 
 
@@ -11,16 +13,16 @@ Absolute value.
 
 Examples:
 
-
 ```
 
 
 put abs(-0.5) into x
-
 put abs(0.5) into x
 
 
 ```
+
+
 
 ## atan(x)
 
@@ -30,7 +32,6 @@ Arctangent, in radians.
 
 Examples:
 
-
 ```
 
 
@@ -39,6 +40,8 @@ put atan(0.5) into x
 
 
 ```
+
+
 
 ## average()
 
@@ -51,16 +54,16 @@ You can also provide a comma-delimited string.
 
 Examples:
 
-
 ```
 
 
 put average(1,2,3) into x
-
 put average("1,2,3") into x -- returns 2
 
 
 ```
+
+
 
 ## charToNum(x)
 
@@ -70,7 +73,6 @@ From ascii-like number to a character. Note that characters in a field are displ
 Note that the newline character is always \n (10).
 
 Examples:
-
 
 ```
 
@@ -82,13 +84,14 @@ put charToNum(97) into x
 
 ```
 
+
+
 ## clickH()
 
 
 Get x coordinate of a recent mouse click. See `clickLoc` for more details.
 
 Examples:
-
 
 ```
 
@@ -98,6 +101,8 @@ put clickh() into x
 
 
 ```
+
+
 
 ## clickLoc()
 
@@ -113,17 +118,17 @@ This isn't necessarily the most recent mouseclick, it is only updated
 
 Examples:
 
-
 ```
 
 
 wait until the mouseClic
-
 answer "you clicked at" && the clickLoc
 
 
 
 ```
+
+
 
 ## clickV()
 
@@ -131,7 +136,6 @@ answer "you clicked at" && the clickLoc
 Get y coordinate of a recent mouse click. See `clickLoc` for more details.
 
 Examples:
-
 
 ```
 
@@ -142,6 +146,8 @@ put clickv() into x
 
 ```
 
+
+
 ## commandKey()
 
 
@@ -149,27 +155,22 @@ Check if this modifier key is pressed.
 
 Examples:
 
-
 ```
 
 
 if the commandKey is down then
-
-answer "cmd key is down"
-
+    answer "cmd key is down"
 end if
-
 -- same as
-
 if the cmdKey is down then
-
-answer "cmd key is down"
-
+    answer "cmd key is down"
 end if
 
 
 
 ```
+
+
 
 ## contains
 
@@ -178,25 +179,23 @@ Can you find a string within a string?
 
 Examples:
 
-
 ```
 
 
 if "abc" contains "b" then
-
-answer "yes"
-
+    answer "yes"
 end if
 
 
 ```
+
+
 
 ## cos(x)
 
 
 
 Examples:
-
 
 ```
 
@@ -206,6 +205,8 @@ put cos(0.5 * pi) into x
 
 ```
 
+
+
 ## date()
 
 
@@ -214,24 +215,20 @@ Returns the current date.
 
 Examples:
 
-
 ```
 
 
 the date
-
 date()
-
 the abbrev date
-
 the short date
-
 the long date
-
 the English date
 
 
 ```
+
+
 
 ## exp(x)
 
@@ -239,7 +236,6 @@ the English date
 e to the power of x.
 
 Examples:
-
 
 ```
 
@@ -251,13 +247,14 @@ put exp(0.5) into x
 
 ```
 
+
+
 ## exp2(x)
 
 
 2 to the power of x.
 
 Examples:
-
 
 ```
 
@@ -267,6 +264,8 @@ put exp2(0.5) into x
 
 ```
 
+
+
 ## is a
 
 
@@ -274,42 +273,29 @@ Check the type of an expression.
 
 Examples:
 
-
 ```
 
 
 if x is a number then
-
-answer "a"
-
+    answer "a"
 end if
-
 if x is a integer then
-
-answer "b"
-
+    answer "b"
 end if
-
 if x is a logical then
-
-answer "c"
-
+    answer "c"
 end if
-
 if x is a point then
-
-answer "d"
-
+    answer "d"
 end if
-
 if x is a rect then
-
-answer "e"
-
+    answer "e"
 end if
 
 
 ```
+
+
 
 ## is in
 
@@ -318,27 +304,23 @@ Can you find a string within a string?
 
 Examples:
 
-
 ```
 
 
 if "b" is in "abc" then
-
-answer "yes"
-
+    answer "yes"
 end if
 
 -- is within is the same,
-
 if "b" is within "abc" then
-
-answer "yes"
-
+    answer "yes"
 end if
 
 
 
 ```
+
+
 
 ## keyChar()
 
@@ -347,32 +329,24 @@ In an afterkeydown or afterkeyup handler, check the character. Is affected by sh
 
 Examples:
 
-
 ```
 
 
 put keyChar() into x
-
 on afterKeyDown
-
-if keyChar() is "i" and the shiftKey is up and \
-
-the optionKey is down and the commandKey is up then
-
-answer "you pressed option-i"
-
-else if keyChar() is "U" and the shiftKey is down and \
-
-the optionKey is up and the commandKey is up then
-
-answer "you pressed shift-u"
-
-end if
-
+    if keyChar() is "i" and the shiftKey is up and \
+            the optionKey is down and the commandKey is up then
+        answer "you pressed option-i"
+    else if keyChar() is "U" and the shiftKey is down and \
+            the optionKey is up and the commandKey is up then
+        answer "you pressed shift-u"
+    end if
 end afterKeyDown
 
 
 ```
+
+
 
 ## keyRepeated()
 
@@ -381,18 +355,17 @@ In an afterkeydown handler, did this event come from the user holding the key do
 
 Examples:
 
-
 ```
 
 
 if not keyRepeated() then
-
-add 1 to uniqueKeyPresses
-
+    add 1 to uniqueKeyPresses
 end if
 
 
 ```
+
+
 
 ## length(s)
 
@@ -401,25 +374,23 @@ Returns the length of a string, in characters.
 
 Examples:
 
-
 ```
 
 
 answer length("abc") -- displays 3
-
 answer the length of "" -- displays 0
-
 answer the length of "abc" -- displays 3
 
 
 ```
+
+
 
 ## ln(x)
 
 
 
 Examples:
-
 
 ```
 
@@ -433,13 +404,14 @@ put ln(0.5) into x
 
 ```
 
+
+
 ## log2(x)
 
 
 Base-2 logarithm.
 
 Examples:
-
 
 ```
 
@@ -449,6 +421,8 @@ put log2(0.5) into x
 
 ```
 
+
+
 ## max(...)
 
 
@@ -456,16 +430,16 @@ Supports any number of arguments. You can also provide a comma-delimited string.
 
 Examples:
 
-
 ```
 
 
 put max(1,2,3) into x
-
 put max("45,49,40") into x -- returns 49
 
 
 ```
+
+
 
 ## me
 
@@ -475,7 +449,6 @@ Refers to the object that owns the current script.
 Similar to, but distinct from 'target'.
 
 Examples:
-
 
 ```
 
@@ -487,6 +460,8 @@ set the width of me to 100
 
 ```
 
+
+
 ## min()
 
 
@@ -494,16 +469,16 @@ Supports any number of arguments. You can also provide a comma-delimited string.
 
 Examples:
 
-
 ```
 
 
 put min(1,2,3) into x
-
 put min("45,49,40") into x -- returns 40
 
 
 ```
+
+
 
 ## mouse()
 
@@ -512,18 +487,17 @@ Is the mouse button currently down. Returns one of the constants `down` or `up`.
 
 Examples:
 
-
 ```
 
 
 if the mouse is down then
-
-answer "mouse button is clicked"
-
+    answer "mouse button is clicked"
 end if
 
 
 ```
+
+
 
 ## mouseclick()
 
@@ -534,17 +508,17 @@ When you check the mouseclick, it will only return true once before resetting ba
 
 Examples:
 
-
 ```
 
 
 wait until the mouseclick
-
 answer the clickloc
 
 
 
 ```
+
+
 
 ## mouseh()
 
@@ -552,7 +526,6 @@ answer the clickloc
 The x coordinate of the current mouse location.
 
 Examples:
-
 
 ```
 
@@ -563,13 +536,14 @@ put mouseh() into x
 
 ```
 
+
+
 ## mouseloc()
 
 
 The coordinates of the current mouse location.
 
 Examples:
-
 
 ```
 
@@ -580,13 +554,14 @@ put mouseloc() into x
 
 ```
 
+
+
 ## mousev()
 
 
 The y coordinate of the current mouse location.
 
 Examples:
-
 
 ```
 
@@ -597,23 +572,18 @@ put mousev() into x
 
 ```
 
+
+
 ## number
 
 
 **Count parts of text**
 
-
 ```
 answer the number of chars in "abc"
 ```
 
-
-
-```
-answer the number of items in "a,b,c"
-```
-
-
+`answer the number of items in "a,b,c"`
 
 ```
 answer the number of lines in myList
@@ -622,48 +592,32 @@ answer the number of lines in myList
 
 **Count current objects**
 
-
 ```
 answer the number of cards in this stack
 ```
 
-
-
-```
-answer the number of buttons in this card
-```
-
-
+`answer the number of buttons in this card`
 
 ```
 answer the number of fields in this card
 ```
 
-
-
-```
-repeat with x = 1 to the number of cards in this stack
+`repeat with x = 1 to the number of cards in this stack
 
 set the name of card x of this stack to "c" & x
 
-end repeat
-```
-
+end repeat`
 
 **Get the number of an object.**
-
 
 ```
 answer the number of this card
 ```
 
+`put the number of cd fld id 1234 into x
 
+put "abc" into cd fld x`
 
-```
-put the number of cd fld id 1234 into x
-
-put "abc" into cd fld x
-```
 
 ## numberToStr(x)
 
@@ -672,7 +626,6 @@ Convert number to string.
 
 Examples:
 
-
 ```
 
 
@@ -680,6 +633,8 @@ put numberToStr(0.5) into x
 
 
 ```
+
+
 
 ## numToChar(x)
 
@@ -690,7 +645,6 @@ Note that the newline character is always \n (10).
 
 Examples:
 
-
 ```
 
 
@@ -700,6 +654,8 @@ put numToChar("a") into x
 
 ```
 
+
+
 ## objectById(id)
 
 
@@ -707,22 +663,19 @@ Gets the full id from the numeric id.
 
 Examples:
 
-
 ```
 
 
 -- assuming there is a cd btn id 1234
-
 put objectById(1234) into x
-
 -- x is now "card button id 1234".
-
 -- you can now do this
-
 set the topleft of x to 100, 200
 
 
 ```
+
+
 
 ## offset(needle, haystack)
 
@@ -731,17 +684,17 @@ Search for a string within a string, and return the position where found. If not
 
 Examples:
 
-
 ```
 
 
 put offset("b", "abc") into x
-
 -- x is now 2.
 
 
 
 ```
+
+
 
 ## optionKey()
 
@@ -750,18 +703,17 @@ Check if this modifier key is pressed.
 
 Examples:
 
-
 ```
 
 
 if the optionKey is down then
-
-answer "opt key is down"
-
+    answer "opt key is down"
 end if
 
 
 ```
+
+
 
 ## param(n)
 
@@ -770,32 +722,25 @@ Get the nth value passed into the current procedure. Can be used to build a func
 
 Examples:
 
-
 ```
 
 
 on mySumOfNumbers
-
-put 0 into total
-
-repeat with x = 1 to paramCount()
-
-put total + param(x) into total
-
-end repeat
-
-answer "total is" && total
-
+    put 0 into total
+    repeat with x = 1 to paramCount()
+        put total + param(x) into total
+    end repeat
+    answer "total is" && total
 end mySumOfNumbers
 
 on mouseUp
-
-mySumOfNumbers 1, 2, 3
-
+    mySumOfNumbers 1, 2, 3
 end mouseUp
 
 
 ```
+
+
 
 ## paramCount()
 
@@ -804,32 +749,25 @@ Get the number of values passed into the current procedure. Can be used to build
 
 Examples:
 
-
 ```
 
 
 on mySumOfNumbers
-
-put 0 into total
-
-repeat with x = 1 to paramCount()
-
-put total + param(x) into total
-
-end repeat
-
-answer "total is" && total
-
+    put 0 into total
+    repeat with x = 1 to paramCount()
+        put total + param(x) into total
+    end repeat
+    answer "total is" && total
 end mySumOfNumbers
 
 on mouseUp
-
-mySumOfNumbers 1, 2, 3
-
+    mySumOfNumbers 1, 2, 3
 end mouseUp
 
 
 ```
+
+
 
 ## params()
 
@@ -837,7 +775,6 @@ end mouseUp
 Get all of the values passed into the current procedure.
 
 Examples:
-
 
 ```
 
@@ -848,6 +785,8 @@ put params() into x
 
 ```
 
+
+
 ## random(n)
 
 
@@ -857,7 +796,6 @@ Returns random value between 1 and n.
 
 Examples:
 
-
 ```
 
 
@@ -866,6 +804,8 @@ put random(20) into roll
 
 ```
 
+
+
 ## result()
 
 
@@ -873,26 +813,21 @@ The return value of the last called function or procedure.
 
 Examples:
 
-
 ```
 
 
 on myProc
-
-return "a"
-
+    return "a"
 end myProc
-
 on mouseUp
-
-myProc
-
-answer the result
-
+    myProc
+    answer the result
 end mouseUp
 
 
 ```
+
+
 
 ## round(x)
 
@@ -900,7 +835,6 @@ end mouseUp
 Returns integer nearest to number. Odd integers plus 0.5 round up, even integers plus 0.5 round down.
 
 Examples:
-
 
 ```
 
@@ -910,12 +844,13 @@ put round(1.7) into x
 
 ```
 
+
+
 ## screenRect()
 
 
 
 Examples:
-
 
 ```
 
@@ -926,13 +861,14 @@ put screenRect() into x
 
 ```
 
+
+
 ## seconds()
 
 
 Seconds since January 1, 1904.
 
 Examples:
-
 
 ```
 
@@ -942,13 +878,14 @@ put seconds() into x
 
 ```
 
+
+
 ## selectedChunk()
 
 
 Current selection, looks something like 'char 2 to 4 of cd fld id 1234'.
 
 Examples:
-
 
 ```
 
@@ -959,13 +896,14 @@ put selectedChunk() into x
 
 ```
 
+
+
 ## selectedField()
 
 
 The field that contains current selected text, looks something like 'cd fld id 1234'.
 
 Examples:
-
 
 ```
 
@@ -976,13 +914,14 @@ put selectedField() into x
 
 ```
 
+
+
 ## selectedLine()
 
 
 The number of the line of the current selected text.
 
 Examples:
-
 
 ```
 
@@ -993,13 +932,14 @@ put selectedLine() into x
 
 ```
 
+
+
 ## selectedText()
 
 
 The value of the current selected text.
 
 Examples:
-
 
 ```
 
@@ -1009,6 +949,8 @@ put selectedText() into x
 
 ```
 
+
+
 ## shiftKey()
 
 
@@ -1016,26 +958,24 @@ Check if this modifier key is pressed.
 
 Examples:
 
-
 ```
 
 
 if the shiftKey is down then
-
-answer "shift key is down"
-
+    answer "shift key is down"
 end if
 
 
 
 ```
 
+
+
 ## sqrt(x)
 
 
 
 Examples:
-
 
 ```
 
@@ -1045,12 +985,13 @@ put sqrt(0.5) into x
 
 ```
 
+
+
 ## sin(x)
 
 
 
 Examples:
-
 
 ```
 
@@ -1061,6 +1002,8 @@ put sin(0.5 * pi) into x
 
 ```
 
+
+
 ## strToNumber(x)
 
 
@@ -1068,30 +1011,24 @@ Parse string to number. Supports scientific notation. If cannot be parsed, retur
 
 Examples:
 
-
 ```
 
 
 put strToNumber("12") into x
-
 put strToNumber("-12") into x
-
 put strToNumber("1e6") into x
-
 ask "what is a number"
-
 put it into x
-
 if strToNumber(x) is false then
-
-answer "that was not a number"
-
+    answer "that was not a number"
 end if
 
 
 
 
 ```
+
+
 
 ## sum()
 
@@ -1103,24 +1040,23 @@ You can also provide a comma-delimited string.
 
 Examples:
 
-
 ```
 
 
 put sum(1,2,3) into x
-
 put sum("1,2,3") into x -- returns 6
 
 
 
 ```
 
+
+
 ## tan(x)
 
 
 
 Examples:
-
 
 ```
 
@@ -1130,6 +1066,8 @@ put tan(0.125 * pi) into x
 
 
 ```
+
+
 
 ## target
 
@@ -1142,7 +1080,6 @@ Related to 'me', but not the same.
 
 Examples:
 
-
 ```
 
 
@@ -1154,6 +1091,8 @@ put the short id of the target into x
 
 ```
 
+
+
 ## there is a
 
 
@@ -1161,24 +1100,20 @@ Check for the existence of an object.
 
 Examples:
 
-
 ```
 
 
 if there is a cd btn id 12345 then
-
-answer "found"
-
+    answer "found"
 end if
-
 if there is not a cd btn id 12345 then
-
-answer "not found"
-
+    answer "not found"
 end if
 
 
 ```
+
+
 
 ## ticks()
 
@@ -1187,7 +1122,6 @@ Ticks (60th of a second) since January 1, 1904.
 
 Examples:
 
-
 ```
 
 
@@ -1195,6 +1129,8 @@ put ticks() into x
 
 
 ```
+
+
 
 ## tool()
 
@@ -1205,22 +1141,21 @@ The actual current tool will be the browse tool when any script is running.
 
 Examples:
 
-
 ```
 
 
 choose pencil tool
-
 answer tool() -- shows "pencil"
 
 
 ```
 
+
+
 ## toLowerCase()
 
 
 Examples:
-
 
 ```
 
@@ -1230,11 +1165,12 @@ answer toLowerCase("ABC") -- shows "abc"
 
 ```
 
+
+
 ## toUpperCase()
 
 
 Examples:
-
 
 ```
 
@@ -1245,13 +1181,14 @@ answer toUpperCase("abc") -- shows "ABC"
 
 ```
 
+
+
 ## trunc(x)
 
 
 Get integer part of a number. i.e. for positive numbers, always round down to the nearest integer.
 
 Examples:
-
 
 ```
 
@@ -1263,12 +1200,16 @@ put trunc(0.5) into x
 
 ```
 
+
+
 ## annuity(rate, periods)
 
 
 Computes the total cost of an annuity now that will pay you one unit per period, over the specific number of periods.
 
 You want to purchase an annuity that pays you $10,000 a year for 10 years. The interest rate is 10%. How much will it cost you now? The amount loaned is 10000 * annuity(0.10, 10), or 61445.67.
+
+
 ## compound(rate, periods)
 
 

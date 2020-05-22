@@ -4,6 +4,8 @@ this is a generated file, changes will be lost.
 
 [Overview](./reference_01_overview.md) | [Commands](./reference_02_commands.md) | [Syntax](./reference_03_syntax.md) | [Properties](./reference_04_properties.md) | [Functions](./reference_05_functions.md) | Event Handlers | [Compatibility](./reference_07_compatibility.md)
 
+
+
 ## on afterKeyDown
 
 
@@ -16,30 +18,22 @@ You can use the functions `keyChar()`,  `shiftKey()`,  `optionKey()`, and `comma
 
 Examples:
 
-
 ```
 
 
 on afterKeyDown
-
-if keyChar() is "i" and the shiftKey is up and \
-
-the optionKey is down and the commandKey is up then
-
-answer "you pressed option-i"
-
-else if keyChar() is "U" and the shiftKey is down and \
-
-the optionKey is up and the commandKey is up then
-
-answer "you pressed shift-u"
-
-end if
-
+    if keyChar() is "i" and the shiftKey is up and \
+            the optionKey is down and the commandKey is up then
+        answer "you pressed option-i"
+    else if keyChar() is "U" and the shiftKey is down and \
+            the optionKey is up and the commandKey is up then
+        answer "you pressed shift-u"
+    end if
 end afterKeyDown
 
-
 ```
+
+
 
 ## on afterKeyUp
 
@@ -51,30 +45,23 @@ You can use the functions keyChar(), shiftKey(), optionKey(), and commandKey(), 
 
 Examples:
 
-
 ```
 
 
 on afterKeyUp
-
-if keyChar() is "i" and the shiftKey is up and \
-
-the optionKey is down and the commandKey is up then
-
-answer "you pressed option-i"
-
-else if keyChar() is "U" and the shiftKey is down and \
-
-the optionKey is up and the commandKey is up then
-
-answer "you pressed shift-u"
-
-end if
-
+    if keyChar() is "i" and the shiftKey is up and \
+            the optionKey is down and the commandKey is up then
+        answer "you pressed option-i"
+    else if keyChar() is "U" and the shiftKey is down and \
+            the optionKey is up and the commandKey is up then
+        answer "you pressed shift-u"
+    end if
 end afterKeyUp
 
 
 ```
+
+
 
 ## on closeBackground
 
@@ -83,20 +70,18 @@ When you go to a different card, if the card belongs to a different background, 
 
 Examples:
 
-
 ```
 
 
 -- in a background's script
-
 on closeBackground
-
-answer "you have left this background"
-
+    answer "you have left this background"
 end closeBackground
 
 
 ```
+
+
 
 ## on closeCard
 
@@ -107,21 +92,19 @@ Because messages continue up the hierarchy until they are handled, you can also 
 
 Examples:
 
-
 ```
 
 
 -- in a card's script
-
 on closeCard
-
-answer "you have left this card"
-
+    answer "you have left this card"
 end closeCard
 
 
 
 ```
+
+
 
 ## on closeField
 
@@ -139,30 +122,24 @@ The message is sent to the target field and travels upward to the current card a
 
 Examples:
 
-
 ```
 
 
 -- in a field's script
 
 on closeField
-
--- do a simple check of what the user just typed
-
-if not "@" in the target then
-
-put "not a e-mail address" into cd fld "status"
-
-else
-
-put "" into cd fld "status"
-
-end if
-
+    -- do a simple check of what the user just typed
+    if not "@" in the target then
+        put "not a e-mail address" into cd fld "status"
+    else
+        put "" into cd fld "status"
+    end if
 end closeField
 
 
 ```
+
+
 
 ## on exitField
 
@@ -182,32 +159,27 @@ The message is sent to the target field and travels upward to the current card a
 
 Examples:
 
-
 ```
 
 
 -- in a field's script
 
 on openField
-
-show cd btn "indicateCurrentlyEditingField"
-
+    show cd btn "indicateCurrentlyEditingField"
 end openField
 
 on closeField
-
-hide cd btn "indicateCurrentlyEditingField"
-
+    hide cd btn "indicateCurrentlyEditingField"
 end closeField
 
 on exitField
-
-hide cd btn "indicateCurrentlyEditingField"
-
+    hide cd btn "indicateCurrentlyEditingField"
 end exitField
 
 
 ```
+
+
 
 ## on idle
 
@@ -218,6 +190,8 @@ Sent repeatedly to the current card. Can be used for a game loop.
 
 To get faster idle calls, at the expense of heavier cpu usage, use `set the idlerate to "faster"`
 
+
+
 ## on mouseDoubleClick
 
 
@@ -225,18 +199,17 @@ Remember that scripts are only run when you're in the Browse tool (hand-shape). 
 
 Examples:
 
-
 ```
 
 
 on mouseDoubleClick
-
-answer "you double-clicked this button."
-
+    answer "you double-clicked this button."
 end mouseDoubleClick
 
 
 ```
+
+
 
 ## on mouseDown
 
@@ -245,18 +218,17 @@ Remember that scripts are only run when you're in the Browse tool (hand-shape). 
 
 Examples:
 
-
 ```
 
 
 on mouseDown
-
-answer "code is running."
-
+    answer "code is running."
 end mouseDown
 
 
 ```
+
+
 
 ## on mouseEnter
 
@@ -265,18 +237,17 @@ Remember that scripts are only run when you're in the Browse tool (hand-shape). 
 
 Examples:
 
-
 ```
 
 
 on mouseEnter
-
-set the icon of me to 12
-
+    set the icon of me to 12
 end mouseDown
 
 
 ```
+
+
 
 ## on mouseLeave
 
@@ -285,18 +256,17 @@ Remember that scripts are only run when you're in the Browse tool (hand-shape). 
 
 Examples:
 
-
 ```
 
 
 on mouseLeave
-
-set the icon of me to 10
-
+    set the icon of me to 10
 end mouseLeave
 
 
 ```
+
+
 
 ## on mouseUp
 
@@ -305,18 +275,17 @@ Remember that scripts are only run when you're in the Browse tool (hand-shape). 
 
 Examples:
 
-
 ```
 
 
 on mouseUp
-
-answer "hello, world."
-
+    answer "hello, world."
 end mouseUp
 
 
 ```
+
+
 
 ## on mouseWithin
 
@@ -327,18 +296,17 @@ Called repeatedly when the cursor is inside the object. You can use the mouseloc
 
 Examples:
 
-
 ```
 
 
 on mouseWithin
-
-set the loc of cd btn "follow" to the mouseLoc
-
+    set the loc of cd btn "follow" to the mouseLoc
 end mouseWithin
 
 
 ```
+
+
 
 ## on openBackground
 
@@ -347,20 +315,18 @@ When you go to a different card, if the card belongs to a different background, 
 
 Examples:
 
-
 ```
 
 
 -- in a background's script
-
 on openBackground
-
-answer "welcome to this background"
-
+    answer "welcome to this background"
 end openBackground
 
 
 ```
+
+
 
 ## on openCard
 
@@ -371,20 +337,18 @@ Because messages continue up the hierarchy until they are handled, you can also 
 
 Examples:
 
-
 ```
 
 
 -- in a card's script
-
 on openCard
-
-answer "welcome to this card"
-
+    answer "welcome to this card"
 end openCard
 
 
 ```
+
+
 
 ## on openField
 
@@ -395,22 +359,20 @@ See also: `closeField` and `exitField`.
 
 Examples:
 
-
 ```
 
 
 -- in a field's script
 
 on openField
-
--- place default text in the field when you tab over to it...
-
-put "abc" into the target
-
+    -- place default text in the field when you tab over to it...
+    put "abc" into the target
 end openField
 
 
 ```
+
+
 
 ## on openStack
 
@@ -419,16 +381,12 @@ Message sent upon first opening the stack.
 
 Examples:
 
-
 ```
 
 
 -- in a stack's script
-
 on openStack
-
-answer "welcome to this card"
-
+    answer "welcome to this card"
 end openStack
 
 

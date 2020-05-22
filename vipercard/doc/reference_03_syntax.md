@@ -4,157 +4,121 @@ this is a generated file, changes will be lost.
 
 [Overview](./reference_01_overview.md) | [Commands](./reference_02_commands.md) | Syntax | [Properties](./reference_04_properties.md) | [Functions](./reference_05_functions.md) | [Event Handlers](./reference_06_events.md) | [Compatibility](./reference_07_compatibility.md)
 
+
+
 ## (operators)
 
 
 Here are the operators that can be used.
 
-
 ```
 2 * 3
 ```
 
-
 multiplication
-
 
 ```
 2 / 3
 ```
 
-
 division
-
 
 ```
 2 ^ 3
 ```
 
-
 raise to the third power
-
 
 ```
 7 div 5
 ```
 
-
 truncated division
-
 
 ```
 7 mod 5
 ```
 
-
 modulo
-
 
 ```
 2 > 3
 ```
 
-
 greater than
-
 
 ```
 2 < 3
 ```
 
-
 less than
-
 
 ```
 2 >= 3
 ```
 
-
 greater than or equal to
-
 
 ```
 2 <= 3
 ```
 
-
 less than or equal to
-
 
 ```
 2  ==  3
 ```
 
-
 equal to
-
 
 ```
 2  !=  3
 ```
 
-
 not equal to
-
 
 ```
 "abc" is "def"
 ```
 
-
 equal to
-
 
 ```
 "abc" is not "def"
 ```
 
-
 not equal to
-
 
 ```
 "abc" is in "123abcdef"
 ```
 
-
 does string contain another string
-
 
 ```
 "abc" is not in "123abcdef"
 ```
 
-
 string is not in another string
-
 
 ```
 2 + 3
 ```
 
-
 addition
-
 
 ```
 2 - 3
 ```
 
-
 subtraction
 
 `&` and `&&` combine two strings (concatenation).
 
-
 ```
 put "a" & "b" into x
-
 answer x -- displays "ab"
-
 put "a" && "b" into x
-
 answer x -- displays "a b"
 ```
 
@@ -165,39 +129,33 @@ You can also use `a = b`, which is equivalent to `a == b`
 
 The constants 'true' and 'false' are used often. Internally there is no distinct boolean type, but the strings "true" and "false" are interpreted as true and false respectively.
 
-
 ```
 true and false
 ```
 
-
 logical and
-
 
 ```
 true or false
 ```
 
-
 logical or
-
 
 ```
 not true
 ```
 
-
 logical not
 
 Logical operations are not guaranteed to be short-circuiting. In other words,
-
 
 ```
 put (true or myfunction()) into x
 ```
 
-
 still will call `myfunction`, when it hypothetically could have been skipped.
+
+
 
 
 ## (constants)
@@ -205,61 +163,37 @@ still will call `myfunction`, when it hypothetically could have been skipped.
 
 The following constants are defined:
 
-
 ```
 
 pi
-
 newline
-
 tab
-
 empty
-
 quote
-
 one
-
 two
-
 three
-
 four
-
 five
-
 six
-
 seven
-
 eight
-
 nine
-
 ten
-
 colon
-
 comma
-
 true
-
 false
-
 up
-
 down
-
 space
-
 return
-
 cr
-
 formfeed
-
 linefeed
 ```
+
+
 
 
 ## global
@@ -275,19 +209,18 @@ The contents are lost when the stack is exited, however, and are not saved to di
 
 Examples:
 
-
 ```
 
 
 global currentData1, currentData2
-
 put "stored 1" into currentData1
-
 put "stored 2" into currentData2
 
 
 
 ```
+
+
 
 ## if/then
 
@@ -300,13 +233,9 @@ In the example
 
 ```
 
-
 put 2 into x
-
 if x > 0 then
-
-answer "x is greater than 0"
-
+    answer "x is greater than 0"
 end if
 ```
 
@@ -318,13 +247,9 @@ You can also include an "else" section that will be run only if the expression e
 
 ```
 if x > 0 then
-
-answer "x is greater than 0"
-
+    answer "x is greater than 0"
 else
-
-answer "x is not greater than 0"
-
+    answer "x is not greater than 0"
 end if
 ```
 
@@ -334,21 +259,13 @@ You can chain together many different conditions with "else if".
 
 ```
 
-
 put 3 into x
-
 if x > 3 then
-
-answer "x is greater than 3"
-
+    answer "x is greater than 3"
 else if x < 3 then
-
-answer "x is less than 3"
-
+    answer "x is less than 3"
 else if x is 3 then
-
-answer "x is 3"
-
+    answer "x is 3"
 end if
 ```
 
@@ -358,27 +275,21 @@ As soon as one of the branches is taken, all of the remaining branches are skipp
 
 ```
 
-
 if 3+3 is 6 then
-
-answer "aaa"
-
+    answer "aaa"
 else if 2+2 is 4 then
-
--- this not run, even though the expression is true
-
-answer "bbb"
-
+    -- this not run, even though the expression is true
+    answer "bbb"
 end if
 
-
 ```
+
+
 
 ## if/then, single-line
 
 
 Examples:
-
 
 ```
 
@@ -388,11 +299,12 @@ if 3+3 is 6 then answer "it is"
 -- you can even do this
 
 if 3+3 is 7 then answer "it is not"
-
 else answer "it is"
 
 
 ```
+
+
 
 ## exit repeat
 
@@ -401,28 +313,22 @@ Exit the current loop. Equivalent to "break" in C.
 
 Examples:
 
-
 ```
 
 
 repeat with x = 1 to 3
-
-if x == 2 then
-
-exit repeat
-
-end if
-
-answer x
-
+    if x == 2 then
+        exit repeat
+    end if
+    answer x
 end repeat
-
 -- displays 1
-
 -- and does not display 2 or 3
 
 
 ```
+
+
 
 ## exit
 
@@ -431,30 +337,23 @@ Skips to the end of the current handler, skipping over all subsequent lines of c
 
 Examples:
 
-
 ```
 
 
 on mouseUp
-
-put cd fld "fld1" into x
-
-if x is not a number then
-
-answer "you did not type a number"
-
-exit mouseUp
-
-answer "this will never get called"
-
-end if
-
-put x * 2 into cd fld "fld1"
-
+    put cd fld "fld1" into x
+    if x is not a number then
+        answer "you did not type a number"
+        exit mouseUp
+        answer "this will never get called"
+    end if
+    put x * 2 into cd fld "fld1"
 end mouseUp
 
 
 ```
+
+
 
 ## exit to ViperCard
 
@@ -465,28 +364,22 @@ For compatibility, `exit to HyperCard` is also accepted. `exit to ViperCard` can
 
 Examples:
 
-
 ```
 
 
 on myHandler
-
-exit to ViperCard
-
-answer "this will never get called"
-
+    exit to ViperCard
+    answer "this will never get called"
 end myHandler
-
 on mouseUp
-
-myHandler
-
-answer "and even this will never get called"
-
+    myHandler
+    answer "and even this will never get called"
 end mouseUp
 
 
 ```
+
+
 
 ## next repeat
 
@@ -495,83 +388,60 @@ Inside a loop, go back to the top of the loop, skipping the next line(s) of code
 
 Examples:
 
-
 ```
 
 
 repeat with x = 1 to 3
-
-if x == 2 then
-
-next repeat
-
-end if
-
-answer x
-
+    if x == 2 then
+        next repeat
+    end if
+    answer x
 end repeat
-
 -- displays 1
-
 -- displays 3
-
 -- and does not display 2
 
 
 ```
+
+
 
 ## pass
 
 
 Exits the current function and calls a function higher in the message hierarchy. For example, if a button has the script
 
-
 ```
 on mouseUp
-
-answer "button handling the event"
-
+    answer "button handling the event"
 end mouseUp
-
 -- and the current card has the script
-
 on mouseUp
-
-answer "card handling the event"
-
+    answer "card handling the event"
 end mouseUp
 ```
-
 
 and the button is clicked, only the button's code will be run.
 
 If you want both to be run, you can use the pass command. If a button has the script
 
-
 ```
 on mouseUp
-
-answer "button handling the event"
-
-pass mouseUp
-
--- any code here will be skipped
-
+    answer "button handling the event"
+    pass mouseUp
+    -- any code here will be skipped
 end mouseUp
-
 --and the current card has the script
-
 on mouseUp
-
-answer "card handling the event"
-
+    answer "card handling the event"
 end mouseUp
 ```
-
 
 and the button is clicked,
 
 both will be run.
+
+
 
 ## repeat
 
@@ -580,68 +450,48 @@ Use to create a loop.
 
 Examples:
 
-
 ```
 
 
 repeat with x = 1 to 5
-
-answer "x is now" & x
-
+    answer "x is now" & x
 end repeat
 
 repeat with x = 5 down to 1
-
-answer "x is now" & x
-
+    answer "x is now" & x
 end repeat
 
 repeat 3 times
-
-answer "hi"
-
+    answer "hi"
 end repeat
 
 repeat forever
-
-answer "this is an infinite loop"
-
+    answer "this is an infinite loop"
 end repeat
 
 put 0 into counter
-
 repeat forever
-
-answer "but not this"
-
-add 1 to counter
-
-if counter > 3 then
-
-exit repeat
-
-end if
-
+    answer "but not this"
+    add 1 to counter
+    if counter > 3 then
+        exit repeat
+    end if
 end repeat
 
 put 0 into counter
-
 repeat until counter > 3
-
-add 1 to counter
-
+    add 1 to counter
 end repeat
 
 put 0 into counter
-
 repeat while counter <= 3
-
-add 1 to counter
-
+    add 1 to counter
 end repeat
 
 
 ```
+
+
 
 ## return
 
@@ -652,22 +502,15 @@ Note: no lines of code after the return statement will be run.
 
 Examples:
 
-
 ```
 
 
 function myAddition p1, p2
-
-return p1 + p2
-
-answer "this line will never be reached"
-
+    return p1 + p2
+    answer "this line will never be reached"
 end myAddition
-
 on mouseUp
-
-put myAddition(1,2) into x
-
+    put myAddition(1,2) into x
 end mouseUp
 
 

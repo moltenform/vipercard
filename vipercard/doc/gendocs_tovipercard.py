@@ -1,5 +1,5 @@
 
-from gendocs2 import *
+from gendocs import *
 specialCharFontChange = "\x02"
 changeFontTitle = f'{specialCharFontChange}times_24_biuosdce{specialCharFontChange}'
 changeFontBody = f'{specialCharFontChange}times_12_biuosdce{specialCharFontChange}'
