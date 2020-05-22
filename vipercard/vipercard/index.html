@@ -32,7 +32,6 @@
 
 <link rel="stylesheet" href="/resources03a/intro/style.css">
 <meta http-equiv="cleartype" content="on">
-<script src="/resources03a/intro/introjs.js"></script>
 <script>
 	if (location.protocol != 'https:' && window.location.href.indexOf('vipercard') != -1)
 	{
@@ -49,9 +48,10 @@
 	<nav role="navigation" id="site-nav" class="">
 	    <ul class="mainnav">
 		    <li>
-			<span style="display:none" id="spcouldstart"><a href="/0.3/index.html#enablenewscaling" ><img border="0" src="/resources03a/intro/1btnstart.png" alt="Start ViperCard 0.2"></a></span>
-			<span style="display:none" id="spcouldnotstart"><a href="/0.3/index.html#enablenewscaling" ><img border="0" src="/resources03a/intro/1btnwrongbrowser.png" alt="This browser is not yet supported. Please use Firefox or Chrome, or click here to continue anyway."></a></span>
-			<span style="display:none" id="spcouldnotstartmobile"><a href="/0.3/index.html#enablenewscaling" ><img border="0" src="/resources03a/intro/1btncouldnotstartmobile.png" alt="This browser is not yet supported. Please use Firefox or Chrome, or click here to continue anyway."></a></span>
+			<span id="spempty"><a href="/0.3/index.html" ><img border="0" src="/resources03a/intro/1btnempty.png" alt="Start ViperCard 0.2"></a></span>
+			<span style="display:none" id="spcouldstart"><a href="/0.3/index.html" ><img border="0" src="/resources03a/intro/1btnstart.png" alt="Start ViperCard 0.2"></a></span>
+			<span style="display:none" id="spcouldnotstart"><a href="/0.3/index.html" ><img border="0" src="/resources03a/intro/1btnwrongbrowser.png" alt="This browser is not yet supported. Please use Firefox or Chrome, or click here to continue anyway."></a></span>
+			<span style="display:none" id="spcouldnotstartmobile"><a href="/0.3/index.html" ><img border="0" src="/resources03a/intro/1btncouldnotstartmobile.png" alt="This browser is not yet supported. Please use Firefox or Chrome, or click here to continue anyway."></a></span>
 			<noscript>ViperCard requires JavaScript.</noscript>
 			</li>
 	    </ul>
@@ -70,9 +70,12 @@
 <p style="margin-left:1em"><img border="0" src="/resources03a/intro/08.png" alt="Add your project to this page: see 'Publish to featured' in the File menu." /></p>
 <p style="margin-left:1em"><a href="/0.3/html/why.html"><img border="0" src="/resources03a/intro/05.png" alt="Rationale" /></a></p>
 <!-- <p style="margin-left:1em"><a href="https://crime.team/~hypercard/"><img border="0" src="/resources03a/intro/06.png" alt="This looks cool: HyperCard Zine" /></a></p> -->
-<!--<p style="margin-left:1em"><a href="/0.3/#enablenewscaling"><img border="0" src="/resources03a/intro/06vnext.png" alt="See a preview of the next ViperCard" /></a></p>-->
+<!--<p style="margin-left:1em"><a href="/0.3/"><img border="0" src="/resources03a/intro/06vnext.png" alt="See a preview of the next ViperCard" /></a></p>-->
 <p style="margin-left:1em"><a href="/0.2/"><img border="0" src="/resources03a/intro/06fallback.png" alt="Start Vipercard 0.2 (fewer features, possibly more stable)" /></a></p>
 <link rel="prefetch" href="/resources03a/images/opening.png" />
+
+<script src="/external/bowser-2.9/bowser-2.9-bundled.js"></script>
+<script src="/resources03a/intro/introjs.js"></script>
 
 </body>
 </html>
