@@ -31,6 +31,7 @@
 export class VpcNonModalDocViewer extends VpcNonModalBase {
     compositeType = 'VpcNonModalDocViewer';
     hasCloseBtn = true;
+    adjustedStartVidBtn = false
     cbShowVids:O<()=>void>
     constructor(protected vci: VpcStateInterface, public type: DialogDocsType) {
         super('VpcNonModalDocViewer' + Math.random());
@@ -57,20 +58,19 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
      */
     readonly referenceInfo: [string, string, string[]][] = [
         /* prettier-ignore */
-        ['overview', 'lngLngoverview', ['Introduction', 'Scripting Overview', 'Helpful Examples', 'Expressions', 'Message Box', 'Lists/arrays', 'Variables', 'Writing functions', 'Text and Chunks', 'Referring to objects', 'Structure', 'Tips & Shortcuts', 'Credits']],
+        ['overview', 'lngOverview', ['Introduction', 'Scripting', 'Expressions', 'Message Box', 'Lists/Arrays', 'Variables', 'New Functions', 'Text and Chunks', 'Objects', 'Structure', 'Examples', 'Tips & Shortcuts', 'Credits']],
         /* prettier-ignore */
-        ['commands', 'lngLngcommands', ['add', 'answer', 'ask', 'beep', 'choose tool', 'click', 'create', 'do', 'dial', 'disable', 'divide', 'delete ', 'drag', 'enable', 'go to card', 'hide', 'multiply', 'lock screen', 'play', 'put', 'replace', 'send', 'set', 'show', 'sort', 'subtract', 'unlock screen', 'wait', 'visual effect']],
+        ['commands', 'lngCommands', ['add', 'answer', 'ask', 'beep', 'choose tool', 'click', 'create', 'do', 'dial', 'disable', 'divide', 'delete ', 'drag', 'enable', 'go to card', 'hide', 'multiply', 'lock screen', 'play', 'put', 'replace', 'send', 'set', 'show', 'sort', 'subtract', 'unlock screen', 'wait', 'visual effect']],
         /* prettier-ignore */
-        ['syntax', 'lngLngsyntax', ['(operators)', '(constants)', 'global', 'if/then', 'if/then, single-line', 'exit repeat', 'exit', 'exit to ViperCard', 'next repeat', 'pass', 'repeat', 'return']],
+        ['syntax', 'lngSyntax', ['(Operators)', '(Constants)', 'global', 'if/then', 'short if/then', 'exit repeat', 'exit', 'exit to ViperCard', 'next repeat', 'pass', 'repeat', 'return']],
         /* prettier-ignore */
-        ['properties', 'lngLngproperties', ['any object: id', 'any object: name', 'any object: number', 'any object: owner', 'any object: script', 'btn: autohilite', 'btn: checkmark', 'btn: enabled', 'btn: left', 'btn: loc, location', 'btn: height', 'btn: hilite', 'btn: label', 'btn: icon', 'btn: rect, rectangle', 'btn: showlabel', 'btn: style', 'btn: textalign', 'btn: textfont', 'btn: textsize', 'btn: textstyle', 'btn: top', 'btn: topleft', 'btn: visible', 'btn: width', 'fld: alltext', 'fld: dontwrap', 'fld: enabled', 'fld: defaulttextfont', 'fld: defaulttextsize', 'fld: defaulttextstyle', 'fld: left', 'fld: loc, location', 'fld: locktext', 'fld: height', 'fld: rect, rectangle', 'fld: scroll', 'fld: singleline', 'fld: style', 'fld: textalign', 'fld: textfont', 'fld: textsize', 'fld: textstyle', 'fld: top', 'fld: topleft', 'fld: width', 'fld: visible', 'global: cursor', 'global: filled', 'global: lineColor', 'global: lineSize', 'global: itemdelimiter', 'global: idlerate', 'global: multiple', 'global: pattern']],
+        ['properties', 'lngProperties', ['id', 'name', 'number', 'owner', 'script', 'btn: autohilite', 'btn: checkmark', 'btn: enabled', 'btn: left', 'btn: loc, location', 'btn: height', 'btn: hilite', 'btn: label', 'btn: icon', 'btn: rect, rectangle', 'btn: showlabel', 'btn: style', 'btn: textalign', 'btn: textfont', 'btn: textsize', 'btn: textstyle', 'btn: top', 'btn: topleft', 'btn: visible', 'btn: width', 'fld: alltext', 'fld: dontwrap', 'fld: enabled', 'fld: defaulttextfont', 'fld: defaulttextsize', 'fld: defaulttextstyle', 'fld: left', 'fld: loc, location', 'fld: locktext', 'fld: height', 'fld: rect, rectangle', 'fld: scroll', 'fld: singleline', 'fld: style', 'fld: textalign', 'fld: textfont', 'fld: textsize', 'fld: textstyle', 'fld: top', 'fld: topleft', 'fld: width', 'fld: visible', 'cursor', 'filled', 'lineColor', 'lineSize', 'itemdelimiter', 'idlerate', 'multiple', 'pattern']],
         /* prettier-ignore */
-        ['functions', 'lngLngfunctions', ['abs', 'atan', 'average', 'charToNum', 'clickH', 'clickLoc', 'clickV', 'commandKey', 'contains', 'cos', 'date', 'exp', 'exp2', 'is a', 'is in', 'keyChar', 'keyRepeated', 'length', 'ln', 'log2', 'max', 'me', 'min', 'mouse', 'mouseclick', 'mouseh', 'mouseloc', 'mousev', 'number', 'numberToStr', 'numToChar', 'objectById', 'offset', 'optionKey', 'param', 'paramCount', 'params', 'random', 'result', 'round', 'screenRect', 'seconds', 'selectedChunk', 'selectedField', 'selectedLine', 'selectedText', 'shiftKey', 'sqrt', 'sin', 'strToNumber', 'sum', 'tan', 'target', 'there is a', 'ticks', 'tool', 'toLowerCase', 'toUpperCase', 'trunc', 'annuity', 'compound']],
+        ['functions', 'lngFunctions', ['abs', 'atan', 'average', 'charToNum', 'clickH', 'clickLoc', 'clickV', 'commandKey', 'contains', 'cos', 'date', 'exp', 'exp2', 'is a', 'is in', 'keyChar', 'keyRepeated', 'length', 'ln', 'log2', 'max', 'me', 'min', 'mouse', 'mouseClick', 'mouseH', 'mouseLoc', 'mouseV', 'number', 'numberToStr', 'numToChar', 'objectById', 'offset', 'optionKey', 'param', 'paramCount', 'params', 'random', 'result', 'round', 'screenRect', 'seconds', 'selectedChunk', 'selectedField', 'selectedLine', 'selectedText', 'shiftKey', 'sqrt', 'sin', 'strToNumber', 'sum', 'tan', 'target', 'there is a', 'ticks', 'tool', 'toLowerCase', 'toUpperCase', 'trunc', 'annuity', 'compound']],
         /* prettier-ignore */
-        ['events', 'lngLngevent Handlers', ['on afterKeyDown', 'on afterKeyUp', 'on closeBackground', 'on closeCard', 'on closeField', 'on exitField', 'on idle', 'on mouseDoubleClick', 'on mouseDown', 'on mouseEnter', 'on mouseLeave', 'on mouseUp', 'on mouseWithin', 'on openBackground', 'on openCard', 'on openField', 'on openStack']],
+        ['events', 'lngEvent Handlers', ['afterKeyDown', 'afterKeyUp', 'closeBackground', 'closeCard', 'closeField', 'exitField', 'idle', 'mouseDoubleClick', 'mouseDown', 'mouseEnter', 'mouseLeave', 'mouseUp', 'mouseWithin', 'openBackground', 'openCard', 'openField', 'openStack']],
         /* prettier-ignore */
-        ['compatibility', 'lngLngcompatibility', ['(Compatibility)', 'abbrev id', 'abbrev name', 'arrowKey', 'bottom', 'botright', 'diskSpace', 'environment', 'errorDialog', 'exp1', 'freesize', 'get {expression}', 'heapSpace', 'ln1', 'long name', 'mark', 'marked', 'on errorDialog', 'right', 'pop', 'push', 'size', 'stacksinuse', 'stackSpace', 'suspended', 'systemVersion', 'trappable: on doMenu', 'trappable: on help', 'unmark', 'version', 'long version']],
-
+        ['compatibility', 'lngCompatibility', ['(Compatibility)', 'abbrev id', 'abbrev name', 'arrowKey', 'bottom', 'botright', 'diskSpace', 'environment', 'errorDialog', 'exp1', 'freesize', 'get', 'heapSpace', 'ln1', 'long name', 'mark', 'marked', 'on errorDialog', 'right', 'pop', 'push', 'size', 'stacksInUse', 'stackSpace', 'suspended', 'systemVersion', 'trappable: on arrowKey', 'trappable: on doMenu', 'trappable: on help', 'unmark', 'version']],
     ];
 
     /**
@@ -170,8 +170,10 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             btnStartVid.set('visible', ctginfo[0].startsWith('vid'));
             btnStartVid.set('labeltext', tostring(vidTitles[ctg]));
             if (ctginfo[0].startsWith('vid')) {
-                let rghtBackground = grp.getEl(this.getElId('rghtBackground'));
-                rghtBackground.set('labeltext', '');
+                let rghtBackground = grp.findEl(this.getElId('rghtBackground'));
+                if (rghtBackground) {
+                    rghtBackground.set('labeltext', '');
+                }
             }
         }
     }
@@ -208,11 +210,17 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             if (entryTitle) {
                 for (let i = 0, len = jsonData.entries.length; i < len; i++) {
                     let jsonEntry = jsonData.entries[i];
-                    if (jsonEntry.body && jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()) {
+                    if (jsonEntry.body && (jsonEntry.title.toLowerCase() === entryTitle.toLowerCase() || jsonEntry.title.split('(')[0].toLowerCase() === entryTitle.toLowerCase())) {
                         let btnStartVid = grp.getEl(this.getElId('btnStartVid'));
                         if (entryTitle.toLowerCase() === 'introduction') {
                             btnStartVid.set('visible', true);
-                            btnStartVid.set('labeltext', "Open a tutorial vid");
+                            btnStartVid.set('labeltext', "(Open a tutorial vid)");
+                            if (!this.adjustedStartVidBtn) {
+                                this.adjustedStartVidBtn = true
+                                btnStartVid.set('h', btnStartVid.getN('h') - 30)
+                                btnStartVid.set('y', btnStartVid.getN('y') + 50)
+                                btnStartVid.set('x', btnStartVid.getN('x') - 10)
+                            }
                         } else {
                             btnStartVid.set('visible', false);
                         }

@@ -396,7 +396,7 @@ put the size of this stack into z
 
 
 
-## stacksinuse
+## stacksInUse
 
 
 (Deprecated and hard-coded, for backwards compatibility only)
@@ -406,7 +406,7 @@ Examples:
 ```
 
 
-put the stacksinuse into z
+put the stacksInUse into z
 
 
 
@@ -548,23 +548,8 @@ Examples:
 
 
 put the version into z
-
-
-
-```
-
-
-
-## long version
-
-
-
-Examples:
-
-```
-
-
 put the long version into z
+
 
 
 ```

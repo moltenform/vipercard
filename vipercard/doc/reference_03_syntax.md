@@ -286,7 +286,7 @@ end if
 
 
 
-## if/then, single-line
+## short if/then
 
 
 Examples:

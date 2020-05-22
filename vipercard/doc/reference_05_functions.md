@@ -108,7 +108,7 @@ put clickh() into x
 
 Get the coordinates of a recent mouse click.
 
-This isn't necessarily the most recent mouseclick, it is only updated
+This isn't necessarily the most recent mouseClick, it is only updated
 
 1) clicks before the script runs
 
@@ -499,19 +499,19 @@ end if
 
 
 
-## mouseclick()
+## mouseClick()
 
 
 Was the mouse recently clicked? Doesn't include the click that created the message, it needs to be later.
 
-When you check the mouseclick, it will only return true once before resetting back to false. See also: clickloc, clickh, clickv.
+When you check the mouseClick, it will only return true once before resetting back to false. See also: clickloc, clickh, clickv.
 
 Examples:
 
 ```
 
 
-wait until the mouseclick
+wait until the mouseClick
 answer the clickloc
 
 
@@ -520,7 +520,7 @@ answer the clickloc
 
 
 
-## mouseh()
+## mouseH()
 
 
 The x coordinate of the current mouse location.
@@ -530,7 +530,7 @@ Examples:
 ```
 
 
-put mouseh() into x
+put mouseH() into x
 
 
 
@@ -538,7 +538,7 @@ put mouseh() into x
 
 
 
-## mouseloc()
+## mouseLoc()
 
 
 The coordinates of the current mouse location.
@@ -548,7 +548,7 @@ Examples:
 ```
 
 
-put mouseloc() into x
+put mouseLoc() into x
 
 
 
@@ -556,7 +556,7 @@ put mouseloc() into x
 
 
 
-## mousev()
+## mouseV()
 
 
 The y coordinate of the current mouse location.
@@ -566,7 +566,7 @@ Examples:
 ```
 
 
-put mousev() into x
+put mouseV() into x
 
 
 

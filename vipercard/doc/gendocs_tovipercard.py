@@ -54,7 +54,7 @@ def goTsIndexSection(section, sectionfulltitle, outname):
     trace('/* prettier-ignore */')
     out = []
     out.append(outname)
-    out.append('lng' + sectionfulltitle.title())
+    out.append(sectionfulltitle)
     entries = []
     out.append(entries)
     for item in section:

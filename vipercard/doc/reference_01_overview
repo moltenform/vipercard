@@ -11,7 +11,7 @@ Welcome to ViperCard, an open source re-creation and re-imagination of 1987's Hy
 
 
 ============================================================
-========================= Scripting Overview
+========================= Scripting
 ============================================================
 
 All objects (all buttons, fields, and cards) have an associated set of code called a "script."
@@ -83,61 +83,6 @@ When you are in the Browse tool and you interact with the page by clicking on bu
 
 The documentation here has a list of Commands, Event Handlers, and Properties that can be set.
 
-============================================================
-========================= Helpful Examples
-============================================================
-
-The tutorial videos show helpful example code.
-
-Example 1:
-`
--- after creating a field called "myFld":
--- create a btn and put this in its script:
-on mouseUp
-    -- when you click button "Go", you get 10 points!
-    put cd fld "myFld" into score
-    put (score + 10) into score
-    put score into cd fld "myFld"
-end mouseUp
-
-`
-
-Example 2:
-`
--- after creating a btn called "fish":
--- create a btn and put this in its script:
-on mouseUp
-    -- when you click this, the fish moves
-    put the top of cd btn "fish" into y
-    subtract 10 from y
-    set the top of cd btn "fish" to y
-end mouseUp
-
-`
-Example 3:
-`
--- create interactive art.
--- put this in the card script,
--- then when you choose the browse tool and 
--- click on the card, it will draw lines.
-
-on mouseUp
-    put the clickH into X
-    put the clickV into y
-    
-    -- choose the line tool to draw lines
-    choose "line" tool
-    
-    -- make a loop that will repeat 10 times
-    repeat 10 times
-        put random(80) into randx
-        put random(80) into randy
-        -- will get random # between 1 and 80
-        drag from x, y to (x + randx), (y + randy)
-    end repeat
-end mouseUp
-  
-`
 
 
 ============================================================
@@ -211,7 +156,7 @@ is also supported.
 
 
 ============================================================
-========================= Lists/arrays
+========================= Lists/Arrays
 ============================================================
 
 
@@ -338,7 +283,7 @@ set the left of cd btn "myBtn" to 2
 `
 
 ============================================================
-========================= Writing functions
+========================= New Functions
 ============================================================
 
 An example of how to define and call a custom function:
@@ -555,27 +500,19 @@ delete item 2 to 3 of myList
 See also documentation for the `delete` command.
 
 ============================================================
-========================= Referring to objects
+========================= Objects
 ============================================================
 
-Ways to refer to a stack:
+Ways to refer to a button or field:
 `
-this stack
-stack 1
-stack "name"
+cd btn id 1234
+cd btn "myBtn"
+cd btn 2
+first cd btn
+any cd btn
+last cd btn
 `
-Ways to refer to a background:
-`
-this background
-prev background
-next background
-first background
-second background
-last background
-bg 1
-bg id 1234
-bg "name"
-`
+
 Ways to refer to a card:
 `
 this card
@@ -588,14 +525,25 @@ card 1
 card id 1234
 card "name"
 `
-Ways to refer to a button or field:
+
+Ways to refer to a background:
 `
-cd btn id 1234
-cd btn "myBtn"
-cd btn 2
-first cd btn
-any cd btn
-last cd btn
+this background
+prev background
+next background
+first background
+second background
+last background
+bg 1
+bg id 1234
+bg "name"
+`
+
+Ways to refer to a stack:
+`
+this stack
+stack 1
+stack "name"
 `
 Other ways to refer to objects:
 `
@@ -610,8 +558,6 @@ function whichObject
 end whichObject
 answer the name of whichObject()
 `
-
-
 ============================================================
 ========================= Structure
 ============================================================
@@ -682,6 +628,63 @@ put "a" into line (x+1) of myList
 set the left of cd btn "myBtn" to x
 set the left of cd btn "myBtn" to (45 + 50 * cos(theta))
 `
+
+============================================================
+========================= Examples
+============================================================
+
+The tutorial videos show helpful example code.
+
+Example 1:
+`
+-- after creating a field called "myFld":
+-- create a btn and put this in its script:
+on mouseUp
+    -- when you click button "Go", you get 10 points!
+    put cd fld "myFld" into score
+    put (score + 10) into score
+    put score into cd fld "myFld"
+end mouseUp
+
+`
+
+Example 2:
+`
+-- after creating a btn called "fish":
+-- create a btn and put this in its script:
+on mouseUp
+    -- when you click this, the fish moves
+    put the top of cd btn "fish" into y
+    subtract 10 from y
+    set the top of cd btn "fish" to y
+end mouseUp
+
+`
+Example 3:
+`
+-- create interactive art.
+-- put this in the card script,
+-- then when you choose the browse tool and 
+-- click on the card, it will draw lines.
+
+on mouseUp
+    put the clickH into X
+    put the clickV into y
+    
+    -- choose the line tool to draw lines
+    choose "line" tool
+    
+    -- make a loop that will repeat 10 times
+    repeat 10 times
+        put random(80) into randx
+        put random(80) into randy
+        -- will get random # between 1 and 80
+        drag from x, y to (x + randx), (y + randy)
+    end repeat
+end mouseUp
+  
+`
+
 
 ============================================================
 ========================= Tips & Shortcuts

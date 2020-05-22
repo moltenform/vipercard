@@ -2,7 +2,7 @@
  
 
 ============================================================
-========================= on___afterKeyDown
+========================= afterKeyDown
 ============================================================
 
 
@@ -24,7 +24,7 @@ on afterKeyDown
     end if
 end afterKeyDown
 ============================================================
-========================= on___afterKeyUp
+========================= afterKeyUp
 ============================================================
 
 
@@ -40,7 +40,7 @@ on afterKeyUp
 end afterKeyUp
 
 ============================================================
-========================= on___closeBackground
+========================= closeBackground
 ============================================================
 
 When you go to a different card, if the card belongs to a different background, the closeBackground message will be sent. (You're leaving one background and going to another).
@@ -53,7 +53,7 @@ on closeBackground
 end closeBackground
 
 ============================================================
-========================= on___closeCard
+========================= closeCard
 ============================================================
 
 Message sent upon leaving a card.
@@ -69,7 +69,7 @@ end closeCard
 
 
 ============================================================
-========================= on___closeField
+========================= closeField
 ============================================================
 
 Sent when the user clicks on a field to select it, types text into the field, and then de-selects the field.
@@ -97,7 +97,7 @@ on closeField
 end closeField
 
 ============================================================
-========================= on___exitField
+========================= exitField
 ============================================================
 
 Sent when the user clicks on a field to select it, does not type text into the field, and then de-selects the field.
@@ -130,7 +130,7 @@ on exitField
 end exitField
 
 ============================================================
-========================= on___idle
+========================= idle
 ============================================================
 
 Sent repeatedly to the current card. Can be used for a game loop.
@@ -141,7 +141,7 @@ To get faster idle calls, at the expense of heavier cpu usage, use `set the idle
 
 
 ============================================================
-========================= on___mouseDoubleClick
+========================= mouseDoubleClick
 ============================================================
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Create a button, edit its script, and type the example below. Now when you choose the browse tool and double-click the button, your code will run.
@@ -153,7 +153,7 @@ on mouseDoubleClick
 end mouseDoubleClick
 
 ============================================================
-========================= on___mouseDown
+========================= mouseDown
 ============================================================
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse is pressed down onto the object. Create a button, edit its script, and type the example below. Now when you choose the browse tool and click the button, your code will run.
@@ -165,7 +165,7 @@ on mouseDown
 end mouseDown
 
 ============================================================
-========================= on___mouseEnter
+========================= mouseEnter
 ============================================================
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse enters the object.
@@ -177,7 +177,7 @@ on mouseEnter
 end mouseDown
 
 ============================================================
-========================= on___mouseLeave
+========================= mouseLeave
 ============================================================
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse leaves the object.
@@ -189,7 +189,7 @@ on mouseLeave
 end mouseLeave
 
 ============================================================
-========================= on___mouseUp
+========================= mouseUp
 ============================================================
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse is clicked. To be precise, when the mouse is pressed down onto the object, and released on the same object. Create a button, edit its script, type the example below. Now when you choose the browse tool and click the button, your code will run.
@@ -201,7 +201,7 @@ on mouseUp
 end mouseUp
 
 ============================================================
-========================= on___mouseWithin
+========================= mouseWithin
 ============================================================
 
 Called repeatedly when the cursor is inside the object. You can use the mouseloc() function to get the position of the cursor. This can be used to create drag/drop effects.
@@ -215,7 +215,7 @@ on mouseWithin
 end mouseWithin
 
 ============================================================
-========================= on___openBackground
+========================= openBackground
 ============================================================
 
 When you go to a different card, if the card belongs to a different background, the openBackground message will be sent. (You're leaving one background and going to another).
@@ -228,7 +228,7 @@ on openBackground
 end openBackground
 
 ============================================================
-========================= on___openCard
+========================= openCard
 ============================================================
 
 Message sent upon going to a card.
@@ -243,7 +243,7 @@ on openCard
 end openCard
 
 ============================================================
-========================= on___openField
+========================= openField
 ============================================================
 
 Sent to a field, when text is first selected in it.
@@ -260,7 +260,7 @@ on openField
 end openField
 
 ============================================================
-========================= on___openStack
+========================= openStack
 ============================================================
 
 Message sent upon first opening the stack.

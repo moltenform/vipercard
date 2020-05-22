@@ -6,7 +6,7 @@ this is a generated file, changes will be lost.
 
 
 
-## on afterKeyDown
+## afterKeyDown
 
 
 
@@ -35,7 +35,7 @@ end afterKeyDown
 
 
 
-## on afterKeyUp
+## afterKeyUp
 
 
 
@@ -58,7 +58,7 @@ end afterKeyUp
 
 
 
-## on closeBackground
+## closeBackground
 
 
 When you go to a different card, if the card belongs to a different background, the closeBackground message will be sent. (You're leaving one background and going to another).
@@ -78,7 +78,7 @@ end closeBackground
 
 
 
-## on closeCard
+## closeCard
 
 
 Message sent upon leaving a card.
@@ -101,7 +101,7 @@ end closeCard
 
 
 
-## on closeField
+## closeField
 
 
 Sent when the user clicks on a field to select it, types text into the field, and then de-selects the field.
@@ -136,7 +136,7 @@ end closeField
 
 
 
-## on exitField
+## exitField
 
 
 Sent when the user clicks on a field to select it, does not type text into the field, and then de-selects the field.
@@ -176,7 +176,7 @@ end exitField
 
 
 
-## on idle
+## idle
 
 
 Sent repeatedly to the current card. Can be used for a game loop.
@@ -187,7 +187,7 @@ To get faster idle calls, at the expense of heavier cpu usage, use `set the idle
 
 
 
-## on mouseDoubleClick
+## mouseDoubleClick
 
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Create a button, edit its script, and type the example below. Now when you choose the browse tool and double-click the button, your code will run.
@@ -206,7 +206,7 @@ end mouseDoubleClick
 
 
 
-## on mouseDown
+## mouseDown
 
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse is pressed down onto the object. Create a button, edit its script, and type the example below. Now when you choose the browse tool and click the button, your code will run.
@@ -225,7 +225,7 @@ end mouseDown
 
 
 
-## on mouseEnter
+## mouseEnter
 
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse enters the object.
@@ -244,7 +244,7 @@ end mouseDown
 
 
 
-## on mouseLeave
+## mouseLeave
 
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse leaves the object.
@@ -263,7 +263,7 @@ end mouseLeave
 
 
 
-## on mouseUp
+## mouseUp
 
 
 Remember that scripts are only run when you're in the Browse tool (hand-shape). Called whenever the mouse is clicked. To be precise, when the mouse is pressed down onto the object, and released on the same object. Create a button, edit its script, type the example below. Now when you choose the browse tool and click the button, your code will run.
@@ -282,7 +282,7 @@ end mouseUp
 
 
 
-## on mouseWithin
+## mouseWithin
 
 
 Called repeatedly when the cursor is inside the object. You can use the mouseloc() function to get the position of the cursor. This can be used to create drag/drop effects.
@@ -303,7 +303,7 @@ end mouseWithin
 
 
 
-## on openBackground
+## openBackground
 
 
 When you go to a different card, if the card belongs to a different background, the openBackground message will be sent. (You're leaving one background and going to another).
@@ -323,7 +323,7 @@ end openBackground
 
 
 
-## on openCard
+## openCard
 
 
 Message sent upon going to a card.
@@ -345,7 +345,7 @@ end openCard
 
 
 
-## on openField
+## openField
 
 
 Sent to a field, when text is first selected in it.
@@ -369,7 +369,7 @@ end openField
 
 
 
-## on openStack
+## openStack
 
 
 Message sent upon first opening the stack.

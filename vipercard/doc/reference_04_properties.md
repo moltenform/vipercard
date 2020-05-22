@@ -6,7 +6,7 @@ this is a generated file, changes will be lost.
 
 
 
-## any object: id
+## id
 
 
 The id uniquely identifies an object. In ViperCard, all objects will have different ids, even if they are different types or are on different cards.
@@ -30,7 +30,7 @@ set the name of cd id z to "changed"
 
 
 
-## any object: name
+## name
 
 
 You can get or set the name of an object.
@@ -47,7 +47,7 @@ answer the short name of cd btn id 1011 -- "changed"
 
 
 
-## any object: number
+## number
 
 
 You can get the number of an object.
@@ -62,7 +62,7 @@ answer the number of card 4 -- 4
 
 
 
-## any object: owner
+## owner
 
 
 Gets the parent object. Btns and flds belong to cards, cards belong to backgrounds, and backgrounds belong to the stack.
@@ -80,7 +80,7 @@ set the name of the owner of cd btn "myBtn" to "changed"
 
 
 
-## any object: script
+## script
 
 
 It's unlikely to be useful, but a script can dynamically change the contents of another script.
@@ -902,7 +902,7 @@ put the visible of cd fld "myFld" into z
 
 
 
-## global: cursor
+## cursor
 
 
 Sets the current cursor.
@@ -922,34 +922,64 @@ repeat with x = 1 to 30
     wait 0.2 seconds
 end repeat
 
-put the cursor into x
-
 
 
 ```
 
 
 
-## global: filled
+## filled
 
 
 The color/opacity for drawing. Currently can be "true" for black, "false" for transparent, or "white" for white.
 
+Examples:
 
-## global: lineColor
+```
+
+
+set the filled to "white"
+
+
+```
+
+
+
+## lineColor
 
 
 The lineColor for drawing. Currently can be 0 (black) or 1 (white).
 
+Examples:
 
-## global: lineSize
+```
+
+
+set the lineSize to 1
+
+
+```
+
+
+
+## lineSize
 
 
 The linesize for drawing. Currently can be 1 (thin) or 2 (thicker).
 
+Examples:
+
+```
 
 
-## global: itemdelimiter
+set the lineSize to 2
+
+
+```
+
+
+
+## itemdelimiter
 
 
 
@@ -969,9 +999,10 @@ set the itemdel to ","
 
 
 
-## global: idlerate
+## idlerate
 
 
+The speed at which `on idle` is called.
 
 Examples:
 
@@ -986,13 +1017,24 @@ set the idlerate to "faster"
 
 
 
-## global: multiple
+## multiple
 
 
 The "draw multiple" setting for drawing. Does not yet affect script drawing.
 
+Examples:
 
-## global: pattern
+```
+
+
+set the multiple to true
+
+
+```
+
+
+
+## pattern
 
 
 The current pattern number.
