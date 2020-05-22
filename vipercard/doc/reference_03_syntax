@@ -100,7 +100,7 @@ linefeed`
 
 
 ============================================================
-========================= global {variableName}
+========================= global
 ============================================================
 
 Declares that a variable is a global.
@@ -164,11 +164,8 @@ end if
 `
 
 ============================================================
-========================= if/then on a single-line
+========================= if/then, single-line
 ============================================================
-
-
-This is implemented in 0.3.
 
 Examples:
 
@@ -183,8 +180,7 @@ else answer "it is"
 ========================= exit___repeat
 ============================================================
 
-Exit the current loop.
-Equivalent to "break" in C.
+Exit the current loop. Equivalent to "break" in C.
 
 Examples:
 
@@ -198,7 +194,7 @@ end repeat
 -- and does not display 2 or 3
 
 ============================================================
-========================= exit currentHandler
+========================= exit
 ============================================================
 
 Skips to the end of the current handler, skipping over all subsequent lines of code. Similar to return, but does not point to a value.
@@ -324,10 +320,10 @@ repeat while counter <= 3
 end repeat
 
 ============================================================
-========================= return {expression}
+========================= return
 ============================================================
 
-return a value from the current function.
+Returns a value from the current function.
 Note: no lines of code after the return statement will be run.
 
 Examples:

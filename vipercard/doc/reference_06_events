@@ -277,20 +277,3 @@ on openStack
     answer "welcome to this card"
 end openStack
 
-============================================================
-========================= trappable: on___doMenu
-============================================================
-
-You can make a custom doMenu handler that overrides the default one.
-
-Hold the Shift key to bypass a customized doMenu.
-
-Examples:
-
--- in a card's script
-on doMenu p1, p2
-    if p1 == "New Card" then
-        answer "Making a new card"
-    end if
-    send "doMenu "&quote&p1&quote&", "&quote&p2&quote to this stack
-end doMenu

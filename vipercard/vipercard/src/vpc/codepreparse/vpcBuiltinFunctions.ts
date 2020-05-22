@@ -480,21 +480,21 @@ export class VpcBuiltinFunctions {
     }
 
     /**
-     * In a mousedown or mouseup handler, get click x coordinate.
+     * Get click x coordinate.
      */
     callClickh(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1 ? VpcValN(frmMsg.clickLoc[0]) : VpcVal.Empty;
     }
 
     /**
-     * In a mousedown or mouseup handler, get click y coordinate.
+     * Get click y coordinate.
      */
     callClickv(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1 ? VpcValN(frmMsg.clickLoc[1]) : VpcVal.Empty;
     }
 
     /**
-     * In a mousedown or mouseup handler, get click x,y coordinates.
+     * Get click x,y coordinates.
      */
     callClickloc(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1

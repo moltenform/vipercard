@@ -47,31 +47,36 @@ put charToNum(97) into x
 
 
 ============================================================
-========================= clickh()
+========================= clickH()
 ============================================================
 
-In a mousedown or mouseup handler, get click x coordinate.
+Get x coordinate of a recent mouse click. See `clickLoc` for more details.
 Examples:
 
 put clickh() into x
 
 
 ============================================================
-========================= clickloc()
+========================= clickLoc()
 ============================================================
+Get the coordinates of a recent mouse click.
 
-In a mousedown or mouseup handler, get click x,y coordinates.
+This isn't necessarily the most recent mouseclick, it is only updated 
+1) clicks before the script runs
+2) when you check the `mouseClick`
+3) when you simulate a click with `click` or `drag`
 
 Examples:
 
-put clickloc() into x
+wait until the mouseclick
+answer "you clicked at" && the clickloc
 
 
 ============================================================
-========================= clickv()
+========================= clickV()
 ============================================================
 
-In a mousedown or mouseup handler, get click y coordinate.
+Get y coordinate of a recent mouse click. See `clickLoc` for more details.
 
 Examples:
 
@@ -117,7 +122,6 @@ put cos(0.5 * pi) into x
 
 ============================================================
 ========================= date()
-========================= the {adjective} date
 ============================================================
 
 
@@ -306,12 +310,14 @@ end if
 ========================= mouseclick()
 ============================================================
 
-Are we currently handling a mousedown or mouseup event.
+Was the mouse recently clicked? Doesn't include the click that created the message, it needs to be later.
+
+When you check the mouseclick, it will only return true once before resetting back to false. See also: clickloc, clickh, clickv.
 
 Examples:
 
-put mouseclick() into x
-
+wait until the mouseclick
+answer the clickloc
 
 
 ============================================================

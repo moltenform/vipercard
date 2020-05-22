@@ -10,7 +10,7 @@ You can enable compatibility mode for a stack by choosing `Object->Stack info...
 * You can say `btn 2` instead of `cd btn 2`
 * You can say `put "A" into item 3 of char 2 of x` which doesn't usually make sense
 * You can say `put "new" into item 4 of line 3 of x` and get more intuitive behavior
-* Reverts to the unhelpful `long id`; also the `target` can be ambiguous for bg objects.
+* Uses HyperCard's less useful form for `long id`, `owner`, and `the target`.
 
 ============================================================
 ========================= abbrev id
@@ -32,10 +32,10 @@ Examples:
 put the abbrev name of cd fld "myFld" into z
 
 ============================================================
-========================= arrowKey {direction}
+========================= arrowKey
 ============================================================
 
-Sends an arrowKey message. by default, arrowKey "left" goes to the previous card, and arrowKey "right" goes to the next card, but this can be overridden in a card script or stack script.
+Sends an `arrowKey` message. By default, `arrowKey left` goes to the previous card, and `arrowKey right` goes to the next card, but this can be overridden in a card script or stack script.
 
 ============================================================
 ========================= bottom
@@ -161,10 +161,12 @@ put the long name of cd fld "myFld" into z
 
 Fully functional, might not be useful.
 Sets the "marked" property on a card to true.
-Examples:
+
+`
 mark card id 1234
 mark cards where the name of this card contains "b"
 mark all cards
+`
 
 When cards are marked, you can conveniently reference them:
 `
@@ -211,7 +213,7 @@ put the right of cd fld "myFld" into z
 ========================= pop
 ============================================================
 
-Functional but not recommended in new code.
+Functional, but not recommended in new code.
 
 Examples:
 
@@ -224,7 +226,7 @@ go to card x
 ========================= push
 ============================================================
 
-Functional but not recommended in new code.
+Functional, but not recommended in new code.
 
 Examples:
 
@@ -277,7 +279,7 @@ put the suspended into z
 
 
 ============================================================
-========================= systemVersion()
+========================= systemVersion
 ============================================================
 
 (Deprecated and hard-coded).
@@ -291,6 +293,28 @@ Examples:
 
 put systemVersion() into x
 
+============================================================
+========================= trappable: on___doMenu
+============================================================
+
+You can make a custom `doMenu` handler that overrides the default one.
+
+Hold the Shift key to bypass a customized `doMenu`.
+
+Examples:
+
+-- in a card's script
+on doMenu p1, p2
+    if p1 == "New Card" then
+        answer "Making a new card"
+    end if
+    send "doMenu "&quote&p1&quote&", "&quote&p2&quote to this stack
+end doMenu
+============================================================
+========================= trappable: on___help
+============================================================
+
+You can make a custom `help` handler that overrides the default one. However, the default one won't really ever be called, since you can't choose `Help` from the `Go` menu in ViperCard.
 
 ============================================================
 ========================= unmark
