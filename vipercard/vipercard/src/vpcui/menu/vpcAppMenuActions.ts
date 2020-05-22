@@ -472,7 +472,9 @@ export class VpcMenuActions {
      * show complete script reference
      */
     goMnuDlgHelpReference() {
+        let showVids = () => this.goMnuDlgHelpExamples()
         let dlg = new VpcNonModalDocViewer(this.vci, DialogDocsType.Reference);
+        dlg.cbShowVids = showVids
         this.vci.setNonModalDialog(dlg);
     }
 

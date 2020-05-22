@@ -26,11 +26,12 @@
  * used for both
  * "examples" (currently points to youtube example videos)
  * and
- * "reference" (complete scriping reference)
+ * "reference" (complete scripting reference)
  */
 export class VpcNonModalDocViewer extends VpcNonModalBase {
     compositeType = 'VpcNonModalDocViewer';
     hasCloseBtn = true;
+    cbShowVids:O<()=>void>
     constructor(protected vci: VpcStateInterface, public type: DialogDocsType) {
         super('VpcNonModalDocViewer' + Math.random());
 
@@ -164,8 +165,8 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             btnStartVid.set('visible', ctginfo[0].startsWith('vid'));
             btnStartVid.set('labeltext', tostring(vidTitles[ctg]));
             if (ctginfo[0].startsWith('vid')) {
-                let rghtBtn = grp.getEl(this.getElId('rghtBtn'));
-                rghtBtn.set('labeltext', '');
+                let rghtBackground = grp.getEl(this.getElId('rghtBackground'));
+                rghtBackground.set('labeltext', '');
             }
         }
     }
@@ -175,20 +176,17 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
      */
     protected resetRightSide(grp: UI512ElGroup, isWaiting: boolean) {
         let rghtFld = grp.findEl(this.getElId('rghtFld'));
-        let rghtBtn = grp.findEl(this.getElId('rghtBtn'));
+        let rghtBackground = grp.findEl(this.getElId('rghtBackground'));
         if (rghtFld) {
             rghtFld.set('scrollamt', 0);
             rghtFld.setFmTxt(FormattedText.newFromUnformatted(isWaiting ? ' ... ' : ''));
         }
 
-        if (rghtBtn) {
-            rghtBtn.set('iconnumber', 0);
-            rghtBtn.set('icongroupid', '');
-
+        if (rghtBackground) {
             if (!isWaiting && this.type === DialogDocsType.Examples) {
-                this.giveRightBtnText(rghtBtn);
+                this.giveRightBtnText(rghtBackground);
             } else {
-                rghtBtn.set('labeltext', '');
+                rghtBackground.set('labeltext', '');
             }
         }
     }
@@ -206,6 +204,14 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
                 for (let i = 0, len = jsonData.entries.length; i < len; i++) {
                     let jsonEntry = jsonData.entries[i];
                     if (jsonEntry.body && jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()) {
+                        let btnStartVid = grp.getEl(this.getElId('btnStartVid'));
+                        if (entryTitle.toLowerCase() === 'introduction') {
+                            btnStartVid.set('visible', true);
+                            btnStartVid.set('labeltext', "Open a tutorial vid");
+                        } else {
+                            btnStartVid.set('visible', false);
+                        }
+
                         let txt = FormattedText.newFromSerialized(jsonEntry.body);
                         let rghtFld = grp.findEl(this.getElId('rghtFld'));
                         if (rghtFld) {
@@ -272,12 +278,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         let gel = new UI512ElTextFieldAsGeneric(btm);
         let ln = TextSelModify.selectByLinesWhichLine(gel);
         if (ln !== undefined && ln >= 0 && ln < this.examplesInfo[ctg][2]) {
-            this.resetRightSide(grp, true); /* show the "..." */
-            let rghtBtn = grp.findEl(this.getElId('rghtBtn'));
-            if (rghtBtn) {
-                rghtBtn.set('iconnumber', ln);
-                rghtBtn.set('icongroupid', 'screenshots_' + sectionId);
-            }
+            this.resetRightSide(grp, true);
         }
     }
 
@@ -317,15 +318,14 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     }
 
     /**
-     * when showing example screenshots (the old way before youtube vids),
-     * the right button holds the screenshot as an icon
+     * show link to start video
      */
     protected createLayoutRightBtn(grp: UI512ElGroup, rghtFld: UI512ElTextField) {
-        let rghtBtn = this.genBtn(this.vci.UI512App(), grp, 'rghtBtn');
-        rghtBtn.set('autohighlight', false);
-        rghtBtn.setDimensions(rghtFld.x, rghtFld.y, rghtFld.w, rghtFld.h);
-        rghtBtn.set('visible', this.type !== DialogDocsType.Reference);
-        rghtBtn.set('style', this.type === DialogDocsType.Examples ? UI512BtnStyle.Rectangle : UI512BtnStyle.Transparent);
+        let rghtBackground = this.genBtn(this.vci.UI512App(), grp, 'rghtBtn');
+        rghtBackground.set('autohighlight', false);
+        rghtBackground.setDimensions(rghtFld.x, rghtFld.y, rghtFld.w, rghtFld.h);
+        rghtBackground.set('visible', this.type !== DialogDocsType.Reference);
+        rghtBackground.set('style', this.type === DialogDocsType.Examples ? UI512BtnStyle.Rectangle : UI512BtnStyle.Transparent);
 
         let btnStartVid = this.genBtn(this.vci.UI512App(), grp, 'btnStartVid');
         btnStartVid.set('style', UI512BtnStyle.OSStandard);
@@ -370,7 +370,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * start the video in a new browser tab
      */
-    protected clickedBtnStartVid(rightBtn: UI512Element) {
+    protected clickedBtnStartVid() {
         if (this.type === DialogDocsType.Examples) {
             let grp = this.vci.UI512App().getGroup(this.grpId);
             let top = cast(UI512ElTextField, grp.getEl(this.getElId('topChoice')));
@@ -379,6 +379,11 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
                 let num = this.examplesInfo[ctg][0].replace(/vid/g, '');
                 window.open('/0.3/html/video' + num + '.html', '_blank');
             }
+        } else {
+            /* close this and load the tutorial one */
+            if (this.cbShowVids) {
+                this.cbShowVids()
+            }
         }
     }
 
@@ -386,42 +391,42 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
      * when showing example screenshots (the old way before youtube vids),
      * the right button to start showing screenshots
      */
-    protected giveRightBtnText(rghtBtn: UI512Element) {
+    protected giveRightBtnText(rghtBackground: UI512Element) {
         let s = 'Click here to view a tutorial showing how to use ViperCard.';
         let style = 'b+iuosdce';
         s = UI512DrawText.setFont(s, `geneva_14_${style}`);
-        rghtBtn.set('labeltext', s);
+        rghtBackground.set('labeltext', s);
     }
 
-    /**
-     * when showing example screenshots (the old way before youtube vids),
-     * advance to the next screenshot
-     */
-    protected clickedRightBtn(rightBtn: UI512Element) {
-        if (this.type === DialogDocsType.Examples) {
-            /* advance to the next picture, if applicable. */
-            let grp = this.vci.UI512App().getGroup(this.grpId);
-            let btmGeneric = grp.getEl(this.getElId('btmChoice'));
-            let btm = cast(UI512ElTextField, btmGeneric);
-            let gel = new UI512ElTextFieldAsGeneric(btm);
-            let lnCurrent = TextSelModify.selectByLinesWhichLine(gel);
-            let lastLine = btm.getFmTxt().toUnformatted().split('\n').length - 1;
-            lastLine -= 1; /* compensate for last empty line */
-            if (lastLine <= 1) {
-                return; /* looks like a "video" one */
-            }
+    //~ /**
+     //~ * when showing example screenshots (the old way before youtube vids),
+     //~ * advance to the next screenshot
+     //~ */
+    //~ protected clickedRightBtn(rightBtn: UI512Element) {
+        //~ if (this.type === DialogDocsType.Examples) {
+            //~ /* advance to the next picture, if applicable. */
+            //~ let grp = this.vci.UI512App().getGroup(this.grpId);
+            //~ let btmGeneric = grp.getEl(this.getElId('btmChoice'));
+            //~ let btm = cast(UI512ElTextField, btmGeneric);
+            //~ let gel = new UI512ElTextFieldAsGeneric(btm);
+            //~ let lnCurrent = TextSelModify.selectByLinesWhichLine(gel);
+            //~ let lastLine = btm.getFmTxt().toUnformatted().split('\n').length - 1;
+            //~ lastLine -= 1; /* compensate for last empty line */
+            //~ if (lastLine <= 1) {
+                //~ return; /* looks like a "video" one */
+            //~ }
 
-            if (lnCurrent !== undefined && lnCurrent < lastLine) {
-                lnCurrent += 1;
-                TextSelModify.selectLineInField(gel, lnCurrent);
-                this.onChooseItem(btm);
-            } else if (lnCurrent === undefined) {
-                lnCurrent = 0;
-                TextSelModify.selectLineInField(gel, lnCurrent);
-                this.onChooseItem(btm);
-            }
-        }
-    }
+            //~ if (lnCurrent !== undefined && lnCurrent < lastLine) {
+                //~ lnCurrent += 1;
+                //~ TextSelModify.selectLineInField(gel, lnCurrent);
+                //~ this.onChooseItem(btm);
+            //~ } else if (lnCurrent === undefined) {
+                //~ lnCurrent = 0;
+                //~ TextSelModify.selectLineInField(gel, lnCurrent);
+                //~ this.onChooseItem(btm);
+            //~ }
+        //~ }
+    //~ }
 
     /**
      * route button click
@@ -431,10 +436,10 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             this.onChooseCategory(cast(UI512ElTextField, el));
         } else if (short === 'btmChoice') {
             this.onChooseItem(cast(UI512ElTextField, el));
-        } else if (short === 'rghtBtn') {
-            this.clickedRightBtn(el);
+        //~ } else if (short === 'rghtBtn') {
+            //~ this.clickedRightBtn(el);
         } else if (short === 'btnStartVid') {
-            this.clickedBtnStartVid(el);
+            this.clickedBtnStartVid();
         }
     }
 
