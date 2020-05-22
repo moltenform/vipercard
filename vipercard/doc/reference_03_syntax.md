@@ -6,7 +6,7 @@ this is a generated file, changes will be lost.
 
 
 
-## (operators)
+## (Operators)
 
 
 Here are the operators that can be used.
@@ -158,7 +158,7 @@ still will call `myfunction`, when it hypothetically could have been skipped.
 
 
 
-## (constants)
+## (Constants)
 
 
 The following constants are defined:

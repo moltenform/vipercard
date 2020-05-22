@@ -78,6 +78,8 @@ You can use the choose command to programmatically draw shapes and lines.
 
 When a script completes, you'll be taken back to the Browse tool regardless of which tool was chosen within a script.
 
+The form `choose "brush" tool` and `choose tool 3` is also supported.
+
 Examples:
 
 choose pencil tool
@@ -100,8 +102,6 @@ roundrect
 curve
 spray
 browse
-
---the form `choose "brush" tool` and `choose tool 3` is also supported.
 
 ============================================================
 ========================= click

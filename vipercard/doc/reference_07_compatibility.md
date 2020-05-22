@@ -180,7 +180,7 @@ put the freesize of this stack into z
 
 
 
-## get {expression}
+## get
 
 
 Evaluates any expression and saves the result to the variable "it".
@@ -480,6 +480,12 @@ put systemVersion() into x
 
 ```
 
+
+
+## trappable: on arrowKey
+
+
+You can make a custom `arrowKey` handler that overrides the default one.
 
 
 ## trappable: on doMenu

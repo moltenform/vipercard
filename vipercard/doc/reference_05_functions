@@ -357,21 +357,21 @@ put mousev() into x
 ============================================================
 
 ^Count parts of text^
-`answer the number of chars in "abc"`
-`answer the number of items in "a,b,c"`
-`answer the number of lines in myList`
+`answer the number of chars in "abc"
+answer the number of items in "a,b,c"
+answer the number of lines in myList`
 
 ^Count current objects^
-`answer the number of cards in this stack`
-`answer the number of buttons in this card`
-`answer the number of fields in this card`
-`repeat with x = 1 to the number of cards in this stack
+`answer the number of cards in this stack
+answer the number of buttons in this card
+answer the number of fields in this card
+repeat with x = 1 to the number of cards in this stack
     set the name of card x of this stack to "c" & x
 end repeat`
 
 ^Get the number of an object.^
-`answer the number of this card`
-`put the number of cd fld id 1234 into x
+`answer the number of this card
+put the number of cd fld id 1234 into x
 put "abc" into cd fld x`
 
 ============================================================
@@ -653,9 +653,9 @@ put tan(0.125 * pi) into x
 
 Refers to the object that was most recently acted on.
 
-Here's one reason why this can be useful: If you have many buttons that all basically perform the same action, you could have an 'on mouseup' handler in the card script instead of a separate script within each button. This script in the card could check the target to see which, if any, of the buttons were clicked.
+Here's one way this can be useful: If you have many buttons that all basically perform the same action, you could have an 'on mouseup' handler in the card script instead of a separate script within each button. This script in the card could check the target to see which of the buttons were clicked.
 
-Related to 'me', but not the same.
+Different than 'me', which is the owner of the currently running script, which might be different than the button that was clicked.
 
 Examples:
 

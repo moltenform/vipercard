@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+	<head><!-- Styles by GithubMarkdown, MIT license, Sindre Sorhus -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+		<title>ViperCard - Script Reference - (Compatibility)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./github-markdown.css">
+<link rel="stylesheet" href="./smalltheme.css">
+</head>
+<body>
+
+<div class="smalltheme-uppernavbox"><span class="linktilebuttonhspace"></span><a class="smalltheme-textwithinbox" href="/">vipercard</a><span class="smalltheme-textwithinbox"> &gt; </span><a class="smalltheme-textwithinbox" href="reference_01_overview.html">script reference</a><span class="linktilebuttonhspace"></span></div>
+<article class="markdown-body">
+
+
+<!---
+this is a generated file, changes will be lost.
+-->
+
+<p><a href="./reference_01_overview.html">Overview</a> | <a href="./reference_02_commands.html">Commands</a> | <a href="./reference_03_syntax.html">Syntax</a> | <a href="./reference_04_properties.html">Properties</a> | <a href="./reference_05_functions.html">Functions</a> | <a href="./reference_06_events.html">Event Handlers</a> | Compatibility</p>
+<h2 id="-compatibility-">(Compatibility)</h2>
+<p>These are provided for compatibility with HyperCard. They might have hard-coded values/reduced functionality, and are unlikely to be useful in new scripts.</p>
+<p>You can enable compatibility mode for a stack by choosing <code>Object-&gt;Stack info...</code> and clicking <code>Compatibility</code> in the panel on the right. This setting is saved with the stack and makes these changes for compatibility.</p>
+<ul>
+<li>You can say <code>btn 2</code> instead of <code>cd btn 2</code></li>
+<li>You can say <code>put &quot;A&quot; into item 3 of char 2 of x</code> which doesn&#39;t usually make sense</li>
+<li>You can say <code>put &quot;new&quot; into item 4 of line 3 of x</code> and get more intuitive behavior</li>
+<li>Uses HyperCard&#39;s less useful form for <code>long id</code>, <code>owner</code>, and <code>the target</code>.</li>
+</ul>
+<h2 id="abbrev-id">abbrev id</h2>
+<p>Examples:</p>
+<pre><code>
+
+put the abbrev id of cd fld &quot;myFld&quot; into z
+
+
+</code></pre><h2 id="abbrev-name">abbrev name</h2>
+<p>Examples:</p>
+<pre><code>
+
+put the abbrev name of cd fld &quot;myFld&quot; into z
+
+</code></pre><h2 id="arrowkey">arrowKey</h2>
+<p>Sends an <code>arrowKey</code> message. By default, <code>arrowKey left</code> goes to the previous card, and <code>arrowKey right</code> goes to the next card, but this can be overridden in a card script or stack script.</p>
+<h2 id="bottom">bottom</h2>
+<p>Equivalent to the top of the object + the height of the object.</p>
+<p>Examples:</p>
+<pre><code>
+
+put the bottom of cd fld &quot;myFld&quot; into z
+
+</code></pre><h2 id="botright">botright</h2>
+<p>Examples:</p>
+<pre><code>
+
+put the botright of cd btn &quot;myBtn&quot; into z
+
+</code></pre><h2 id="diskspace-">diskSpace()</h2>
+<p>(Deprecated and hard-coded).</p>
+<p>Examples:</p>
+<pre><code>
+
+put diskSpace() into x
+
+
+
+</code></pre><h2 id="environment">environment</h2>
+<p>(Deprecated and hard-coded, for backwards compatibility only)</p>
+<p>Examples:</p>
+<pre><code>
+
+put the environment into z
+
+
+
+</code></pre><h2 id="errordialog">errorDialog</h2>
+<p>Causes a runtime error at the current line.</p>
+<p>Examples:</p>
+<pre><code>
+
+errorDialog &quot;Not a number&quot;
+
+</code></pre><h2 id="exp1-x-">exp1(x)</h2>
+<p>(e to the power of x) minus 1.</p>
+<p>Examples:</p>
+<pre><code>
+
+put exp1(0.5) into x
+
+</code></pre><h2 id="freesize">freesize</h2>
+<p>(Deprecated and hard-coded, for backwards compatibility only)</p>
+<p>Examples:</p>
+<pre><code>
+
+put the freesize of this stack into z
+
+</code></pre><h2 id="get">get</h2>
+<p>Evaluates any expression and saves the result to the variable &quot;it&quot;.</p>
+<p>The &#39;put&#39; command is typically more useful.</p>
+<p>Examples:</p>
+<pre><code>
+
+get 2+3
+put it into x
+answer x -- shows 5
+
+get the width of cd btn &quot;myBtn&quot;
+put it into x
+answer x -- shows the width of the specified button
+
+</code></pre><h2 id="heapspace-">heapSpace()</h2>
+<p>(Deprecated and hard-coded).</p>
+<p>Examples:</p>
+<pre><code>
+
+put heapSpace() into x
+
+
+</code></pre><h2 id="ln1-x-">ln1(x)</h2>
+<p>Natural logarithm of (x + 1)</p>
+<p>Examples:</p>
+<pre><code>
+
+put ln1(0.5) into x
+
+</code></pre><h2 id="long-name">long name</h2>
+<p>Examples:</p>
+<pre><code>
+
+put the long name of cd fld &quot;myFld&quot; into z
+
+</code></pre><h2 id="mark">mark</h2>
+<p>Fully functional, might not be useful.</p>
+<p>Sets the &quot;marked&quot; property on a card to true.</p>
+<pre><code>
+mark card id 1234
+mark cards where the name of this card contains &quot;b&quot;
+mark all cards
+</code></pre><p>When cards are marked, you can conveniently reference them:</p>
+<pre><code>
+marked card 4
+prev marked card
+next marked card
+first marked card
+second marked card
+last marked card
+</code></pre><h2 id="marked">marked</h2>
+<p>You can mark a card.</p>
+<p>Examples:</p>
+<pre><code>
+
+answer the marked of cd 4
+set the marked of cd 4 to true
+
+</code></pre><h2 id="on-errordialog">on errorDialog</h2>
+<p>(Included for compatibility, unlikely to be useful for writing scripts).</p>
+<p>A few error messages create an errorDialog event. The default response is</p>
+<p>to show a script error at the offending line. If you write your own errorDialog</p>
+<p>handler you can catch these events. However, because nearly all errors do not</p>
+<p>go through errorDialog, this is unlikely to be useful.</p>
+<h2 id="right">right</h2>
+<p>Equivalent to the left of the object + the width of the object.</p>
+<p>Examples:</p>
+<pre><code>
+
+put the right of cd fld &quot;myFld&quot; into z
+
+
+</code></pre><h2 id="pop">pop</h2>
+<p>Functional, but not recommended in new code.</p>
+<p>Examples:</p>
+<pre><code>
+
+push card
+go to card 7
+pop card into x
+go to card x
+
+</code></pre><h2 id="push">push</h2>
+<p>Functional, but not recommended in new code.</p>
+<p>Examples:</p>
+<pre><code>
+
+push card
+go to card 7
+pop card
+
+
+</code></pre><h2 id="size">size</h2>
+<p>(Deprecated and hard-coded, for backwards compatibility only)</p>
+<p>Examples:</p>
+<pre><code>
+
+put the size of this stack into z
+
+</code></pre><h2 id="stacksinuse">stacksinuse</h2>
+<p>(Deprecated and hard-coded, for backwards compatibility only)</p>
+<p>Examples:</p>
+<pre><code>
+
+put the stacksinuse into z
+
+
+</code></pre><h2 id="stackspace-">stackSpace()</h2>
+<p>(Deprecated and hard-coded).</p>
+<p>Examples:</p>
+<pre><code>
+
+put stackSpace() into x
+
+
+</code></pre><h2 id="suspended">suspended</h2>
+<p>(Deprecated and hard-coded, for backwards compatibility only)</p>
+<p>Examples:</p>
+<pre><code>
+
+put the suspended into z
+
+
+
+</code></pre><h2 id="systemversion">systemVersion</h2>
+<p>(Deprecated and hard-coded).</p>
+<p>To get the current software version, use</p>
+<pre><code>put the version into x</code></pre><p>or</p>
+<pre><code>put the long version into x</code></pre><p>instead.</p>
+<p>Examples:</p>
+<pre><code>
+
+put systemVersion() into x
+
+</code></pre><h2 id="trappable-on-arrowkey">trappable: on arrowKey</h2>
+<p>You can make a custom <code>arrowKey</code> handler that overrides the default one.</p>
+<h2 id="trappable-on-domenu">trappable: on doMenu</h2>
+<p>You can make a custom <code>doMenu</code> handler that overrides the default one.</p>
+<p>Hold the Shift key to bypass a customized <code>doMenu</code>.</p>
+<p>Examples:</p>
+<pre><code>
+
+-- in a card&#39;s script
+on doMenu p1, p2
+    if p1 == &quot;New Card&quot; then
+        answer &quot;Making a new card&quot;
+    end if
+    send &quot;doMenu &quot;&amp;quote&amp;p1&amp;quote&amp;&quot;, &quot;&amp;quote&amp;p2&amp;quote to this stack
+end doMenu
+</code></pre><h2 id="trappable-on-help">trappable: on help</h2>
+<p>You can make a custom <code>help</code> handler that overrides the default one. However, the default one won&#39;t really ever be called, since you can&#39;t choose <code>Help</code> from the <code>Go</code> menu in ViperCard.</p>
+<h2 id="unmark">unmark</h2>
+<p>Fully functional, might not be useful.</p>
+<p>Sets the &quot;marked&quot; property on a card to false.</p>
+<p>Examples:</p>
+<pre><code>
+
+unmark card id 1234
+unmark all cards
+
+</code></pre><h2 id="version">version</h2>
+<p>Examples:</p>
+<pre><code>
+
+put the version into z
+
+
+</code></pre><h2 id="long-version">long version</h2>
+<p>Examples:</p>
+<pre><code>
+
+put the long version into z
+
+</code></pre>
+</article>
+</body>
+</html>

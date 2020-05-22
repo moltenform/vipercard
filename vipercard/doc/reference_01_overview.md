@@ -451,7 +451,7 @@ end if
 ```
 
 
-For `if` and `else if`, only `true` or `false` are accepted, any other value is a runtime error. For example, to check that a string is not empty, you cannot say `if myVar then`, you have to say something like `if length(myVar) > 0 then`
+For `if` and `else if`, only `true` or `false` are accepted, any other value is a runtime error. For example, to check that a string is not empty, you cannot say `if myVar then`, you have to say something like `if length(myVar) > 0 then` instead.
 
 Note that equality checks account for different data types: 
 
@@ -478,7 +478,7 @@ This is the same as writing
 
 set the topleft of cd btn "myBtn" to 1, 2
 set the topleft of cd btn "myBtn" to "1, 2"
-or
+-- or
 set the top of cd btn "myBtn" to 1
 set the left of cd btn "myBtn" to 2
 
@@ -862,23 +862,27 @@ No code can exist outside of a handler or function.
 
 Handlers look like this
 
-`on mouseup
 
-answer "hello world"
+```
+on mouseup 
+    answer "hello world"
+end mouseup
+```
 
-end mouseup`
-
+    
 and respond to an event message.
     
 **Functions**
 
 Functions look like this
 
-`function myAddition p1, p2
 
-return p1 + p2
+```
+function myAddition p1, p2
+    return p1 + p2
+end myAddition
+```
 
-end myAddition`
 
 They can then be called with code like
 
@@ -999,99 +1003,52 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 ViperCard uses the following libraries:
 
-Chevrotain
-
-https://github.com/SAP/chevrotain
-
-Apache License 2.0
-
-FileSaver.js
-
-https://github.com/eligrey/FileSaver.js
-
-MIT License
-
-Golly
-
-https://github.com/dannygarcia/golly
-
-MIT License
-
-js-lru
-
-https://github.com/rsms/js-lru
-
-MIT License
-
-Clipboard.js
-
-https://github.com/zenorocha/clipboard.js
-
-MIT License
-    
-base64js
-
-https://github.com/beatgammit/base64-js
-
-MIT License
-            
-JSGIF
-
-https://github.com/antimatter15/jsgif
-
-MIT License
-    
-Bresenham easy.filter
-
-http://members.chello.at/easyfilter/bresenham.html
-
-written permission of author
-    
-lz-string
-
-https://github.com/pieroxy/lz-string
-
-MIT License
-
-Pizzicato
-
-https://github.com/alemangui/pizzicato
-
-MIT License
-
-Bowser
-
-https://github.com/lancedikson/bowser
-
-MIT License
-
-types-text-encoding
-
-https://www.npmjs.com/package/@types/text-encoding
-
-MIT License
-
-deep-freeze
-
-https://github.com/substack/deep-freeze
-
-Public domain
-
-pbkdf2 gist by Chris Veness
-
-description of Mac OS Roman character set
-
-https://en.wikipedia.org/wiki/Mac_OS_Roman
-
-http://creativecommons.org/licenses/by-sa/3.0/
-
-Creative Commons Attribution-ShareAlike
-
-and a small excerpt from the SciTE code editor,
-
-ported from C++ to TypeScript by Ben Fisher
-
-SciTE
-
-https://www.scintilla.org/License.txt
+* Chevrotain
+    * https://github.com/SAP/chevrotain
+    * Apache License 2.0
+* FileSaver.js
+    * https://github.com/eligrey/FileSaver.js
+    * MIT License
+* Golly
+    * https://github.com/dannygarcia/golly
+    * MIT License
+* js-lru
+    * https://github.com/rsms/js-lru
+    * MIT License
+* Clipboard.js
+    * https://github.com/zenorocha/clipboard.js
+    * MIT License
+* base64js
+    * https://github.com/beatgammit/base64-js
+    * MIT License
+* JSGIF
+    * https://github.com/antimatter15/jsgif
+    * MIT License
+* Bresenham easy.filter
+    * http://members.chello.at/easyfilter/bresenham.html
+    * written permission of author
+* lz-string
+    * https://github.com/pieroxy/lz-string
+    * MIT License
+* Pizzicato
+    * https://github.com/alemangui/pizzicato
+    * MIT License
+* Bowser
+    * https://github.com/lancedikson/bowser
+    * MIT License
+* types-text-encoding 
+    * https://www.npmjs.com/package/@types/text-encoding
+    * MIT License
+* deep-freeze
+    * https://github.com/substack/deep-freeze
+    * Public domain
+* pbkdf2 gist by Chris Veness
+* description of Mac OS Roman character set
+    * https://en.wikipedia.org/wiki/Mac_OS_Roman
+    * http://creativecommons.org/licenses/by-sa/3.0/
+    * Creative Commons Attribution-ShareAlike
+* and a small excerpt from the SciTE code editor,
+* ported from C++ to TypeScript by Ben Fisher
+* SciTE
+    * https://www.scintilla.org/License.txt
 

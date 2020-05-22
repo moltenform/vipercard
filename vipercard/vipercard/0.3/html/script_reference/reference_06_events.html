@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+	<head><!-- Styles by GithubMarkdown, MIT license, Sindre Sorhus -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+		<title>ViperCard - Script Reference - on afterKeyDown</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./github-markdown.css">
+<link rel="stylesheet" href="./smalltheme.css">
+</head>
+<body>
+
+<div class="smalltheme-uppernavbox"><span class="linktilebuttonhspace"></span><a class="smalltheme-textwithinbox" href="/">vipercard</a><span class="smalltheme-textwithinbox"> &gt; </span><a class="smalltheme-textwithinbox" href="reference_01_overview.html">script reference</a><span class="linktilebuttonhspace"></span></div>
+<article class="markdown-body">
+
+
+<!---
+this is a generated file, changes will be lost.
+-->
+
+<p><a href="./reference_01_overview.html">Overview</a> | <a href="./reference_02_commands.html">Commands</a> | <a href="./reference_03_syntax.html">Syntax</a> | <a href="./reference_04_properties.html">Properties</a> | <a href="./reference_05_functions.html">Functions</a> | Event Handlers | <a href="./reference_07_compatibility.html">Compatibility</a></p>
+<h2 id="on-afterkeydown">on afterKeyDown</h2>
+<p>Called when a key is pressed.</p>
+<p>You can use the functions <code>keyChar()</code>,  <code>shiftKey()</code>,  <code>optionKey()</code>, and <code>commandKey()</code>, to determine which key(s) where pressed.</p>
+<p><code>keyRepeated()</code> can be used to see if the key event comes from the key having been held down.</p>
+<p>Examples:</p>
+<pre><code>
+
+on afterKeyDown
+    if keyChar() is &quot;i&quot; and the shiftKey is up and \
+            the optionKey is down and the commandKey is up then
+        answer &quot;you pressed option-i&quot;
+    else if keyChar() is &quot;U&quot; and the shiftKey is down and \
+            the optionKey is up and the commandKey is up then
+        answer &quot;you pressed shift-u&quot;
+    end if
+end afterKeyDown
+</code></pre><h2 id="on-afterkeyup">on afterKeyUp</h2>
+<p>Called when a key is pressed and released.</p>
+<p>Examples:</p>
+<pre><code>
+
+on afterKeyUp
+    if keyChar() is &quot;i&quot; then
+        answer &quot;you pressed i&quot;
+    end if
+end afterKeyUp
+
+</code></pre><h2 id="on-closebackground">on closeBackground</h2>
+<p>When you go to a different card, if the card belongs to a different background, the closeBackground message will be sent. (You&#39;re leaving one background and going to another).</p>
+<p>Examples:</p>
+<pre><code>
+
+-- in a background&#39;s script
+on closeBackground
+    answer &quot;you have left this background&quot;
+end closeBackground
+
+</code></pre><h2 id="on-closecard">on closeCard</h2>
+<p>Message sent upon leaving a card.</p>
+<p>Because messages continue up the hierarchy until they are handled, you can also respond to closeCard in a stack script.</p>
+<p>Examples:</p>
+<pre><code>
+
+-- in a card&#39;s script
+on closeCard
+    answer &quot;you have left this card&quot;
+end closeCard
+
+
+</code></pre><h2 id="on-closefield">on closeField</h2>
+<p>Sent when the user clicks on a field to select it, types text into the field, and then de-selects the field.</p>
+<p>If the browse tool is active, this message will be sent by the following:</p>
+<ul>
+<li>When typing text into a field, click outside the field</li>
+<li>When typing text into a field, press Enter</li>
+<li>When typing text into a field, go to a different card</li>
+</ul>
+<p>See also: <code>openField</code> and <code>exitField</code>.</p>
+<p>The message is sent to the target field and travels upward to the current card as usual.</p>
+<p>Examples:</p>
+<pre><code>
+
+-- in a field&#39;s script
+
+on closeField
+    -- do a simple check of what the user just typed
+    if not &quot;@&quot; in the target then
+        put &quot;not a e-mail address&quot; into cd fld &quot;status&quot;
+    else
+        put &quot;&quot; into cd fld &quot;status&quot;
+    end if
+end closeField
+
+</code></pre><h2 id="on-exitfield">on exitField</h2>
+<p>Sent when the user clicks on a field to select it, does not type text into the field, and then de-selects the field.</p>
+<p>If the browse tool is active, this message will be sent by the following:</p>
+<ul>
+<li>When a field is selected, click outside the field</li>
+<li>When a field is selected, press Enter</li>
+<li>When a field is selected, go to a different card</li>
+</ul>
+<p>It&#39;s possible for exitField to be sent to the field more than once if some of the above actions happen at the same time.</p>
+<p>See also: <code>openField</code> and <code>closeField</code>.</p>
+<p>The message is sent to the target field and travels upward to the current card as usual.</p>
+<p>Examples:</p>
+<pre><code>
+
+-- in a field&#39;s script
+
+on openField
+    show cd btn &quot;indicateCurrentlyEditingField&quot;
+end openField
+
+on closeField
+    hide cd btn &quot;indicateCurrentlyEditingField&quot;
+end closeField
+
+on exitField
+    hide cd btn &quot;indicateCurrentlyEditingField&quot;
+end exitField
+
+</code></pre><h2 id="on-idle">on idle</h2>
+<p>Sent repeatedly to the current card. Can be used for a game loop.</p>
+<p>(Note that to terminate a script that is being called repeatedly, you can change to the button or field tool.)</p>
+<p>To get faster idle calls, at the expense of heavier cpu usage, use <code>set the idlerate to &quot;faster&quot;</code></p>
+<h2 id="on-mousedoubleclick">on mouseDoubleClick</h2>
+<p>Remember that scripts are only run when you&#39;re in the Browse tool (hand-shape). Create a button, edit its script, and type the example below. Now when you choose the browse tool and double-click the button, your code will run.</p>
+<p>Examples:</p>
+<pre><code>
+
+on mouseDoubleClick
+    answer &quot;you double-clicked this button.&quot;
+end mouseDoubleClick
+
+</code></pre><h2 id="on-mousedown">on mouseDown</h2>
+<p>Remember that scripts are only run when you&#39;re in the Browse tool (hand-shape). Called whenever the mouse is pressed down onto the object. Create a button, edit its script, and type the example below. Now when you choose the browse tool and click the button, your code will run.</p>
+<p>Examples:</p>
+<pre><code>
+
+on mouseDown
+    answer &quot;code is running.&quot;
+end mouseDown
+
+</code></pre><h2 id="on-mouseenter">on mouseEnter</h2>
+<p>Remember that scripts are only run when you&#39;re in the Browse tool (hand-shape). Called whenever the mouse enters the object.</p>
+<p>Examples:</p>
+<pre><code>
+
+on mouseEnter
+    set the icon of me to 12
+end mouseDown
+
+</code></pre><h2 id="on-mouseleave">on mouseLeave</h2>
+<p>Remember that scripts are only run when you&#39;re in the Browse tool (hand-shape). Called whenever the mouse leaves the object.</p>
+<p>Examples:</p>
+<pre><code>
+
+on mouseLeave
+    set the icon of me to 10
+end mouseLeave
+
+</code></pre><h2 id="on-mouseup">on mouseUp</h2>
+<p>Remember that scripts are only run when you&#39;re in the Browse tool (hand-shape). Called whenever the mouse is clicked. To be precise, when the mouse is pressed down onto the object, and released on the same object. Create a button, edit its script, type the example below. Now when you choose the browse tool and click the button, your code will run.</p>
+<p>Examples:</p>
+<pre><code>
+
+on mouseUp
+    answer &quot;hello, world.&quot;
+end mouseUp
+
+</code></pre><h2 id="on-mousewithin">on mouseWithin</h2>
+<p>Called repeatedly when the cursor is inside the object. You can use the mouseloc() function to get the position of the cursor. This can be used to create drag/drop effects.</p>
+<p>(Note that to terminate a script that is being called repeatedly, you can change to the button or field tool.)</p>
+<p>Examples:</p>
+<pre><code>
+
+on mouseWithin
+    set the loc of cd btn &quot;follow&quot; to the mouseLoc
+end mouseWithin
+
+</code></pre><h2 id="on-openbackground">on openBackground</h2>
+<p>When you go to a different card, if the card belongs to a different background, the openBackground message will be sent. (You&#39;re leaving one background and going to another).</p>
+<p>Examples:</p>
+<pre><code>
+
+-- in a background&#39;s script
+on openBackground
+    answer &quot;welcome to this background&quot;
+end openBackground
+
+</code></pre><h2 id="on-opencard">on openCard</h2>
+<p>Message sent upon going to a card.</p>
+<p>Because messages continue up the hierarchy until they are handled, you can also respond to openCard in a stack script.</p>
+<p>Examples:</p>
+<pre><code>
+
+-- in a card&#39;s script
+on openCard
+    answer &quot;welcome to this card&quot;
+end openCard
+
+</code></pre><h2 id="on-openfield">on openField</h2>
+<p>Sent to a field, when text is first selected in it.</p>
+<p>See also: <code>closeField</code> and <code>exitField</code>.</p>
+<p>Examples:</p>
+<pre><code>
+
+-- in a field&#39;s script
+
+on openField
+    -- place default text in the field when you tab over to it...
+    put &quot;abc&quot; into the target
+end openField
+
+</code></pre><h2 id="on-openstack">on openStack</h2>
+<p>Message sent upon first opening the stack.</p>
+<p>Examples:</p>
+<pre><code>
+
+-- in a stack&#39;s script
+on openStack
+    answer &quot;welcome to this card&quot;
+end openStack
+
+
+</code></pre>
+</article>
+</body>
+</html>

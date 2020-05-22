@@ -104,49 +104,37 @@ You can use the choose command to programmatically draw shapes and lines.
 
 When a script completes, you'll be taken back to the Browse tool regardless of which tool was chosen within a script.
 
+The form `choose "brush" tool` and `choose tool 3` is also supported.
+
 Examples:
 
-`
+```
+
 
 choose pencil tool
-
 click at 10,20
-
 -- this draws a black pixel at the coordinates x=10, y=20
 
 choose line tool
-
 drag from 10,20 to 30,40
-
--- this draws a line starting at the coordinates (10,20)
-
+-- this draws a line starting at the coordinates (10,20) 
 -- ending at (30,40)
 
 -- tools include:
-
 brush
-
 bucket
-
 pencil
-
 line
-
 rect
-
 oval
-
 roundrect
-
 curve
-
 spray
-
 browse
 
---the form `choose "brush" tool` and `choose tool 3` is also supported.
 
-`
+```
+
 
 
 ## click

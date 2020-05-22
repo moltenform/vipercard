@@ -30,17 +30,12 @@ end afterKeyDown
 
 Called when a key is pressed and released.
 
-You can use the functions keyChar(), shiftKey(), optionKey(), and commandKey(), to determine which key(s) where pressed.
 
 Examples:
 
 on afterKeyUp
-    if keyChar() is "i" and the shiftKey is up and \
-            the optionKey is down and the commandKey is up then
-        answer "you pressed option-i"
-    else if keyChar() is "U" and the shiftKey is down and \
-            the optionKey is up and the commandKey is up then
-        answer "you pressed shift-u"
+    if keyChar() is "i" then
+        answer "you pressed i"
     end if
 end afterKeyUp
 
