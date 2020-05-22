@@ -68,8 +68,8 @@ This isn't necessarily the most recent mouseclick, it is only updated
 
 Examples:
 
-wait until the mouseclick
-answer "you clicked at" && the clickloc
+wait until the mouseClic
+answer "you clicked at" && the clickLoc
 
 
 ============================================================

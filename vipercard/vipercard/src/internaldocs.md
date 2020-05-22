@@ -106,7 +106,19 @@ the class, and calls it. That way I don't need any switch statement,
 if-thens, or table of function pointers, it saves space and effort!
 
 ```
+## Source code layers
 
+* We make sure that every `.ts` file is strictly ordered into a layer. Code in lower layers cannot call directly call code in a higher layer.
+* This prevents circular dependencies and encourages good non-monolithic design.
+* It also ensures that test code can be cleanly cut away from product code; by making test code live above product code, the product code is unable to have any dependencies on it.
+* Layers are specified in `layers.cfg` and enforced by the `super-auto-import` python script.
+* For cases where lower code needs to call into higher code, it can do so indirectly with so-called "dependency inversion". This can be a simple callback function, or for more structured callbacks, an interface.
+* For example: when a script executes code, it makes sense for this to be a low-level module depending only on the parser. Certain commands, though, need to interact with the UI and cause changes to it. If script execution were above the UI, though, this wouldn't really be right, because UI actions need to cause script execution to run.
+    * We can solve this situation elegantly by creating an interface called `OutsideWorld`. 
+    * First, the interface is defined. The interface can be defined at a very low level, since it has no implementation. The methods on the interface are all semantically meaningful, instead of exposing data structures they provide actions like `WriteToMessageBox()`, `GetCurrentTool()`, and `CountElements()`.
+    * Then, script execution is written to act on an instance that implements the interface. As a side benefit, test code can verify script execution by providing a controlled and monitored implementation of the interface. The interface can even be split into read-only methods and read-write methods, since parts of script execution like expression evaluation should be essentially idempotent.
+    * Finally, in the higher UI layer, there is a `VpcOutsideImpl` class that fully implements the interface. In effect, the lower-level script execution code is calling up into higher UI code, but in a controlled and organized way.
+* This type of organization is also useful for maintaining re-usability of lower layers. For example, it's easier to keep the `util512` layer free of ViperCard-specific functionality, and thus more re-usable for other projects, because it is kept lower than application code. 
 
 ## Rendering
 
