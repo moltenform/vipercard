@@ -10,10 +10,9 @@
 /* auto */ import { StackOrderHelpers } from './../../vpc/vel/velStackOrderHelpers';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
-/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, callDebuggerIfNotInProduction, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
@@ -471,28 +470,6 @@ export class VpcPresenter extends VpcPresenterInit {
         } else {
             this.cbExitToMainMenu();
         }
-    }
-
-    /**
-     * after the user clicked 'New button' in the ui
-     */
-    selectANewBtnFld(vel:VpcElBase, setPos:boolean):void {
-        if (setPos) {
-            let newX = this.userBounds[0] + Util512Higher.getRandIntInclusiveWeak(20, 200);
-            let newY = this.userBounds[1] + Util512Higher.getRandIntInclusiveWeak(20, 200);
-            vel.setOnVel('x', newX, this.vci.getModel())
-            vel.setOnVel('y', newY, this.vci.getModel())
-        }
-        
-        /* save *before* setting selectedVelId */
-        this.lyrPropPanel.saveChangesToModel(false);
-        this.lyrPropPanel.updateUI512Els();
-        this.vci.setOption('selectedVelId', vel.idInternal);
-        this.vci.setOption('viewingScriptVelId', '');
-
-        /* update before tool is set */
-        this.lyrPropPanel.updateUI512Els();
-        this.setTool(vel.getType() === VpcElType.Btn ? VpcTool.Button : VpcTool.Field);
     }
 
     /**

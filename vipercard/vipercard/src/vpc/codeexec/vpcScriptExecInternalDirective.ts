@@ -15,10 +15,10 @@
 /**
  * provide advanced capabilities to scripts.
  * this is, for example, how doMenu can accomplish so many things
+ * fully implemented in a higher level.
  */
 export abstract class VpcExecInternalDirectiveAbstract {
     outside: OutsideWorldReadWrite
-
     abstract setGlobal(key:string, v:VpcVal):void;
     abstract getGlobal(key:string):VpcVal;
     abstract getCardHistory():RememberHistory;
@@ -26,11 +26,17 @@ export abstract class VpcExecInternalDirectiveAbstract {
     abstract goRemovevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]):void
     abstract createOneVelUsedOnlyByDeserialize(parentId: string, type: VpcElType, insertIndex:number, newId: O<string>):VpcElBase
 
+    /**
+     * run a directive
+     */
     go(directive:string, param:ValHolder<string>, msg:[string,string]) {
         let cur = this.outside.Model().getCurrentCard()
         Util512.callAsMethodOnClass("VpcExecInternalDirectiveAbstract", this, 'go' + Util512.capitalizeFirst(directive), [param, cur, msg], false)
     }
 
+    /**
+     * sends either the closeField or exitField message
+     */
     goCloseorexitfield(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         let seld = this.outside.GetSelectedField();
         if (seld && seld.parentIdInternal === cur.idInternal) {
@@ -49,12 +55,18 @@ export abstract class VpcExecInternalDirectiveAbstract {
         }
     }
 
+    /**
+     * sets current card
+     */
     goGotocardsendnomessages(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         let nextCardId = VpcValS(param.val)
             checkThrow(nextCardId && nextCardId.isItInteger(), 'Rj|');
             this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
     }
 
+    /**
+     * starts visual effect
+     */
     goViseffect(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         let nextCardId = VpcValS(param.val)
         let spec = this.getGlobal('$currentVisEffect').readAsString().split('|');
@@ -65,10 +77,16 @@ export abstract class VpcExecInternalDirectiveAbstract {
             }
     }
 
+    /**
+     * return focus to messagebox
+     */
     goReturntomsgbox(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         this.outside.WriteToReplMessageBox('', true);
     }
 
+    /**
+     * implement 'go back' and 'go forth'
+     */
     goApplyBackForth(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         let fallback = () => cur.idInternal;
             let cardExists = (s: string) => {

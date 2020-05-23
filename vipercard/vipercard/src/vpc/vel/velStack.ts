@@ -35,8 +35,12 @@ export class VpcElStack extends VpcElBase {
     static readonly initIncreasingNumberId = 50000;
 
     /* counter for when you create a button in the ui and it's called "my button 3"
-    (persisted, but not undoable) */
+    (persisted, but not undoable because it starts with 'increasingnumber') */
     protected _increasingnumberforelemname = 1;
+
+    /* counter for when you create a button in the ui and it's called "my field 3"
+    (persisted, but not undoable because it starts with 'increasingnumber') */
+    protected _increasingnumberforelemnamefld = 1;
 
     /* counter for creating numeric ids for elements
     (persisted, but not undoable) */
@@ -82,9 +86,10 @@ export class VpcElStack extends VpcElBase {
     /**
      * get next number, when you create a button in the ui and it's called "my button 3"
      */
-    getNextNumberForElemName(h: VpcHandleLinkedVels) {
-        let ret = this.getN('increasingnumberforelemname');
-        this.setOnVel('increasingnumberforelemname', ret + 1, h);
+    getNextNumberForElemName(h: VpcHandleLinkedVels, forBtn:boolean) {
+        let fld = forBtn ? 'increasingnumberforelemname' : 'increasingnumberforelemnamefld'
+        let ret = this.getN(fld);
+        this.setOnVel(fld, ret + 1, h);
         return ret.toString();
     }
 

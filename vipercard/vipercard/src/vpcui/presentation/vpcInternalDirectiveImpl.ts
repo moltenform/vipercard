@@ -6,7 +6,7 @@
 /* auto */ import { RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcElType, checkThrow, checkThrowInternal, checkThrowNotifyMsg, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcTool, checkThrow, checkThrowInternal, checkThrowNotifyMsg, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
@@ -29,20 +29,34 @@
  * complete implementation of VpcExecInternalDirective 
  */
 export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstract {
-    constructor(protected pr:O<VpcPresenterInterface>, protected vci:VpcStateInterface) {
+    constructor(protected pr:VpcPresenterInterface, protected vci:VpcStateInterface) {
         super()
     }
 
+    /**
+     * set contents of global var
+     */
     setGlobal(key:string, v:VpcVal) {
         this.vci.getCodeExec().globals.set(key, v)
     }
+
+    /**
+     * get contents of global var
+     */
     getGlobal(key:string):VpcVal {
         return this.vci.getCodeExec().globals.getOrFallback(key, VpcValS(''))
     }
+
+    /**
+     * access cardhistory array
+     */
     getCardHistory():RememberHistory {
         return this.vci.getCodeExec().cardHistory
     }
     
+    /**
+     * make a new vel, can't send messages like newButton
+     */
     goMakevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         let vel:VpcElBase
         if (param.val==='btn' || param.val==='button') {
@@ -61,6 +75,9 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         return vel
     }
 
+    /**
+     * paste a copied vel
+     */
     goPastecardorvel(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         let id = this.vci.getOptionS('copiedVelId');
         let found = this.vci.getModel().findByIdUntyped(id);
@@ -79,6 +96,9 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         }
     }
 
+    /**
+     * remove a vel
+     */
     goRemovevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         let idInternal = param.val
         let ref = new RequestedVelRef(VpcElType.Unknown)
@@ -93,12 +113,18 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         }
     }
 
+    /**
+     * make a background
+     */
     protected makeBgWithoutMsg(cur:VpcElCard) { 
         let bg = this.createOneVelUsedOnlyByDeserialize(this.vci.getModel().stack.idInternal, VpcElType.Bg, -1);
         this.createOneVelUsedOnlyByDeserialize(bg.idInternal, VpcElType.Card, -1);
         return bg
     }
 
+    /**
+     * make a card
+     */
     protected makeCardWithoutMsg(cur:VpcElCard, isDupePaint:boolean) {
         let paint = cur.getS('paint');
         let currentBg = this.vci.getModel().getById(VpcElBg, cur.parentIdInternal);
@@ -113,8 +139,12 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         return vel
     }
 
+    /**
+     * make a btn or fld
+     */
     protected makeBtnFldWithoutMsg(type:VpcElType) {
-        /* make a button that is tall enough to show an icon */
+        /* make a button that is tall enough to show an icon, since
+        in prev versions icon clipping didn't work well */
         const defaultBtnW = 100;
         const defaultBtnH = 58;
         const defaultFldW = 100;
@@ -131,14 +161,16 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
             checkThrowInternal(false, '6E|wrong type ' + type);
         }
 
+        let newX = this.pr.userBounds[0] + Util512Higher.getRandIntInclusiveWeak(20, 200);
+        let newY = this.pr.userBounds[1] + Util512Higher.getRandIntInclusiveWeak(20, 200);
         let currentCardId = this.vci.getOutside().GetOptionS('currentCardId');
         let vel = this.createOneVelUsedOnlyByDeserialize(currentCardId, type, -1);
         assertTrue(vel instanceof VpcElSizable, '6u|not VpcElSizable');
-        vel.setDimensions(0,0, w, h, this.vci.getModel());
+        vel.setDimensions(newX,newY, w, h, this.vci.getModel());
         vel.setOnVel(
             'name',
             longstr(`my ${vpcElTypeShowInUI(vel.getType())}
-             ${this.vci.getModel().stack.getNextNumberForElemName(this.vci.getModel())}`),
+             ${this.vci.getModel().stack.getNextNumberForElemName(this.vci.getModel(), type === VpcElType.Btn)}`),
             this.vci.getModel()
         );
 
@@ -161,7 +193,46 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
             checkThrowInternal(false, "btn or fld expected")
         }
 
+        /* save *before* setting selectedVelId */
+        this.pr.lyrPropPanel.saveChangesToModel(false);
+        this.pr.lyrPropPanel.updateUI512Els();
+        this.vci.setOption('selectedVelId', vel.idInternal);
+        this.vci.setOption('viewingScriptVelId', '');
+
+        /* update before tool is set */
+        this.pr.lyrPropPanel.updateUI512Els();
+
+        /* change tool -- so we can see it selected --
+        but only do this if we're here temporarily (menuAction)
+        not from a user script calling doMenu "create button" */
+        if (this.getUpcomingTool() !== VpcTool.Browse) {
+            let needChangeTool = type === VpcElType.Btn ? VpcTool.Button : VpcTool.Field
+            this.setUpcomingTool(needChangeTool)
+        }
+        
         return vel
+    }
+
+    /**
+     * in a menu action, current tool might temporarily be browse
+     */
+    protected getUpcomingTool() {
+        if (this.vci.getTool() === VpcTool.Browse) {
+            return this.vci.getCodeExec().silenceMessagesForUIAction.val ?? this.vci.getTool()
+        } else {
+            return this.vci.getTool()
+        }
+    }
+
+    /**
+     * in a menu action, set subsequent tool
+     */
+    protected setUpcomingTool(t:VpcTool) {
+        if (this.vci.getTool() === VpcTool.Browse && this.vci.getCodeExec().silenceMessagesForUIAction.val) {
+            this.vci.getCodeExec().silenceMessagesForUIAction.val = t
+        } else {
+            this.vci.setTool(t)
+        }
     }
 
     /**

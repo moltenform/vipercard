@@ -251,6 +251,9 @@ export class VpcIntroProvider {
                 if (vel['_compatibilitymode'] === undefined) {
                     vel['_compatibilitymode'] = false;
                 }
+                if (vel['_increasingnumberforelemnamefld'] === undefined) {
+                    vel['_increasingnumberforelemnamefld'] = 1;
+                }
                 if (vel['_cardorder'] === undefined) {
                     vel['_cardorder'] = '';
                     model.stack.alterCardOrder(current => {
