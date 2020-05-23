@@ -52,7 +52,6 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
     ): O<DrawCharResult> {
         if (s === null || s === undefined) {
             assertTrue(false, '3M|tried to draw null string...');
-            return new DrawCharResult(args.boxX, args.boxX + 1, args.boxY + 1);
         }
 
         let text = new FormattedText();

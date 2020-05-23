@@ -6,9 +6,22 @@
 /* Released under the GPLv3 license */
 
 export const UI512DrawTextCharGrayed = /* static class */ {
-    maxCharWidth: 40 as const,
-    maxCharHeight: 40 as const,
+    maxCharWidth: 96 as const,
+    maxCharHeight: 96 as const,
     tempCanvas: undefined as O<CanvasWrapper>,
+    ensureTempCanvas():CanvasWrapper {
+        /* create the cached mem canvas if we don't have one */
+        if (!this.tempCanvas) {
+            this.tempCanvas = CanvasWrapper.createMemoryCanvas(
+                this.maxCharWidth,
+                this.maxCharHeight
+            );
+        }
+
+        /* erase any previous contents */
+        this.tempCanvas.clear();
+        return this.tempCanvas
+    },
     go(
         img: DrawableImage,
         dest: CanvasWrapper,
@@ -23,19 +36,9 @@ export const UI512DrawTextCharGrayed = /* static class */ {
         boxW: number,
         boxH: number
     ) {
-        /* create the cached mem canvas if we don't have one */
-        if (!this.tempCanvas) {
-            this.tempCanvas = CanvasWrapper.createMemoryCanvas(
-                this.maxCharWidth,
-                this.maxCharHeight
-            );
-        }
-
-        /* erase any previous contents */
-        this.tempCanvas.clear();
-
+        let cnvs = this.ensureTempCanvas()
         /* draw font character onto the temp canvas */
-        this.tempCanvas.drawFromImage(
+        cnvs.drawFromImage(
             img,
             srcX,
             srcY,
@@ -45,21 +48,21 @@ export const UI512DrawTextCharGrayed = /* static class */ {
             0,
             0,
             0,
-            this.tempCanvas.canvas.width,
-            this.tempCanvas.canvas.height
+            cnvs.canvas.width,
+            cnvs.canvas.height
         );
 
         /* make every other pixel transparent */
         let parity = (destX + destY) % 2;
-        this.makeCheckered(this.tempCanvas, parity);
+        this.makeCheckered(cnvs, parity);
 
         /* draw the results */
         dest.drawFromImage(
-            this.tempCanvas.canvas,
+            cnvs.canvas,
             0,
             0,
-            this.tempCanvas.canvas.width,
-            this.tempCanvas.canvas.height,
+            cnvs.canvas.width,
+            cnvs.canvas.height,
             destX,
             destY,
             boxX,

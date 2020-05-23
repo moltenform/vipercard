@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from './utilsCanvasDraw';
 /* auto */ import { getRoot } from './util512Higher';
-/* auto */ import { cast, getEnumToStrOrFallback } from './util512';
+/* auto */ import { cast } from './util512';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { IconInfo } from './../draw/ui512DrawIconClasses';
 

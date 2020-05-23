@@ -12,6 +12,7 @@
 /* auto */ import { UI512BtnStyle, UI512ElementButtonBase } from './ui512ElementButton';
 /* auto */ import { UI512Application } from './ui512ElementApp';
 /* auto */ import { UI512Element, UI512ElementWithHighlight } from './ui512Element';
+/* auto */ import { UI512DrawTextCharGrayed } from './../drawtext/ui512DrawTextCharGrayed';
 /* auto */ import { DrawTextArgs, drawTextArgsFromEl } from './../drawtext/ui512DrawTextArgs';
 /* auto */ import { UI512DrawText } from './../drawtext/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
@@ -148,11 +149,8 @@ export class UI512ViewDraw {
         b: UI512ViewDrawBorders,
         rect: O<number[]>,
         iconInfo: IconInfo,
-        overrideCentered?: boolean
     ) {
         if (rect) {
-            //~ const iconCentered =
-            //~ overrideCentered === undefined ? iconInfo.centered : overrideCentered;
             let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
             let icon = iconManager.findIcon(iconInfo.iconGroup, iconInfo.iconNumber);
             if (icon) {
@@ -207,61 +205,45 @@ export class UI512ViewDraw {
         s: string,
         styleEnabled: boolean
     ) {
-        const lineHeight = 12;
-        const marginBetween = 0;
-        let srcRect = RenderIconGroup.lookupRectangle(
+        const marginBetweenIconAndTxt = 3;
+        const assumeTxtHeight = 9;
+        let iconSrcRect = RenderIconGroup.lookupRectangle(
             iconInfo.iconGroup,
             iconInfo.iconNumber
         );
-        if (rect && srcRect) {
-            let iconH = srcRect[3] + iconInfo.adjustHeight;
-            let boxIconAndTextWidth = rect[2];
-            let boxIconAndTextHeight = iconH + marginBetween + lineHeight;
-            let boxIconAndTextX = rect[0];
-            let boxIconAndTextY =
-                rect[1] + Math.trunc((rect[3] - boxIconAndTextHeight) / 2);
 
-            if (boxIconAndTextWidth <= rect[2] && boxIconAndTextHeight <= rect[3]) {
-                let boxIconOnly = [
-                    boxIconAndTextX,
-                    boxIconAndTextY,
-                    boxIconAndTextWidth,
-                    iconH
-                ];
-                this.drawIconIfDefined(b, boxIconOnly, iconInfo);
-                let boxTextOnlyX = boxIconAndTextX;
-                let boxTextOnlyY = boxIconAndTextY + iconH + marginBetween;
-                let boxTextOnlyWidth = boxIconAndTextWidth;
-                /*
-                let boxTextOnlyHeight = Math.max(1, rect[3] - (boxTextOnlyY - rect[1]));
-                */
-
-                /* Follow what HC does and set the font to 9pt Geneva.
-                in fact, in HC no other font is supported. */
-                let style = styleEnabled ? 'biuosdce' : 'biuos+dce';
-                let labelSmall = UI512DrawText.setFont(s, `geneva_9_${style}`);
-
-                /* Follow what HC does and strip out any newlines */
-                labelSmall = labelSmall.replace(/\r|\n/g, '');
-                let boxText = [
-                    boxTextOnlyX,
-                    boxTextOnlyY,
-                    boxTextOnlyWidth,
-                    boxTextOnlyWidth
-                ];
-
-                /* Follow what HC does and do not wrap the label text, even if asked to */
-                this.drawTextIfDefined(
-                    b,
-                    boxText,
-                    labelSmall,
-                    false /* wrap */,
-                    true /* hAlign */,
-                    false /* vAlign */,
-                    styleEnabled
-                );
-            }
+        if (!rect || !iconSrcRect) {
+            return
         }
+        
+        let iconW = iconSrcRect[2] + iconInfo.adjustWidth;
+        let iconH = iconSrcRect[3] + iconInfo.adjustHeight;
+        let iconAndTextH = iconH + marginBetweenIconAndTxt + assumeTxtHeight
+        let iconX = rect[0] + Math.trunc(rect[2]/2) - Math.trunc(iconW/2)
+        let iconY = rect[1] + Math.trunc(rect[3]/2) - Math.trunc(iconAndTextH/2)
+        
+        let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
+        let icon = iconManager.findIcon(iconInfo.iconGroup, iconInfo.iconNumber);
+        if (!icon) {
+            b.complete.complete = false;
+            return
+        }
+        
+        /* draw the icon */
+        b.canvas.drawFromImage(icon.set.image, icon.srcRect[0], icon.srcRect[1], icon.srcRect[2], icon.srcRect[3],
+            iconX, iconY, rect[0], rect[1], rect[2], rect[3])
+
+        /* now draw the text */
+        /* set the font to 9pt Geneva, unless it's already been set.
+        in fact, in HC no other font is supported. */
+        let style = styleEnabled ? 'biuosdce' : 'biuos+dce';
+        let labelSmall = UI512DrawText.setFont(s, `geneva_9_${style}`);
+        labelSmall = labelSmall.replace(/\r|\n/g, '');
+        let lowestY = rect[1] + rect[3]
+        let args = new DrawTextArgs(rect[0], iconY + iconH + marginBetweenIconAndTxt, rect[2], 0, true/*hAlign*/,
+            false/*vAlign*/, false/*wrap - always make false*/)
+        args.boxH = Math.max(0, lowestY-args.boxY)
+        this.drawText(b, s, args, styleEnabled)
     }
 
     /**

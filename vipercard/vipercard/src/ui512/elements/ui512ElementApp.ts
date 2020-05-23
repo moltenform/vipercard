@@ -1,6 +1,6 @@
 
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { O, tostring, bool } from './../utils/util512Base';
+/* auto */ import { O, tostring } from './../utils/util512Base';
 /* auto */ import { ensureDefined } from './../utils/util512Assert';
 /* auto */ import { AnyParameterCtor, OrderedHash } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
