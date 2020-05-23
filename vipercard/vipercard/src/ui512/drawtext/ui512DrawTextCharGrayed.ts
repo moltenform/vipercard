@@ -6,8 +6,8 @@
 /* Released under the GPLv3 license */
 
 export const UI512DrawTextCharGrayed = /* static class */ {
-    maxCharWidth: 96 as const,
-    maxCharHeight: 96 as const,
+    maxCharWidth: 64 as const,
+    maxCharHeight: 64 as const,
     tempCanvas: undefined as O<CanvasWrapper>,
     ensureTempCanvas():CanvasWrapper {
         /* create the cached mem canvas if we don't have one */

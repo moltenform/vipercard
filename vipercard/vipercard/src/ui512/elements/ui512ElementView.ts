@@ -205,8 +205,8 @@ export class UI512ViewDraw {
         s: string,
         styleEnabled: boolean
     ) {
-        const marginBetweenIconAndTxt = 3;
-        const assumeTxtHeight = 9;
+        const marginBetweenIconAndTxt = 0;
+        const assumeTxtHeight = 12;
         let iconSrcRect = RenderIconGroup.lookupRectangle(
             iconInfo.iconGroup,
             iconInfo.iconNumber
@@ -230,8 +230,7 @@ export class UI512ViewDraw {
         }
         
         /* draw the icon */
-        b.canvas.drawFromImage(icon.set.image, icon.srcRect[0], icon.srcRect[1], icon.srcRect[2], icon.srcRect[3],
-            iconX, iconY, rect[0], rect[1], rect[2], rect[3])
+        icon.drawAtLocationAndClipFromBox(b.canvas, iconInfo, iconX, iconY, rect[0], rect[1], rect[2], rect[3] )
 
         /* now draw the text */
         /* set the font to 9pt Geneva, unless it's already been set.
@@ -243,7 +242,7 @@ export class UI512ViewDraw {
         let args = new DrawTextArgs(rect[0], iconY + iconH + marginBetweenIconAndTxt, rect[2], 0, true/*hAlign*/,
             false/*vAlign*/, false/*wrap - always make false*/)
         args.boxH = Math.max(0, lowestY-args.boxY)
-        this.drawText(b, s, args, styleEnabled)
+        this.drawText(b, labelSmall, args, styleEnabled)
     }
 
     /**

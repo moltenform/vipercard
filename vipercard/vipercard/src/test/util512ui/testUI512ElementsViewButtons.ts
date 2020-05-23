@@ -131,11 +131,16 @@ export class TestDrawUI512Buttons {
         drawBlank: boolean,
         areHighlighted: boolean,
         idPrefix: string,
-        dims = [90, 65]
+        dims = [90, 65],
+        onlyFirst:O<number> = undefined
     ) {
         let nRows = drawBlank
             ? BtnPropsToTest.BtnPropsToTestMax
             : BtnPropsToTest.NoIconNoLabel;
+        if (onlyFirst !== undefined) {
+            nRows = Math.min(onlyFirst, nRows)
+        }
+
         let rows = Util512.range(0, nRows);
         let layout = new GridLayout(
             clientX0 + 3,
@@ -182,19 +187,25 @@ export class TestDrawUI512Buttons {
         this.addButtons(fakeApp, fakeGrp, list, 1, 900, true, false, '3', [2, 2]);
 
         /* drawing very small highlighted buttons */
-        this.addButtons(fakeApp, fakeGrp, list, 500, 900, true, true, '4', [2, 2]);
+        this.addButtons(fakeApp, fakeGrp, list, 128, 900, true, true, '4', [2, 2]);
 
         /* drawing small buttons */
         this.addButtons(fakeApp, fakeGrp, list, 1, 1000, true, false, '5', [5, 5]);
 
         /* drawing small highlighted buttons */
-        this.addButtons(fakeApp, fakeGrp, list, 500, 1000, true, true, '6', [5, 5]);
+        this.addButtons(fakeApp, fakeGrp, list, 128, 1000, true, true, '6', [5, 5]);
+
+        /* drawing short and wide buttons */
+        this.addButtons(fakeApp, fakeGrp, list, 200, 860, true, false, '7', [100, 35], 3);
+
+        /* drawing short and wide highlighted buttons */
+        this.addButtons(fakeApp, fakeGrp, list, 200, 975, true, true, '8', [100, 35], 3);
 
         /* drawing tall buttons */
-        this.addButtons(fakeApp, fakeGrp, list, 1, 1100, true, false, '7', [40, 200]);
+        this.addButtons(fakeApp, fakeGrp, list, 1, 1100, true, false, '9', [40, 200]);
 
         /* drawing tall highlighted buttons */
-        this.addButtons(fakeApp, fakeGrp, list, 500, 1100, true, true, '8', [40, 200]);
+        this.addButtons(fakeApp, fakeGrp, list, 500, 1100, true, true, '10', [40, 200]);
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             for (let btn of list) {
                 view.renderElement(canvas, btn, false, complete);
