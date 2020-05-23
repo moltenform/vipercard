@@ -96,10 +96,9 @@ def transformToHtml(indir, outdir):
         os.mkdir(tmpdir)
     files.ensure_empty_directory(tmpdir)
     manifest = '''
-# This directory has the raw markdown,
-# you should instead go to https://moltenform.com
+# These are temporary files belonging to vipercard
 
-titleprefix=ViperCard - Script Reference
+titleprefix=title
 contentprefix=
 contentprefix_ifnotindex=
 contentprefix_ifindex=
@@ -128,31 +127,107 @@ end_header_generated_by_makelinkchain=
         if f.lower().endswith('.html'):
             files.delete(f)
             
-    headerfragment = files.readall(outdir+'../noship_headerfragment.html', encoding='utf-8')
+    headerfragment = files.readall(outdir+'/../noship_headerfragment.html', encoding='utf-8')
     
     for f, short in files.listfiles(tmpdir):
         if short.endswith('.html'):
             dest = files.join(outdir, short)
             files.move(f, dest, False)
             alltxt = files.readall(dest, encoding='utf-8')
-            alltxt = fixuphtml(alltxt, headerfragment)
+            alltxt = fixuphtml(short, alltxt, headerfragment)
             files.writeall(dest, alltxt, encoding='utf-8')
+    
     import shutil
     shutil.rmtree(tmpdir)
+    movePagesUp(outdir)
 
-def fixuphtml(alltxt, headerfragment):
+g_titles = {}
+g_titles['page_404'] = 'ViperCard - Page not found'
+g_titles['page_terms'] = 'ViperCard - Terms and Content Policies'
+g_titles['page_video'] = 'ViperCard - Tutorial Videos'
+g_titles['page_video1'] = 'ViperCard - Tutorial Videos - Making a GIF'
+g_titles['page_video2'] = 'ViperCard - Tutorial Videos - Making a game'
+g_titles['page_video3'] = 'ViperCard - Tutorial Videos - Making interactive art'
+g_titles['page_why'] = 'ViperCard - Rationale'
+g_titles['reference_01_overview'] = 'ViperCard - Script Reference - overview'
+g_titles['reference_02_commands'] = 'ViperCard - Script Reference - commands'
+g_titles['reference_03_syntax'] = 'ViperCard - Script Reference - syntax'
+g_titles['reference_04_properties'] = 'ViperCard - Script Reference - properties'
+g_titles['reference_05_functions'] = 'ViperCard - Script Reference - functions'
+g_titles['reference_06_events'] = 'ViperCard - Script Reference - events'
+g_titles['reference_07_compatibility'] = 'ViperCard - Script Reference - compatibility'
+navScrRef = '<div class="smalltheme-uppernavbox"><span class="linktilebuttonhspace"></span><a class="smalltheme-textwithinbox" href="/">vipercard</a><span class="smalltheme-textwithinbox"> &gt; </span><a class="smalltheme-textwithinbox" href="reference_01_overview.html">script reference</a><span class="linktilebuttonhspace"></span></div>'
+navVideo = '<div class="smalltheme-uppernavbox"><span class="linktilebuttonhspace"></span><a class="smalltheme-textwithinbox" href="/">vipercard</a><span class="smalltheme-textwithinbox"> &gt; </span><a class="smalltheme-textwithinbox" href="video.html">tutorial vids</a><span class="linktilebuttonhspace"></span></div>'
+g_nav = {}
+g_nav['page_404'] = '<div class="smalltheme-uppernavbox"><span class="linktilebuttonhspace"></span><a class="smalltheme-textwithinbox" href="/">vipercard</a><span class="smalltheme-textwithinbox"><span class="linktilebuttonhspace"></span></div>'
+g_nav['page_terms'] = '<div class="smalltheme-uppernavbox"><span class="linktilebuttonhspace"></span><a class="smalltheme-textwithinbox" href="/">vipercard</a><span class="smalltheme-textwithinbox"><span class="linktilebuttonhspace"></span></div>'
+g_nav['page_video'] = navVideo
+g_nav['page_video1'] = navVideo
+g_nav['page_video2'] = navVideo
+g_nav['page_video3'] = navVideo
+g_nav['page_why'] = '<div class="smalltheme-uppernavbox"><span class="linktilebuttonhspace"></span><a class="smalltheme-textwithinbox" href="/">vipercard</a><span class="smalltheme-textwithinbox"> &gt; </span><a class="smalltheme-textwithinbox" href="#">Why</a><span class="linktilebuttonhspace"></span></div>'
+g_nav['reference_01_overview'] = navScrRef
+g_nav['reference_02_commands'] = navScrRef
+g_nav['reference_03_syntax'] = navScrRef
+g_nav['reference_04_properties'] = navScrRef
+g_nav['reference_05_functions'] = navScrRef
+g_nav['reference_06_events'] = navScrRef
+g_nav['reference_07_compatibility'] = navScrRef
+g_descriptions={}
+g_descriptions['page_404'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['page_terms'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['page_video'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['page_video1'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['page_video2'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['page_video3'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['page_why'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['reference_01_overview'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['reference_02_commands'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['reference_03_syntax'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['reference_04_properties'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['reference_05_functions'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['reference_06_events'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+g_descriptions['reference_07_compatibility'] = 'ViperCard, an open source HyperCard, make interactive 1 bit art and games like Macintosh'
+
+def fixuphtml(short, alltxt, headerfragment):
+    
     def replExpectAtLeastOne(s1, s2):
         nonlocal alltxt
         assertTrue(s1 in alltxt, "not seen", s1)
         alltxt = alltxt.replace(s1, s2)
-    replExpectAtLeastOne('md">', 'html">')
+    if not 'page' in short:
+        replExpectAtLeastOne('md">', 'html">')
+    key = short.split('.')[0]
     replExpectAtLeastOne('<head>', '<head><!-- Styles by GithubMarkdown, MIT license, Sindre Sorhus -->\n'+headerfragment+'\n')
     replExpectAtLeastOne('<div class="smalltheme-uppernavbox"><span class="linktilebuttonhspace"></span><a href="/"><div class="linktilebutton linktilebutton_narrow linktilebutton_homenarrow"><img class="linktilebuttonicon linktilebuttonicon_home" src="/resources03a/images/pages/hm.png" alt="home" /><br />Home</div></a><span class="linktilebuttonhspace"></span></div>', 
-        '<div class="smalltheme-uppernavbox"><span class="linktilebuttonhspace"></span><a class="smalltheme-textwithinbox" href="/">vipercard</a><span class="smalltheme-textwithinbox"> &gt; </span><a class="smalltheme-textwithinbox" href="reference_01_overview.html">script reference</a><span class="linktilebuttonhspace"></span></div>')
+        g_nav[key])
     replExpectAtLeastOne('<link rel="stylesheet" href="../github-markdown/github-markdown.css">', '<link rel="stylesheet" href="./github-markdown.css">')
     replExpectAtLeastOne('<link rel="stylesheet" href="../smalltheme.css">', '<link rel="stylesheet" href="./smalltheme.css">')
     alltxt = alltxt.replace('example videos.', 'example videos (<a href="../video.html">here</a>).')
+    alltxt = re.sub(r'<title>(.*?)</title>', rf'<title>{g_titles[key]}</title>', alltxt)
+    alltxt = alltxt.replace('%%keywords%%', g_descriptions[key]+', '+g_titles[key])
+    alltxt = alltxt.replace('%%description%%', g_descriptions[key]+', '+g_titles[key])
     return alltxt
+
+def fixuphtmlpage(alltxt):
+    def replExpectAtLeastOne(s1, s2):
+        nonlocal alltxt
+        assertTrue(s1 in alltxt, "not seen", s1)
+        alltxt = alltxt.replace(s1, s2)
+    
+    replExpectAtLeastOne('<link rel="stylesheet" href="./smalltheme.css">', '<link rel="stylesheet" href="./script_reference/smalltheme.css">')
+    replExpectAtLeastOne('<link rel="stylesheet" href="./github-markdown.css">', '<link rel="stylesheet" href="./script_reference/github-markdown.css">')
+    return alltxt
+
+def movePagesUp(outdir):
+    for f, short in files.listfiles(outdir):
+        if short.startswith('page_'):
+            dest = f'{outdir}/../{short.replace("page_", "")}'
+            files.move(f, dest, True) # overwrite existing
+            # fix html
+            alltxt = files.readall(dest, encoding='utf-8')
+            alltxt = fixuphtmlpage(alltxt)
+            files.writeall(dest, alltxt, encoding='utf-8')
 
 if __name__=='__main__':
     outdir = r'..\vipercard\0.3\html\script_reference'

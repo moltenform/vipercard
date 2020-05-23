@@ -36,12 +36,8 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     constructor(protected vci: VpcStateInterface, public type: DialogDocsType) {
         super('VpcNonModalDocViewer' + Math.random());
 
-        /* set size of window */
-        if (this.type === DialogDocsType.Examples) {
-            VpcNonModalFormBase.largeWindowBounds(this, vci);
-        } else {
-            VpcNonModalFormBase.standardWindowBounds(this, vci);
-        }
+        /* set size of window. LargeWindowBounds is an alternative */
+        VpcNonModalFormBase.standardWindowBounds(this, vci);
     }
 
     /**

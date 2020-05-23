@@ -1,5 +1,4 @@
-
-<iframe width="900" height="480" src="https://www.youtube.com/embed/9Jyh-EXsH4w?rel=0&autoplay=1" style="border:0px" allowfullscreen="true"></iframe>
+<iframe width="450" height="240" src="https://www.youtube.com/embed/9Jyh-EXsH4w?rel=0&autoplay=1" style="border:0px" allowfullscreen="true"></iframe>
 
 <h3><a href="video1.html" style="color:black;">Demo 1: make an animated GIF</a></h3>
 <h3><a href="video2.html" style="color:black;">Demo 2: make a game</a></h3>
