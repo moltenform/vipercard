@@ -146,6 +146,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
         /* when a runtime option changes: */
         /* - set a flag in observeRuntimeOptChanges that we'll check during render */
         this.vci.getCodeExec().directiveImpl = new VpcExecInternalDirectiveFull(this, this.vci)
+        this.vci.getCodeExec().directiveImpl.outside = this.vci.getOutside()
         this.vci.getCodeExec().cbOnScriptError = scriptErr => this.defaultShowScriptErr(scriptErr);
         this.vci.getCodeExec().cbCauseUIRedraw = () => this.lyrModelRender.uiRedrawNeeded();
         this.vci.getCodeExec().cbSetRealTool = (tl:VpcTool) => this.vci.setTool(tl)

@@ -159,10 +159,10 @@ export class VpcExecTop {
 
         let codeRunningAfter = this.isCodeRunning();
         if (codeRunningBefore !== codeRunningAfter && this.cbCauseUIRedraw) {
-            if (codeRunningAfter === false) {
-                this.resetAfterFrameStackIsDone();
-            }
             this.cbCauseUIRedraw();
+        }
+        if (codeRunningBefore !== codeRunningAfter && !codeRunningAfter) {
+            this.resetAfterFrameStackIsDone();
         }
     }
 
@@ -195,7 +195,6 @@ export class VpcExecTop {
      * some state should be reset after the call returns.
      */
     resetAfterFrameStackIsDone() {
-        console.log(Math.random())
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         VpcCurrentScriptStage.latestDestLineSeen = undefined;
         VpcCurrentScriptStage.origClass = undefined;

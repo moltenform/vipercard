@@ -23,8 +23,6 @@ end vpcinternaluntrappabledomenu
 
 on domenu itemName, pb
     global doMenuResult
-    answer "yay" && itemName && pb
-    answer "fgdgdfg"
     put "" into doMenuResult
     put tolowercase(itemName) into pl
     if "|" is in pl then
@@ -32,14 +30,13 @@ on domenu itemName, pb
     end if
     put false into handled
     put "|" & pl & "|" into key
-    if not handled then put handled and domenu_edit(key, pl, pb) into handled
-    if not handled then put handled and domenu_movecard(key, pl, pb) into handled
-    if not handled then put handled and domenu_object(key, pl, pb) into handled
-    if not handled then put handled and domenu_paintsetting(key, pl, pb) into handled
-    if not handled then put handled and domenu_changefont(key, pl, pb) into handled
-    if not handled then put handled and domenu_changefontsize(key, pl, pb) into handled
-    if not handled then put handled and domenu_changetextstyle(key, pl, pb) into handled
-    if not handled then put handled and domenu_changetextstyletoggle(key, pl, pb) into handled
+    if not handled then put domenu_edit(key, pl, pb) into handled
+    if not handled then put domenu_movecard(key, pl, pb) into handled
+    if not handled then put domenu_object(key, pl, pb) into handled
+    if not handled then put domenu_paintsetting(key, pl, pb) into handled
+    if not handled then put domenu_changefont(key, pl, pb) into handled
+    if not handled then put domenu_changefontsize(key, pl, pb) into handled
+    if not handled then put domenu_changefontstyle(key, pl, pb) into handled
     if not handled then
         errorDialog ("Unknown domenu" && pl)
     end if
@@ -64,7 +61,6 @@ end domenu_edit
 on domenu_object key, pl, pb
     global doMenuResult
     put true into ret
-    answer key && pl && pb
     if pl == "new button" then
         send "newButton" to this cd
         put "btn" into sendParam
@@ -168,7 +164,7 @@ end domenu_paintsetting
 
 on domenu_changefont key, pl, pb
     put "|chicago|courier|geneva|new york|times|helvetica|monaco|symbol|" into keys
-    if key in keys then
+    if key is in keys then
         if "setAll|" in pb then
             replace "setAll|" with "" in pb
             set the textfont of pb to pl
@@ -183,7 +179,7 @@ end domenu_changefont
 
 on domenu_changefontsize key, pl, pb
     put "|9|10|12|14|18|24|" into keys
-    if key in keys then
+    if key is in keys then
         if "setAll|" in pb then
             replace "setAll|" with "" in pb
             set the textsize of pb to pl
@@ -198,7 +194,7 @@ end domenu_changefontsize
 
 on domenu_changefontstyle key, pl, pb
     put "|plain|bold|italic|underline|outline|condense|extend|grayed|" into keys
-    if key in keys then
+    if key is in keys then
         if "setAll|" in pb then
             replace "setAll|" with "" in pb
             set the textstyle of pb to plain
