@@ -1,4 +1,10 @@
-    
+
+function cerror(s) {
+    if (console && console.error) {
+        console.error(s)
+    }
+}
+
 function newBrowserDetect() {
     var s = window.navigator.userAgent;
     var obj = bowser.parse(s);
@@ -7,7 +13,7 @@ function newBrowserDetect() {
         return 'mobile'
     } else {
         var rawBrowser = obj && obj.browser && obj.browser.name
-        if (rawBrowser == BROWSER_MAP.ie || rawBrowser == BROWSER_MAP.edge) {
+        if (rawBrowser == bowser.BROWSER_MAP.ie || rawBrowser == bowser.BROWSER_MAP.edge) {
             return 'notstart'
         } else {
             return 'canstart'
@@ -88,14 +94,14 @@ function goImpl() {
     try {
         typ = newBrowserDetect()
     } catch (e) {
-        console.err(e.toString());
+        cerror(e.toString());
     }
 
     if (typ == undefined) {
         try {
             typ = oldBrowserDetect()
         } catch (e) {
-            console.err(e.toString());
+            cerror(e.toString());
         }
     }
 
@@ -121,7 +127,7 @@ function go() {
     try {
         goImpl()
     } catch (e) {
-        console.err(e.toString());
+        cerror(e.toString());
     }  
 }
 

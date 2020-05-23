@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from './utilsCanvasDraw';
 /* auto */ import { getRoot } from './util512Higher';
-/* auto */ import { cast } from './util512';
+/* auto */ import { cast, getEnumToStrOrFallback } from './util512';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { IconInfo } from './../draw/ui512DrawIconClasses';
 
@@ -365,6 +365,13 @@ export class UI512CursorAccess {
             UI512CursorAccess.lastDrawnMy = UI512CursorAccess.currentMy;
             UI512CursorAccess.lastDrawnCur = UI512CursorAccess.currentCursor;
             return;
+        }
+
+        /* we're not using a css cursor - 
+        prevent there from being 2 cursors shown */
+        let el = window.document.getElementById('mainDomCanvas');
+        if (el) {
+            el.style.cursor = 'none'
         }
 
         if (
