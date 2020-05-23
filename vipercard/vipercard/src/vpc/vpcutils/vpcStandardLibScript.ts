@@ -232,18 +232,6 @@ end internalvpcdeletevelhelper_bg
 --    send "openbackground" to cd id nextCard
 --    send "opencard" to cd id nextCard
 --end internalvpcnewbghelper
---
---on internalvpcnewcdhelper
---    put the short id of this cd into prevCard
---    internalvpcmessagesdirective "closeorexitfield" prevCard
---    send "closecard" to cd id prevCard
---    internalvpcmessagesdirective "makenewcdsendnomessages"
---    put the result into nextCard
---    internalvpcmessagesdirective "gotocardsendnomessages" nextCard
---    send "newcard" to cd id nextCard
---    send "opencard" to cd id nextCard
---end internalvpcnewcdhelper
-
 
 
        `.replace(/\r\n/g, '\n')

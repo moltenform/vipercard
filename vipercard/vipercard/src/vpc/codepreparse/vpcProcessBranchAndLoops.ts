@@ -71,7 +71,7 @@ export class BranchProcessing {
      */
     go(line: VpcCodeLine) {
         if (this.stack.length === 0 && line.ctg !== VpcLineCategory.HandlerStart) {
-            checkThrow(false, `5q|only 'on mouseup' and 'function myfunction' can exist at this scope`);
+            checkThrow(false, `5q|code outside function? only 'on mouseup' and 'function myfunction' can exist at this scope`);
         } else if (this.stack.length > 0 && line.ctg === VpcLineCategory.HandlerStart) {
             checkThrow(false, `5p|cannot begin a handler inside an existing handler`);
         }
