@@ -141,7 +141,7 @@ export class VpcExecTop {
      * run code, and trigger UI refresh
      */
     runTimeslice(ms: number) {
-        if (!this.haveSentOpenStack) {
+        if (!this.haveSentOpenStack && !this.silenceMessagesForUIAction.val) {
             this.haveSentOpenStack = true;
             this.sendInitialOpenStackAndOpenCard();
         }
@@ -159,7 +159,9 @@ export class VpcExecTop {
 
         let codeRunningAfter = this.isCodeRunning();
         if (codeRunningBefore !== codeRunningAfter && this.cbCauseUIRedraw) {
-            this.resetAfterFrameStackIsDone();
+            if (codeRunningAfter === false) {
+                this.resetAfterFrameStackIsDone();
+            }
             this.cbCauseUIRedraw();
         }
     }
@@ -193,6 +195,7 @@ export class VpcExecTop {
      * some state should be reset after the call returns.
      */
     resetAfterFrameStackIsDone() {
+        console.log(Math.random())
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         VpcCurrentScriptStage.latestDestLineSeen = undefined;
         VpcCurrentScriptStage.origClass = undefined;

@@ -79,17 +79,17 @@ export const VpcRewritesGlobal = /* static class */ {
             line[i - 1].tokenType === tks.tkOfOnly &&
             line[i].tokenType === tks._the &&
             line[i + 1].tokenType === tks._target) {
-                return false
+                return true
             }
         
         /* transform 'the params()' into 'the params' */
         if (i >= 2 && line[i].tokenType === tks.tkLParen && this.fixOldSyntaxFor[line[i-1].image] && line[i-2].tokenType === tks._the) {
-            return false
+            return true
         } else if (i >= 3 && line[i].tokenType === tks.tkRParen && line[i-1].tokenType === tks.tkLParen && this.fixOldSyntaxFor[line[i-2].image] && line[i-3].tokenType === tks._the) {
-            return false
+            return true
         }
 
-        return true
+        return false
     },
 
     /**

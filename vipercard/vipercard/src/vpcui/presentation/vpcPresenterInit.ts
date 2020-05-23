@@ -148,6 +148,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
         this.vci.getCodeExec().directiveImpl = new VpcExecInternalDirectiveFull(this, this.vci)
         this.vci.getCodeExec().cbOnScriptError = scriptErr => this.defaultShowScriptErr(scriptErr);
         this.vci.getCodeExec().cbCauseUIRedraw = () => this.lyrModelRender.uiRedrawNeeded();
+        this.vci.getCodeExec().cbSetRealTool = (tl:VpcTool) => this.vci.setTool(tl)
         this.vci.getCodeExec().runStatements.cbAnswerMsg = (a, b, c, d, e) => this.answerMsg(a, b, c, d, e);
         this.vci.getCodeExec().runStatements.cbAskMsg = (a, b, c) => this.askMsg(a, b, c);
         this.vci.getCodeExec().runStatements.cbStopCodeRunning = () => {

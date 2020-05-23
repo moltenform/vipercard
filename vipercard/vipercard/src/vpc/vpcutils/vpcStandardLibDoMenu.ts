@@ -17,13 +17,14 @@ on vpcinternaluntrappabledomenu itemName, pb
     if the shiftKey is down then
         domenu itemName, pb
     else
-        send "domenu "&quote&"itemName"&quote&", "&quote&pb&quote to this cd
+        send ("domenu "&quote&itemName&quote&", "&quote&pb&quote) to this cd
     end if
 end vpcinternaluntrappabledomenu
 
 on domenu itemName, pb
-
     global doMenuResult
+    answer "yay" && itemName && pb
+    answer "fgdgdfg"
     put "" into doMenuResult
     put tolowercase(itemName) into pl
     if "|" is in pl then
@@ -31,14 +32,14 @@ on domenu itemName, pb
     end if
     put false into handled
     put "|" & pl & "|" into key
-    put handled and domenu_edit(key, pl, pb) into handled
-    put handled and domenu_movecard(key, pl, pb) into handled
-    put handled and domenu_object(key, pl, pb) into handled
-    put handled and domenu_paintsetting(key, pl, pb) into handled
-    put handled and domenu_changefont(key, pl, pb) into handled
-    put handled and domenu_changefontsize(key, pl, pb) into handled
-    put handled and domenu_changetextstyle(key, pl, pb) into handled
-    put handled and domenu_changetextstyletoggle(key, pl, pb) into handled
+    if not handled then put handled and domenu_edit(key, pl, pb) into handled
+    if not handled then put handled and domenu_movecard(key, pl, pb) into handled
+    if not handled then put handled and domenu_object(key, pl, pb) into handled
+    if not handled then put handled and domenu_paintsetting(key, pl, pb) into handled
+    if not handled then put handled and domenu_changefont(key, pl, pb) into handled
+    if not handled then put handled and domenu_changefontsize(key, pl, pb) into handled
+    if not handled then put handled and domenu_changetextstyle(key, pl, pb) into handled
+    if not handled then put handled and domenu_changetextstyletoggle(key, pl, pb) into handled
     if not handled then
         errorDialog ("Unknown domenu" && pl)
     end if
@@ -63,6 +64,7 @@ end domenu_edit
 on domenu_object key, pl, pb
     global doMenuResult
     put true into ret
+    answer key && pl && pb
     if pl == "new button" then
         send "newButton" to this cd
         put "btn" into sendParam
