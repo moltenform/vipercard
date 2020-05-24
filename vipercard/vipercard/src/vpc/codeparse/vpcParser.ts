@@ -524,26 +524,14 @@ RuleObjectInterpretedFromString = this.RULE('RuleObjectInterpretedFromString', (
 this.OR1([
 {
 ALT: () => {
-this.SUBRULE1(this.RuleHAnyAllowedVariableName)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHOldStyleFnNonNullary)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHOldStyleFnNullaryOrNullaryPropGet)
-}
-},
-{
-ALT: () => {
 this.CONSUME1(tks.tkStringLiteral)
 }
 },
 {
 ALT: () => {
+this.OPTION1(() => {
+this.CONSUME1(tks._the)
+});
 this.CONSUME1(tks._target)
 }
 },
@@ -552,6 +540,22 @@ ALT: () => {
 this.CONSUME1(tks.tkLParen)
 this.SUBRULE1(this.RuleExpr)
 this.CONSUME1(tks.tkRParen)
+}
+},
+{
+ALT: () => {
+this.SUBRULE1(this.RuleHAnyAllowedVariableName)
+}
+},
+{
+ALT: () => {
+this.CONSUME2(tks._the)
+this.OPTION2(() => {
+this.CONSUME1(tks.tkAdjective)
+});
+this.CONSUME1(tks.tkAllUnaryPropertiesIfNotAlready)
+this.CONSUME1(tks.tkOfOnly)
+this.SUBRULE1(this.RuleObject)
 }
 }
 ]);

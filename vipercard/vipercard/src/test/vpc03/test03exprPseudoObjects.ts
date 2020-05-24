@@ -27,24 +27,24 @@ t.test('03exprObjectInterpretedFromString', () => {
     h3.pr.getSelectedFieldVel = () => h3.vcstate.model.getById(VpcElField, h3.ids.fBC1)
     
     let b = new ScriptTestBatch();
-    /* HOldStyleFnNonNullary */
-    b.t(`put "cd btn ${h3.ids.go}" into x\nthe short id of the owner of x`, `${h3.ids.cdA}`)
-    /* HOldStyleFnNullaryOrNullaryPropGet */
-    b.t(`the short id of the selectedField`, `${h3.ids.fBC1}`)
+    /* HUnaryPropertyGet */
+    b.t(`put "cd btn id ${h3.ids.go}" into x\\the short id of the owner of x`, `${h3.ids.cdA}`)
     /* tkStringLiteral */
-    b.t(`the short id of "cd btn ${h3.ids.bBC1}"`, `${h3.ids.bBC1}`)
+    b.t(`the short id of "cd btn id ${h3.ids.bBC1}"`, `${h3.ids.bBC1}`)
     /* HAnyAllowedVariableName 1 */
-    b.t(`put "cd btn ${h3.ids.bDE1}" into x\nthe short id of x`, `${h3.ids.bDE1}`)
+    b.t(`put "cd btn id ${h3.ids.bDE1}" into x\\the short id of x`, `${h3.ids.bDE1}`)
     /* HAnyAllowedVariableName 2 */
-    b.t(`put "cd btn ${h3.ids.bDE1}" into a\nthe short id of a`, `${h3.ids.bDE1}`)
+    b.t(`put "cd btn id ${h3.ids.bDE1}" into a\\the short id of a`, `${h3.ids.bDE1}`)
     /* _target 1 */
     b.t(`the short id of target`, `${h3.ids.go}`)
-    /* _target 2 */
+    /* HOldStyleFnNullaryOrNullaryPropGet or _target 2 */
     b.t(`the short id of the target`, `${h3.ids.go}`)
     /* parens 1 */
-    b.t(`the short id of ("cd btn ${h3.ids.bBC1}")`, `${h3.ids.bBC1}`)
+    b.t(`the short id of ("cd btn id ${h3.ids.bBC1}")`, `${h3.ids.bBC1}`)
     /* parens 2 */
-    b.t(`the short id of ("cd" && "btn" && ${h3.ids.bBC1})`, `${h3.ids.bBC1}`)
+    b.t(`the short id of ("cd" && "btn id" && ${h3.ids.bBC1})`, `${h3.ids.bBC1}`)
+    /* parens 3 */
+    b.t(`put "cd btn id ${h3.ids.go}" into x\\the short id of (the owner of x)`, `${h3.ids.cdA}`)
     //~ todo: difference between target and the target, see internaldocs
     //~ need bg support to fully test it
     b.batchEvaluate(h3);

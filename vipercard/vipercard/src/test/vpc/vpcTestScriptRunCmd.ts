@@ -522,9 +522,6 @@ t.test('execCommands delete', () => {
     /* not yet supported */
     b.t('put "abcdef,123,456" into initlist\\0', '0');
     b.t('put initlist into x\\0', '0');
-    //~ b.t('delete cd btn "a1"\\0', '');
-    //~ b.t('delete cd fld "a1"\\0', '');
-    //~ b.t('delete cd 1\\0', '');
     b.t('put "a" into x\ndelete x\\0', 'ERR:5:expected something like');
 
     /* normal chunks */

@@ -213,19 +213,26 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 let resolved = this.outside.ResolveContainerReadable(req);
                 val = VpcValS(resolved.getRawString());
             } else if (ctx._target && ctx._target[0]) {
-                /* here we're looking up a true object, not reading the results of a variable */
+                /* note: here we're looking up a true object, not reading the results of a variable */
                 let ref = new RequestedVelRef(VpcElType.Unknown);
                 ref.isReferenceToTarget = true;
                 return ref;
-            } else if (ctx.RuleHOldStyleFnNonNullary && ctx.RuleHOldStyleFnNonNullary[0]) {
-                val = this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
-            } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
-                val = this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]);
             } else if (ctx.RuleExpr && ctx.RuleExpr[0]) {
                 val = this.visit(ctx.RuleExpr[0]);
             } else if (ctx.tkStringLiteral && ctx.tkStringLiteral[0]) {
                 let im = ctx.tkStringLiteral[0].image;
                 val = VpcValS(im.slice(1, -1));
+            } else if (ctx.tkAllUnaryPropertiesIfNotAlready && ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
+                /* get the short id of the owner of cd btn 1 */
+                checkThrow(ctx.RuleObject && ctx.RuleObject[0], "RuleObject is undefined")
+                let velRef = this.visit(ctx.RuleObject[0]);
+                checkThrow(velRef instanceof RequestedVelRef, `99|internal error, expected RuleObject to be a RequestedElRef`);
+                let adjective =
+                ctx.tkAdjective && ctx.tkAdjective[0]
+                    ? getStrToEnum<PropAdjective>(PropAdjective, 'PropAdjective', ctx.tkAdjective[0].image)
+                    : PropAdjective.Empty;
+                let propName = ctx.tkAllUnaryPropertiesIfNotAlready[0].image
+                val = this.outside.GetProp(velRef, propName, adjective, undefined);
             } else {
                 checkThrow(false, 'SB|no branch');
             }

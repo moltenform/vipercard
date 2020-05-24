@@ -57,7 +57,7 @@ t.test('getProp', () => {
 
     /* invalid */
     b.t(`the short id of xyz`, `ERR:no variable`);
-    b.t(`the short id of the xyz`, `ERR:no such function`);
+    b.t(`the short id of the xyz`, `ERR:parse err`);
 
     /* target, me, productOpts have different behavior
         confirmed these in emulator */

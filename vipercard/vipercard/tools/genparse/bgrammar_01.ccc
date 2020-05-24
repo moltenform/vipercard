@@ -239,8 +239,14 @@ ObjectStack:={<Position> { tkStack | tkStackAtEndOfLine} | tkStack <Lvl6Expressi
 
 
 ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef
-// support variables, HOldStyleFnNonNullary (basically for the target), and HOldStyleFnNullaryOrNullaryPropGet (basically for the owner of),
-ObjectInterpretedFromString:={ <HAnyAllowedVariableName> | <HOldStyleFnNonNullary> |  <HOldStyleFnNullaryOrNullaryPropGet> | tkStringLiteral | _target | tkLParen <Expr> tkRParen }              --->Custom--->RequestedVelRef
+
+// ObjectInterpretedFromString:
+// don't need to support HOldStyleFnNonNullary
+// future possibility: allow HOldStyleFnNullaryOrNullaryPropGet to support 'the target', and HUnaryPropertyGet to support 'the owner of'. now use tkAllUnaryPropertiesIfNotAlready for owner.
+// since HUnaryPropertyGet has an optional "the", it's complicated to do that now.
+// original product allows an hchunk: 'get the short id of line 3 of cd fld "a"' but that would make 'get the textfont of line 3 of cd fld "a"' ambiguous.
+// so I won't support an hchunk for now, you'll have to use parens
+ObjectInterpretedFromString:={ tkStringLiteral | [_the] _target | tkLParen <Expr> tkRParen | <HAnyAllowedVariableName> | _the [tkAdjective] tkAllUnaryPropertiesIfNotAlready tkOfOnly <Object> }       --->Custom--->RequestedVelRef
 
 // CONFIRMED THIS COMPLEX BEHAVIOR IN EMULATOR:
 // "target" and "the target" have subtly different behavior
