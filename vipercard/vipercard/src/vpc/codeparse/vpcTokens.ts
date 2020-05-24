@@ -533,7 +533,7 @@ pattern: /(?:<>)|(?:>=?)|(?:<=?)|(?:!=)|(?:==?)|(?:\xB2)|(?:\xB3)|(?:\xAD)/i,
 });
 tks.tkUnaryVipercardProperties = chevrotain.createToken({
 name: "tkUnaryVipercardProperties",
-pattern: /(?:alltext(?![a-zA-Z0-9_]))|(?:label(?![a-zA-Z0-9_]))|(?:showlabel(?![a-zA-Z0-9_]))|(?:singleline(?![a-zA-Z0-9_]))|(?:defaulttextstyle(?![a-zA-Z0-9_]))|(?:defaulttextfont(?![a-zA-Z0-9_]))|(?:defaulttextsize(?![a-zA-Z0-9_]))/i,
+pattern: /(?:alltext(?![a-zA-Z0-9_]))|(?:label(?![a-zA-Z0-9_]))|(?:showlabel(?![a-zA-Z0-9_]))|(?:singleline(?![a-zA-Z0-9_]))|(?:defaulttextstyle(?![a-zA-Z0-9_]))|(?:defaulttextfont(?![a-zA-Z0-9_]))|(?:defaulttextsize(?![a-zA-Z0-9_]))|(?:internalid(?![a-zA-Z0-9_]))|(?:compatibilitymode(?![a-zA-Z0-9_]))/i,
 });
 tks.tkAllUnaryPropertiesIfNotAlready = chevrotain.createToken({
 name: "tkAllUnaryPropertiesIfNotAlready",
@@ -712,6 +712,8 @@ listOfAllWordLikeTokens['singleline'] = tks.tkUnaryVipercardProperties;
 listOfAllWordLikeTokens['defaulttextstyle'] = tks.tkUnaryVipercardProperties;
 listOfAllWordLikeTokens['defaulttextfont'] = tks.tkUnaryVipercardProperties;
 listOfAllWordLikeTokens['defaulttextsize'] = tks.tkUnaryVipercardProperties;
+listOfAllWordLikeTokens['internalid'] = tks.tkUnaryVipercardProperties;
+listOfAllWordLikeTokens['compatibilitymode'] = tks.tkUnaryVipercardProperties;
 listOfAllWordLikeTokens['autohilite'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['autoselect'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['autotab'] = tks.tkAllUnaryPropertiesIfNotAlready;

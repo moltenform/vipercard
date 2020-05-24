@@ -190,7 +190,7 @@ tkGreaterOrLessEqualOrEqual=OneOfOr(<> |or| >=? |or| <=? |or| != |or| ==? |or| \
 // the sin of cd fld 1 -- retrieves the *contents* of cd fld 1
 // the list below contains only the long form, synonyms like 'loc' will be rewritten via rewritePropertySynonyms
 // checkmark isn't new to us, it is already in list
-tkUnaryVipercardProperties=OneOfWords(alltext,label,showlabel,singleline,defaulttextstyle,defaulttextfont,defaulttextsize)
+tkUnaryVipercardProperties=OneOfWords(alltext,label,showlabel,singleline,defaulttextstyle,defaulttextfont,defaulttextsize,internalid,compatibilitymode)
 
 /* generated code, any changes past this point will be lost: --------------- */
 tkAllUnaryPropertiesIfNotAlready=OneOfWords(autohilite,autoselect,autotab,bottom,bottomright,cantabort,cantdelete,cantmodify,cantpeek,checkmark,commandchar,dontsearch,dontwrap,enabled,family,fixedlineheight,freesize,height,hilite,icon,left,location,locktext,markchar,menumessage,multiplelines,name,owner,partnumber,rectangle,reporttemplates,right,script,scroll,sharedhilite,sharedtext,showlines,showname,showpict,size,style,textalign,titlewidth,top,topleft,visible,widemargins,width,zoomed)

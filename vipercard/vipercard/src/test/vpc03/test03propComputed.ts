@@ -74,8 +74,9 @@ t.test('03owner computed property', () => {
     for (let compatmode of [true, false]) {
         let b = new ScriptTestBatch()
         b.t(`set the compatibilitymode of this stack to ${compatmode}\\1`, `1`)
-        b.t(`the owner of ${cProductName}`, `ERR:fff`)
-        b.t(`the owner of this stack`, `ERR:fff`)
+        b.t(`set the name of this stack to ""\\1`, `1`)
+        b.t(`the owner of ${cProductName}`, `ERR:Cannot get owner`)
+        b.t(`the owner of this stack`, `ERR:Cannot get owner`)
         b.t(`the owner of bg 1`, `stack id ${h3.ids.stack}`)
         b.t(`the long owner of bg 1`, `stack id ${h3.ids.stack}`)
         b.t(`the short owner of bg 1`, `${h3.ids.stack}`)
@@ -115,22 +116,23 @@ t.test('03target computed property', () => {
     let b = new ScriptTestBatch()
     b.t(`set the compatibilitymode of this stack to true\\1`, `1`)
     b.t(`the target`, `card button "go"`)
-    b.t(`the long target`, `card button "go" of cd "a" of stack ""`)
+    b.t(`the long target`, `card button "go" of card "a" of stack ""`)
     b.t(`the short target`, `go`)
     b.t(`set the compatibilitymode of this stack to false\\1`, `1`)
     b.t(`the target`, `card button id ${h3.ids.go}`)
     b.t(`the long target`, `card button id ${h3.ids.go}`)
-    b.t(`the short target`, `go`)
+    b.t(`the short target`, `${h3.ids.go}`)
     b.batchEvaluate(h3);
 })
 t.test('03date computed property', () => {
     let b = new ScriptTestBatch()
     b.t(`global d1\\1`, `1`)
-    b.t(`put d1 & "~" & the date after d1\\1`, `1`)
-    b.t(`put d1 & "~" & the short date after d1\\1`, `1`)
-    b.t(`put d1 & "~" & the abbrev date after d1\\1`, `1`)
-    b.t(`put d1 & "~" & the long date after d1\\1`, `1`)
-    b.t(`put d1 & "~" & the English date after d1\\1`, `1`)
+    b.t(`put "" into d1\\1`, `1`)
+    b.t(`put "~" & the date after d1\\1`, `1`)
+    b.t(`put "~" & the short date after d1\\1`, `1`)
+    b.t(`put "~" & the abbrev date after d1\\1`, `1`)
+    b.t(`put "~" & the long date after d1\\1`, `1`)
+    b.t(`put "~" & the English date after d1\\1`, `1`)
     b.batchEvaluate(h3);
     let d1 = h3.vcstate.vci.getCodeExec().globals.get('d1')
     let pts = d1.readAsString().split('~')
@@ -142,19 +144,19 @@ t.test('03date computed property', () => {
     assertWarn(/[a-zA-Z]+, [a-zA-Z]+ [0-9]+, [0-9]+/.test(pts[5]), '')
     let testDateUtils:any = Util512.shallowClone(VpcBuiltinFunctionsDateUtils)
     testDateUtils._getDateCurrent = () => {
-        return [1, 0, 1900]
+        return [0, 1, 0, 1900]
     }
-    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Abbrev), '')
-    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Empty), '')
-    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Long), '')
-    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Short), '')
+    assertWarnEq('Sun, Jan 1, 1900', testDateUtils.go(PropAdjective.Abbrev).readAsString(), '')
+    assertWarnEq('1/1/1900', testDateUtils.go(PropAdjective.Empty).readAsString(), '')
+    assertWarnEq('Sunday, January 1, 1900', testDateUtils.go(PropAdjective.Long).readAsString(), '')
+    assertWarnEq('1/1/1900', testDateUtils.go(PropAdjective.Short).readAsString(), '')
     testDateUtils._getDateCurrent = () => {
-        return [31, 11, 2025]
+        return [6, 31, 11, 2025]
     }
-    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Abbrev), '')
-    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Empty), '')
-    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Long), '')
-    assertWarnEq('ffff', testDateUtils.go(PropAdjective.Short), '')
+    assertWarnEq('Sat, Dec 31, 2025', testDateUtils.go(PropAdjective.Abbrev).readAsString(), '')
+    assertWarnEq('12/31/2025', testDateUtils.go(PropAdjective.Empty).readAsString(), '')
+    assertWarnEq('Saturday, December 31, 2025', testDateUtils.go(PropAdjective.Long).readAsString(), '')
+    assertWarnEq('12/31/2025', testDateUtils.go(PropAdjective.Short).readAsString(), '')
 })
 t.test('03version computed property', () => {
     let b = new ScriptTestBatch()

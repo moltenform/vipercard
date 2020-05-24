@@ -208,7 +208,8 @@ export const Util512 = /* static class */ {
         s: string,
         args: unknown[],
         okIfNotExists: boolean,
-        returnIfNotExists = ''
+        returnIfNotExists = '',
+        okIfOnParentClass = false
     ): unknown {
         checkThrow512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
@@ -219,7 +220,7 @@ export const Util512 = /* static class */ {
         let method = me[s];
         assertTrue(args === undefined || Array.isArray(args), '4I|args not an array');
         if (method && typeof method === 'function') {
-            assertTrue(
+            assertTrue(okIfOnParentClass ||
                 me.hasOwnProperty(s) || me.__proto__.hasOwnProperty(s),
                 '4H|cannot use parent classes',
                 clsname,

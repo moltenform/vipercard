@@ -270,6 +270,7 @@ export class TestVpc03 extends TestVpcScriptRunBase {
         this.ids.bDE3 = bDE3.idInternal
         this.ids.fDE3 = fDE3.idInternal
         this.vcstate.vci.setCurCardNoOpenCardEvt(this.ids.cdCD);
+        bgD.setOnVel('name', 'd', this.vcstate.model);
         cdDD.setOnVel('name', 'd', this.vcstate.model);
         cdDE.setOnVel('name', 'e', this.vcstate.model);
         cdDF.setOnVel('name', 'f', this.vcstate.model);

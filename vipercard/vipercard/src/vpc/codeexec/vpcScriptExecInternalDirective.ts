@@ -31,7 +31,7 @@ export abstract class VpcExecInternalDirectiveAbstract {
      */
     go(directive:string, param:ValHolder<string>, msg:[string,string]) {
         let cur = this.outside.Model().getCurrentCard()
-        Util512.callAsMethodOnClass("VpcExecInternalDirectiveAbstract", this, 'go' + Util512.capitalizeFirst(directive), [param, cur, msg], false)
+        Util512.callAsMethodOnClass("VpcExecInternalDirectiveAbstract", this, 'go' + Util512.capitalizeFirst(directive), [param, cur, msg], false, '', true /*okIfOnParentClass*/)
     }
 
     /**

@@ -13,26 +13,26 @@
 export const VpcBuiltinFunctionsDateUtils = /* static class */ {
     /* render short date. */
     _getShortDate() {
-        let [nDay, nMonth, nYear] = this._getDateCurrent();
-        return `${nMonth + 1}/${nDay}/${nYear}`;
+        let [nDay, nDate, nMonth, nYear] = this._getDateCurrent();
+        return `${nMonth + 1}/${nDate}/${nYear}`;
     },
 
     /* render abbrev date. */
     _getAbbrevDate() {
-        let [nDay, nMonth, nYear] = this._getDateCurrent();
-        return `${lng(day_names_short[nDay])}, ${lng(month_names_short[nMonth])} ${nDay}, ${nYear}`;
+        let [nDay, nDate, nMonth, nYear] = this._getDateCurrent();
+        return `${lng(day_names_short[nDay])}, ${lng(month_names_short[nMonth])} ${nDate}, ${nYear}`;
     },
 
     /* render long date. */
     _getLongDate() {
-        let [nDay, nMonth, nYear] = this._getDateCurrent();
-        return `${lng(day_names[nDay])}, ${lng(month_names[nMonth])} ${nDay}, ${nYear}`;
+        let [nDay, nDate, nMonth, nYear] = this._getDateCurrent();
+        return `${lng(day_names[nDay])}, ${lng(month_names[nMonth])} ${nDate}, ${nYear}`;
     },
 
     /* get date info from javascript. month is 0-based. */
-    _getDateCurrent(): [number, number, number] {
+    _getDateCurrent(): [number, number, number, number] {
         let d = new Date();
-        return [d.getDay(), d.getMonth(), d.getFullYear()];
+        return [d.getDay(), d.getDate(), d.getMonth(), d.getFullYear()];
     },
 
     /* get the current date as a string */

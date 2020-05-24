@@ -254,7 +254,7 @@ confirmed in emulator  */
         `go card id ${h.ids.cdBC}\ngo to cd fld 1\\the short id of this cd`,
         `ERR:5:Cannot go to a`
     );
-    b.t(`go to vipercard\\the short id of this cd`, `ERR:expected a number`);
+    b.t(`go to vipercard\\the short id of this cd`, `ERR:Cannot go`);
     b.t(`go card 1\ngo to cd btn id 1\\the short id of this cd`, `${h.ids.cdA}`);
 
     /* go by id */
@@ -522,9 +522,9 @@ t.test('execCommands delete', () => {
     /* not yet supported */
     b.t('put "abcdef,123,456" into initlist\\0', '0');
     b.t('put initlist into x\\0', '0');
-    b.t('delete cd btn "a1"\\0', 'ERR:not yet supported');
-    b.t('delete cd fld "a1"\\0', 'ERR:not yet supported');
-    b.t('delete cd 1\\0', 'ERR:not yet supported');
+    //~ b.t('delete cd btn "a1"\\0', '');
+    //~ b.t('delete cd fld "a1"\\0', '');
+    //~ b.t('delete cd 1\\0', '');
     b.t('put "a" into x\ndelete x\\0', 'ERR:5:expected something like');
 
     /* normal chunks */
@@ -1008,7 +1008,7 @@ send code to this stack\\g`,
     );
 
     /* not valid */
-    b.t('send\\0', 'PREPARSEERR:too short');
+    b.t('send\\0', 'ERR:parse err');
     b.t('send "put 1 into x"\\0', 'ERR:MismatchedTokenException');
     b.t('send to\\0', 'ERR:NoViableAltException');
     b.t('send to this stack\\0', 'ERR:NoViableAltException');

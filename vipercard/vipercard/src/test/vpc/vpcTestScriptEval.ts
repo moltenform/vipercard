@@ -1112,7 +1112,7 @@ t.test('builtinFunctions', () => {
     /* ordinal and too-large ordinal */
     b.t('the short id of first card', `${h.ids.cdA}`);
     b.t('the short id of third card', `${h.ids.cdBC}`);
-    b.t('the short id of tenth card', `ERR:find this object`);
+    b.t('the short id of tenth card', `ERR:find that object`);
 
     /* confirmed in emulator that it should throw */
     b.t('the number of cards of bg 4', 'ERR:find this object');
