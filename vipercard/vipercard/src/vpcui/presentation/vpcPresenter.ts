@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcValN } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { GuessStackTrace } from './../../vpc/codeexec/vpcScriptExecTop';
@@ -179,7 +179,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * might be either a compile error
      * or a runtime error
      */
-    defaultShowScriptErr(scriptErr: VpcErr) {
+    defaultShowScriptErr(scriptErr: VpcErr, msgObj:O<VpcScriptMessage>) {
         this.vci.getCodeExec().forceStopRunning();
 
         this.vci.undoableAction(() => {
@@ -200,6 +200,13 @@ export class VpcPresenter extends VpcPresenterInit {
                 }
 
                 return;
+            } else if (msgObj && (msgObj instanceof VpcScriptMessageMsgBoxCode) && velId === this.vci.getModel().productOpts.idInternal) {
+                /* e.g. you go Edit->Delete Card for the only card in a stack.
+                there will be a script error, but don't open the script editor,
+                just show a dialog -- it's not even really a script error.
+                Only do this for productopts errors in case someone has overridden domenu */
+                this.answerMsg(msg);
+                return
             }
 
             /* move to the card where the error happened. */

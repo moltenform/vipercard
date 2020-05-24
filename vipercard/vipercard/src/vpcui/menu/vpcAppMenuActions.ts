@@ -497,7 +497,7 @@ export class VpcMenuActions {
                 this.runMenuActionCode(`doMenu "${cmd}", "setAll|${renderVel}" `)
             }
         } else {
-            console.error("Unknown menu item")
+            console.error("Unknown menu item", s)
         }
     }
 

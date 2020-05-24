@@ -38,7 +38,7 @@ export class VpcExecTop {
     check = new CheckReservedWords();
     runStatements = new ExecuteStatement();
     workQueue: VpcExecFrameStack[] = [];
-    cbOnScriptError: O<(err: VpcErr) => void>;
+    cbOnScriptError: O<(err: VpcErr, msg:O<VpcScriptMessage>) => void>;
     cbCauseUIRedraw: O<() => void>;
     cbSetRealTool: (tl:VpcTool)=>void
     directiveImpl: VpcExecInternalDirectiveAbstract
@@ -270,6 +270,7 @@ export class VpcExecTop {
      */
     protected handleScriptException(e: Error, context: string) {
         let stackTrace = new GuessStackTrace(this, this.outside).go();
+        let msgObj = this.workQueue[0]?.originalMsg
         this.forceStopRunning();
 
         let scriptErr = Util512BaseErr.errIfExactCls<VpcErr>('VpcErr', e);
@@ -323,7 +324,7 @@ export class VpcExecTop {
         this.resetAfterFrameStackIsDone();
 
         if (this.cbOnScriptError) {
-            this.cbOnScriptError(scriptErr);
+            this.cbOnScriptError(scriptErr, msgObj);
         } else {
             respondUI512Error(scriptErr.clsAsErr(), context);
         }

@@ -4,7 +4,7 @@
 /* auto */ import { tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { checkThrow, checkThrowEq, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
@@ -82,12 +82,13 @@ export class VpcScriptExecuteStatementHelpers {
         checkThrow(sawExpected, 'JM|syntax error did not see ', expectSee);
         this.outside.SimulateClick(argsGiven, mods);
         if (msg && argsGiven.length >= 2) {
+            checkThrowInternal(msg instanceof VpcScriptMessage, "wrong type")
             /* add click to the pr's click tracking.
             confirmed in emulator that it uses first coordinates. 
             don't update lastSeenClickId--
             we should update clickLoc() but not mouseClick() */
-            msg.lastSeenClickId[0] = argsGiven[0]
-            msg.lastSeenClickId[1] = argsGiven[1]
+            msg.clickLoc[0] = argsGiven[0]
+            msg.clickLoc[1] = argsGiven[1]
         }
     }
 

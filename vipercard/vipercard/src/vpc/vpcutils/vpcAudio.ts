@@ -69,8 +69,12 @@ export const VpcAudio = /* static class */ {
                 let aud = window.document.getElementById('vpcaudiohtmlel' + key) as HTMLAudioElement;
                 if (aud) {
                     VpcAudio._playAsyncImpl(aud);
+                    //~ fghfg
+                    console.log("pltrue")
                     return true;
                 } else {
+                    //~ fghfg
+                    console.log("plfalse")
                     return false;
                 }
             }, 'audio play') === true

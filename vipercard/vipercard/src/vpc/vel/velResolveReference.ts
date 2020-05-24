@@ -459,7 +459,7 @@ export class VelResolveReference {
                     return arr.length;
                 }
             } else {
-                checkThrow(false, 'could not find this object parent or unknown type');
+                checkThrow(false, 'could not find this object parent or incorrect type');
             }
         } else if (type === VpcElType.Btn || type === VpcElType.Fld) {
             if (parent instanceof VpcElBg) {
@@ -471,7 +471,7 @@ export class VelResolveReference {
                 let arr = parent.parts.filter(vel => vel.getType() === type && !vel.getS('is_bg_velement_id').length);
                 return arr.length;
             } else {
-                checkThrow(false, 'could not find this object parent or unknown type');
+                checkThrow(false, 'could not find this object parent or incorrect type');
             }
         } else {
             checkThrow(false, 'unknown type');
