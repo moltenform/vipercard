@@ -1,8 +1,7 @@
 
-/* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { ScriptTestBatch } from './../vpc/vpcTestScriptRunBase';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
-/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { h3 } from './test03lexer';

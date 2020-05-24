@@ -1,7 +1,6 @@
 
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
-/* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertWarnEq, longstr } from './../../ui512/utils/util512';

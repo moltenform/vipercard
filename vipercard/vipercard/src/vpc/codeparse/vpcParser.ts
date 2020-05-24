@@ -1005,12 +1005,7 @@ this.SUBRULE1(this.RuleOf)
 this.OR1([
 {
 ALT: () => {
-this.SUBRULE1(this.RuleObjectBg)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectStack)
+this.SUBRULE1(this.RuleObject)
 }
 }
 ]);

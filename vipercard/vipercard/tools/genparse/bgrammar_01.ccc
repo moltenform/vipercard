@@ -337,7 +337,7 @@ HGenericFunctionCall:={ MAX_LOOKAHEAD=5 <FnCallNumberOf> | <FnCallThereIs> | <HF
 // we do though support "the number of marked cds of bg 1" which the product could not do
 FnCallNumberOf:= _the _number tkOfOnly { <FnCallNumberOf_1>|<FnCallNumberOf_2>|<FnCallNumberOf_3>|<FnCallNumberOf_4>|<FnCallNumberOf_5>  }      --->ProcessOr--->VpcVal
 FnCallNumberOf_1:={tkCard | tkBg} { tkBtnPlural | tkFldPlural }      --->Custom--->VpcVal
-FnCallNumberOf_2:=[_marked] tkCardPlural  [ <Of> { <ObjectBg> | <ObjectStack> } ]           --->Custom--->VpcVal
+FnCallNumberOf_2:=[_marked] tkCardPlural  [ <Of> { <Object> } ]           --->Custom--->VpcVal
 FnCallNumberOf_3:=tkBgPlural [ <Of> <ObjectStack> ]                                                       --->Custom--->VpcVal
 FnCallNumberOf_4:={_windows | _menu | _menuItem <Of> <Menu>}                             --->Custom--->VpcVal
 FnCallNumberOf_5:=tkChunkGranularity <Of> <Lvl3Expression>                                        --->Custom--->VpcVal

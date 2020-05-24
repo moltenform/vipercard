@@ -429,10 +429,10 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleFnCallNumberOf_2(ctx: VisitingContext): VpcVal {
             let parentRef = new RequestedVelRef(VpcElType.Stack);
             parentRef.lookByRelative = OrdinalOrPosition.This;
-            if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
-                parentRef = this.visit(ctx.RuleObjectBg[0]);
-            } else if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
-                parentRef = this.visit(ctx.RuleObjectStack[0]);
+            if (ctx.RuleObject && ctx.RuleObject[0]) {
+                /* must be a bg or stack, but let's check that
+                later so we can accept forms like 'me' or 'x' */
+                parentRef = this.visit(ctx.RuleObject[0]);
             }
 
             if (ctx._marked && ctx._marked[0]) {

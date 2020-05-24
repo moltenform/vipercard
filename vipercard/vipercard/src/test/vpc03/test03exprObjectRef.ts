@@ -545,6 +545,9 @@ t.test('03exprNumberOfObjects', () => {
     b.t(`the number of cards of bg 1 of this stack`, `1`);
     b.t(`the number of cards of bg 2 of this stack`, `3`);
     b.t(`the number of cards of bg 99`, `ERR:could not find`);
+    b.t(`the number of cards of me`, `ERR:incorrect type`);
+    b.t(`the number of cards of card 2`, `ERR:incorrect type`);
+    b.t(`the number of cards of cd btn 1`, `ERR:incorrect type`);
     /* number of marked cards-see above */
     /* bkgnds */
     b.t(`the number of bkgnds`, `4`);
@@ -554,6 +557,11 @@ t.test('03exprNumberOfObjects', () => {
     b.t(`the number of stacks`, `ERR:no variable`);
     b.t(`the number of ViperCards`, `ERR:no variable`);
     b.t(`the number of me`, `1`);
+    /* parent should accept different expressions */
+    b.t(`put "bg id ${h3.ids.bgB}" into x\\the number of cards of x`, `3`);
+    b.t(`the number of cards of the owner of cd id ${h3.ids.cdBC}`, `3`);
+    b.t(`the number of cards of (the owner of cd id ${h3.ids.cdBC})`, `3`);
+    b.t(`the number of cards of the target`, `ERR:incorrect type`);
     b.batchEvaluate(h3, [EvaluateThereIs]);
 })
 t.test('03Object Auto-insert scope for backwards compat', () => {
