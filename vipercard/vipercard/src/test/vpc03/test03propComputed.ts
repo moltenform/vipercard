@@ -160,8 +160,8 @@ t.test('03date computed property', () => {
 })
 t.test('03version computed property', () => {
     let b = new ScriptTestBatch()
-    b.t(`the version`, `${vpcVersion}`)
-    b.t(`the short version`, vpcVersion[0] + '.' + vpcVersion[1])
+    b.t(`the version`, vpcVersion[4] + '.' + vpcVersion[6])
+    b.t(`the short version`, vpcVersion[4] + '.' + vpcVersion[6])
     b.t(`the long version`, `${vpcVersion}`)
     b.batchEvaluate(h3);
 })

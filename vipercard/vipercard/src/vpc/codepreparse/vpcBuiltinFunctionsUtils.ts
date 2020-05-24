@@ -51,7 +51,7 @@ export const VpcBuiltinFunctionsDateUtils = /* static class */ {
         if (adjective === PropAdjective.Long) {
             return VpcValS(vpcVersion);
         } else {
-            return VpcValS(vpcVersion[0] + '.' + vpcVersion[1]);
+            return VpcValS(vpcVersion[4] + '.' + vpcVersion[6]);
         }
     }
 };

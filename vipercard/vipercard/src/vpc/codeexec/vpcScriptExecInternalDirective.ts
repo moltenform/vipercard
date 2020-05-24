@@ -87,7 +87,7 @@ export abstract class VpcExecInternalDirectiveAbstract {
     /**
      * implement 'go back' and 'go forth'
      */
-    goApplyBackForth(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
+    goApplybackforth(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         let fallback = () => cur.idInternal;
             let cardExists = (s: string) => {
                 let ref = new RequestedVelRef(VpcElType.Card);

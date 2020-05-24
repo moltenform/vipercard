@@ -263,7 +263,7 @@ t.test('vpcProperties', () => {
     b.t('the stacksinuse', '');
     b.t('the suspended', 'false');
     b.t('the long version', `${vpcVersion}`);
-    b.t('the version', `${vpcVersion[0]}.${vpcVersion[1]}`);
+    b.t('the version', `${vpcVersion[4]}.${vpcVersion[6]}`);
 
     /* product opts set */
     b.t('set the itemdelimiter to "|" \\ the itemdelimiter', '|');
