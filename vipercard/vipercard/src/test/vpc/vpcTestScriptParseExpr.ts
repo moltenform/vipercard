@@ -371,10 +371,11 @@ t.test('ScriptParseFunctionCalls fn call with no args', () => {
     testExp(`not the time`, 'parses');
     testExp(`the target`, 'parses');
     testExp(`the long target`, 'parses');
-    /* we specifically support these in rewrites for backwards compat */
-    testExp(`the time()`, 'parses');
-    testExp(`not the time()`, 'parses');
-    testExp(`not the target()`, 'parses');
+    /* we specifically support these in rewrites for backwards compat,
+    but that happens in rewrite which doesn't get hit here! */
+    assertFailsParseExp(`the time()`, 'NotAllInputParsed');
+    assertFailsParseExp(`not the time()`, 'NotAllInputParsed');
+    assertFailsParseExp(`not the target()`, 'NotAllInputParsed');
     /* we used to accept this, but we don't anymore */
     assertFailsParseExp(`the myFunction()`, 'NotAllInputParsed');
     assertFailsParseExp(`the keyrepeated()`, 'NotAllInputParsed');

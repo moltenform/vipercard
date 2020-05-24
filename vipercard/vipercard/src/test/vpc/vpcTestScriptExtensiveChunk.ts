@@ -20,12 +20,12 @@ t.atest('--init--testCollectionScriptExtensiveChunk', async () => {
     return h.initEnvironment();
 });
 t.atest('ScriptExtensiveChunk', async () => {
-    h.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.doWithoutAbilityToUndo(() =>
         h.vcstate.model.stack.setOnVel('compatibilitymode', true, h.vcstate.model)
     );
     let test = new RunExtensiveChunkTests();
     await test.go();
-    h.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.doWithoutAbilityToUndo(() =>
         h.vcstate.model.stack.setOnVel('compatibilitymode', false, h.vcstate.model)
     );
 });

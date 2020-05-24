@@ -61,14 +61,16 @@ end domenu_edit
 on domenu_object key, pl, pb
     global doMenuResult
     put true into ret
-    if pl == "new button" then
+    if pl == "new button" or pl == "new button from ui" then
         send "newButton" to this cd
         put "btn" into sendParam
+        if "from ui" is in pl then put "fromui" after sendParam
         internalvpcmessagesdirective "makevelwithoutmsg" sendParam
         put sendParam into doMenuResult
-    else if pl == "new field" then
+    else if pl == "new field" or pl == "new field from ui" then
         send "newField" to this cd
         put "fld" into sendParam
+        if "from ui" is in pl then put "fromui" after sendParam
         internalvpcmessagesdirective "makevelwithoutmsg" sendParam
         put sendParam into doMenuResult
     else if pl == "new background" then

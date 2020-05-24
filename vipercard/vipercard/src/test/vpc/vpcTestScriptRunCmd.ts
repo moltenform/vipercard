@@ -1037,7 +1037,7 @@ send code to this stack\\g`,
 
     /* make sure that invalid code is cleaned out after a preparse failure. */
     let stack = h.vcstate.vci.getModel().getById(VpcElStack, h.ids.stack);
-    h.vcstate.vci.undoableAction(() => stack.setOnVel('script', ``, h.vcstate.model));
+    h.vcstate.vci.doWithoutAbilityToUndo(() => stack.setOnVel('script', ``, h.vcstate.model));
     b.t('send "$$$#$%#$" to this stack\\0', 'ERR:4:lex error');
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
@@ -1052,7 +1052,7 @@ send code to this stack\\g`,
     b = new ScriptTestBatch();
 
     /* make sure that code can run after a runtime failure. */
-    h.vcstate.vci.undoableAction(() => stack.setOnVel('script', ``, h.vcstate.model));
+    h.vcstate.vci.doWithoutAbilityToUndo(() => stack.setOnVel('script', ``, h.vcstate.model));
 
     b.t('send "put 1 into cd fld 999" to this stack\\0', 'ERR:4:element not found');
 
@@ -1070,7 +1070,7 @@ send code to this stack\\g`,
 
     /* calling as a handler, like the original product could do */
     let v = h.vcstate.vci.getModel().getById(VpcElButton, h.ids.bBC1);
-    h.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.doWithoutAbilityToUndo(() =>
         v.setOnVel(
             'script',
             `
@@ -1095,7 +1095,7 @@ end myCompute`,
     b = new ScriptTestBatch();
 
     /* calling as a function */
-    h.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.doWithoutAbilityToUndo(() =>
         v.setOnVel(
             'script',
             `
@@ -1120,7 +1120,7 @@ end myCompute`,
     b = new ScriptTestBatch();
 
     /* calling as a function (can access others in that scope) */
-    h.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.doWithoutAbilityToUndo(() =>
         v.setOnVel(
             'script',
             `
@@ -1182,7 +1182,7 @@ end sometimesSetResult`;
     assertWarnEq('2a', got.readAsString(), 'RD|');
 
     /* sending an event down, it can bubble back up */
-    h.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.doWithoutAbilityToUndo(() =>
         h.vcstate.model.stack.setOnVel(
             'script',
             `
@@ -1210,7 +1210,7 @@ end myCompute`;
     assertWarnEq('0', got.readAsString(), 'RB|');
 
     /* or it is overridden in the card */
-    h.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.doWithoutAbilityToUndo(() =>
         h.vcstate.model.getCurrentCard().setOnVel(
             'script',
             `

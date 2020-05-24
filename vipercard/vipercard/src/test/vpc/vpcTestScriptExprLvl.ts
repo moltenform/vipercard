@@ -1072,7 +1072,7 @@ t.test('ModelFindById.when not exists', () => {
 });
 t.atest('testVpcStateSerialize', async () => {
     let txt = FormattedText.newFromUnformatted('');
-    h.vcstate.undoManager.doWithoutAbilityToUndo(() => {
+    h.vcstate.vci.doWithoutAbilityToUndo(() => {
         txt = h.modifyVcState();
     });
 
@@ -1153,7 +1153,7 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
 
         /* we'll be setting sharedtext and sharedhilite a few times, so for convenience
         allow setting data throughout */
-        newState.undoManager.doWithoutAbilityToUndo(() => {});
+        h.vcstate.vci.doWithoutAbilityToUndo(() => {});
     }
 
     /**

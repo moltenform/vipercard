@@ -59,10 +59,16 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
      */
     goMakevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
         let vel:VpcElBase
+        let isFromUI = false
+        if (param.val.toLowerCase().endsWith('fromui')) {
+            isFromUI = true
+            param.val = param.val.replace(/fromui/i, '')
+        }
+
         if (param.val==='btn' || param.val==='button') {
-            vel = this.makeBtnFldWithoutMsg(VpcElType.Btn)
+            vel = this.makeBtnFldWithoutMsg(VpcElType.Btn, isFromUI)
         } else if (param.val==='fld' || param.val==='field') {
-            vel = this.makeBtnFldWithoutMsg(VpcElType.Fld)
+            vel = this.makeBtnFldWithoutMsg(VpcElType.Fld, isFromUI)
         } else if (param.val==='card' || param.val==='dupecardpaint') {
             vel = this.makeCardWithoutMsg(cur, param.val==='dupecardpaint')
         } else if (param.val==='bg' || param.val==='bkgnd') {
@@ -82,7 +88,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         let id = this.vci.getOptionS('copiedVelId');
         let found = this.vci.getModel().findByIdUntyped(id);
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
-            let dupe = this.makeBtnFldWithoutMsg(found.getType());
+            let dupe = this.makeBtnFldWithoutMsg(found.getType(), true);
             VpcGettableSerialization.copyPropsOver(found, dupe);
 
             /* move it a bit */
@@ -142,7 +148,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
     /**
      * make a btn or fld
      */
-    protected makeBtnFldWithoutMsg(type:VpcElType) {
+    protected makeBtnFldWithoutMsg(type:VpcElType, fromui:boolean) {
         /* make a button that is tall enough to show an icon, since
         in prev versions icon clipping didn't work well */
         const defaultBtnW = 100;
@@ -193,19 +199,19 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
             checkThrowInternal(false, "btn or fld expected")
         }
 
-        /* save *before* setting selectedVelId */
-        this.pr.lyrPropPanel.saveChangesToModel(false);
-        this.pr.lyrPropPanel.updateUI512Els();
-        this.vci.setOption('selectedVelId', vel.idInternal);
-        this.vci.setOption('viewingScriptVelId', '');
+        /* important: only mess with proppanels if not fromui!
+        otherwise closing the invisible panel will set props on the object */
+        if (fromui) {
+            /* save *before* setting selectedVelId */
+            this.pr.lyrPropPanel.saveChangesToModel(false);
+            this.pr.lyrPropPanel.updateUI512Els();
+            this.vci.setOption('selectedVelId', vel.idInternal);
+            this.vci.setOption('viewingScriptVelId', '');
 
-        /* update before tool is set */
-        this.pr.lyrPropPanel.updateUI512Els();
+            /* update before tool is set */
+            this.pr.lyrPropPanel.updateUI512Els();
 
-        /* change tool -- so we can see it selected --
-        but only do this if we're here temporarily (menuAction)
-        not from a user script calling doMenu "create button" */
-        if (this.getUpcomingTool() !== VpcTool.Browse) {
+            /* change tool -- so we can see it selected  */
             let needChangeTool = type === VpcElType.Btn ? VpcTool.Button : VpcTool.Field
             this.setUpcomingTool(needChangeTool)
         }

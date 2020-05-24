@@ -318,6 +318,7 @@ t.test('vpcProperties', () => {
     h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
 
     /* size properties */
+    b.t('set the rect of cd btn "p1" to 0,0,0,0\\0', '0');
     b.t('the left of cd btn "p1"', '0');
     b.t('the top of cd btn "p1"', '0');
     b.t('the width of cd btn "p1"', '0');
@@ -462,7 +463,7 @@ t.test('vpcProperties', () => {
     b.t('set the hilite of cd btn "p1" to true\\the hilite of cd btn "p1"', 'true');
     b.t('the icon of cd btn "p1"', '0');
     b.t('set the icon of cd btn "p1" to 1\\the icon of cd btn "p1"', '1');
-    b.t('the label of cd btn "p1"', '');
+    b.t('the label of cd btn "p1"', 'New Button');
     b.t(
         'set the label of cd btn "p1" to "newlabel"\\the label of cd btn "p1"',
         'newlabel'
@@ -483,7 +484,7 @@ t.test('vpcProperties', () => {
     b.t('set the textsize of cd btn "p1" to 16\\the textsize of cd btn "p1"', '16');
 
     /* btn validated get/set */
-    b.t('the style of cd btn "p1"', 'rectangle');
+    b.t('the style of cd btn "p1"', 'roundrect');
     b.t('set the style of cd btn "p1" to "xyz"\\0', 'ERR:Button style');
     b.t('set the style of cd btn "p1" to "radio"\\the style of cd btn "p1"', 'radio');
     b.t('set the style of cd btn "p1" to shadow\\the style of cd btn "p1"', 'shadow');
@@ -653,6 +654,8 @@ t.test('vpcProperties', () => {
 
     /* setting style */
     const fld = h.vcstate.model.getById(VpcElField, h.ids.fBC1);
+    h.vcstate.vci.doWithoutAbilityToUndo(()=>
+    fld.setOnVel('style', UI512FldStyle.Rectangle, h.vcstate.model))
     assertEq(UI512FldStyle.Rectangle, fld.getN('style'), '1 |');
     b.t('the style of cd fld "p1"', 'rectangle');
     b.t('set the style of cd fld "p1" to "xyz"\\0', 'ERR:Field style or');
@@ -691,7 +694,7 @@ t.test('vpcProperties', () => {
         'ef',
         new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString()
     );
-    h.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.doWithoutAbilityToUndo(() =>
         fldPerChar.setCardFmTxt(FormattedText.newFromSerialized(sfmt), higher)
     );
 
@@ -794,7 +797,6 @@ t.test('vpcProperties', () => {
     b.t('set the style of char 1 to 2 of cd fld "p2" to "opaque"\\0', 'ERR:can only say');
     b.t('set the xyz of char 1 to 2 of cd fld "p2" to "Geneva"\\0', 'ERR:can only say');
     b.batchEvaluate(h);
-    b = new ScriptTestBatch();
 
     /* confirm formatting */
     contents = fldPerChar.getCardFmTxt().toSerialized();
@@ -834,7 +836,8 @@ t.test('vpcProperties', () => {
     ];
 
     for (let [action, expectedFont] of actions) {
-        h.vcstate.vci.undoableAction(() =>
+        b = new ScriptTestBatch();
+        h.vcstate.vci.doWithoutAbilityToUndo(() =>
             fldPerChar.setCardFmTxt(FormattedText.newFromSerialized(sfmt), higher)
         );
         assertEq(sfmt, fldPerChar.getCardFmTxt().toSerialized(), '1w|');
@@ -843,7 +846,6 @@ t.test('vpcProperties', () => {
         b.t('set the defaulttextsize of cd fld "p2" to "12"\\0', '0');
         b.t(`${action}\\0`, '0');
         b.batchEvaluate(h);
-        b = new ScriptTestBatch();
 
         /* formatting should have been lost */
         contents = fldPerChar.getCardFmTxt().toSerialized();
@@ -851,6 +853,7 @@ t.test('vpcProperties', () => {
         assertEq(expected, contents, '1v|');
     }
 
+    b = new ScriptTestBatch();
     h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
 
     /* productopts */
@@ -999,14 +1002,14 @@ t.test('vpcProperties', () => {
     b.t('the owner of stack ""', 'ERR:get owner');
     b.t('the owner of this stack', 'ERR:get owner');
     b.t('the owner of bg 1', 'stack id 921');
-    b.t('the owner of cd fld "p1"', 'card id 1005');
-    b.t('the owner of cd btn "p1"', 'card id 1005');
+    b.t('the owner of cd fld "p1"', `card id ${h.ids.cdBC}`);
+    b.t('the owner of cd btn "p1"', `card id ${h.ids.cdBC}`);
     b.t('the owner of cd btn "xyz"', 'ERR:could not find');
     b.t('the owner of cd fld "xyz"', 'ERR:could not find');
-    b.t('the owner of cd 1', 'bkgnd id 1000');
-    b.t('the owner of second cd', 'bkgnd id 1002');
-    b.t('the owner of fifth cd', 'bkgnd id 1003');
-    b.t('the owner of cd "d" of bg 3', 'bkgnd id 1003');
+    b.t('the owner of cd 1', `bkgnd id ${h.ids.bgA}`);
+    b.t('the owner of second cd', `bkgnd id ${h.ids.bgB}`);
+    b.t('the owner of fifth cd', `bkgnd id ${h.ids.bgC}`);
+    b.t('the owner of cd "d" of bg 3', `bkgnd id ${h.ids.bgC}`);
 
     b.batchEvaluate(h);
 });
@@ -1378,14 +1381,8 @@ t.test('builtinFunctions', () => {
     b.t('commandkey()', 'up');
     b.t('optionkey()', 'up');
     b.t('shiftkey()', 'up');
-    //~ b.t('clickh()', `${h.simClickX - userBounds[0]}`);
-    //~ b.t('clickv()', `${h.simClickY - userBounds[1]}`);
-    //~ b.t('clickloc()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
     b.t('mouse()', `up`);
-    b.t('mouseclick()', `true`);
-    //~ b.t('mouseh()', `${h.simMouseX - userBounds[0]}`);
-    //~ b.t('mousev()', `${h.simMouseY - userBounds[1]}`);
-    //~ b.t('mouseloc()', `${h.simMouseX - userBounds[0]},${h.simMouseY - userBounds[1]}`);
+    b.t('mouseclick()', `false`);
     b.t('param(0)', ``);
     b.t('param(1)', ``);
     b.t('param(2)', ``);
@@ -1398,12 +1395,10 @@ t.test('builtinFunctions', () => {
     b.t('put the clickH() into x\\1', `1`);
     b.t('put the clickV() into y\\1', `1`);
     b.t('put the clickLoc() into xy\\1', `1`);
-    
 
     /* casing */
-    //~ b.t('CLICKLOC()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
-    //~ b.t('clIcKloC()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
-    //~ b.t('ClickLoc()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`);
-
+    b.t('SHIFTKEY()', `up`);
+    b.t('ShIfTkEy()', `up`);
+    b.t('sHiFtKeY()', `up`);
     b.batchEvaluate(h);
 });

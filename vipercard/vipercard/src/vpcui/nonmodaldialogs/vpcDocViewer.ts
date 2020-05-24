@@ -407,36 +407,6 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         rghtBackground.set('labeltext', s);
     }
 
-    //~ /**
-     //~ * when showing example screenshots (the old way before youtube vids),
-     //~ * advance to the next screenshot
-     //~ */
-    //~ protected clickedRightBtn(rightBtn: UI512Element) {
-        //~ if (this.type === DialogDocsType.Examples) {
-            //~ /* advance to the next picture, if applicable. */
-            //~ let grp = this.vci.UI512App().getGroup(this.grpId);
-            //~ let btmGeneric = grp.getEl(this.getElId('btmChoice'));
-            //~ let btm = cast(UI512ElTextField, btmGeneric);
-            //~ let gel = new UI512ElTextFieldAsGeneric(btm);
-            //~ let lnCurrent = TextSelModify.selectByLinesWhichLine(gel);
-            //~ let lastLine = btm.getFmTxt().toUnformatted().split('\n').length - 1;
-            //~ lastLine -= 1; /* compensate for last empty line */
-            //~ if (lastLine <= 1) {
-                //~ return; /* looks like a "video" one */
-            //~ }
-
-            //~ if (lnCurrent !== undefined && lnCurrent < lastLine) {
-                //~ lnCurrent += 1;
-                //~ TextSelModify.selectLineInField(gel, lnCurrent);
-                //~ this.onChooseItem(btm);
-            //~ } else if (lnCurrent === undefined) {
-                //~ lnCurrent = 0;
-                //~ TextSelModify.selectLineInField(gel, lnCurrent);
-                //~ this.onChooseItem(btm);
-            //~ }
-        //~ }
-    //~ }
-
     /**
      * route button click
      */
@@ -445,8 +415,6 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             this.onChooseCategory(cast(UI512ElTextField, el));
         } else if (short === 'btmChoice') {
             this.onChooseItem(cast(UI512ElTextField, el));
-        //~ } else if (short === 'rghtBtn') {
-            //~ this.clickedRightBtn(el);
         } else if (short === 'btnStartVid') {
             this.clickedBtnStartVid();
         }

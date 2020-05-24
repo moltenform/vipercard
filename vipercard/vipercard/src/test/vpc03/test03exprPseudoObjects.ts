@@ -46,6 +46,7 @@ t.test('03exprObjectInterpretedFromString', () => {
     /* parens 2 */
     b.t(`the short id of ("cd" && "btn" && ${h3.ids.bBC1})`, `${h3.ids.bBC1}`)
     //~ todo: difference between target and the target, see internaldocs
+    //~ need bg support to fully test it
     b.batchEvaluate(h3);
     h3.pr.getSelectedFieldVel = svdMethod
 });

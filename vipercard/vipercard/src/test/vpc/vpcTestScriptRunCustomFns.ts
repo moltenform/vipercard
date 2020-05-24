@@ -896,7 +896,7 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
      */
     provideCustomFnInStackScript(addCode = '') {
         let stack = h.vcstate.model.getById(VpcElStack, h.ids.stack);
-        h.vcstate.vci.undoableAction(() =>
+        h.vcstate.vci.doWithoutAbilityToUndo(() =>
             stack.setOnVel(
                 'script',
                 `

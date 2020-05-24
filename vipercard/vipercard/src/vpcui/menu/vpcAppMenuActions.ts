@@ -439,14 +439,14 @@ export class VpcMenuActions {
      * new button
      */
     goMnuObjectsNewBtn() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Button"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Button from ui"')
     }
 
     /**
      * new field
      */
     goMnuObjectsNewFld() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Field"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Field from ui"')
     }
 
     /**

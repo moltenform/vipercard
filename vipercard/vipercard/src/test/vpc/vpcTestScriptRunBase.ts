@@ -203,20 +203,17 @@ export class TestVpcScriptRunBase {
 
 
         let bgA = model.stack.bgs[0];
-        
-        
-        let bgB = cast(VpcElBg, makeVel('bkgnd'))
-        let bgC = cast(VpcElBg, makeVel('bkgnd'))
         let cdA = bgA.cards[0];
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdA.idInternal);
+        let bgB = cast(VpcElBg, makeVel('bkgnd'))
         let cdBB = bgB.cards[0]
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBB.idInternal);
         let cdBC = cast(VpcElCard, makeVel('card'))
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBC.idInternal);
         let cdBD = cast(VpcElCard, makeVel('card'))
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBD.idInternal);
-        let cdCD = cast(VpcElCard, makeVel('card'))
-        this.vcstate.vci.setCurCardNoOpenCardEvt(cdCD.idInternal);
+        let bgC = cast(VpcElBg, makeVel('bkgnd'))
+        let cdCD = bgC.cards[0]
 
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBC.idInternal);
         let fBC1 = makeVel('field')
@@ -224,9 +221,11 @@ export class TestVpcScriptRunBase {
         let fBC3 = makeVel('field')
         let bBC1 = makeVel('button')
         let bBC2 = makeVel('button')
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdBD.idInternal);
         let fBD1 = makeVel('field')
         let fBD2 = makeVel('field')
         let bBD1 = makeVel('button')
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdCD.idInternal);
         let fCD1 = makeVel('field')
         let bCD1 = makeVel('button')
 
@@ -307,7 +306,7 @@ export class TestVpcScriptRunBase {
         let msg = scriptErr.message;
         let velId = scriptErr.scriptErrVelid ?? 'unknown';
         let line = scriptErr.scriptErrLine ?? -1;
-        this.vcstate.vci.undoableAction(() => {
+        this.vcstate.vci.doWithoutAbilityToUndo(() => {
             this.vcstate.vci.setTool(VpcTool.Browse);
         });
 
