@@ -147,7 +147,7 @@ end goCardDestinationFromObjectId
 -- 'delete cd btn 1' becomes this:
 on internalvpcdeletevelhelper internalId, userfacingId
     if objectById(internalId) == "" then
-        errorDialog "delete failed, object not found"
+        errorDialog "Delete failed, object not found."
     end if
     -- 1) send messages
     put word 1 of objectById(internalId) into objType
@@ -168,7 +168,7 @@ on internalvpcdeletevelhelper internalId, userfacingId
             put the short id of this cd into prevCd
             go next
             if the short id of this cd is prevCd then
-                errorDialog "delete failed, cannot delete this card (only card in stack?)"
+                errorDialog "Delete failed, cannot delete this card. Is it the only card in the stack?"
             end if
         end if
 
@@ -176,14 +176,14 @@ on internalvpcdeletevelhelper internalId, userfacingId
         if the number of cds in (the owner of cd id internalId) is 1 then
             send "deleteBackground" to cd id internalId
         end if
-    else if objType != "bkgnd" then
+    else if objType = "bkgnd" then
+        internalvpcdeletevelhelper_bg internalId
+    else
         errorDialog "Cannot delete this type of object"
     end if
 
     -- 2) remove it
-    if objType == "bkgnd" then
-        internalvpcdeletevelhelper_bg internalId
-    else
+    if objType != "bkgnd" then
         put internalId into sendParam
         internalvpcmessagesdirective "removevelwithoutmsg" sendParam
         return sendParam

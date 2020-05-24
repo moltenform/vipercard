@@ -206,7 +206,7 @@ export class VpcElProductOpts extends VpcElBase {
         setters['filled'] = [PrpTyp.Str, (me: VpcElProductOpts, s: string, h: VpcHandleLinkedVels) => {
             if (s.toLowerCase() === 'white') {
                 me.setOnVel('optPaintFillColor', clrWhite, h)
-            } else if (s.toLowerCase() === 'black') {
+            } else if (s.toLowerCase() === 'black' || s.toLowerCase() === 'true') {
                 me.setOnVel('optPaintFillColor', clrBlack, h)
             } else {
                 /* make transparent */

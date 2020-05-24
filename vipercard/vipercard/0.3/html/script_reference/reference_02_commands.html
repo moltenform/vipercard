@@ -132,14 +132,14 @@ click at 10,20
 
 
 </code></pre><h2 id="create">create</h2>
-<p>Use <code>domenu &quot;create button&quot;</code> or <code>domenu &quot;create field&quot;</code> to create a button.</p>
+<p>Use <code>domenu &quot;new button&quot;</code> or <code>domenu &quot;new field&quot;</code> to create a button.</p>
 <p>Examples:</p>
 <pre><code>
 
-doMenu &quot;Create Button&quot;
+doMenu &quot;New Button&quot;
 put the result into newBtn
-set the name of newBtn to &quot;my new button&quot;
-set the loc of newBtn to 30, 30
+set the name of cd btn id newBtn to &quot;my new button&quot;
+set the loc of cd btn id newBtn to 30, 30
 
 </code></pre><h2 id="do">do</h2>
 <p>Take a string, and execute it as if it were a ViperCard script.</p>
@@ -150,6 +150,27 @@ set the loc of newBtn to 30, 30
 put &quot;answer &quot; into buildScript
 put quote &amp; &quot;abc&quot; &amp; quote after buildScript
 do buildScript
+
+</code></pre><h2 id="domenu">doMenu</h2>
+<p>Do a menu action.</p>
+<p>Supported actions include:</p>
+<pre><code>
+doMenu &quot;new card&quot;
+doMenu &quot;delete card&quot;
+doMenu &quot;first&quot;
+doMenu &quot;prev&quot;
+doMenu &quot;next&quot;
+doMenu &quot;last&quot;
+doMenu &quot;new button&quot;
+doMenu &quot;new field&quot;
+doMenu &quot;duplicate card paint&quot;
+
+-- all items from the Draw menu like
+doMenu &quot;black fill&quot;
+-- all items from the Font menu like
+doMenu &quot;helvetica&quot;
+-- all items from the Style menu like
+doMenu &quot;14&quot;
 
 </code></pre><h2 id="dial">dial</h2>
 <p>The dial command generates touch-tone sounds for the digits in the number, through the speaker. To dial the phone from ViperCard, you must either hold the handset up to the speaker of your computer or use a device that feeds computer audio output to the telephone.</p>

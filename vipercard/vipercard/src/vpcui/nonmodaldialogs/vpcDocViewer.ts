@@ -56,7 +56,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         /* prettier-ignore */
         ['overview', 'lngOverview', ['Introduction', 'Scripting', 'Expressions', 'Message Box', 'Lists/Arrays', 'Variables', 'New Functions', 'Text and Chunks', 'Objects', 'Structure', 'Examples', 'Tips & Shortcuts', 'Credits']],
         /* prettier-ignore */
-        ['commands', 'lngCommands', ['add', 'answer', 'ask', 'beep', 'choose tool', 'click', 'create', 'do', 'dial', 'disable', 'divide', 'delete ', 'drag', 'enable', 'go to card', 'hide', 'multiply', 'lock screen', 'play', 'put', 'replace', 'send', 'set', 'show', 'sort', 'subtract', 'unlock screen', 'wait', 'visual effect']],
+        ['commands', 'lngCommands', ['add', 'answer', 'ask', 'beep', 'choose tool', 'click', 'create', 'do', 'doMenu', 'dial', 'disable', 'divide', 'delete ', 'drag', 'enable', 'go to card', 'hide', 'multiply', 'lock screen', 'play', 'put', 'replace', 'send', 'set', 'show', 'sort', 'subtract', 'unlock screen', 'wait', 'visual effect']],
         /* prettier-ignore */
         ['syntax', 'lngSyntax', ['(Operators)', '(Constants)', 'global', 'if/then', 'short if/then', 'exit repeat', 'exit', 'exit to ViperCard', 'next repeat', 'pass', 'repeat', 'return']],
         /* prettier-ignore */

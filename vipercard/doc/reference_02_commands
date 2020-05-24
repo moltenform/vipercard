@@ -120,14 +120,14 @@ click at 10,20
 ========================= create
 ============================================================
 
-Use `domenu "create button"` or `domenu "create field"` to create a button.
+Use `domenu "new button"` or `domenu "new field"` to create a button.
 
 Examples:
 
-doMenu "Create Button"
+doMenu "New Button"
 put the result into newBtn
-set the name of newBtn to "my new button"
-set the loc of newBtn to 30, 30
+set the name of cd btn id newBtn to "my new button"
+set the loc of cd btn id newBtn to 30, 30
 
 ============================================================
 ========================= do
@@ -142,6 +142,34 @@ Examples:
 put "answer " into buildScript
 put quote & "abc" & quote after buildScript
 do buildScript
+
+============================================================
+========================= doMenu
+============================================================
+
+Do a menu action.
+
+Supported actions include:
+
+`
+doMenu "new card"
+doMenu "delete card"
+doMenu "first"
+doMenu "prev"
+doMenu "next"
+doMenu "last"
+doMenu "new button"
+doMenu "new field"
+doMenu "duplicate card paint"
+
+-- all items from the Draw menu like
+doMenu "black fill"
+-- all items from the Font menu like
+doMenu "helvetica"
+-- all items from the Style menu like
+doMenu "14"
+
+`
 
 ============================================================
 ========================= dial

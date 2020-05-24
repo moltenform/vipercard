@@ -37,6 +37,7 @@ on domenu itemName, pb
     if not handled then put domenu_changefont(key, pl, pb) into handled
     if not handled then put domenu_changefontsize(key, pl, pb) into handled
     if not handled then put domenu_changefontstyle(key, pl, pb) into handled
+    if not handled then put domenu_changefontalign(key, pl, pb) into handled
     if not handled then
         errorDialog ("Unknown domenu" && pl)
     end if
@@ -156,8 +157,8 @@ on domenu_paintsetting key, pl, pb
         set the filled to true
     else if pl == "white fill" then
         set the filled to "white"
-    else if pl == "multiple" then
-        set the drawmultiple to (not the drawmultiple)
+    else if pl == "draw multiple" then
+        set the multiple to (not the multiple)
     else
         put false into ret
     end if
@@ -167,11 +168,11 @@ end domenu_paintsetting
 on domenu_changefont key, pl, pb
     put "|chicago|courier|geneva|new york|times|helvetica|monaco|symbol|" into keys
     if key is in keys then
-        if "setAll|" in pb then
+        if "setAll|" is in pb then
             replace "setAll|" with "" in pb
             set the textfont of pb to pl
         else
-            set the textfont of the selection to pl
+            set the textfont of the selectedchunk to pl
         end if
         return true
     else
@@ -182,11 +183,11 @@ end domenu_changefont
 on domenu_changefontsize key, pl, pb
     put "|9|10|12|14|18|24|" into keys
     if key is in keys then
-        if "setAll|" in pb then
+        if "setAll|" is in pb then
             replace "setAll|" with "" in pb
             set the textsize of pb to pl
         else
-            set the textsize of the selection to pl
+            set the textsize of the selectedchunk to pl
         end if
         return true
     else
@@ -197,19 +198,31 @@ end domenu_changefontsize
 on domenu_changefontstyle key, pl, pb
     put "|plain|bold|italic|underline|outline|condense|extend|grayed|" into keys
     if key is in keys then
-        if "setAll|" in pb then
+        if "setAll|" is in pb then
             replace "setAll|" with "" in pb
             set the textstyle of pb to plain
         else if pl == "plain" then
-            set the textstyle of the selection to plain
+            set the textstyle of the selectedchunk to plain
         else
-            set the textstyle of the selection to "toggle-" & pl
+            set the textstyle of the selectedchunk to "toggle-" & pl
         end if
         return true
     else
         return false
     end if
 end domenu_changefontstyle
+
+on domenu_changefontalign key, pl, pb
+    put true into ret
+    if pl is "align left" or pl is "alignleft" then
+        set the textalign of the selectedfield to "left"
+    else if pl is "align center" or pl is "aligncenter" then
+        set the textalign of the selectedfield to "center"
+    else
+        put false into ret
+    end if
+    return ret
+end domenu_changefontalign
 
        `.replace(/\r\n/g, '\n')
 };

@@ -487,8 +487,8 @@ export class VpcMenuActions {
             let toolNumber = Util512.parseInt(s.substr('mnuItemTool'.length));
             toolNumber = toolNumber ?? VpcTool.Browse;
             this.vci.setTool(toolNumber);
-        } else if (s.startsWith('mnuItemFont')) {
-            let cmd = s.substr("mnuItemFont".length)
+        } else if (s.startsWith('mnuItemSetFont')) {
+            let cmd = s.substr("mnuItemSetFont".length)
             if (this.vci.getTool() === VpcTool.Browse) {
                 this.runMenuActionCode(`doMenu "${cmd}"`)
             } else {
