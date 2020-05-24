@@ -403,9 +403,7 @@ export class TestVpcScriptRunBase {
         built = FormattedText.fromExternalCharset(built, BrowserInfo.get().os);
 
         let vel = this.vcstate.model.getByIdUntyped(targetId);
-        this.vcstate.vci.doWithoutAbilityToUndo(() =>
-            vel.setOnVel('script', built, this.vcstate.model)
-        );
+        this.setScript(vel.idInternal, built)
 
         /* fake a click inside a btn, usually btnGo */
         assertEq(VpcTool.Browse, this.pr.getTool(), 'HY|');

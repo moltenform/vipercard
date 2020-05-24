@@ -1033,8 +1033,7 @@ send code to this stack\\g`,
     b = new ScriptTestBatch();
 
     /* make sure that invalid code is cleaned out after a preparse failure. */
-    let stack = h.vcstate.vci.getModel().getById(VpcElStack, h.ids.stack);
-    h.vcstate.vci.doWithoutAbilityToUndo(() => stack.setOnVel('script', ``, h.vcstate.model));
+    h.setScript(h.ids.stack, '')
     b.t('send "$$$#$%#$" to this stack\\0', 'ERR:4:lex error');
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
@@ -1049,8 +1048,7 @@ send code to this stack\\g`,
     b = new ScriptTestBatch();
 
     /* make sure that code can run after a runtime failure. */
-    h.vcstate.vci.doWithoutAbilityToUndo(() => stack.setOnVel('script', ``, h.vcstate.model));
-
+    h.setScript(h.ids.stack, '')
     b.t('send "put 1 into cd fld 999" to this stack\\0', 'ERR:4:element not found');
 
     b.batchEvaluate(h);
