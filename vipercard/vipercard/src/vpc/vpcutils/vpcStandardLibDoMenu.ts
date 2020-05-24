@@ -128,7 +128,7 @@ on domenu_movecard key, pl, pb
         if pb == "FromUI" and the number of this cd >= the number of cds in this stack then
             answer "You are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu."
         else
-            go prev
+            go next
         end if
     else
         put false into ret

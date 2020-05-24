@@ -376,28 +376,28 @@ export class VpcMenuActions {
     /**
      * left arrow, usually go left but user can override
      */
-    mnuOnArrowLeft() {
+    goMnuOnArrowLeft() {
         this.runMenuActionCode('arrowkey "left"')
     }
 
     /**
      * right arrow, usually go right but user can override
      */
-    mnuOnArrowRight() {
+    goMnuOnArrowRight() {
         this.runMenuActionCode('arrowkey "right"')
     }
 
     /**
      * up arrow, usually no-op but user can override
      */
-    mnuOnArrowUp() {
+    goMnuOnArrowUp() {
         this.runMenuActionCode('arrowkey "up"')
     }
 
     /**
      * down arrow, usually no-op but user can override
      */
-    mnuOnArrowDown() {
+    goMnuOnArrowDown() {
         this.runMenuActionCode('arrowkey "down"')
     }
 

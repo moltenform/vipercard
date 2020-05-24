@@ -116,7 +116,7 @@ export class VpcAppLyrToolbox extends VpcUILayer {
             this.vci.performMenuAction('mnuGoCardNext');
         } else if (id === 'dupeCardOrStatus') {
             if (!this.vci.isCodeRunning()) {
-                this.vci.performMenuAction('mnuDupeCard');
+                this.vci.performMenuAction('mnuDupeCardPaint');
             }
         } else if (id === 'makeAnimOrStatus') {
             if (!this.vci.isCodeRunning()) {
