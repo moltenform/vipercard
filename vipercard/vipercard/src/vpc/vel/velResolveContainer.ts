@@ -154,15 +154,16 @@ export class RWContainerFldSelection implements WritableContainer {
             this.fld.setProp('alltext', VpcValS(newstring), this.h);
         } else {
             let slice = txt.slice(this.start, this.end)
-            let font = insertion+this.start >= 0 && insertion+this.start < txt.len() ? txt.fontAt(insertion+this.start) : this.fld.getDefaultFontAsUi512();
+            let trueInsert = insertion + this.start
+            let font = trueInsert >= 0 && trueInsert < txt.len() ? txt.fontAt(trueInsert) : this.fld.getDefaultFontAsUi512();
             let newSliceContents = FormattedText.byInsertion(slice, insertion, lenToDelete, newstring, font);
-            let newTxt = FormattedText.byInsertion(newSliceContents, this.start, this.end, newSliceContents.toUnformatted(), font)
+            let newTxt = FormattedText.byInsertion(txt, this.start, this.end-this.start, newSliceContents.toUnformatted(), font)
             this.fld.setCardFmTxt(newTxt, this.h);
         }
     }
 
     setAll(newText: string) {
-        this.splice(0, 0, newText)
+        this.splice(0, this.len(), newText)
     }
 
     replaceAll(search: string, replaceWith: string) {

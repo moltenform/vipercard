@@ -2,7 +2,7 @@
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
-/* auto */ import { RequestedVelRef, RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';

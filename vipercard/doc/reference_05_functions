@@ -569,11 +569,37 @@ put selectedLine() into x
 ========================= selectedText()
 ============================================================
 
-The value of the current selected text.
+The value of the current selected text, or the empty string if there is no selection.
 
 Examples:
 
 put selectedText() into x
+
+============================================================
+========================= the selection
+============================================================
+
+Reading from `the selection` retrieves the value of the current selected text, or the empty string if there is no selection.
+
+Writing to `the selection` replaces the currently selected text with new text.
+
+Examples:
+
+put the selection into x
+put "" into the selection
+put "abc" into the selection
+
+-- chunks are supported
+put char 2 to 3 of the selection into x
+put "" into char 2 to 3 of the selection
+put "abc" into char 3 of the selection
+put item 2 to 3 of the selection into x
+put "" into item 2 to 3 of the selection
+put "abc" into item 3 of the selection
+
+-- you can delete part of the selection
+delete char 2 to 4 of the selection
+delete item 3 of the selection
 
 ============================================================
 ========================= shiftKey()

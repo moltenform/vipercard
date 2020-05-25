@@ -6,6 +6,7 @@
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 
+
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -16,9 +17,16 @@
     add 1 to char 3 to 5 of y (modify)
     delete char 3 to 5 of y (delete)
     set the textsize of char 3 to 5 of cd fld 1 to 12 (text)
-    Note: chunks can also be applied to "the selection",
-        for simplicity we now implement the selection as a
-        new container type, not as a chunk
+    Note: chunks can also be applied to "the selection".
+        it's a new container type, not a chunk.
+            if it were a chunk, or if it were rewritten
+            in rewrites to char selcharstart to selcharend of the selectedfield,
+            it would be hard to support put "abc" into item 3 of the selection
+        put char 3 to 5 of the selection into y (read)
+        put x into char 3 to 5 of the selection (write)
+        add 1 to char 3 to 5 of the selection, nyi
+        delete char 3 to 5 of y (delete)
+        set the textsize of the selectedchunk to 12 (done in rewrites)
  */
 
 /**
@@ -120,6 +128,9 @@ export const ChunkResolution = /* static class */ {
             cont.splice(0, cont.len(), news);
             return;
         }
+
+        /* it gets thrown off because it won't see the inserted text */
+        checkThrow(cont['start'] === undefined && cont['end'] === undefined, "we don't yet support 'add 3 to item 1 of the selection' _RWContainerFldSelection_")
 
         /* haven't tested this, note that newline is sometimes a special char even for items */
         checkThrow(itemDel !== '\n', "we haven't tested with an itemdel of newline");
