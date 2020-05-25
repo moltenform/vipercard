@@ -275,9 +275,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
                 ret.vel = new RequestedVelRef(VpcElType.Fld);
                 ret.vel.lookById = Util512.parseIntStrict(selFld.idInternal);
                 checkThrow(ret.vel.lookById, 'S7|');
-                ret.chunk = new RequestedChunk(bounds[0]);
+                ret.vel.partIsCdOrBg = true
+                ret.chunk = new RequestedChunk(bounds[0]+1 /* 0-based to 1-based */);
                 ret.chunk.granularity = VpcGranularity.Chars;
-                ret.chunk.last = bounds[1];
+                ret.chunk.last = Math.max(1, bounds[1]);
                 ret.chunk.sortFirst = true;
                 return ret;
             }
