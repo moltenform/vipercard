@@ -65,32 +65,14 @@
 //      nearly all chunks supported except 1) negative index 2) backwards bounds 3) deleting a range besides chars
 //      use compatibility mode (off by default) to match some weird behavior in original product
 //      unless compatibility mode is turned on, "the id" is made consistent for all objects 
-//          is also more useful, since the long id actually is long than the short id.
+//          is also more useful, since the long id actually is longer than the short id, and isn't card-dependent.
 //      set the filled can be true, false, or "white"
 
-            
-// aren't yet supported in software include:
-//      domenu can't (yet) be handled/trapped
+
 
 // changes from v1:
-//      put the sin of 4 into x is now supported
-//      put sin of 4 into x is now supported, and even the sin of cd fld 1
-//      continued lines can use logical not / cool os roman symbols
-//      put "a" into fld 1 and put "a" into bg fld 1 both work, if compat mode is on
-//      cd btn "abc" is now case insensitive
-//      unsupported commands like "close" are not syntax errors, they will be shown at runtime
-//      "send" is more efficient, doesn't need to recompile the whole script, just the snippet
-//      NEW FEATURE:  put "bkgnd id 2590" into xx;   put the name of xx into cd fld "myf"
-//      you can use one val where most places coords are needed. 
-        // put "1,1" into cds; click at cds, to match product
         // click at "1," missing items are treated as 0, to match product
-//      you can no longer say put the result() into x, you have to say either put the result into x or put result() into x
-//      match the product: you can't say 'get the id of target' or 'get the id of target()', you have to say 'get the id of the target'
-//      match the product: we no longer support the in some cases, "the me" and "the hypercard" are no longer valid
-//      match the product: we support 'put the name of target' via string rewrites to match the product
-//      single line ifs match the product better. last line is "else answer 'hi'" not "else then answer 'hi'"
-//      Better cursors, better rendering on different monitor resolutions, more fonts
-//      NEW FEATURE:  recursive chunks, put "a" into char 1 of line 3 of cd fld 1
+//      we no longer support the in some cases, "the me" and "the hypercard" are no longer valid
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )
 tkStringLiteral=/"[^"\n]*"{{nothingdirectlyafter}}/
@@ -236,17 +218,15 @@ ObjectCard:= { _recent { tkCard | tkCardPlural | tkCardAtEndOfLine} | _back | _f
 ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | tkOrdinalOrPosition { tkBg | tkBgAtEndOfLine } |  \
                         tkBgAtEndOfLine} [ <Of> <ObjectStack> ]                                                                          --->Custom--->RequestedVelRef
 ObjectStack:={ tkOrdinalOrPosition { tkStack | tkStackAtEndOfLine} | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                         --->Custom--->RequestedVelRef  
-
-
 ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef
 
 // ObjectInterpretedFromString:
 // don't need to support HOldStyleFnNonNullary
-// future possibility: allow HOldStyleFnNullaryOrNullaryPropGet to support 'the target', and HUnaryPropertyGet to support 'the owner of'. now use tkAllUnaryPropertiesIfNotAlready for owner.
+// maybe use HUnaryPropertyGet to support 'the owner of'. now use tkAllUnaryPropertiesIfNotAlready for owner.
 // since HUnaryPropertyGet has an optional "the", it's complicated to do that now.
 // original product allows an hchunk: 'get the short id of line 3 of cd fld "a"' but that would make 'get the textfont of line 3 of cd fld "a"' ambiguous.
 // so I won't support an hchunk for now, you'll have to use parens
-ObjectInterpretedFromString:={ tkStringLiteral | [_the] _target | tkLParen <Expr> tkRParen | <HAnyAllowedVariableName> | _the [tkAdjective] tkAllUnaryPropertiesIfNotAlready tkOfOnly <Object> }       --->Custom--->RequestedVelRef
+ObjectInterpretedFromString:={ tkStringLiteral | _target | tkLParen <Expr> tkRParen | <HAnyAllowedVariableName> | <HOldStyleFnNullaryOrNullaryPropGet> | _the [tkAdjective] tkAllUnaryPropertiesIfNotAlready tkOfOnly <Object> }       --->Custom--->RequestedVelRef
 
 // CONFIRMED THIS COMPLEX BEHAVIOR IN EMULATOR:
 // "target" and "the target" have subtly different behavior
