@@ -255,17 +255,23 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
+     * makes the bounds ordered min to max, and ensures that they are within range.
+     * also checks for a field marked as can't-select.
+     */
+    protected getSelectionBounds(fld:VpcElField) : O<[number, number]> {
+        let generic = new VpcTextFieldAsGeneric(undefined, fld, this.Model());
+         return TextSelModify.getSelectedTextBounds(generic);
+    }
+
+    /**
      * get the selected text chunk
      */
     GetSelectedTextChunk(): O<RequestedContainerRef> {
         let selFld = this.GetSelectedField();
         if (selFld) {
-            let ret = new RequestedContainerRef();
-            ret.vel = new RequestedVelRef(VpcElType.Fld);
-            let generic = new VpcTextFieldAsGeneric((undefined as unknown) as UI512ElTextField, selFld, this.Model());
-
-            let bounds = TextSelModify.getSelectedTextBounds(generic);
+            let bounds = this.getSelectionBounds(selFld)
             if (bounds) {
+                let ret = new RequestedContainerRef();
                 ret.vel = new RequestedVelRef(VpcElType.Fld);
                 ret.vel.lookById = Util512.parseIntStrict(selFld.idInternal);
                 checkThrow(ret.vel.lookById, 'S7|');
@@ -273,12 +279,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
                 ret.chunk.granularity = VpcGranularity.Chars;
                 ret.chunk.last = bounds[1];
                 ret.chunk.sortFirst = true;
+                return ret;
             }
-
-            return ret;
-        } else {
-            return undefined;
         }
+            
+        return undefined;
     }
 
     /**

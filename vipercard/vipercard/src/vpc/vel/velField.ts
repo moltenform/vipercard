@@ -4,6 +4,7 @@
 /* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { GenericTextField } from './../../ui512/textedit/ui512GenericField';
@@ -274,7 +275,7 @@ export class VpcElField extends VpcElSizable {
  * we need to update the _VpcElField_ model first
  */
 export class VpcTextFieldAsGeneric implements GenericTextField {
-    constructor(protected el512: UI512ElTextField, protected impl: VpcElField, protected h: VpcHandleLinkedVels) {}
+    constructor(protected el512: O<UI512ElTextField>, protected impl: VpcElField, protected h: VpcHandleLinkedVels) {}
 
     setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
         this.impl.setCardFmTxt(newTxt, this.h, context);
@@ -314,7 +315,7 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
     }
 
     getReadOnlyUI512(): UI512ElTextField {
-        return this.el512;
+        return ensureDefined(this.el512, "");
     }
 
     getScrollAmt(): number {

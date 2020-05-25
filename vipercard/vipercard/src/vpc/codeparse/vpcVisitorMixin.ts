@@ -12,7 +12,6 @@
 /* auto */ import { VelRenderId } from './../vel/velRenderName';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
-/* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { arLast, cast, castVerifyIsStr, getStrToEnum } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -265,8 +264,8 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return ret;
         }
 
-        RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef {
-            let ret = new RequestedContainerRef();
+        RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef | "noSelection" {
+            let ret:RequestedContainerRef | "noSelection" = new RequestedContainerRef();
             if (ctx.RuleMenu && ctx.RuleMenu[0]) {
                 checkThrow(false, "S8|we don't yet support custom menus");
             } else if (ctx.RuleMessageBox && ctx.RuleMessageBox[0]) {
@@ -275,7 +274,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.vel = new RequestedVelRef(VpcElType.Unknown);
                 ret.vel.isReferenceToTarget = true;
             } else if (ctx._selection && ctx._selection[0]) {
-                ret = ensureDefined(this.outside.GetSelectedTextChunk(), 'nothing is selected');
+                ret = this.outside.GetSelectedTextChunk() ?? "noSelection";
             } else if (ctx.RuleObjectBtn && ctx.RuleObjectBtn[0]) {
                 checkThrow(
                     false,
@@ -296,12 +295,13 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHContainer(ctx: VisitingContext): RequestedContainerRef {
             let ret = this.visit(ctx.RuleHSimpleContainer[0]);
+            checkThrow(ret !== "noSelection", "There isn't any selection.")
             checkThrow(ret instanceof RequestedContainerRef, `S5|internal error, expected IntermedValContainer`);
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
                 let newChunk = this.visit(ctx.RuleHChunk[0]);
                 checkThrow(newChunk && newChunk instanceof RequestedChunk, `9W|chunk not valid`);
                 if (ret.chunk) {
-                    /* append our chunk. e.g. "char 3 of the selectedtext" */
+                    /* append our chunk. e.g. "char 3 of the selection" */
                     let wasThere = ret.chunk;
                     ret.chunk = newChunk;
                     ret.chunk.child = wasThere;
@@ -357,8 +357,13 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 return VpcVal.getScientificNotation(ctx.tkNumLiteral[0].image);
             } else if (ctx.RuleHSimpleContainer && ctx.RuleHSimpleContainer[0]) {
                 let container = this.visit(ctx.RuleHSimpleContainer[0]);
-                checkThrow(container instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
-                return VpcValS(this.outside.ContainerRead(container));
+                if (container === "noSelection") {
+                    return VpcValS("");
+                } else {
+                    checkThrow(container instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
+                    return VpcValS(this.outside.ContainerRead(container));
+                }
+                
             } else {
                 checkThrowInternal(false, '|3|null');
             }
@@ -371,10 +376,12 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 return this.visit(ctx.RuleHGenericFunctionCall[0]);
             } else if (ctx.RuleHSimpleContainer && ctx.RuleHSimpleContainer[0]) {
                 let reference = this.visit(ctx.RuleHSimpleContainer[0]);
-                checkThrow(reference instanceof RequestedContainerRef, 'S2|');
-                let readable = this.outside.ResolveContainerReadable(reference);
-                let s = readable.getRawString();
-                return VpcValS(s);
+                if (reference === "noSelection") {
+                    return VpcValS("");
+                } else {
+                    checkThrow(reference instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
+                    return VpcValS(this.outside.ContainerRead(reference));
+                }
             } else {
                 checkThrowInternal(false, 'S1|OR in HSource, no branch found');
             }
