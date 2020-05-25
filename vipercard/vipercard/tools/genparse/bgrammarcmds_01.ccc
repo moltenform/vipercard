@@ -119,7 +119,7 @@ BuiltinCmdReplace:=... <Expr> tkSyntaxMark <Expr> tkInOnly  <HSimpleContainer>
 // select. "select empty", "select text of cd fld 1" is supported, "select button/fld" is not (you'd have to be in the edit tool)
 BuiltinCmdSelect:=...  tkStringLiteral [ <HContainer> ]                                         
 // setting a property
-BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> { <ObjectFld> | _me | [_the] _target } | <Object> } ] _to <AnyPropertyVal>    
+BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> { <ObjectFld> | _me | <ObjectChunkInterpretedFromString> } | <Object> } ] _to <AnyPropertyVal>    
 // show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
 // we don't yet support show all cards or show 6 cards
 BuiltinCmdShow:=...  <Object> [ tkSyntaxMark <Lvl4Expression> [tkComma <Lvl4Expression>]  ]                                  

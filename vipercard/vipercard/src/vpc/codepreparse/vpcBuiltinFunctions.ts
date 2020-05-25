@@ -2,7 +2,7 @@
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
-/* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { RequestedVelRef, RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
@@ -631,15 +631,10 @@ export class VpcBuiltinFunctions {
      * The value of the current selected text.
      */
     callSelectedtext(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let fld = this.readoutside.FindSelectedTextBounds()[0];
-        if (fld) {
-            let start = fld.getN('selcaret');
-            let end = fld.getN('selend');
-            let s = fld.getCardFmTxt().toUnformattedSubstr(start, end - start);
-            return VpcValS(s);
-        } else {
-            return VpcVal.Empty;
-        }
+        let ref = new RequestedContainerRef()
+        ref.isJustSelection = true
+        let resolved = this.readoutside.ResolveContainerReadable(ref)
+        return VpcValS(resolved.getRawString())
     }
 
     /**

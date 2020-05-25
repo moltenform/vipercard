@@ -247,6 +247,7 @@ ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef
 // original product allows an hchunk: 'get the short id of line 3 of cd fld "a"' but that would make 'get the textfont of line 3 of cd fld "a"' ambiguous.
 // so I won't support an hchunk for now, you'll have to use parens
 ObjectInterpretedFromString:={ tkStringLiteral | [_the] _target | tkLParen <Expr> tkRParen | <HAnyAllowedVariableName> | _the [tkAdjective] tkAllUnaryPropertiesIfNotAlready tkOfOnly <Object> }       --->Custom--->RequestedVelRef
+ObjectChunkInterpretedFromString:={ <HOldStyleFnNullaryOrNullaryPropGet> | tkStringLiteral | [_the] _target | tkLParen <Expr> tkRParen | <HAnyAllowedVariableName> | _the [tkAdjective] tkAllUnaryPropertiesIfNotAlready tkOfOnly <Object>  }       --->Custom--->[RequestedVelRef, number, number]
 
 // CONFIRMED THIS COMPLEX BEHAVIOR IN EMULATOR:
 // "target" and "the target" have subtly different behavior
@@ -323,7 +324,7 @@ HChunkBound:= { tkLParen <Expr> tkRParen | tkNumLiteral  | <HSimpleContainer> } 
 HSource:={<HSource_1> | <HGenericFunctionCall> | <HSimpleContainer>}   --->Custom--->VpcVal
 HSource_1:=  {tkStringLiteral | tkNumLiteral}                 --->Custom--->VpcVal
 HFnCallWParens:={ <HAnyFnName> tkLParen MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP tkRParen  }         --->Custom--->VpcVal
-HUnaryPropertyGet:=[_the] [ tkAdjective ] <HAllPropertiesThatCouldBeUnary> tkOfOnly { <Object> | <Window> | <MenuItem> <Of> <Menu> | <HChunk> { <ObjectFld> | _me | [_the] _target } }       --->Custom--->VpcVal
+HUnaryPropertyGet:=[_the] [ tkAdjective ] <HAllPropertiesThatCouldBeUnary> tkOfOnly { <Object> | <Window> | <MenuItem> <Of> <Menu> | <HChunk> { <ObjectFld> | _me | <ObjectChunkInterpretedFromString> } }       --->Custom--->VpcVal
 HOldStyleFnNonNullary:=_the <HAnyFnName> tkOfOnly <Lvl6Expression>                                                                             --->Custom--->VpcVal
 HOldStyleFnNullaryOrNullaryPropGet:= _the [ tkAdjective ] <HAnyFnNameOrAllPropertiesThatCouldBeNullary>             --->Custom--->VpcVal
 
