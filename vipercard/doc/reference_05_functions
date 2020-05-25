@@ -548,19 +548,21 @@ put selectedChunk() into x
 ========================= selectedField()
 ============================================================
 
-The field that contains current selected text, looks something like 'cd fld id 1234'.
+The field that contains current selected text, or "" if there is no selection.
+(If compatibility mode is enabled, not recommended for new code, uses HyperCard's formatting and returns a string like
+"card field 4".)
 
 Examples:
 
 put selectedField() into x
-
+set the loc of the selectedField to 23, 45
 
 ============================================================
 ========================= selectedLine()
 ============================================================
 
 The number of the line of the current selected text, or "" if there is no selection.
-(If compatibility mode is enabled, uses HyperCard's formatting and returns a string like
+(If compatibility mode is enabled, not recommended for new code, uses HyperCard's formatting and returns a string like
 "line 3 of card field 4".)
 Examples:
 
