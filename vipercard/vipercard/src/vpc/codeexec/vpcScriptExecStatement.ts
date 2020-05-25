@@ -335,7 +335,7 @@ export class ExecuteStatement {
     goSelect(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals);
         if (params[0] === 'empty') {
-            checkThrow(false, 'R+|nyi: deselecting text');
+            this.directiveImpl.setSelection(undefined, 0, 0)
         } else {
             let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
             checkThrow(contRef.vel, 'R*|has to be a field, not a variable');
@@ -347,6 +347,12 @@ export class ExecuteStatement {
                 let cont = this.outside.ResolveContainerReadable(contRef)
                 let bounds = ChunkResolution.applyRead(cont, contRef.chunk, this.outside.GetItemDelim())
                 if (bounds) {
+                    if (params[0] === 'before') {
+                        bounds.endPos = bounds.startPos
+                    } else if (params[0] === 'after') {
+                        bounds.startPos = bounds.endPos
+                    }
+
                     this.directiveImpl.setSelection(resolved, bounds.startPos, bounds.endPos)
                 }
             }

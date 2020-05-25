@@ -63,11 +63,11 @@ t.test('getProp', () => {
         confirmed these in emulator */
     b.t(`the short id of the target`, `${h.ids.go}`);
     b.t(`the short id of target`, `${h.ids.go}`);
-    b.t(`put 1 into target\\0`, `ERR:writing text to`);
+    b.t(`put 1 into target\\0`, `ERR:only read/write`);
     b.t(`the short id of target()`, `ERR:parse err`);
     b.t(`the short id of (target())`, `ERR:no such function`);
     /* tries to pull its contents */
-    b.t(`the short id of (target)`, `ERR:only support reading/writing text`);
+    b.t(`the short id of (target)`, `ERR:only read/write text`);
     b.t(`the short id of the me`, `ERR:parse err`);
     b.t(`the short id of me()`, `ERR:parse err`);
     b.t(`the short id of (me)`, `ERR:parse err`);

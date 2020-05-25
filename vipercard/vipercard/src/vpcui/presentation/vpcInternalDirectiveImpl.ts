@@ -309,7 +309,14 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
      * we don't need to send a selected-field-changed event, it will 
      * be sent by the ui512 layer.
      */
-    setSelection(vel:VpcElField, start:number, end:number):void {
+    setSelection(vel:O<VpcElField>, start:number, end:number):void {
+        this.vci.causeFullRedraw()
+        if (!vel) {
+            /* clear the selection */
+            this.pr.setCurrentFocus(undefined, false /* skip sending event */)
+            return
+        }
+
         let elId = this.pr.lyrModelRender.velIdToElId(vel.idInternal)
         let findEl = this.pr.app.findEl(elId)
         if (findEl) {
@@ -323,7 +330,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
                 weird/negative/backwards, we'll repair it here  */
                 vel.setOnVel('selcaret', newbounds[0], this.outside.Model())
                 vel.setOnVel('selend', newbounds[1], this.outside.Model())
-                this.pr.setCurrentFocus(elId, false /* send event */)
+                this.pr.setCurrentFocus(elId, false /* skip sending event */)
             }
         }
     }

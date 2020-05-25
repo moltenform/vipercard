@@ -388,7 +388,7 @@ put the result %ARG0%`;
     rewriteSelect(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'S>|not enough args');
         if (line[1].image === 'empty') {
-            checkThrowEq(1, line.length, 'S=|select empty should be alone');
+            checkThrowEq(2, line.length, 'S=|select empty should be alone');
             return [[line[0], BuildFakeTokens.makeStringLiteral(line[0], 'empty') ]];
         } else {
             let startContainer = 1;
@@ -404,11 +404,11 @@ put the result %ARG0%`;
 
             checkThrow(
                 line[startContainer].tokenType === tks.tkChunkGranularity || 'text' === line[startContainer].image,
-                'S<|we only support `select *text* of` or `select char 2 of'
+                'S<|incorrect syntax for select'
             );
             if ('text' === line[startContainer].image) {
                 startContainer += 1;
-                checkThrowEq('of', line[startContainer].image, 'S;|we only support `select text *of*`');
+                checkThrowEq('of', line[startContainer].image, 'S;|incorrect syntax for select, no \'of\' seen');
                 startContainer += 1;
             }
 

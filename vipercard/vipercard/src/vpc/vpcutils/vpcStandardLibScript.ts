@@ -47,6 +47,13 @@ on arrowkey direction
     end if
 end arrowkey
 
+-- clicking away from any field should clear selection
+on mouseUp
+    if word 2 of (the target) is not "button" and word 2 of (the target) is not "field" then
+        select empty
+    end if
+end mouseUp
+
 on push
     global internalvpcpushimpl
     put return & the short id of this cd after internalvpcpushimpl

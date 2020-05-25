@@ -209,8 +209,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             checkThrow(vel, `8;|element not found`);
             checkThrow(
                 vel instanceof VpcElField,
-                longstr(`UJ|currently we only support reading/writing text to
-                    a fld. to read/write label of button, use 'the label of cd btn 1'`)
+                longstr(`UJ|you can only read/write text to
+                    a field. to read/write label of button, use 'the label of cd btn 1'`)
             );
 
             return new RWContainerField(vel, this.Model());
