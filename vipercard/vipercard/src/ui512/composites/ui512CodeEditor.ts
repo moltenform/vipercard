@@ -1,4 +1,5 @@
 
+/* auto */ import { arLast } from './../utils/util512';
 /* auto */ import { TextSelModify } from './../textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextFieldAsGeneric } from './../textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
@@ -8,6 +9,7 @@
 /* auto */ import { UI512DrawText } from './../drawtext/ui512DrawText';
 /* auto */ import { UI512CompBase, WndBorderDecorationConsts } from './ui512Composites';
 /* auto */ import { UI512AutoIndent, UI512CompCodeEditorFont } from './ui512CodeEditorAutoIndent';
+
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -112,6 +114,12 @@ export class UI512CompCodeEditor extends UI512CompBase {
                     this.blockCommentStart,
                     this.blockCommentEnd
                 );
+                break;
+            case 'Opt+Enter':
+                /* insert continued line character */
+                TextSelModify.changeTextInsert(gel, arLast(this.autoIndent.lineContinuation));
+                TextSelModify.changeTextInsert(gel, '\n');
+                this.autoIndent.runAutoIndentAll(this.el);
                 break;
             case 'Enter':
                 /* run auto-indent when you hit Enter */
