@@ -559,7 +559,9 @@ put selectedField() into x
 ========================= selectedLine()
 ============================================================
 
-The number of the line of the current selected text.
+The number of the line of the current selected text, or "" if there is no selection.
+(If compatibility mode is enabled, uses HyperCard's formatting and returns a string like
+"line 3 of card field 4".)
 Examples:
 
 put selectedLine() into x

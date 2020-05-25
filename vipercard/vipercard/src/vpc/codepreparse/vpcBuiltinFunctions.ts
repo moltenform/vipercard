@@ -3,7 +3,7 @@
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq, OrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
@@ -604,7 +604,7 @@ export class VpcBuiltinFunctions {
     callSelectedfield(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let fld = this.readoutside.FindSelectedTextBounds()[0];
         if (fld) {
-            let container = this.getFullNameById(fld.idInternal, PropAdjective.Abbrev, VpcElType.Fld);
+            let container = this.renderVelName(fld.idInternal);
             return VpcValS(container);
         } else {
             return VpcVal.Empty;
@@ -620,7 +620,7 @@ export class VpcBuiltinFunctions {
         if (fld) {
             let start = this.toOneBased(fld.getN('selcaret'));
             let end = this.toOneBased(fld.getN('selend'));
-            let container = this.getFullNameById(fld.idInternal, PropAdjective.Abbrev, VpcElType.Fld);
+            let container = this.renderVelName(fld.idInternal);
             return VpcValS(`char ${start} to ${end} of ${container}`);
         } else {
             return VpcVal.Empty;
@@ -638,6 +638,16 @@ export class VpcBuiltinFunctions {
     }
 
     /**
+     * are we in compatibility mode
+     */
+    protected getCompatMode() {
+        let ref = new RequestedVelRef(VpcElType.Stack)
+        ref.lookByRelative = OrdinalOrPosition.This
+        let read = this.readoutside.GetProp(ref, 'compatibilitymode', PropAdjective.Empty, undefined)
+        return read.readAsStrictBoolean()
+    }
+
+    /**
      * The number of the line of the current selected text.
      * Note: disregards the end of the selection.
      */
@@ -646,7 +656,13 @@ export class VpcBuiltinFunctions {
         if (selInfo && selInfo[0]) {
             let start = selInfo[1];
             let lines = new UI512Lines(selInfo[0].getFmTxt());
-            return VpcValN(lines.indexToLineNumber(start));
+            let whichLine = this.toOneBased(lines.indexToLineNumber(start))
+            if (this.getCompatMode()) {
+                let s = `line ${whichLine} of ${this.renderVelName(selInfo[0].idInternal)}`
+                return VpcValS(s)
+            } else {
+                return VpcValN(whichLine)
+            }
         } else {
             return VpcVal.Empty;
         }
@@ -675,15 +691,29 @@ export class VpcBuiltinFunctions {
     }
 
     /**
-     * get the full name of a vel
+     * get the name of a vel as a string.
+     * if compat mode, "card field 3" (confirmed in emulator)
+     * if non-compat mode, "card field id 234"
      */
-    protected getFullNameById(id: string, adjective: PropAdjective, type: VpcElType) {
-        let ref = new RequestedVelRef(type);
+    protected renderVelName(idInternal: string):string {
+        let ref = new RequestedVelRef(VpcElType.Unknown);
         ref.partIsCdOrBg = true
-        let idn = VpcValS(id).readAsStrictInteger(this.tmpArr);
-        ref.lookById = idn;
-        let fullname = this.readoutside.GetProp(ref, 'name', adjective, undefined);
-        return fullname.readAsString();
+        ref.lookById = Util512.parseInt(idInternal)
+        checkThrow(ref.lookById, "id not a number")
+        let sInfo = this.readoutside.ElementExists(ref)
+        checkThrow(sInfo, "not found")
+        if (this.getCompatMode()) {
+            let words = sInfo.split(' ')
+            let objType = words[0]
+            if (words[1] === 'button' || words[1] === 'field') {
+                objType += ' ' + words[1]
+            }
+            
+            let objNumber = this.readoutside.GetProp(ref, 'number', PropAdjective.Long, undefined)
+            return `${objType} ${objNumber.readAsString()}`
+        } else {
+            return sInfo
+        }
     }
 
     /**
