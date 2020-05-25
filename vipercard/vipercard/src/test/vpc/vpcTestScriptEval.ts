@@ -1095,7 +1095,7 @@ t.test('builtinFunctions', () => {
     b.t('the number of bgs', '3');
     b.t('the number of bgs of this stack', '3');
     b.t('the number of bgs of next stack', 'ERR:find this object');
-    b.t('the number of bgs of second stack', 'ERR:parse error');
+    b.t('the number of bgs of second stack', 'ERR:find this object');
     b.t('the number of cds', '5');
     b.t('the number of cds of this stack', '5');
     b.t('the number of cds of this bg', '3');
@@ -1129,7 +1129,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a xyz`, 'ERR:variable found');
     b.t(`there _is_ a this stack`, 'true');
     b.t(`there _is_ a next stack`, 'false');
-    b.t(`there _is_ a second stack`, 'ERR:parse err');
+    b.t(`there _is_ a second stack`, 'false');
     b.t(`there _is_ a xyz stack`, 'ERR:parse err');
 
     /* bg */
@@ -1156,7 +1156,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a this card`, 'true');
     b.t(`there _is_ a next card`, 'true');
     b.t(`there _is_ a first card`, 'true');
-    b.t(`there _is_ a tenth card`, 'false');
+    b.t(`there _is_ a last card`, 'true');
     b.t(`there _is_ a card 2 of this bg`, 'true');
     b.t(`there _is_ a card 2 of bg 2`, 'true');
     b.t(`there _is_ a card 2 of bg 1`, 'false');

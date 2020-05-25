@@ -35,8 +35,6 @@ export interface VpcCompleteVisitor {
     RuleObjectSpecial(ctx: VisitingContext): RequestedVelRef;
     RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef;
     RuleOf(ctx: VisitingContext): ChvITk;
-    RuleOrdinal(ctx: VisitingContext): OrdinalOrPosition;
-    RulePosition(ctx: VisitingContext): OrdinalOrPosition;
     RuleMenuItem(ctx: VisitingContext): string;
     RuleMenu(ctx: VisitingContext): string;
     RuleWindow_1(ctx: VisitingContext): string;
@@ -127,8 +125,6 @@ export interface VisitingContext {
     RuleObjectSpecial: any[];
     RuleObjectInterpretedFromString: any[];
     RuleOf: any[];
-    RuleOrdinal: any[];
-    RulePosition: any[];
     RuleMenuItem: any[];
     RuleMenu: any[];
     RuleWindow_1: any[];
@@ -220,8 +216,7 @@ export interface VisitingContext {
     tkFldPlural: ChvITk[];
     tkProductName: ChvITk[];
     tkAdjective: ChvITk[];
-    tkOrdinal: ChvITk[];
-    tkPosition: ChvITk[];
+    tkOrdinalOrPosition: ChvITk[];
     tkChunkGranularity: ChvITk[];
     tkInOnly: ChvITk[];
     tkOfOnly: ChvITk[];

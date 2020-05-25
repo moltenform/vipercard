@@ -139,8 +139,8 @@ export class VpcRewriteForCommands {
     }
     rewriteDelete(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, "not enough args")
-        if (line[1]?.tokenType === tks.tkChunkGranularity || line[1]?.tokenType === tks.tkOrdinal && line[2]?.tokenType === tks.tkChunkGranularity 
-            || line[1]?.tokenType === tks._the && line[2]?.tokenType === tks.tkOrdinal && line[3]?.tokenType === tks.tkChunkGranularity) {
+        if (line[1]?.tokenType === tks.tkChunkGranularity || line[1]?.tokenType === tks.tkOrdinalOrPosition && line[2]?.tokenType === tks.tkChunkGranularity 
+            || line[1]?.tokenType === tks._the && line[2]?.tokenType === tks.tkOrdinalOrPosition && line[3]?.tokenType === tks.tkChunkGranularity) {
                 return this.hReturnNyiIfMenuMentionedOutsideParens(line);
         } else {
 /* rewrite to internalvpcdeletevelhelper */
@@ -219,8 +219,13 @@ return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0% , the sh
             return [this.hBuildNyi(`go without dialog`, line[0])];
         }
 
+        //~ /* we usually turn 'the first' into 'first' later on in rewrites */
+        //~ if (line[1].image === 'the' && line[2].tokenType === tks.tkOrdinalOrPosition) {
+            //~ line.splice(1, 1);
+        //~ }
+
         let template = '';
-        if (line.length === 2 && (line[1].tokenType === tks.tkOrdinal || line[1].tokenType === tks.tkPosition)) {
+        if (line.length === 2 && (line[1].tokenType === tks.tkOrdinalOrPosition)) {
             template = `
 if there is a %ARG0% card then
     internalvpcmovecardhelper ( the internalid of %ARG0% card ) , ${shouldSuspendHistory}

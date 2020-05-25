@@ -129,8 +129,8 @@ tkFld=OneOfWords(field,fld)
 tkFldPlural=OneOfWords(fields,flds)
 tkProductName=OneOfWords(hypercard,vipercard)
 tkAdjective=OneOfWords(long,short,abbrev,abbr,abbreviated)
-tkOrdinal=OneOfWords(last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eighth,ninth,tenth)
-tkPosition=OneOfWords(this,prev,previous,next)
+/* we support 'the first', 'the third' by rewrites _shouldOmit which deletes 'the' */
+tkOrdinalOrPosition=OneOfWords(this,prev,previous,next,last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eighth,ninth,tenth)
 tkChunkGranularity=OneOfWords(characters?,chars?,words?,items?,lines?)
 tkInOnly=OneOfWords(in)
 tkOfOnly=OneOfWords(of)
@@ -228,14 +228,14 @@ tkIdentifier=/[a-zA-Z][0-9a-zA-Z$_]*/
 // but let's allow card 1 of this stack because in the "go" command that is supported. 
 
 Object:={ <ObjectSpecial> | <ObjectInterpretedFromString> | <ObjectBtn> | <ObjectFld> | <ObjectCard> |    <ObjectBg> | <ObjectStack>     }                     --->ProcessOr--->RequestedVelRef
-ObjectBtn:={ <Ordinal> {tkCard | tkBg} tkBtn | {tkCard | tkBg} {tkBtn _id <Lvl6Expression> | tkBtn <Lvl6Expression> } }  [ <Of> <ObjectCard> ]                                     --->Custom--->RequestedVelRef
-ObjectFld:={ <Ordinal> {tkCard | tkBg} tkFld | {tkCard | tkBg} {tkFld _id <Lvl6Expression> | tkFld <Lvl6Expression>} } [ <Of> <ObjectCard> ]                                   --->Custom--->RequestedVelRef
+ObjectBtn:={ tkOrdinalOrPosition {tkCard | tkBg} tkBtn | {tkCard | tkBg} {tkBtn _id <Lvl6Expression> | tkBtn <Lvl6Expression> } }  [ <Of> <ObjectCard> ]                                     --->Custom--->RequestedVelRef
+ObjectFld:={ tkOrdinalOrPosition {tkCard | tkBg} tkFld | {tkCard | tkBg} {tkFld _id <Lvl6Expression> | tkFld <Lvl6Expression>} } [ <Of> <ObjectCard> ]                                   --->Custom--->RequestedVelRef
 ObjectCard:= { _recent { tkCard | tkCardPlural | tkCardAtEndOfLine} | _back | _forth | tkCard _id <Lvl6Expression> | \
-                     [_marked] tkCard <Lvl6Expression> | tkCardAtEndOfLine | <Ordinal> [_marked] { tkCard | tkCardAtEndOfLine} | \
-                     <Position> [_marked] { tkCard | tkCardAtEndOfLine} } [ <Of> <ObjectBg> ]  [ <Of> <ObjectStack> ]                            --->Custom--->RequestedVelRef
-ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | <Ordinal> { tkBg | tkBgAtEndOfLine } | <Position> { tkBg | \
-                        tkBgAtEndOfLine } | tkBgAtEndOfLine} [ <Of> <ObjectStack> ]                                                                          --->Custom--->RequestedVelRef
-ObjectStack:={<Position> { tkStack | tkStackAtEndOfLine} | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                         --->Custom--->RequestedVelRef  
+                     [_marked] tkCard <Lvl6Expression> | tkCardAtEndOfLine | tkOrdinalOrPosition [_marked] { tkCard | tkCardAtEndOfLine} } \
+                [ <Of> <ObjectBg> ]  [ <Of> <ObjectStack> ]                            --->Custom--->RequestedVelRef
+ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | tkOrdinalOrPosition { tkBg | tkBgAtEndOfLine } |  \
+                        tkBgAtEndOfLine} [ <Of> <ObjectStack> ]                                                                          --->Custom--->RequestedVelRef
+ObjectStack:={ tkOrdinalOrPosition { tkStack | tkStackAtEndOfLine} | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                         --->Custom--->RequestedVelRef  
 
 
 ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef
@@ -275,10 +275,8 @@ ObjectInterpretedFromString:={ tkStringLiteral | [_the] _target | tkLParen <Expr
 //////////// Helpers
 // docs say that unless it is ofOnly or inOnly, of/in are interchangeable
 Of:={tkOfOnly|tkInOnly}                         --->ProcessOr--->IToken
-Ordinal:=[_the] tkOrdinal                   --->Custom--->OrdinalOrPosition
-Position:=[_the] tkPosition                  --->Custom--->OrdinalOrPosition
-MenuItem:={<Ordinal> _menuItem | _menuItem <Lvl6Expression>}       --->Constant|"{menuitemExpr}"
-Menu:={<Ordinal> _menu | _menu <Lvl6Expression>}                             --->Constant|"{menuExpr}"
+MenuItem:={tkOrdinalOrPosition _menuItem | _menuItem <Lvl6Expression>}       --->Constant|"{menuitemExpr}"
+Menu:={tkOrdinalOrPosition _menu | _menu <Lvl6Expression>}                             --->Constant|"{menuExpr}"
 // tkIdentifier is one of: pattern,tool,scroll,fatbits
 Window_1:=[_the] {tkCard  } _window    --->Constant|"{windowExpr}"
 Window:={<Window_1> | <MessageBox>}             --->Constant|"{windowExpr}"
@@ -295,7 +293,7 @@ HSimpleContainer:={ <Menu> | <MessageBox> | [_the] _selection | _target | <Objec
 // fyi: HContainer is only used for 'put' command, never in expression evaluation
 HContainer:=[<HChunk>] <HSimpleContainer>                                                                                         --->Custom--->RequestedContainerRef
 HChunk:=<HChunkOne> MANY{{ <HChunkOne> }}ENDMANY                                                                                    --->Custom--->RequestedChunk
-HChunkOne:={ <Ordinal> tkChunkGranularity | tkChunkGranularity <HChunkBound> [_to <HChunkBound>] } <Of>       --->Custom--->RequestedChunk
+HChunkOne:={ tkOrdinalOrPosition tkChunkGranularity | tkChunkGranularity <HChunkBound> [_to <HChunkBound>] } <Of>       --->Custom--->RequestedChunk
 // we restrict what can be in chunkbounds to reduce the chances for parser ambiguity. this is just the "4" in get char 4 of "abcd", nothing special
 HChunkBound:= { tkLParen <Expr> tkRParen | tkNumLiteral  | <HSimpleContainer> }                --->Custom--->VpcVal
 

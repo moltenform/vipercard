@@ -89,6 +89,11 @@ export const VpcRewritesGlobal = /* static class */ {
             return true
         }
 
+        /* transform 'the first' into 'first'. saves a parse rule and helps us for parsing 'the selection' */
+        if (line[i].tokenType === tks._the && line[i+1] && line[i+1].tokenType===tks.tkOrdinalOrPosition) {
+            return true
+        }
+
         return false
     },
 
@@ -100,7 +105,7 @@ export const VpcRewritesGlobal = /* static class */ {
      *      see bgrammar_01.ccc for an explanation of why
      * 3) go from 'the params()' to 'the params' for compat with old vipercard scripts.
      */
-    rewriteSpecifyCdOrBgPart(line: ChvITk[], rw: VpcSuperRewrite, compatMode: boolean): ChvITk[] {
+    rewriteSpecifyCdOrBgPartAndMore(line: ChvITk[], rw: VpcSuperRewrite, compatMode: boolean): ChvITk[] {
         let ret: ChvITk[] = [];
         for (let i = 0; i < line.length - 1; i++) {
             
@@ -109,8 +114,9 @@ export const VpcRewritesGlobal = /* static class */ {
                 ret.push(line[i]);
             }
 
-            if (line[i + 1].tokenType === tks.tkBtn || line[i + 1].tokenType === tks.tkFld ||
-                line[i + 1].tokenType === tks.tkBtnPlural || line[i + 1].tokenType === tks.tkFldPlural) {
+            if ((line[i + 1].tokenType === tks.tkBtn || line[i + 1].tokenType === tks.tkFld ||
+                line[i + 1].tokenType === tks.tkBtnPlural || line[i + 1].tokenType === tks.tkFldPlural) &&
+                line[i].image !== 'choose') {
                 if (line[i].tokenType !== tks.tkCard && line[i].tokenType !== tks.tkBg) {
                     if (compatMode) {
                         /* insert a missing 'bg' or 'cd' */

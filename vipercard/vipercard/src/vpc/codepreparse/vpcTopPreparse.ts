@@ -91,10 +91,10 @@ export const VpcTopPreparse = /* static class */ {
         let branchProcessor = new BranchProcessing(idGen);
         for (let line of lines) {
             VpcCurrentScriptStage.latestSrcLineSeen = line[0].startLine;
-            let nextLines2 = this._stage2Process(line, rewrites) ?? [line];
+            let nextLines2 = this._stage2Process(line, rewrites, rw, compatMode) ?? [line];
             for (let line2 of nextLines2) {
                 VpcCurrentScriptStage.latestSrcLineSeen = line2[0].startLine;
-                let nextLines3 = this._stage3Process(line2, exp, rw, compatMode);
+                let nextLines3 = this._stage3Process(line2, exp, rw, );
                 for (let line3 of nextLines3) {
                     VpcCurrentScriptStage.latestSrcLineSeen = line3[0].startLine;
                     /* make it lowercase again, just in case */
@@ -133,14 +133,14 @@ export const VpcTopPreparse = /* static class */ {
     },
 
     /* apply the 3nd stage of rewriting */
-    _stage2Process(line: ChvITk[], rwcmd: VpcRewriteForCommands): O<ChvITk[][]> {
+    _stage2Process(line: ChvITk[], rwcmd: VpcRewriteForCommands, rw: VpcSuperRewrite, compatMode: boolean): O<ChvITk[][]> {
+        line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPartAndMore(line, rw, compatMode);
         let methodName = 'rewrite' + Util512.capitalizeFirst(line[0].image);
         return Util512.callAsMethodOnClass(VpcRewriteForCommands.name, rwcmd, methodName, [line], true) as O<ChvITk[][]>;
     },
 
     /* apply the 3rd stage of rewriting */
-    _stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite, compatMode: boolean): ChvITk[][] {
-        line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line, rw, compatMode);
+    _stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite): ChvITk[][] {
         line = VpcRewritesGlobal.rewritePropertySynonyms(line, rw);
         let outlines = exp.go(line);
         return outlines;

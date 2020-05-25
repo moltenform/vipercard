@@ -1,7 +1,7 @@
 
 /* auto */ import { RememberHistory } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, checkThrowInternal, findPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, checkThrowInternal, findPositionFromOrdinalOrPosition, ordinalOrPositionIsPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElProductOpts } from './velProductOpts';
 /* auto */ import { VpcModelTop } from './velModelTop';
@@ -44,6 +44,11 @@ export class VelResolveReference {
         } else if (ref.cardIsRecentHistory) {
             return this.getFromCardRecentHistory(ref, cardHistory);
         }
+
+         /* some things should not be by position */
+         if (ref.type === VpcElType.Btn ||ref.type === VpcElType.Fld) {
+             checkThrow(!ref.lookByRelative || !ordinalOrPositionIsPosition(ref.lookByRelative), "cannot be by position")
+         }
 
         /* combine parents into one chain */
         this.combineParents(ref);

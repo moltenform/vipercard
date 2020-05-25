@@ -468,8 +468,9 @@ export class ExecuteStatement {
      * Pauses the script.
      */
     goWait(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        /* essentially turn OrdinalOrPosition.second into "second" */
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
-        params = params.concat(this.h.getLiteralParams(vals, tkstr.tkOrdinal));
+        params = params.concat(this.h.getLiteralParams(vals, tkstr.tkOrdinalOrPosition));
         let multiply = MapTermToMilliseconds.Ticks;
         if (params && params.length) {
             checkThrowEq(1, params.length, 'Rx|expected something like `wait 400 ms`');

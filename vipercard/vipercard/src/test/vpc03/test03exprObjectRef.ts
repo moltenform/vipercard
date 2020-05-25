@@ -182,10 +182,10 @@ t.test('03ObjectStack', () => {
     b.t(`the short id of this stack`, `${h3.ids.stack}`);
     b.t(`the short id of next stack`, `ERR:could not find`);
     b.t(`the short id of prev stack`, `ERR:could not find`);
-    /* we should not support ordinal */
-    b.t(`the short id of first stack`, `ERR:parse`);
-    b.t(`the short id of last stack`, `ERR:parse`);
-    b.t(`the short id of any stack`, `ERR:parse`);
+    /* we support ordinal, although product doesn't */
+    b.t(`the short id of first stack`, `${h3.ids.stack}`);
+    b.t(`the short id of last stack`, `${h3.ids.stack}`);
+    b.t(`the short id of any stack`, `${h3.ids.stack}`);
     /* by id */
     b.t(`the short id of stack id ${h3.ids.stack}`, `${h3.ids.stack}`);
     b.t(`the short id of stack id 9`, `ERR:could not find`);
@@ -198,7 +198,7 @@ t.test('03ObjectStack', () => {
     it's intentionally using 'get'
     do not simplify! */
     b.t(`the short id of stack`, `ERR:parse`);
-    b.t(`get the short id of first stack\\it`, `ERR:parse`);
+    b.t(`get the short id of first stack\\it`, `${h3.ids.stack}`);
     b.t(`get the short id of this stack\\it`, `${h3.ids.stack}`);
     b.t(`get the short id of stack\\it`, `${h3.ids.stack}`);
     b.batchEvaluate(h3, [EvaluateThereIs, EvaluateAsParsedFromAString]);
@@ -331,6 +331,14 @@ t.test('03ObjectCard', () => {
     b.t(`the short id of next cd of bg 2`, `${h3.ids.cdBB}`);
     b.t(`the short id of last cd of bg 2`, `${h3.ids.cdBD}`);
     b.t(`the short id of tenth cd of bg 2`, `ERR:could not find`);
+    /* add 'the' */
+    b.t(`go cd 1\\1`, `1`);
+    b.t(`the short id of the first cd of bg 2`, `${h3.ids.cdBB}`);
+    b.t(`the short id of the this cd of bg 2`, `ERR:could not find`);
+    b.t(`the short id of the prev cd of bg 2`, `${h3.ids.cdBD}`);
+    b.t(`the short id of the next cd of bg 2`, `${h3.ids.cdBB}`);
+    b.t(`the short id of the last cd of bg 2`, `${h3.ids.cdBD}`);
+    b.t(`the short id of the tenth cd of bg 2`, `ERR:could not find`);
     /* special back-forth cards */
     b.t(`go cd 2\\1`, `1`);
     b.t(`go cd 3\\1`, `1`);
@@ -511,9 +519,9 @@ t.test('03ObjectBtnAndField', () => {
     b.t(`the short id of cd (typ) 0`, `ERR:could not find`);
     b.t(`the short id of cd (typ) 99`, `ERR:could not find`);
     /* look by relative */
-    b.t(`the short id of this cd (typ)`, `ERR:parse err`);
-    b.t(`the short id of prev cd (typ)`, `ERR:parse err`);
-    b.t(`the short id of next cd (typ)`, `ERR:parse err`);
+    b.t(`the short id of this cd (typ)`, `ERR:by position`);
+    b.t(`the short id of prev cd (typ)`, `ERR:by position`);
+    b.t(`the short id of next cd (typ)`, `ERR:by position`);
     b.t(`the short id of first cd (typ)`, `(1)`);
     b.t(`the short id of second cd (typ)`, `(2)`);
     b.t(`the short id of last cd (typ)`, `(3)`);

@@ -110,6 +110,12 @@ t.test('03 chunk groundwork', () => {
     b.t('last char of z', 'e');
     b.t('tenth char of z', '');
     b.t('global z\\char 1 to fifth char of z', 'ERR:5:parse err');
+    /* ordinal bounds with the */
+    b.t('the first char of z', 'a');
+    b.t('the third char of z', 'c');
+    b.t('the last char of z', 'e');
+    b.t('the tenth char of z', '');
+    b.t('global z\\char 1 to the fifth char of z', 'ERR:5:parse err');
     /* ordinal puts */
     b.t('global z1\nput "abc" into z1\\1', '1');
     b.t('put z1 into z\nput "AA" into char 1 of z\\z', 'AAbc');

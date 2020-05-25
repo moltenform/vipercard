@@ -11,7 +11,7 @@
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { VelRenderId } from './../vel/velRenderName';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
-/* auto */ import { bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { arLast, cast, castVerifyIsStr, getStrToEnum } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -83,10 +83,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
             ref.partIsBg = isBg;
             ref.partIsCd = !isBg;
-            if (ctx.RuleOrdinal && ctx.RuleOrdinal[0] && ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
+            if (ordOrPos && ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 checkThrow(false, "SH|you can't say 'the first cd btn 1'");
-            } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
-                ref.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
+            } else if (ordOrPos) {
+                ref.lookByRelative = ordOrPos
             } else if (ctx._id && ctx._id[0]) {
                 ref.lookById = this.Helper$ReadVpcVal(
                     ctx,
@@ -112,6 +113,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ref.cardLookAtMarkedOnly = true;
             }
 
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
             if (ctx._recent && ctx._recent[0]) {
                 ref.cardIsRecentHistory = 'recent';
             } else if (ctx._back && ctx._back[0]) {
@@ -124,10 +126,8 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                     tkstr.RuleLvl6Expression,
                     this.RuleObjectCard.name
                 ).readAsStrictNumeric(this.tmpArr);
-            } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
-                ref.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
-            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
-                ref.lookByRelative = this.visit(ctx.RulePosition[0]);
+            } else if (ordOrPos) {
+                ref.lookByRelative = ordOrPos;
             } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 this.Helper$SetByNumberOrName(ref, ctx, tkstr.RuleLvl6Expression);
             } else if (ctx.tkCardAtEndOfLine && ctx.tkCardAtEndOfLine[0]) {
@@ -144,14 +144,14 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
                 ret.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
             }
+
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
             if (ctx._id && ctx._id[0]) {
                 ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.RuleObjectBg.name).readAsStrictNumeric(
                     this.tmpArr
                 );
-            } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
-                ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
-            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
-                ret.lookByRelative = this.visit(ctx.RulePosition[0]);
+            } else if (ordOrPos) {
+                ret.lookByRelative = ordOrPos
             } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
@@ -165,14 +165,15 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectStack(ctx: VisitingContext): RequestedVelRef {
             let ref = new RequestedVelRef(VpcElType.Stack);
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
             if (ctx._id && ctx._id[0]) {
                 ref.lookById = this.Helper$ReadVpcVal(
                     ctx,
                     tkstr.RuleLvl6Expression,
                     this.RuleObjectStack.name
                 ).readAsStrictNumeric(this.tmpArr);
-            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
-                ref.lookByRelative = this.visit(ctx.RulePosition[0]);
+            } else if (ordOrPos) {
+                ref.lookByRelative = ordOrPos;
             } else if (ctx.tkStackAtEndOfLine && ctx.tkStackAtEndOfLine[0]) {
                 ref.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
@@ -240,6 +241,8 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return VelRenderId.parseFromString(val.readAsString());
         }
 
+        
+
         /*
         something interesting about Chevtrotain:
             The indices are not tied to the position in the grammar.
@@ -252,17 +255,16 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             --- you have to use the presence of <sub2> or <sub3> to know which branch was taken. ---
             the rule results are pushed onto the array just from left to right as they come, they have no position information.
         */
-        RuleOrdinal(ctx: VisitingContext): OrdinalOrPosition {
-            let image = ctx.tkOrdinal[0].image;
-            let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, tkstr.RuleOrdinal, image);
-            return ret;
+       protected helpFind$OrdinalOrPos(ctx: VisitingContext):O<OrdinalOrPosition> {
+            if (ctx.tkOrdinalOrPosition && ctx.tkOrdinalOrPosition[0])
+            {
+                let image = ctx.tkOrdinalOrPosition[0].image;
+                return getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, this.helpFind$OrdinalOrPos.name, image);
+            } else {
+                return undefined
+            }
         }
-
-        RulePosition(ctx: VisitingContext): OrdinalOrPosition {
-            let image = ctx.tkPosition[0].image;
-            let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, tkstr.RulePosition, image);
-            return ret;
-        }
+        
 
         RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef | "noSelection" {
             let ret:RequestedContainerRef | "noSelection" = new RequestedContainerRef();
@@ -338,8 +340,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let ret = new RequestedChunk(-1);
             checkThrow(ctx.tkChunkGranularity && ctx.tkChunkGranularity[0], 'S3|RuleHChunk');
             ret.granularity = getStrToEnum<VpcGranularity>(VpcGranularity, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
-            if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
-                ret.ordinal = this.visit(ctx.RuleOrdinal[0]);
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
+            if (ordOrPos) {
+                ret.ordinal = ordOrPos
             } else {
                 ret.first = this.visit(ctx.RuleHChunkBound[0]).readAsStrictInteger(this.tmpArr);
                 if (ctx.RuleHChunkBound[1]) {

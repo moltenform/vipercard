@@ -222,10 +222,6 @@ if (ctx.tkInOnly && ctx.tkInOnly[0]) {
 }
 
 
-
-
-
-
 RuleMenuItem(ctx: VisitingContext): string {
 return "{menuitemExpr}";
 }

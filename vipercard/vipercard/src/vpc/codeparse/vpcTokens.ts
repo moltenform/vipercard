@@ -242,8 +242,7 @@ tkFld: undefined as any as chevrotain.TokenType,
 tkFldPlural: undefined as any as chevrotain.TokenType,
 tkProductName: undefined as any as chevrotain.TokenType,
 tkAdjective: undefined as any as chevrotain.TokenType,
-tkOrdinal: undefined as any as chevrotain.TokenType,
-tkPosition: undefined as any as chevrotain.TokenType,
+tkOrdinalOrPosition: undefined as any as chevrotain.TokenType,
 tkChunkGranularity: undefined as any as chevrotain.TokenType,
 tkInOnly: undefined as any as chevrotain.TokenType,
 tkOfOnly: undefined as any as chevrotain.TokenType,
@@ -379,13 +378,9 @@ tks.tkAdjective = chevrotain.createToken({
 name: "tkAdjective",
 pattern: /(?:long(?![a-zA-Z0-9_]))|(?:short(?![a-zA-Z0-9_]))|(?:abbrev(?![a-zA-Z0-9_]))|(?:abbr(?![a-zA-Z0-9_]))|(?:abbreviated(?![a-zA-Z0-9_]))/i,
 });
-tks.tkOrdinal = chevrotain.createToken({
-name: "tkOrdinal",
-pattern: /(?:last(?![a-zA-Z0-9_]))|(?:mid(?![a-zA-Z0-9_]))|(?:middle(?![a-zA-Z0-9_]))|(?:any(?![a-zA-Z0-9_]))|(?:first(?![a-zA-Z0-9_]))|(?:second(?![a-zA-Z0-9_]))|(?:third(?![a-zA-Z0-9_]))|(?:fourth(?![a-zA-Z0-9_]))|(?:fifth(?![a-zA-Z0-9_]))|(?:sixth(?![a-zA-Z0-9_]))|(?:seventh(?![a-zA-Z0-9_]))|(?:eighth(?![a-zA-Z0-9_]))|(?:ninth(?![a-zA-Z0-9_]))|(?:tenth(?![a-zA-Z0-9_]))/i,
-});
-tks.tkPosition = chevrotain.createToken({
-name: "tkPosition",
-pattern: /(?:this(?![a-zA-Z0-9_]))|(?:prev(?![a-zA-Z0-9_]))|(?:previous(?![a-zA-Z0-9_]))|(?:next(?![a-zA-Z0-9_]))/i,
+tks.tkOrdinalOrPosition = chevrotain.createToken({
+name: "tkOrdinalOrPosition",
+pattern: /(?:this(?![a-zA-Z0-9_]))|(?:prev(?![a-zA-Z0-9_]))|(?:previous(?![a-zA-Z0-9_]))|(?:next(?![a-zA-Z0-9_]))|(?:last(?![a-zA-Z0-9_]))|(?:mid(?![a-zA-Z0-9_]))|(?:middle(?![a-zA-Z0-9_]))|(?:any(?![a-zA-Z0-9_]))|(?:first(?![a-zA-Z0-9_]))|(?:second(?![a-zA-Z0-9_]))|(?:third(?![a-zA-Z0-9_]))|(?:fourth(?![a-zA-Z0-9_]))|(?:fifth(?![a-zA-Z0-9_]))|(?:sixth(?![a-zA-Z0-9_]))|(?:seventh(?![a-zA-Z0-9_]))|(?:eighth(?![a-zA-Z0-9_]))|(?:ninth(?![a-zA-Z0-9_]))|(?:tenth(?![a-zA-Z0-9_]))/i,
 });
 tks.tkChunkGranularity = chevrotain.createToken({
 name: "tkChunkGranularity",
@@ -574,48 +569,47 @@ allVpcTokens[17] = tks.tkFld
 allVpcTokens[18] = tks.tkFldPlural
 allVpcTokens[19] = tks.tkProductName
 allVpcTokens[20] = tks.tkAdjective
-allVpcTokens[21] = tks.tkOrdinal
-allVpcTokens[22] = tks.tkPosition
-allVpcTokens[23] = tks.tkChunkGranularity
-allVpcTokens[24] = tks.tkInOnly
-allVpcTokens[25] = tks.tkOfOnly
-allVpcTokens[26] = tks.tkA
-allVpcTokens[27] = tks._not
-allVpcTokens[28] = tks._there
-allVpcTokens[29] = tks._is
-allVpcTokens[30] = tks._no
-allVpcTokens[31] = tks._and
-allVpcTokens[32] = tks._or
-allVpcTokens[33] = tks._contains
-allVpcTokens[34] = tks._within
-allVpcTokens[35] = tks._the
-allVpcTokens[36] = tks._message
-allVpcTokens[37] = tks._window
-allVpcTokens[38] = tks._windows
-allVpcTokens[39] = tks._box
-allVpcTokens[40] = tks._me
-allVpcTokens[41] = tks._recent
-allVpcTokens[42] = tks._back
-allVpcTokens[43] = tks._forth
-allVpcTokens[44] = tks._marked
-allVpcTokens[45] = tks._to
-allVpcTokens[46] = tks._menuItem
-allVpcTokens[47] = tks._menu
-allVpcTokens[48] = tks._id
-allVpcTokens[49] = tks._number
-allVpcTokens[50] = tks._selection
-allVpcTokens[51] = tks._target
-allVpcTokens[52] = tks.tkComma
-allVpcTokens[53] = tks.tkLParen
-allVpcTokens[54] = tks.tkRParen
-allVpcTokens[55] = tks.tkPlusOrMinus
-allVpcTokens[56] = tks.tkMultDivideExpDivMod
-allVpcTokens[57] = tks.tkStringConcat
-allVpcTokens[58] = tks.tkGreaterOrLessEqualOrEqual
-allVpcTokens[59] = tks.tkUnaryVipercardProperties
-allVpcTokens[60] = tks.tkAllUnaryPropertiesIfNotAlready
-allVpcTokens[61] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready
-allVpcTokens[62] = tks.tkIdentifier
+allVpcTokens[21] = tks.tkOrdinalOrPosition
+allVpcTokens[22] = tks.tkChunkGranularity
+allVpcTokens[23] = tks.tkInOnly
+allVpcTokens[24] = tks.tkOfOnly
+allVpcTokens[25] = tks.tkA
+allVpcTokens[26] = tks._not
+allVpcTokens[27] = tks._there
+allVpcTokens[28] = tks._is
+allVpcTokens[29] = tks._no
+allVpcTokens[30] = tks._and
+allVpcTokens[31] = tks._or
+allVpcTokens[32] = tks._contains
+allVpcTokens[33] = tks._within
+allVpcTokens[34] = tks._the
+allVpcTokens[35] = tks._message
+allVpcTokens[36] = tks._window
+allVpcTokens[37] = tks._windows
+allVpcTokens[38] = tks._box
+allVpcTokens[39] = tks._me
+allVpcTokens[40] = tks._recent
+allVpcTokens[41] = tks._back
+allVpcTokens[42] = tks._forth
+allVpcTokens[43] = tks._marked
+allVpcTokens[44] = tks._to
+allVpcTokens[45] = tks._menuItem
+allVpcTokens[46] = tks._menu
+allVpcTokens[47] = tks._id
+allVpcTokens[48] = tks._number
+allVpcTokens[49] = tks._selection
+allVpcTokens[50] = tks._target
+allVpcTokens[51] = tks.tkComma
+allVpcTokens[52] = tks.tkLParen
+allVpcTokens[53] = tks.tkRParen
+allVpcTokens[54] = tks.tkPlusOrMinus
+allVpcTokens[55] = tks.tkMultDivideExpDivMod
+allVpcTokens[56] = tks.tkStringConcat
+allVpcTokens[57] = tks.tkGreaterOrLessEqualOrEqual
+allVpcTokens[58] = tks.tkUnaryVipercardProperties
+allVpcTokens[59] = tks.tkAllUnaryPropertiesIfNotAlready
+allVpcTokens[60] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready
+allVpcTokens[61] = tks.tkIdentifier
 Object.freeze(allVpcTokens);
 
 }
@@ -646,24 +640,24 @@ listOfAllWordLikeTokens['short'] = tks.tkAdjective;
 listOfAllWordLikeTokens['abbrev'] = tks.tkAdjective;
 listOfAllWordLikeTokens['abbr'] = tks.tkAdjective;
 listOfAllWordLikeTokens['abbreviated'] = tks.tkAdjective;
-listOfAllWordLikeTokens['last'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['mid'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['middle'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['any'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['first'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['second'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['third'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['fourth'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['fifth'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['sixth'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['seventh'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['eighth'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['ninth'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['tenth'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['this'] = tks.tkPosition;
-listOfAllWordLikeTokens['prev'] = tks.tkPosition;
-listOfAllWordLikeTokens['previous'] = tks.tkPosition;
-listOfAllWordLikeTokens['next'] = tks.tkPosition;
+listOfAllWordLikeTokens['this'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['prev'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['previous'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['next'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['last'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['mid'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['middle'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['any'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['first'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['second'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['third'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['fourth'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['fifth'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['sixth'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['seventh'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['eighth'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['ninth'] = tks.tkOrdinalOrPosition;
+listOfAllWordLikeTokens['tenth'] = tks.tkOrdinalOrPosition;
 listOfAllWordLikeTokens['characters'] = tks.tkChunkGranularity;
 listOfAllWordLikeTokens['character'] = tks.tkChunkGranularity;
 listOfAllWordLikeTokens['chars'] = tks.tkChunkGranularity;
@@ -803,6 +797,10 @@ alsoReservedWordsList['short'] = true;
 alsoReservedWordsList['abbrev'] = true;
 alsoReservedWordsList['abbr'] = true;
 alsoReservedWordsList['abbreviated'] = true;
+alsoReservedWordsList['this'] = true;
+alsoReservedWordsList['prev'] = true;
+alsoReservedWordsList['previous'] = true;
+alsoReservedWordsList['next'] = true;
 alsoReservedWordsList['last'] = true;
 alsoReservedWordsList['mid'] = true;
 alsoReservedWordsList['middle'] = true;
@@ -817,10 +815,6 @@ alsoReservedWordsList['seventh'] = true;
 alsoReservedWordsList['eighth'] = true;
 alsoReservedWordsList['ninth'] = true;
 alsoReservedWordsList['tenth'] = true;
-alsoReservedWordsList['this'] = true;
-alsoReservedWordsList['prev'] = true;
-alsoReservedWordsList['previous'] = true;
-alsoReservedWordsList['next'] = true;
 alsoReservedWordsList['characters'] = true;
 alsoReservedWordsList['character'] = true;
 alsoReservedWordsList['chars'] = true;
@@ -1027,8 +1021,6 @@ export const tkstr = {
     RuleObjectSpecial: 'RuleObjectSpecial',
     RuleObjectInterpretedFromString: 'RuleObjectInterpretedFromString',
     RuleOf: 'RuleOf',
-    RuleOrdinal: 'RuleOrdinal',
-    RulePosition: 'RulePosition',
     RuleMenuItem: 'RuleMenuItem',
     RuleMenu: 'RuleMenu',
     RuleWindow_1: 'RuleWindow_1',
@@ -1120,8 +1112,7 @@ export const tkstr = {
     tkFldPlural: 'tkFldPlural',
     tkProductName: 'tkProductName',
     tkAdjective: 'tkAdjective',
-    tkOrdinal: 'tkOrdinal',
-    tkPosition: 'tkPosition',
+    tkOrdinalOrPosition: 'tkOrdinalOrPosition',
     tkChunkGranularity: 'tkChunkGranularity',
     tkInOnly: 'tkInOnly',
     tkOfOnly: 'tkOfOnly',

@@ -1,5 +1,5 @@
 
-/* auto */ import { BatchType, ScriptTestBatch, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
+/* auto */ import { BatchType, ScriptTestBatch, TestVpcScriptRunBase, TestMultiplier } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
@@ -229,40 +229,43 @@ t.test('execCommands go to card', () => {
     h.assertLineErr('go "a"', 'something like', 3);
     h.assertLineErr('go 1', 'NoViableAltException', 3);
     h.assertLineErr('go xyz', 'no variable found', 3);
+    h.assertLineErr('go to "a"', 'something like', 3);
+    h.assertLineErr('go to 1', 'NoViableAltException', 3);
+    h.assertLineErr('go to xyz', 'no variable found', 3);
     let b = new ScriptTestBatch();
 
     /* go by id */
     b.t(
-        `go card 1\ngo to card id ${h.ids.cdBD}\\the short id of this cd`,
+        `go to card 1\ngo to card id ${h.ids.cdBD}\\the short id of this cd`,
         `${h.ids.cdBD}`
     );
 
     /* going to nonexistant cards is a no-op,
 confirmed in emulator */
-    b.t(`go card 1\ngo to cd id 8888\\the short id of this cd`, `${h.ids.cdA}`);
-    b.t(`go card 1\ngo to cd "notexist"\\the short id of this cd`, `${h.ids.cdA}`);
-    b.t(`go card 1\ngo to bg 8888\\the short id of this cd`, `${h.ids.cdA}`);
+    b.t(`go to card 1\ngo to cd id 8888\\the short id of this cd`, `${h.ids.cdA}`);
+    b.t(`go to card 1\ngo to cd "notexist"\\the short id of this cd`, `${h.ids.cdA}`);
+    b.t(`go to card 1\ngo to bg 8888\\the short id of this cd`, `${h.ids.cdA}`);
 
     /* going to different types of objects is an error,
 confirmed in emulator  */
     b.t(
-        `go card id ${h.ids.cdBC}\ngo to cd btn "p1"\\the short id of this cd`,
+        `go to card id ${h.ids.cdBC}\ngo to cd btn "p1"\\the short id of this cd`,
         `ERR:5:Cannot go to a`
     );
     b.t(
-        `go card id ${h.ids.cdBC}\ngo to cd fld 1\\the short id of this cd`,
+        `go to card id ${h.ids.cdBC}\ngo to cd fld 1\\the short id of this cd`,
         `ERR:5:Cannot go to a`
     );
     b.t(`go to vipercard\\the short id of this cd`, `ERR:Cannot go`);
-    b.t(`go card 1\ngo to cd btn id 1\\the short id of this cd`, `${h.ids.cdA}`);
+    b.t(`go to card 1\ngo to cd btn id 1\\the short id of this cd`, `${h.ids.cdA}`);
 
     /* go by id */
     b.t(
-        `go card 1\ngo to card id ${h.ids.cdBD}\\the short id of this cd`,
+        `go to card 1\ngo to card id ${h.ids.cdBD}\\the short id of this cd`,
         `${h.ids.cdBD}`
     );
     b.t(
-        `go card 1\ngo to card id ${h.ids.cdCD}\\the short id of this cd`,
+        `go to card 1\ngo to card id ${h.ids.cdCD}\\the short id of this cd`,
         `${h.ids.cdCD}`
     );
 
@@ -285,39 +288,49 @@ confirmed in emulator  */
 
     /* ord/position */
     b.t('go to card 3\\the short id of this cd', `${h.ids.cdBC}`);
-    b.t('go next\\the short id of this cd', `${h.ids.cdBD}`);
-    b.t('go prev\\the short id of this cd', `${h.ids.cdBC}`);
-    b.t('go previous\\the short id of this cd', `${h.ids.cdBB}`);
-    b.t('go next\\the short id of this cd', `${h.ids.cdBC}`);
-    b.t('go first\\the short id of this cd', `${h.ids.cdA}`);
-    b.t('go last\\the short id of this cd', `${h.ids.cdCD}`);
-    b.t('go third\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to next --[[f]]\\the short id of this cd', `${h.ids.cdBD}`);
+    b.t('go to prev\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to previous\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go to next --[[g]]\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to first\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go to last\\the short id of this cd', `${h.ids.cdCD}`);
+    b.t('go to third\\the short id of this cd', `${h.ids.cdBC}`);
+
+    /* ord/position with the */
+    b.t('go to card 3\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to the next\\the short id of this cd', `${h.ids.cdBD}`);
+    b.t('go to the prev\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to the previous\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go to the next\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to the first\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go to the last\\the short id of this cd', `${h.ids.cdCD}`);
+    b.t('go to the third\\the short id of this cd', `${h.ids.cdBC}`);
 
     /* should wrap around */
-    b.t('go first\ngo prev\\the short id of this cd', `${h.ids.cdCD}`);
-    b.t('go last\ngo next\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go to first\ngo to prev\\the short id of this cd', `${h.ids.cdCD}`);
+    b.t('go to last\ngo to next --[[h]]\\the short id of this cd', `${h.ids.cdA}`);
 
     /* reference by name */
-    b.t('go card 1\ngo to card "a"\\the short id of this cd', `${h.ids.cdA}`);
-    b.t('go card 1\ngo to card "b"\\the short id of this cd', `${h.ids.cdBB}`);
-    b.t('go card 1\ngo to card "c"\\the short id of this cd', `${h.ids.cdBC}`);
-    b.t('go card 1\ngo to card "d"\\the short id of this cd', `${h.ids.cdBD}`);
-    b.t('go card 1\ngo to card "d" of bg 2\\the short id of this cd', `${h.ids.cdBD}`);
-    b.t('go card 1\ngo to card "d" of bg 3\\the short id of this cd', `${h.ids.cdCD}`);
+    b.t('go to card 1\ngo to card "a"\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go to card 1\ngo to card "b"\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go to card 1\ngo to card "c"\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to card 1\ngo to card "d"\\the short id of this cd', `${h.ids.cdBD}`);
+    b.t('go to card 1\ngo to card "d" of bg 2\\the short id of this cd', `${h.ids.cdBD}`);
+    b.t('go to card 1\ngo to card "d" of bg 3\\the short id of this cd', `${h.ids.cdCD}`);
 
     /* confirmed in emulator: if there are ambiguous card names,
 use whichever comes first in the stack, regardless of current bg
 but if you're already at that one, keep going to next */
     b.t(
-        `go card id ${h.ids.cdA}\ngo to card "d"\\the short id of this cd`,
+        `go to card id ${h.ids.cdA}\ngo to card "d"\\the short id of this cd`,
         `${h.ids.cdBD}`
     );
     b.t(
-        `go card id ${h.ids.cdBD}\ngo to card "d"\\the short id of this cd`,
+        `go to card id ${h.ids.cdBD}\ngo to card "d"\\the short id of this cd`,
         `${h.ids.cdCD}`
     );
     b.t(
-        `go card id ${h.ids.cdCD}\ngo to card "d"\\the short id of this cd`,
+        `go to card id ${h.ids.cdCD}\ngo to card "d"\\the short id of this cd`,
         `${h.ids.cdBD}`
     );
 
@@ -336,11 +349,11 @@ do not change the current card */
     b.t('go to card 4\ngo to bg 2\\the short id of this cd', `${h.ids.cdBD}`);
 
     /* object reference */
-    b.t('go third\ngo to this stack\\the short id of this cd', `${h.ids.cdBC}`);
-    b.t('go third\ngo to stack "other"\\the short id of this cd', `${h.ids.cdBC}`);
-    b.t('go third\ngo to stack id 999\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to third\ngo to this stack\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to third\ngo to stack "other"\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to third\ngo to stack id 999\\the short id of this cd', `${h.ids.cdBC}`);
     b.t(
-        `go third\ngo to stack id ${h.ids.stack}\\the short id of this cd`,
+        `go to third\ngo to stack id ${h.ids.stack}\\the short id of this cd`,
         `${h.ids.cdBC}`
     );
     b.t('go to card 1 of this stack\\the short id of this cd', `${h.ids.cdA}`);
@@ -352,37 +365,47 @@ do not change the current card */
 
     /* go by variable lookup - correct, confirmed in emulator */
     b.t(
-        longstr(`go card 1{{NEWLINE}}put "card id ${h.ids.cdBD}" into
+        longstr(`go to card 1{{NEWLINE}}put "card id ${h.ids.cdBD}" into
                 xx{{NEWLINE}}go to xx\\the short id of this cd`),
         `${h.ids.cdBD}`
     );
     b.t(
-        longstr(`go card 1{{NEWLINE}}put the long id of card id ${h.ids.cdBD} into
+        longstr(`go to card 1{{NEWLINE}}put the long id of card id ${h.ids.cdBD} into
                 xx{{NEWLINE}}go to xx\\the short id of this cd`),
         `${h.ids.cdBD}`
     );
     b.t(
-        longstr(`go card 1{{NEWLINE}}put the short name of card id ${h.ids.cdBD} into
+        longstr(`go to card 1{{NEWLINE}}put the short name of card id ${h.ids.cdBD} into
                 xx{{NEWLINE}}go to card xx\\the short id of this cd`),
         `${h.ids.cdBD}`
     );
 
     /* go by variable lookup - incorrect, confirmed in emulator */
     b.t(
-        longstr(`go card 1{{NEWLINE}}put "card id ${h.ids.cdBD}" into xx{{NEWLINE}}go to
+        longstr(`go to card 1{{NEWLINE}}put "card id ${h.ids.cdBD}" into xx{{NEWLINE}}go to
                 card xx\\the short id of this cd`),
         `${h.ids.cdA}`
     );
     b.t(
-        longstr(`go card 1{{NEWLINE}}put "cd id ${h.ids.cdBC}" into
+        longstr(`go to card 1{{NEWLINE}}put "cd id ${h.ids.cdBC}" into
                 xx{{NEWLINE}}go to card xx\\the short id of this cd`),
         `${h.ids.cdA}`
     );
     b.t(
-        longstr(`go card 1{{NEWLINE}}put the long id of cd id ${h.ids.cdBC} into
+        longstr(`go to card 1{{NEWLINE}}put the long id of cd id ${h.ids.cdBC} into
                 xx{{NEWLINE}}go to card xx\\the short id of this cd`),
         `${h.ids.cdA}`
     );
+    /* unfortunatly can't use a TestMultiplier because a lot of these 
+    have state. should fix this by putting a go to card 1 in front of 
+    each test so that each line is independent. */
+    let savedTests = b.tests
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
+    for (let i=0; i<savedTests.length; i++) {
+        savedTests[i][0] = savedTests[i][0].replace(/go to /g, "go ")
+    }
+    b.tests = savedTests
     b.batchEvaluate(h);
 });
 t.test('execCommands disable and enable', () => {

@@ -272,12 +272,11 @@ export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
     checkThrow(tk.tokenType !== tks.tkProductName, "Su|we don't support variable names like hypercard,vipercard");
     checkThrow(tk.tokenType !== tks.tkAdjective, "St|we don't support variable names like long,short,abbrev,abbr,abbreviated");
     checkThrow(
-        tk.tokenType !== tks.tkOrdinal,
+        tk.tokenType !== tks.tkOrdinalOrPosition,
         longstr(`Ss|we don't support variable names like last,
          mid,middle,any,first,second,third,fourth,fifth,
          sixth,seventh,eigth,ninth,tenth`)
     );
-    checkThrow(tk.tokenType !== tks.tkPosition, "Sr|we don't support variable names like this,prev,next");
     checkThrow(
         tk.tokenType !== tks.tkChunkGranularity,
         "Sq|we don't support variable names like characters,chars,words,items,lines"

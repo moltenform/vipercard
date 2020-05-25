@@ -67,6 +67,10 @@ export enum OrdinalOrPosition {
     __AlternateForm__Prev = Previous
 }
 
+export function ordinalOrPositionIsPosition(o:OrdinalOrPosition) {
+    return o > OrdinalOrPosition.Tenth 
+}
+
 /**
  * a 'chunk' is a way to specify a contiguous span of text, e.g.
  * word 3 to 4 of "a b c d e"

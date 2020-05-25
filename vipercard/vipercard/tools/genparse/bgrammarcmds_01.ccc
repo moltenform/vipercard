@@ -143,7 +143,7 @@ BuiltinCmdVisual:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLit
 // wait supports  second,seconds,milliseconds,ms,ticks. defaults to a tick, which is 60th of second
 // we rewrite `wait for 2 ms` into `wait 2 "ms"`
 // or "wait until/while" which we should just expand into a while loop. note that "second" is a tkOrdinal
-BuiltinCmdWait:=... <Expr> [ { tkIdentifier | tkOrdinal  } ]
+BuiltinCmdWait:=... <Expr> [ { tkIdentifier | tkOrdinalOrPosition  } ]
 // write. set NYI during rewrites
 // used internally. tkStringLiteral is "send" or "do"
 CmdSend:=... tkStringLiteral <Expr> _to <Object>                    --->BuildMap

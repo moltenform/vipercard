@@ -186,7 +186,7 @@ RuleObjectBtn = this.RULE('RuleObjectBtn', () => {
 this.OR1([
 {
 ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
+this.CONSUME1(tks.tkOrdinalOrPosition)
 this.OR2([
 {
 ALT: () => {
@@ -244,7 +244,7 @@ RuleObjectFld = this.RULE('RuleObjectFld', () => {
 this.OR1([
 {
 ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
+this.CONSUME1(tks.tkOrdinalOrPosition)
 this.OR2([
 {
 ALT: () => {
@@ -355,7 +355,7 @@ this.CONSUME2(tks.tkCardAtEndOfLine)
 },
 {
 ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
+this.CONSUME1(tks.tkOrdinalOrPosition)
 this.OPTION2(() => {
 this.CONSUME2(tks._marked)
 });
@@ -372,33 +372,13 @@ this.CONSUME3(tks.tkCardAtEndOfLine)
 }
 ]);
 }
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RulePosition)
+}
+]);
 this.OPTION3(() => {
-this.CONSUME3(tks._marked)
-});
-this.OR4([
-{
-ALT: () => {
-this.CONSUME5(tks.tkCard)
-}
-},
-{
-ALT: () => {
-this.CONSUME4(tks.tkCardAtEndOfLine)
-}
-}
-]);
-}
-}
-]);
-this.OPTION4(() => {
 this.SUBRULE1(this.RuleOf)
 this.SUBRULE1(this.RuleObjectBg)
 });
-this.OPTION5(() => {
+this.OPTION4(() => {
 this.SUBRULE2(this.RuleOf)
 this.SUBRULE1(this.RuleObjectStack)
 });
@@ -421,7 +401,7 @@ this.SUBRULE2(this.RuleLvl6Expression)
 },
 {
 ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
+this.CONSUME1(tks.tkOrdinalOrPosition)
 this.OR2([
 {
 ALT: () => {
@@ -438,24 +418,7 @@ this.CONSUME1(tks.tkBgAtEndOfLine)
 },
 {
 ALT: () => {
-this.SUBRULE1(this.RulePosition)
-this.OR3([
-{
-ALT: () => {
-this.CONSUME4(tks.tkBg)
-}
-},
-{
-ALT: () => {
 this.CONSUME2(tks.tkBgAtEndOfLine)
-}
-}
-]);
-}
-},
-{
-ALT: () => {
-this.CONSUME3(tks.tkBgAtEndOfLine)
 }
 }
 ]);
@@ -469,7 +432,7 @@ RuleObjectStack = this.RULE('RuleObjectStack', () => {
 this.OR1([
 {
 ALT: () => {
-this.SUBRULE1(this.RulePosition)
+this.CONSUME1(tks.tkOrdinalOrPosition)
 this.OR2([
 {
 ALT: () => {
@@ -576,25 +539,11 @@ this.CONSUME1(tks.tkInOnly)
 ]);
 });
 
-RuleOrdinal = this.RULE('RuleOrdinal', () => {
-this.OPTION1(() => {
-this.CONSUME1(tks._the)
-});
-this.CONSUME1(tks.tkOrdinal)
-});
-
-RulePosition = this.RULE('RulePosition', () => {
-this.OPTION1(() => {
-this.CONSUME1(tks._the)
-});
-this.CONSUME1(tks.tkPosition)
-});
-
 RuleMenuItem = this.RULE('RuleMenuItem', () => {
 this.OR1([
 {
 ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
+this.CONSUME1(tks.tkOrdinalOrPosition)
 this.CONSUME1(tks._menuItem)
 }
 },
@@ -611,7 +560,7 @@ RuleMenu = this.RULE('RuleMenu', () => {
 this.OR1([
 {
 ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
+this.CONSUME1(tks.tkOrdinalOrPosition)
 this.CONSUME1(tks._menu)
 }
 },
@@ -735,7 +684,7 @@ RuleHChunkOne = this.RULE('RuleHChunkOne', () => {
 this.OR1([
 {
 ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
+this.CONSUME1(tks.tkOrdinalOrPosition)
 this.CONSUME1(tks.tkChunkGranularity)
 }
 },
@@ -1629,7 +1578,7 @@ this.CONSUME1(tks.tkIdentifier)
 },
 {
 ALT: () => {
-this.CONSUME1(tks.tkOrdinal)
+this.CONSUME1(tks.tkOrdinalOrPosition)
 }
 }
 ]);
