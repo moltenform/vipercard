@@ -194,7 +194,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
                 UI512DrawText.setFont('abcde\nabcde\nabcde', vel.getDefaultFontAsUi512())
             );
 
-            vel.setCardFmTxt(newTxt, this.vci.getModel());
+            vel.setFmTxt(newTxt, this.vci.getModel());
             vel.setProp('style', VpcValS('scrolling'), this.vci.getModel());
         } else {
             checkThrowInternal(false, "btn or fld expected")

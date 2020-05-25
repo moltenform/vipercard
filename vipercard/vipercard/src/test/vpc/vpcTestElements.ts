@@ -28,20 +28,20 @@ let higher = new HigherNoReplication_TestOnly();
 t.test('ChangeToSingleLine.Should Preserve Text That Is Already One Line', () => {
     let vel = new VpcElField('id1', 'parentid1');
     vel.observer = new ElementObserverNoOp();
-    vel.setCardFmTxt(FormattedText.newFromUnformatted('abc'), higher);
+    vel.setFmTxt(FormattedText.newFromUnformatted('abc'), higher);
     vel.setProp('singleline', VpcValBool(false), higher);
-    assertEq('abc', vel.getCardFmTxt().toUnformatted(), 'F+|');
+    assertEq('abc', vel.getFmTxt().toUnformatted(), 'F+|');
     vel.setProp('singleline', VpcValBool(true), higher);
-    assertEq('abc', vel.getCardFmTxt().toUnformatted(), 'F*|');
+    assertEq('abc', vel.getFmTxt().toUnformatted(), 'F*|');
 });
 t.test('ChangeToSingleLine.making it single line should kill the other line', () => {
     let vel = new VpcElField('id1', 'parentid1');
     vel.observer = new ElementObserverNoOp();
-    vel.setCardFmTxt(FormattedText.newFromUnformatted('abcd\ndef'), higher);
+    vel.setFmTxt(FormattedText.newFromUnformatted('abcd\ndef'), higher);
     vel.setProp('singleline', VpcValBool(false), higher);
-    assertEq('abcd\ndef', vel.getCardFmTxt().toUnformatted(), 'F)|');
+    assertEq('abcd\ndef', vel.getFmTxt().toUnformatted(), 'F)|');
     vel.setProp('singleline', VpcValBool(true), higher);
-    assertEq('abcd', vel.getCardFmTxt().toUnformatted(), 'F(|');
+    assertEq('abcd', vel.getFmTxt().toUnformatted(), 'F(|');
 });
 t.test('ChangeToSingleLine1', () => {
     t.say(
@@ -50,11 +50,11 @@ t.test('ChangeToSingleLine1', () => {
     );
     let vel = new VpcElField('id1', 'parentid1');
     vel.observer = new ElementObserverNoOp();
-    vel.setCardFmTxt(FormattedText.newFromUnformatted('a\nb\nc\nd'), higher);
+    vel.setFmTxt(FormattedText.newFromUnformatted('a\nb\nc\nd'), higher);
     vel.setProp('singleline', VpcValBool(false), higher);
-    assertEq('a\nb\nc\nd', vel.getCardFmTxt().toUnformatted(), 'F&|');
+    assertEq('a\nb\nc\nd', vel.getFmTxt().toUnformatted(), 'F&|');
     vel.setProp('singleline', VpcValBool(true), higher);
-    assertEq('a', vel.getCardFmTxt().toUnformatted(), 'F%|');
+    assertEq('a', vel.getFmTxt().toUnformatted(), 'F%|');
 });
 t.test('VpcElButton.should translate style names for script', () => {
     let vel = new VpcElButton('id1', 'parentid1');
@@ -203,7 +203,7 @@ t.test('SerializeGettable1', () => {
         let vel = new VpcElField('id1', 'parentid1');
         vel.observer = new ElementObserverNoOp();
 
-        vel.setCardFmTxt(FormattedText.newFromUnformatted('abc'), higher);
+        vel.setFmTxt(FormattedText.newFromUnformatted('abc'), higher);
         vel.setOnVel('dontwrap', b, higher);
         vel.setOnVel('enabled', !b, higher);
         vel.setOnVel('locktext', b, higher);
@@ -224,7 +224,7 @@ t.test('SerializeGettable1', () => {
         let restoredJson = JSON.parse(s);
         VpcGettableSerialization.deserializeSettable(restored, restoredJson, higher);
 
-        assertEq('abc', restored.getCardFmTxt().toUnformatted(), 'Fi|');
+        assertEq('abc', restored.getFmTxt().toUnformatted(), 'Fi|');
         assertEq(b, restored.getB('dontwrap'), 'Fh|');
         assertEq(!b, restored.getB('enabled'), 'Fg|');
         assertEq(b, restored.getB('locktext'), 'Ff|');

@@ -183,7 +183,7 @@ export abstract class VpcElBase extends UI512Settable {
         this.getters = SetToInvalidObjectAtEndOfExecution(this.getters);
         this.setters = SetToInvalidObjectAtEndOfExecution(this.setters);
         this.setOnVel = SetToInvalidObjectAtEndOfExecution(this.setOnVel);
-        this.setCardFmTxt = SetToInvalidObjectAtEndOfExecution(this.setCardFmTxt);
+        this.setFmTxt = SetToInvalidObjectAtEndOfExecution(this.setFmTxt);
     }
 
     /**
@@ -202,7 +202,7 @@ export abstract class VpcElBase extends UI512Settable {
         return undefined;
     }
 
-    getCardFmTxt(): FormattedText {
+    getFmTxt(): FormattedText {
         if (this.getB('sharedtext')) {
             return cast(FormattedText, this.getGeneric('ftxt'));
         } else {
@@ -210,7 +210,7 @@ export abstract class VpcElBase extends UI512Settable {
         }
     }
 
-    setCardFmTxt(newTxt: FormattedText, h: VpcHandleLinkedVels, context = ChangeContext.Default) {
+    setFmTxt(newTxt: FormattedText, h: VpcHandleLinkedVels, context = ChangeContext.Default) {
         newTxt.lock();
         if (this.getB('sharedtext')) {
             this.setOnVel('ftxt', newTxt, h);

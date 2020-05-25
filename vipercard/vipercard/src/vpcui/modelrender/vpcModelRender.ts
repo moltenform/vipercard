@@ -297,7 +297,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             }
         }
 
-        target.setFmTxt(vel.getCardFmTxt());
+        target.setFmTxt(vel.getFmTxt());
     }
 
     /**

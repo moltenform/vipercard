@@ -91,15 +91,15 @@ export class RWContainerField implements WritableContainer {
 
     len() {
         /* this is fast, it's the reason we have a len() and not just getRawString().length */
-        return this.fld.getCardFmTxt().len();
+        return this.fld.getFmTxt().len();
     }
 
     getRawString(): string {
-        return this.fld.getCardFmTxt().toUnformatted();
+        return this.fld.getFmTxt().toUnformatted();
     }
 
     splice(insertion: number, lenToDelete: number, newstring: string) {
-        let txt = this.fld.getCardFmTxt();
+        let txt = this.fld.getFmTxt();
         if (insertion === 0 && lenToDelete >= txt.len()) {
             /* follow emulator, there is different behavior
             (lose formatting) when replacing all text */
@@ -107,7 +107,7 @@ export class RWContainerField implements WritableContainer {
         } else {
             let font = insertion >= 0 && insertion < txt.len() ? txt.fontAt(insertion) : this.fld.getDefaultFontAsUi512();
             let newTxt = FormattedText.byInsertion(txt, insertion, lenToDelete, newstring, font);
-            this.fld.setCardFmTxt(newTxt, this.h);
+            this.fld.setFmTxt(newTxt, this.h);
         }
     }
 
@@ -139,7 +139,7 @@ export class RWContainerFldSelection implements WritableContainer {
 
     getRawString(): string {
         if (this.fld) {
-            return this.fld.getCardFmTxt().toUnformatted().substring(this.start, this.end);
+            return this.fld.getFmTxt().toUnformatted().substring(this.start, this.end);
         } else {
             return ""
         }
@@ -147,7 +147,7 @@ export class RWContainerFldSelection implements WritableContainer {
 
     splice(insertion: number, lenToDelete: number, newstring: string) {
         checkThrow(this.fld, "There isn't a selection")
-        let txt = this.fld.getCardFmTxt();
+        let txt = this.fld.getFmTxt();
         if (insertion === 0 && lenToDelete >= txt.len() && this.start === 0 && this.end >= txt.len()-1) {
             /* follow emulator, there is different behavior
             (lose formatting) when replacing all text */
@@ -158,7 +158,7 @@ export class RWContainerFldSelection implements WritableContainer {
             let font = trueInsert >= 0 && trueInsert < txt.len() ? txt.fontAt(trueInsert) : this.fld.getDefaultFontAsUi512();
             let newSliceContents = FormattedText.byInsertion(slice, insertion, lenToDelete, newstring, font);
             let newTxt = FormattedText.byInsertion(txt, this.start, this.end-this.start, newSliceContents.toUnformatted(), font)
-            this.fld.setCardFmTxt(newTxt, this.h);
+            this.fld.setFmTxt(newTxt, this.h);
         }
     }
 

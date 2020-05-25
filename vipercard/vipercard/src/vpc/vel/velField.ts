@@ -98,9 +98,9 @@ export class VpcElField extends VpcElSizable {
      */
     protected setEntireFontFromDefaultFont(h: VpcHandleLinkedVels) {
         let font = this.getDefaultFontAsUi512();
-        let newTxt = this.getCardFmTxt().getUnlockedCopy();
+        let newTxt = this.getFmTxt().getUnlockedCopy();
         newTxt.setFontEverywhere(font);
-        this.setCardFmTxt(newTxt, h);
+        this.setFmTxt(newTxt, h);
     }
 
     /**
@@ -109,7 +109,7 @@ export class VpcElField extends VpcElSizable {
     static fldGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['singleline'] = [PrpTyp.Bool, 'singleline'];
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
-        getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.getCardFmTxt().toUnformatted()];
+        getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.getFmTxt().toUnformatted()];
         getters['defaulttextstyle'] = [
             PrpTyp.Str,
             (me: VpcElField) => SubstringStyleComplex.vpcStyleFromInt(me._defaulttextstyle)
@@ -184,7 +184,7 @@ export class VpcElField extends VpcElSizable {
             (me: VpcElField, s: string, h: VpcHandleLinkedVels) => {
                 let newTxt = FormattedText.newFromUnformatted(s);
                 newTxt.setFontEverywhere(me.getDefaultFontAsUi512());
-                me.setCardFmTxt(newTxt, h);
+                me.setFmTxt(newTxt, h);
             }
         ];
 
@@ -215,11 +215,11 @@ export class VpcElField extends VpcElSizable {
             (me: VpcElField, b: boolean, h: VpcHandleLinkedVels) => {
                 me.setOnVel('singleline', b, h);
                 if (b) {
-                    let hasNewLine = me.getCardFmTxt().indexOf(specialCharNumNewline);
+                    let hasNewLine = me.getFmTxt().indexOf(specialCharNumNewline);
                     if (hasNewLine !== -1) {
                         let newTxt = new FormattedText();
-                        newTxt.appendSubstring(me.getCardFmTxt(), 0, hasNewLine);
-                        me.setCardFmTxt(newTxt, h);
+                        newTxt.appendSubstring(me.getFmTxt(), 0, hasNewLine);
+                        me.setFmTxt(newTxt, h);
                     }
                 }
             }
@@ -278,11 +278,11 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
     constructor(protected el512: O<UI512ElTextField>, protected impl: VpcElField, protected h: VpcHandleLinkedVels) {}
 
     setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
-        this.impl.setCardFmTxt(newTxt, this.h, context);
+        this.impl.setFmTxt(newTxt, this.h, context);
     }
 
     getFmtTxt(): FormattedText {
-        return this.impl.getCardFmTxt();
+        return this.impl.getFmTxt();
     }
 
     canEdit() {

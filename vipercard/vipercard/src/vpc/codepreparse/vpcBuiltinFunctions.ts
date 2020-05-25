@@ -639,12 +639,13 @@ export class VpcBuiltinFunctions {
 
     /**
      * The number of the line of the current selected text.
+     * Note: disregards the end of the selection.
      */
     callSelectedline(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let fld = this.readoutside.FindSelectedTextBounds()[0];
-        if (fld) {
-            let start = fld.getN('selcaret');
-            let lines = new UI512Lines(fld.getCardFmTxt());
+        let selInfo = this.readoutside.FindSelectedTextBounds();
+        if (selInfo && selInfo[0]) {
+            let start = selInfo[1];
+            let lines = new UI512Lines(selInfo[0].getFmTxt());
             return VpcValN(lines.indexToLineNumber(start));
         } else {
             return VpcVal.Empty;

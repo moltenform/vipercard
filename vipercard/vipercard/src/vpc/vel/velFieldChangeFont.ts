@@ -21,7 +21,7 @@ export class VpcFontSpecialChunk {
      * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
      */
     specialSetPropChunkImpl(h: VpcHandleLinkedVels, prop: string, s: string, charstart: number, charend: number): void {
-        let newTxt = this.vel.getCardFmTxt().getUnlockedCopy();
+        let newTxt = this.vel.getFmTxt().getUnlockedCopy();
         let len = charend - charstart;
         if (prop === 'textstyle') {
             let list = s.split(',').map(item => item.trim());
@@ -39,7 +39,7 @@ export class VpcFontSpecialChunk {
             );
         }
 
-        this.vel.setCardFmTxt(newTxt, h);
+        this.vel.setFmTxt(newTxt, h);
     }
 
     /**
@@ -50,7 +50,7 @@ export class VpcFontSpecialChunk {
         if (prop === 'textstyle') {
             /* returns comma-delimited styles, or the string 'mixed' */
             let list = SubstringStyleComplex.getChunkTextStyle(
-                this.vel.getCardFmTxt(),
+                this.vel.getFmTxt(),
                 this.vel.getDefaultFontAsUi512(),
                 charstart,
                 len
@@ -60,7 +60,7 @@ export class VpcFontSpecialChunk {
         } else if (prop === 'textfont') {
             /* returns typeface name or the string 'mixed' */
             return SubstringStyleComplex.getChunkTextFace(
-                this.vel.getCardFmTxt(),
+                this.vel.getFmTxt(),
                 this.vel.getDefaultFontAsUi512(),
                 charstart,
                 len
@@ -68,7 +68,7 @@ export class VpcFontSpecialChunk {
         } else if (prop === 'textsize') {
             /* as per spec this can return either an integer or the string 'mixed' */
             return SubstringStyleComplex.getChunkTextSize(
-                this.vel.getCardFmTxt(),
+                this.vel.getFmTxt(),
                 this.vel.getDefaultFontAsUi512(),
                 charstart,
                 len
@@ -99,7 +99,7 @@ export class VpcFontSpecialChunk {
             newChunk.last = newChunk.first + 1;
         }
 
-        let unformatted = this.vel.getCardFmTxt().toUnformatted();
+        let unformatted = this.vel.getFmTxt().toUnformatted();
         newChunk.first = fitIntoInclusive(newChunk.first, 1, unformatted.length);
 
         /* we've already handled the formattedText.len() === 0 case in getChunkTextAttribute */

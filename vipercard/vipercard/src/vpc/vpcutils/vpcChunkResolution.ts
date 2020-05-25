@@ -17,7 +17,7 @@
     add 1 to char 3 to 5 of y (modify)
     delete char 3 to 5 of y (delete)
     set the textsize of char 3 to 5 of cd fld 1 to 12 (text)
-    Note: chunks can also be applied to "the selection".
+    Note: chunks can also be applied to 'the selection'.
         it's a new container type, not a chunk.
             if it were a chunk, or if it were rewritten
             in rewrites to char selcharstart to selcharend of the selectedfield,

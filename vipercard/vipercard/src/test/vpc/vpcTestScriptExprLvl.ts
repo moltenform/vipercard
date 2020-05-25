@@ -1136,7 +1136,7 @@ t.atest('testVpcStateSerialize', async () => {
     assertEq('on t5\nend t5', newFld.getS('script'), 'G/|');
 
     /* check FormattedText */
-    let newTxt = newFld.getCardFmTxt();
+    let newTxt = newFld.getFmTxt();
     assertTrue(newTxt.len() > 0, 'G.|');
     assertEq(txt.toSerialized(), newTxt.toSerialized(), 'G-|');
 });
@@ -1200,7 +1200,7 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
         /* set a nontrivial FormattedText */
         let c = specialCharFontChange;
         let txt = FormattedText.newFromSerialized(`${c}f1${c}abc\n${c}f2${c}de`);
-        fld.setCardFmTxt(txt, higher);
+        fld.setFmTxt(txt, higher);
 
         //~ /* modify bg field - for card bb */
         //~ let bgfld = h.vcstate.model.getById(VpcElField, h.ids.bgfB1);

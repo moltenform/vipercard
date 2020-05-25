@@ -288,7 +288,8 @@ MessageBox:=[_the] _message [ { _box | _window } ]      --->Constant|"{msgBoxExp
 //////////// Containers
 // the emulator lets you put text into a button, doesn't seem to do anything
 // references to the messagebox are turned into references to a special global variable that is checked after every run
-// handling the selection is tricky... let's support "get the selection, get char 1 of the selection, put "abc" into the selection" but not "put "a" into char 1 of the selection"
+// we considered implementing 'the selection' as either a chunk or rewriting to char selcharstart to selcharend of the selectedfield,
+// but then it would be hard to support put "abc" into item 3 of the selection.
 HSimpleContainer:={ <Menu> | <MessageBox> | [_the] _selection | _target | <ObjectBtn> | <ObjectFld> | <HAnyAllowedVariableName> }  --->Custom--->RequestedContainerRef
 // fyi: HContainer is only used for 'put' command, never in expression evaluation
 HContainer:=[<HChunk>] <HSimpleContainer>                                                                                         --->Custom--->RequestedContainerRef

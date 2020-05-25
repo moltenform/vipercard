@@ -695,7 +695,7 @@ t.test('vpcProperties', () => {
         new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString()
     );
     h.vcstate.vci.doWithoutAbilityToUndo(() =>
-        fldPerChar.setCardFmTxt(FormattedText.newFromSerialized(sfmt), higher)
+        fldPerChar.setFmTxt(FormattedText.newFromSerialized(sfmt), higher)
     );
 
     /* non per-character properties */
@@ -731,7 +731,7 @@ t.test('vpcProperties', () => {
     b = new ScriptTestBatch();
 
     /* formatting should have been preserved */
-    let contents = fldPerChar.getCardFmTxt().toSerialized();
+    let contents = fldPerChar.getFmTxt().toSerialized();
     assertWarnEq(sfmt, contents, '1y|');
 
     /* setting per-character formatting */
@@ -799,7 +799,7 @@ t.test('vpcProperties', () => {
     b.batchEvaluate(h);
 
     /* confirm formatting */
-    contents = fldPerChar.getCardFmTxt().toSerialized();
+    contents = fldPerChar.getFmTxt().toSerialized();
     assertWarnEq(
         longstr(
             `|Courier_24_+biuosdce|a|geneva_24_+biuosdce|b|geneva_18_b+iuo+sdce|
@@ -838,9 +838,9 @@ t.test('vpcProperties', () => {
     for (let [action, expectedFont] of actions) {
         b = new ScriptTestBatch();
         h.vcstate.vci.doWithoutAbilityToUndo(() =>
-            fldPerChar.setCardFmTxt(FormattedText.newFromSerialized(sfmt), higher)
+            fldPerChar.setFmTxt(FormattedText.newFromSerialized(sfmt), higher)
         );
-        assertEq(sfmt, fldPerChar.getCardFmTxt().toSerialized(), '1w|');
+        assertEq(sfmt, fldPerChar.getFmTxt().toSerialized(), '1w|');
         b.t('set the defaulttextfont of cd fld "p2" to "geneva"\\0', '0');
         b.t('set the defaulttextstyle of cd fld "p2" to "plain"\\0', '0');
         b.t('set the defaulttextsize of cd fld "p2" to "12"\\0', '0');
@@ -848,7 +848,7 @@ t.test('vpcProperties', () => {
         b.batchEvaluate(h);
 
         /* formatting should have been lost */
-        contents = fldPerChar.getCardFmTxt().toSerialized();
+        contents = fldPerChar.getFmTxt().toSerialized();
         let expected = UI512DrawText.setFont('abcdef', expectedFont.toSpecString());
         assertEq(expected, contents, '1v|');
     }
