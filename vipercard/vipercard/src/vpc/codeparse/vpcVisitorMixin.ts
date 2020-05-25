@@ -233,6 +233,8 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                     : PropAdjective.Empty;
                 let propName = ctx.tkAllUnaryPropertiesIfNotAlready[0].image
                 val = this.outside.GetProp(velRef, propName, adjective, undefined);
+            } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
+                val = this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0])
             } else {
                 checkThrow(false, 'SB|no branch');
             }

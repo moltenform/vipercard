@@ -556,6 +556,7 @@ Examples:
 
 put selectedField() into x
 set the loc of the selectedField to 23, 45
+set the textalign of the selectedField to "center"
 
 ============================================================
 ========================= selectedLine()

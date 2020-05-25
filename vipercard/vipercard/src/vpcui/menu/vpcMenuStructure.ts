@@ -39,8 +39,10 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
                 'mnuHeaderFile|lngFile',
                 [
                     'mnuNewStack|lngNew stack|',
+                    /* don't add Cmd-N yet, leads to errors */
                     '|---|',
                     'mnuOpen|lngOpen stack...|',
+                    /* don't add Cmd-O yet, leads to errors */
                     '|---|',
                     'mnuSave|lngSave stack|\xBD S',
                     'mnuSaveAs|lngSave stack as...|',

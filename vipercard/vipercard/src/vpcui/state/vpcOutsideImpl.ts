@@ -243,7 +243,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     protected fixSelectionBounds(fld:VpcElField) : O<[number, number]> {
         let generic = new VpcTextFieldAsGeneric(undefined, fld, this.Model());
-         return TextSelModify.getSelectedTextBounds(generic);
+        return TextSelModify.getSelectedTextBounds(generic);
     }
 
     /**

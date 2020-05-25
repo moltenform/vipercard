@@ -168,6 +168,7 @@ end domenu_paintsetting
 on domenu_changefont key, pl, pb
     put "|chicago|courier|geneva|new york|times|helvetica|monaco|symbol|" into keys
     if key is in keys then
+        domenu_exitifcompatmodeenabled
         if "setAll|" is in pb then
             replace "setAll|" with "" in pb
             set the textfont of pb to pl
@@ -183,6 +184,7 @@ end domenu_changefont
 on domenu_changefontsize key, pl, pb
     put "|9|10|12|14|18|24|" into keys
     if key is in keys then
+        domenu_exitifcompatmodeenabled
         if "setAll|" is in pb then
             replace "setAll|" with "" in pb
             set the textsize of pb to pl
@@ -198,6 +200,7 @@ end domenu_changefontsize
 on domenu_changefontstyle key, pl, pb
     put "|plain|bold|italic|underline|outline|condense|extend|grayed|" into keys
     if key is in keys then
+        domenu_exitifcompatmodeenabled
         if "setAll|" is in pb then
             replace "setAll|" with "" in pb
             set the textstyle of pb to plain
@@ -215,8 +218,10 @@ end domenu_changefontstyle
 on domenu_changefontalign key, pl, pb
     put true into ret
     if pl is "align left" or pl is "alignleft" then
+        domenu_exitifcompatmodeenabled
         set the textalign of the selectedfield to "left"
     else if pl is "align center" or pl is "aligncenter" then
+        domenu_exitifcompatmodeenabled
         set the textalign of the selectedfield to "center"
     else
         put false into ret
@@ -224,5 +229,11 @@ on domenu_changefontalign key, pl, pb
     return ret
 end domenu_changefontalign
 
+on domenu_exitifcompatmodeenabled
+    if the compatibilitymode of this stack then
+        answer "Please turn off compatibilitymode before doing this."
+        exit to ViperCard
+    end if
+end domenu_exitifcompatmodeenabled
        `.replace(/\r\n/g, '\n')
 };

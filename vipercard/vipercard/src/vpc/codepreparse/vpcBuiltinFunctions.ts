@@ -3,7 +3,7 @@
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq, OrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
@@ -612,16 +612,15 @@ export class VpcBuiltinFunctions {
     }
 
     /**
-     * Current selection, looks something like 'char 2 to 4 of cd fld id
-        1234'.
+     * Find bounds of current selection
+     * If length of selection is 0, might say 'char 4 to 3 of cd fld 1',
+     * but this is what the original product said.
      */
     callSelectedchunk(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let fld = this.readoutside.FindSelectedTextBounds()[0];
-        if (fld) {
-            let start = this.toOneBased(fld.getN('selcaret'));
-            let end = this.toOneBased(fld.getN('selend'));
-            let container = this.renderVelName(fld.idInternal);
-            return VpcValS(`char ${start} to ${end} of ${container}`);
+        let selInfo = this.readoutside.FindSelectedTextBounds();
+        if (selInfo && selInfo[0]) {
+            let name = this.renderVelName(selInfo[0].idInternal);
+            return VpcValS(`char ${this.toOneBased(selInfo[1])} to ${selInfo[2]} of ${name}`);
         } else {
             return VpcVal.Empty;
         }
@@ -638,7 +637,7 @@ export class VpcBuiltinFunctions {
     }
 
     /**
-     * are we in compatibility mode
+     * Are we in compatibility mode
      */
     protected getCompatMode() {
         let ref = new RequestedVelRef(VpcElType.Stack)
@@ -679,7 +678,7 @@ export class VpcBuiltinFunctions {
     }
 
     /**
-     * what is the long id of this object, by id? return empty if object not found
+     * What is the long id of this object, by id? return empty if object not found
      * supports both internalId and userfacingId
      */
     callObjectbyid(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
@@ -691,9 +690,10 @@ export class VpcBuiltinFunctions {
     }
 
     /**
-     * get the name of a vel as a string.
+     * Get the name of a vel as a string.
      * if compat mode, "card field 3" (confirmed in emulator)
-     * if non-compat mode, "card field id 234"
+     * if non-compat mode, "card field id 234" or "bg field id 345 of cd id 567"
+     * (i.e. non-compat mode can be parsed as string and points to the correct field.)
      */
     protected renderVelName(idInternal: string):string {
         let ref = new RequestedVelRef(VpcElType.Unknown);
@@ -717,7 +717,7 @@ export class VpcBuiltinFunctions {
     }
 
     /**
-     * in the script, lists are all 1 based, but it's easier to work with 0-based indexes,
+     * In the script, lists are all 1 based, but it's easier to work with 0-based indexes,
      * so convert them here
      */
     protected toOneBased(n: number) {
