@@ -219,11 +219,6 @@ return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0% , the sh
             return [this.hBuildNyi(`go without dialog`, line[0])];
         }
 
-        //~ /* we usually turn 'the first' into 'first' later on in rewrites */
-        //~ if (line[1].image === 'the' && line[2].tokenType === tks.tkOrdinalOrPosition) {
-            //~ line.splice(1, 1);
-        //~ }
-
         let template = '';
         if (line.length === 2 && (line[1].tokenType === tks.tkOrdinalOrPosition)) {
             template = `
@@ -394,7 +389,7 @@ put the result %ARG0%`;
         checkThrow(line.length > 1, 'S>|not enough args');
         if (line[1].image === 'empty') {
             checkThrowEq(1, line.length, 'S=|select empty should be alone');
-            return [[line[0], BuildFakeTokens.makeStringLiteral(line[0], 'empty')]];
+            return [[line[0], BuildFakeTokens.makeStringLiteral(line[0], 'empty') ]];
         } else {
             let startContainer = 1;
             let ret = [line[0]];

@@ -73,4 +73,5 @@ export class RequestedContainerRef extends VpcIntermedValBase {
     vel: O<RequestedVelRef>;
     variable: O<string>;
     chunk: O<RequestedChunk>;
+    isJustSelection = false;
 }

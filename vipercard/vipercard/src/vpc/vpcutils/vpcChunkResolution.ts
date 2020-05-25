@@ -16,7 +16,9 @@
     add 1 to char 3 to 5 of y (modify)
     delete char 3 to 5 of y (delete)
     set the textsize of char 3 to 5 of cd fld 1 to 12 (text)
-    Note: "the selection" is also a chunk.
+    Note: chunks can also be applied to "the selection",
+        for simplicity we now implement the selection as a
+        new container type, not as a chunk
  */
 
 /**
@@ -480,10 +482,6 @@ export const ChunkResolution = /* static class */ {
         let lastKey = -1;
         while (current) {
             let key = current.granularity;
-            if (current.sortFirst) {
-                checkThrowInternal(current.granularity === VpcGranularity.Chars, '');
-                key = max;
-            }
 
             /* unless we're in compat mode we'll only allow strict ordering */
             if (!compat) {

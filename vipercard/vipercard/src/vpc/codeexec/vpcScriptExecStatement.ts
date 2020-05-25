@@ -13,6 +13,7 @@
 /* auto */ import { ChunkResolution } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
+/* auto */ import { VpcElField } from './../vel/velField';
 /* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
@@ -338,8 +339,17 @@ export class ExecuteStatement {
         } else {
             let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
             checkThrow(contRef.vel, 'R*|has to be a field, not a variable');
-            this.outside.ResolveContainerWritable(contRef);
-            checkThrow(false, 'R)|nyi: selecting text');
+            let resolved = this.outside.ResolveVelRef(contRef.vel)
+            checkThrow(resolved instanceof VpcElField, "expected a field")
+            if (resolved.parentIdInternal !== this.outside.GetCurrentCardId()) {
+                /* trying to select something on another card is a no-op */
+            } else {
+                let cont = this.outside.ResolveContainerReadable(contRef)
+                let bounds = ChunkResolution.applyRead(cont, contRef.chunk, this.outside.GetItemDelim())
+                if (bounds) {
+                    this.directiveImpl.setSelection(resolved, bounds.startPos, bounds.endPos)
+                }
+            }
         }
     }
     /**

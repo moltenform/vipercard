@@ -83,6 +83,18 @@ export class FormattedText {
         this.fontArray.push(font);
     }
 
+    slice(start:number, end:number) {
+        assertTrue(end >= start && start>=0 &&end>=0, "invalid slice bounds", start, end)
+        let newOne = new FormattedText()
+        for (let i=0; i<this.len(); i++) {
+            if (i>=start && i<end) {
+                newOne.push(this.charAt(i), this.fontAt(i))
+            }
+        }
+        
+        return newOne
+    }
+
     append(other: FormattedText) {
         assertTrue(!this.locked, '3j|locked');
         this.charArray = this.charArray.concat(other.charArray);

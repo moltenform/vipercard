@@ -8,7 +8,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcElType, VpcTool, checkThrow, checkThrowInternal, checkThrowNotifyMsg, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
-/* auto */ import { VpcElField } from './../../vpc/vel/velField';
+/* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
@@ -18,6 +18,7 @@
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
+/* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
@@ -301,6 +302,30 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         let action = new UndoableActionDeleteVel(vel, this.vci);
         this.vci.doChangeSeenCreationDeletion(action)
         action.do(this.vci);
+    }
+
+    /**
+     * set the selected text
+     * we don't need to send a selected-field-changed event, it will 
+     * be sent by the ui512 layer.
+     */
+    setSelection(vel:VpcElField, start:number, end:number):void {
+        let elId = this.pr.lyrModelRender.velIdToElId(vel.idInternal)
+        let findEl = this.pr.app.findEl(elId)
+        if (findEl) {
+            vel.setOnVel('selcaret', start, this.outside.Model())
+            vel.setOnVel('selend', end, this.outside.Model())
+            let generic = new VpcTextFieldAsGeneric(undefined, vel, this.outside.Model());
+            let newbounds = TextSelModify.getSelectedTextBounds(generic);
+            /* also checks if the field has lockedtext/can'tselect */
+            if (newbounds) {
+                /* let's be kind and fix up the bounds so if you send it something
+                weird/negative/backwards, we'll repair it here  */
+                vel.setOnVel('selcaret', newbounds[0], this.outside.Model())
+                vel.setOnVel('selend', newbounds[1], this.outside.Model())
+                this.pr.setCurrentFocus(elId, false /* send event */)
+            }
+        }
     }
 }
 

@@ -61,15 +61,10 @@ export interface OutsideWorldRead {
     IsProductProp(propName: string): boolean;
 
     /**
-     * get the focused vel
+     * get selected field and bounds
      */
-    GetSelectedField(): O<VpcElField>;
-
-    /**
-     * get the selected text chunk
-     */
-    GetSelectedTextChunk(): O<RequestedContainerRef>;
-
+    FindSelectedTextBounds(): [O<VpcElField>, number, number]
+    
     /**
      * get the current tool, specify the 'real' tool or the 'simulated' tool chosen by a script
      */

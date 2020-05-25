@@ -405,7 +405,6 @@ export class RequestedChunk extends VpcIntermedValBase {
     first: number;
     last: O<number>;
     ordinal: O<OrdinalOrPosition>;
-    sortFirst = false;
     child: O<RequestedChunk>;
     constructor(first: number) {
         super();
@@ -421,7 +420,6 @@ export class RequestedChunk extends VpcIntermedValBase {
         other.first = this.first;
         other.last = this.last;
         other.ordinal = this.ordinal;
-        other.sortFirst = this.sortFirst;
         other.child = this.child?.getClone();
         return other;
     }

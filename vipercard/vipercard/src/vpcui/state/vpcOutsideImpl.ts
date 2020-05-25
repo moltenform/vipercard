@@ -5,14 +5,14 @@
 /* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { ChunkResolution } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
 /* auto */ import { VelResolveReference } from './../../vpc/vel/velResolveReference';
-/* auto */ import { ReadableContainerField, ReadableContainerVar, WritableContainerField, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
+/* auto */ import { RWContainerField, RWContainerFldSelection, RWContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { VelGetNumberProperty, VelRenderId, VelRenderName } from './../../vpc/vel/velRenderName';
 /* auto */ import { VpcElProductOpts } from './../../vpc/vel/velProductOpts';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
@@ -24,7 +24,7 @@
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, assertEq, longstr, slength } from './../../ui512/utils/util512';
+/* auto */ import { ValHolder, assertEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -188,24 +188,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
 
     /**
      * resolve a reference to a container,
-     * throws if the requested vel does not exist
+     * throws if the requested vel does not exist.
+     * by casting to readablecontainer this provides read-only access
      */
     ResolveContainerReadable(container: RequestedContainerRef): ReadableContainer {
-        checkThrow(container instanceof RequestedContainerRef, '8<|not a valid container');
-        if (container.vel) {
-            let vel = this.ResolveVelRef(container.vel);
-            checkThrow(vel instanceof VpcElBase, `UK|element not found`);
-            checkThrow(
-                vel instanceof VpcElField,
-                longstr(`6[|currently we only support reading text from a
-                    fld. to read label of button, use 'the label of cd btn 1'`)
-            );
-            return new ReadableContainerField(vel, this.Model());
-        } else if (container.variable) {
-            return new ReadableContainerVar(this, container.variable);
-        } else {
-            checkThrow(false, `6l|invalid IntermedValContainer, nothing set`);
-        }
+        return this.ResolveContainerWritable(container) as ReadableContainer
     }
 
     /**
@@ -213,18 +200,22 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * throws if the requested vel does not exist
      */
     ResolveContainerWritable(container: RequestedContainerRef): WritableContainer {
-        if (container.vel) {
+        checkThrow(container instanceof RequestedContainerRef, '8<|not a valid container');
+        if (container.isJustSelection) {
+            let selPts = this.FindSelectedTextBounds()
+            return new RWContainerFldSelection(selPts[0], this.Model(), selPts[1], selPts[2])
+        } else if (container.vel) {
             let vel = this.ResolveVelRef(container.vel);
             checkThrow(vel, `8;|element not found`);
             checkThrow(
                 vel instanceof VpcElField,
-                longstr(`UJ|currently we only support writing text to
-                    a fld. to write label of button, use 'the label of cd btn 1'`)
+                longstr(`UJ|currently we only support reading/writing text to
+                    a fld. to read/write label of button, use 'the label of cd btn 1'`)
             );
 
-            return new WritableContainerField(vel, this.Model());
+            return new RWContainerField(vel, this.Model());
         } else if (container.variable) {
-            return new WritableContainerVar(this, container.variable);
+            return new RWContainerVar(this, container.variable);
         } else {
             checkThrow(false, `6k|invalid IntermedValContainer, nothing set`);
         }
@@ -247,43 +238,28 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
-     * get the focused vel
-     */
-    GetSelectedField(): O<VpcElField> {
-        return this.vci.getCurrentFocusVelField();
-    }
-
-    /**
      * makes the bounds ordered min to max, and ensures that they are within range.
      * also checks for a field marked as can't-select.
      */
-    protected getSelectionBounds(fld:VpcElField) : O<[number, number]> {
+    protected fixSelectionBounds(fld:VpcElField) : O<[number, number]> {
         let generic = new VpcTextFieldAsGeneric(undefined, fld, this.Model());
          return TextSelModify.getSelectedTextBounds(generic);
     }
 
     /**
-     * get the selected text chunk
+     * find the selected text chunk
      */
-    GetSelectedTextChunk(): O<RequestedContainerRef> {
-        let selFld = this.GetSelectedField();
+    FindSelectedTextBounds(): [O<VpcElField>, number, number] {
+        let selFld = this.vci.getCurrentFocusVelField();
         if (selFld) {
-            let bounds = this.getSelectionBounds(selFld)
+            /* check if it's locktext/non selectable */
+            let bounds = this.fixSelectionBounds(selFld)
             if (bounds) {
-                let ret = new RequestedContainerRef();
-                ret.vel = new RequestedVelRef(VpcElType.Fld);
-                ret.vel.lookById = Util512.parseIntStrict(selFld.idInternal);
-                checkThrow(ret.vel.lookById, 'S7|');
-                ret.vel.partIsCdOrBg = true
-                ret.chunk = new RequestedChunk(bounds[0]+1 /* 0-based to 1-based */);
-                ret.chunk.granularity = VpcGranularity.Chars;
-                ret.chunk.last = Math.max(1, bounds[1]);
-                ret.chunk.sortFirst = true;
-                return ret;
+                return [selFld, bounds[0], bounds[1]]
             }
         }
-            
-        return undefined;
+
+        return [undefined, 0, 0]
     }
 
     /**

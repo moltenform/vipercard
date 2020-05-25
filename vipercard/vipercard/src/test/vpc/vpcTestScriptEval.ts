@@ -67,7 +67,7 @@ t.test('getProp', () => {
     b.t(`the short id of target()`, `ERR:parse err`);
     b.t(`the short id of (target())`, `ERR:no such function`);
     /* tries to pull its contents */
-    b.t(`the short id of (target)`, `ERR:only support reading text`);
+    b.t(`the short id of (target)`, `ERR:only support reading/writing text`);
     b.t(`the short id of the me`, `ERR:parse err`);
     b.t(`the short id of me()`, `ERR:parse err`);
     b.t(`the short id of (me)`, `ERR:parse err`);

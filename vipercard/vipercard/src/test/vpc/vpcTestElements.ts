@@ -3,7 +3,7 @@
 /* auto */ import { MockOutsideWorld } from './vpcTestChunkResolution';
 /* auto */ import { VpcElStack, VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
-/* auto */ import { WritableContainerVar } from './../../vpc/vel/velResolveContainer';
+/* auto */ import { RWContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
@@ -70,7 +70,7 @@ t.test('VpcElButton.should translate style names for script', () => {
 });
 t.test('WritableContainerVar.setAll', () => {
     let world = new MockOutsideWorld();
-    let writer = new WritableContainerVar(world.getMock(), 'varName');
+    let writer = new RWContainerVar(world.getMock(), 'varName');
     writer.setAll('abc');
     assertEq('abc', writer.getRawString(), 'Fz|');
     assertEq('abc', world.result, 'Fy|');
@@ -80,7 +80,7 @@ t.test('WritableContainerVar.setAll', () => {
 });
 t.test('WritableContainerVar.splice', () => {
     let world = new MockOutsideWorld();
-    let writer = new WritableContainerVar(world.getMock(), 'varName');
+    let writer = new RWContainerVar(world.getMock(), 'varName');
 
     /* 2 chars -> 0 chars */
     writer.setAll('abcde');

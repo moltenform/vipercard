@@ -116,9 +116,7 @@ BuiltinCmdReplace:=... <Expr> tkSyntaxMark <Expr> tkInOnly  <HSimpleContainer>
 // returnInField. sent up the message hierarchy, usually does nothing. takes no args
 // returnKey. sent up the message hierarchy, usually does nothing. takes no args
 // save. show NYI in rewrite
-// select. "select empty" is supported, "select button/fld" is not (takes you to the edit tool),
-// "select text of cd fld 1" is supported, in software we'll make sure it's not a variable.
-// however we currently don't support select char 2 of the selection
+// select. "select empty", "select text of cd fld 1" is supported, "select button/fld" is not (you'd have to be in the edit tool)
 BuiltinCmdSelect:=...  tkStringLiteral [ <HContainer> ]                                         
 // setting a property
 BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> { <ObjectFld> | _me | [_the] _target } | <Object> } ] _to <AnyPropertyVal>    

@@ -4,6 +4,7 @@
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType, VpcVisualEffectSpec, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
+/* auto */ import { VpcElField } from './../vel/velField';
 /* auto */ import { VpcElCard } from './../vel/velCard';
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
@@ -25,6 +26,7 @@ export abstract class VpcExecInternalDirectiveAbstract {
     abstract goMakevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]):VpcElBase
     abstract goRemovevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]):void
     abstract createOneVelUsedOnlyByDeserialize(parentId: string, type: VpcElType, insertIndex:number, newId: O<string>):VpcElBase
+    abstract setSelection(vel:VpcElField, start:number, end:number):void
 
     /**
      * run a directive
@@ -38,7 +40,7 @@ export abstract class VpcExecInternalDirectiveAbstract {
      * sends either the closeField or exitField message
      */
     goCloseorexitfield(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
-        let seld = this.outside.GetSelectedField();
+        let seld = this.outside.FindSelectedTextBounds()[0];
         if (seld && seld.parentIdInternal === cur.idInternal) {
             let fieldsRecent = this.outside.GetFieldsRecentlyEdited().val;
             if (fieldsRecent[seld.idInternal]) {

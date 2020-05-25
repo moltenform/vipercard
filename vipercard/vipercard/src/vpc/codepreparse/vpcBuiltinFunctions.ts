@@ -602,7 +602,7 @@ export class VpcBuiltinFunctions {
         like 'cd fld id 1234'.
      */
     callSelectedfield(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let fld = this.readoutside.GetSelectedField();
+        let fld = this.readoutside.FindSelectedTextBounds()[0];
         if (fld) {
             let container = this.getFullNameById(fld.idInternal, PropAdjective.Abbrev, VpcElType.Fld);
             return VpcValS(container);
@@ -616,7 +616,7 @@ export class VpcBuiltinFunctions {
         1234'.
      */
     callSelectedchunk(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let fld = this.readoutside.GetSelectedField();
+        let fld = this.readoutside.FindSelectedTextBounds()[0];
         if (fld) {
             let start = this.toOneBased(fld.getN('selcaret'));
             let end = this.toOneBased(fld.getN('selend'));
@@ -631,7 +631,7 @@ export class VpcBuiltinFunctions {
      * The value of the current selected text.
      */
     callSelectedtext(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let fld = this.readoutside.GetSelectedField();
+        let fld = this.readoutside.FindSelectedTextBounds()[0];
         if (fld) {
             let start = fld.getN('selcaret');
             let end = fld.getN('selend');
@@ -646,7 +646,7 @@ export class VpcBuiltinFunctions {
      * The number of the line of the current selected text.
      */
     callSelectedline(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let fld = this.readoutside.GetSelectedField();
+        let fld = this.readoutside.FindSelectedTextBounds()[0];
         if (fld) {
             let start = fld.getN('selcaret');
             let lines = new UI512Lines(fld.getCardFmTxt());

@@ -2,9 +2,10 @@
 /* auto */ import { VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { ReadableContainer, WritableContainer } from './../vpcutils/vpcUtils';
 /* auto */ import { checkThrow } from './../vpcutils/vpcEnums';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './velOutsideInterfaces';
+/* auto */ import { OutsideWorldReadWrite } from './velOutsideInterfaces';
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcHandleLinkedVels } from './velBase';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 
@@ -31,10 +32,10 @@ export class ReadableContainerStr implements ReadableContainer {
 }
 
 /**
- * a readable container for a script variable
+ * a readable + writable container
  */
-export class ReadableContainerVar implements ReadableContainer {
-    constructor(protected outside: OutsideWorldRead, public varName: string) {}
+export class RWContainerVar implements WritableContainer {
+    constructor(protected outside: OutsideWorldReadWrite, public varName: string) {}
     isDefined() {
         return this.outside.IsVarDefined(this.varName);
     }
@@ -46,15 +47,6 @@ export class ReadableContainerVar implements ReadableContainer {
     len() {
         return this.getRawString().length;
     }
-}
-
-/**
- * a writable container
- */
-export class WritableContainerVar extends ReadableContainerVar implements WritableContainer {
-    constructor(protected outsideWritable: OutsideWorldReadWrite, varName: string) {
-        super(outsideWritable, varName);
-    }
 
     splice(insertion: number, lenToDelete: number, newText: string) {
         /* mimic Array.splice */
@@ -63,16 +55,16 @@ export class WritableContainerVar extends ReadableContainerVar implements Writab
         ret += current.substring(0, insertion);
         ret += newText;
         ret += current.substring(insertion + lenToDelete);
-        this.outsideWritable.SetVarContents(this.varName, VpcValS(ret));
+        this.outside.SetVarContents(this.varName, VpcValS(ret));
     }
 
     setAll(newText: string) {
-        this.outsideWritable.SetVarContents(this.varName, VpcValS(newText));
+        this.outside.SetVarContents(this.varName, VpcValS(newText));
     }
 
     replaceAll(search: string, replaceWith: string) {
         let s = this.getRawString();
-        let result = WritableContainerVar.replaceAll(s, search, replaceWith);
+        let result = RWContainerVar.replaceAll(s, search, replaceWith);
         this.setAll(result);
     }
 
@@ -87,12 +79,12 @@ export class WritableContainerVar extends ReadableContainerVar implements Writab
     }
 }
 
-/**
- * reading content from a field
- */
-export class ReadableContainerField implements ReadableContainer {
-    constructor(protected fld: VpcElField, protected h: VpcHandleLinkedVels) {}
 
+/**
+ * reading/writing content to a field
+ */
+export class RWContainerField implements WritableContainer {
+    constructor(protected fld: VpcElField, protected h: VpcHandleLinkedVels) {}
     isDefined() {
         return true;
     }
@@ -105,12 +97,7 @@ export class ReadableContainerField implements ReadableContainer {
     getRawString(): string {
         return this.fld.getCardFmTxt().toUnformatted();
     }
-}
 
-/**
- * writing content to a field
- */
-export class WritableContainerField extends ReadableContainerField implements WritableContainer {
     splice(insertion: number, lenToDelete: number, newstring: string) {
         let txt = this.fld.getCardFmTxt();
         if (insertion === 0 && lenToDelete >= txt.len()) {
@@ -132,7 +119,56 @@ export class WritableContainerField extends ReadableContainerField implements Wr
     replaceAll(search: string, replaceWith: string) {
         /* currently loses all formatting. this feature could be added if desired. */
         let s = this.getRawString();
-        let result = WritableContainerVar.replaceAll(s, search, replaceWith);
+        let result = RWContainerVar.replaceAll(s, search, replaceWith);
+        this.setAll(result);
+    }
+}
+
+/**
+ * reading/writing content to 'the selection'
+ */
+export class RWContainerFldSelection implements WritableContainer {
+    constructor(protected fld: O<VpcElField>, protected h: VpcHandleLinkedVels, protected start:number, protected end:number) {}
+    isDefined() {
+        return true;
+    }
+
+    len() {
+        return this.end - this.start;
+    }
+
+    getRawString(): string {
+        if (this.fld) {
+            return this.fld.getCardFmTxt().toUnformatted().substring(this.start, this.end);
+        } else {
+            return ""
+        }
+    }
+
+    splice(insertion: number, lenToDelete: number, newstring: string) {
+        checkThrow(this.fld, "There isn't a selection")
+        let txt = this.fld.getCardFmTxt();
+        if (insertion === 0 && lenToDelete >= txt.len() && this.start === 0 && this.end >= txt.len()-1) {
+            /* follow emulator, there is different behavior
+            (lose formatting) when replacing all text */
+            this.fld.setProp('alltext', VpcValS(newstring), this.h);
+        } else {
+            let slice = txt.slice(this.start, this.end)
+            let font = insertion+this.start >= 0 && insertion+this.start < txt.len() ? txt.fontAt(insertion+this.start) : this.fld.getDefaultFontAsUi512();
+            let newSliceContents = FormattedText.byInsertion(slice, insertion, lenToDelete, newstring, font);
+            let newTxt = FormattedText.byInsertion(newSliceContents, this.start, this.end, newSliceContents.toUnformatted(), font)
+            this.fld.setCardFmTxt(newTxt, this.h);
+        }
+    }
+
+    setAll(newText: string) {
+        this.splice(0, 0, newText)
+    }
+
+    replaceAll(search: string, replaceWith: string) {
+        /* currently loses all formatting. this feature could be added if desired. */
+        let s = this.getRawString();
+        let result = RWContainerVar.replaceAll(s, search, replaceWith);
         this.setAll(result);
     }
 }

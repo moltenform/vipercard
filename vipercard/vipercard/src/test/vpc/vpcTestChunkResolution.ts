@@ -3,7 +3,7 @@
 /* auto */ import { VpcChunkPreposition, VpcGranularity } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { ChunkResolution } from './../../vpc/vpcutils/vpcChunkResolution';
-/* auto */ import { ReadableContainerVar, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
+/* auto */ import { RWContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertAsserts } from './../testUtils/testUtils';
@@ -479,7 +479,7 @@ function testGetChunk(
 ) {
     const itemDel = ',';
     let world = new MockOutsideWorld();
-    let reader = new ReadableContainerVar(world.getMock(), 'varName');
+    let reader = new RWContainerVar(world.getMock(), 'varName');
     world.result = s;
     let ch = new RequestedChunk(first);
     ch.last = last;
@@ -501,7 +501,7 @@ function testSetChunk(
 ) {
     const itemDel = ',';
     let world = new MockOutsideWorld();
-    let writer = new WritableContainerVar(world.getMock(), 'varName');
+    let writer = new RWContainerVar(world.getMock(), 'varName');
     world.result = s;
     const sReplace = '123';
     let ch = new RequestedChunk(first);

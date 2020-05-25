@@ -4,7 +4,7 @@
 /* auto */ import { VpcGranularity, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { ChunkResolution } from './../vpcutils/vpcChunkResolution';
-/* auto */ import { ReadableContainerField } from './velResolveContainer';
+/* auto */ import { RWContainerField } from './velResolveContainer';
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcHandleLinkedVels } from './velBase';
 /* auto */ import { fitIntoInclusive, longstr } from './../../ui512/utils/util512';
@@ -103,7 +103,7 @@ export class VpcFontSpecialChunk {
         newChunk.first = fitIntoInclusive(newChunk.first, 1, unformatted.length);
 
         /* we've already handled the formattedText.len() === 0 case in getChunkTextAttribute */
-        let cont = new ReadableContainerField(this.vel, h);
+        let cont = new RWContainerField(this.vel, h);
         let bounds = ChunkResolution.applyRead(cont, chunk, itemDel);
         return bounds ? [bounds.startPos, bounds.endPos] : [0, 0];
     }

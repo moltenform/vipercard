@@ -1,5 +1,5 @@
 
-/* auto */ import { BatchType, ScriptTestBatch, TestVpcScriptRunBase, TestMultiplier } from './vpcTestScriptRunBase';
+/* auto */ import { BatchType, ScriptTestBatch, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';

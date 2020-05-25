@@ -53,7 +53,7 @@ t.test('03 chunk groundwork', () => {
         'global z\nput 1 into cd fld 1\\char cd fld 1 of this cd of this stack of z',
         'a'
     );
-    b.t('global z\nput 1 into cd fld 1\\char target of z', 'ERR:6:reading text');
+    b.t('global z\nput 1 into cd fld 1\\char target of z', 'ERR:6:reading/writing text');
     /* with field */
     b.t('put 1 into cd fld 1\\char (cd fld 1) of z', 'a');
     b.t('put 2 into cd fld 1\\char (cd fld 1) of z', 'b');

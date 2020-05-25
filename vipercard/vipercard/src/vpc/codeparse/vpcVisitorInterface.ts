@@ -2,7 +2,6 @@
 /* auto */ import { IntermedMapOfIntermedVals, VpcVal } from './../vpcutils/vpcVal';
 /* auto */ import { ChvITk } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolutionUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
