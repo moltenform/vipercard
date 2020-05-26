@@ -1438,7 +1438,10 @@ this.CONSUME2(tks.tkSyntaxMark)
 this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkStringLiteral)
 this.OPTION1(() => {
-this.SUBRULE1(this.RuleHContainer)
+this.OPTION2(() => {
+this.SUBRULE1(this.RuleHChunk)
+});
+this.SUBRULE1(this.RuleObject)
 });
 });
 

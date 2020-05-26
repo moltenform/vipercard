@@ -469,6 +469,9 @@ select text of cd fld "myFld"
 -- clear selection
 select empty
 
+-- look up field by string
+select char 1 of the selectedField
+
 ============================================================
 ========================= send
 ============================================================

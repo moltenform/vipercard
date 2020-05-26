@@ -18,6 +18,7 @@
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, cast, getStrToEnum, longstr } from './../../ui512/utils/util512';
+import { RWContainerFldSelection, RWContainerField } from '../vel/velResolveContainer';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -331,21 +332,22 @@ export class ExecuteStatement {
     }
     /**
      * selects text
+     * don't need to support 'put "cd fld id 213" into x; select line 3 of x'
      */
     goSelect(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals);
         if (params[0] === 'empty') {
             this.directiveImpl.setSelection(undefined, 0, 0)
         } else {
-            let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
-            checkThrow(contRef.vel, 'R*|has to be a field, not a variable');
-            let resolved = this.outside.ResolveVelRef(contRef.vel)
+            let chunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk)
+            let velRef = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), '')  
+            let resolved = this.outside.ResolveVelRef(velRef)
             checkThrow(resolved instanceof VpcElField, "expected a field")
             if (resolved.parentIdInternal !== this.outside.GetCurrentCardId()) {
                 /* trying to select something on another card is a no-op */
             } else {
-                let cont = this.outside.ResolveContainerReadable(contRef)
-                let bounds = ChunkResolution.applyRead(cont, contRef.chunk, this.outside.GetItemDelim())
+                let cont = new RWContainerField(resolved, this.outside.Model())
+                let bounds = ChunkResolution.applyRead(cont, chunk, this.outside.GetItemDelim())
                 if (bounds) {
                     if (params[0] === 'before') {
                         bounds.endPos = bounds.startPos

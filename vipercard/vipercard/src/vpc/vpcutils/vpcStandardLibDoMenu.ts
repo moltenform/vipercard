@@ -51,7 +51,7 @@ on domenu_edit key, pl, pb
         put the selectedfield into theFld
         if theFld is not empty then
             put "" into the selection
-            select char 3 of theFld
+            select before text of theFld
         end if
     else
         put false into ret

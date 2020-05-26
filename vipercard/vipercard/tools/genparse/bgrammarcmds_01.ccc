@@ -117,7 +117,7 @@ BuiltinCmdReplace:=... <Expr> tkSyntaxMark <Expr> tkInOnly  <HSimpleContainer>
 // returnKey. sent up the message hierarchy, usually does nothing. takes no args
 // save. show NYI in rewrite
 // select. "select empty", "select text of cd fld 1" is supported, "select button/fld" is not (you'd have to be in the edit tool)
-BuiltinCmdSelect:=...  tkStringLiteral [ <HContainer> ]                                         
+BuiltinCmdSelect:=...  tkStringLiteral [ [<HChunk>] <Object> ]                                       
 // setting a property
 // original product supports 'put "char 2 of cd fld 1" into x, set the textfont of x to bold',
 // but we only support this for 'the selectedchunk' via rewriting selectedchunk

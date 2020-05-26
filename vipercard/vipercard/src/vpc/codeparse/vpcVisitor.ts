@@ -608,9 +608,6 @@ return this.H$BuildMap(ctx);
 }
 
 
-RuleBuiltinCmdSet(ctx: VisitingContext): IntermedMapOfIntermedVals {
-return this.H$BuildMap(ctx);
-}
 
 
 RuleBuiltinCmdShow(ctx: VisitingContext): IntermedMapOfIntermedVals {
