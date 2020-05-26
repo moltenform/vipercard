@@ -4,6 +4,7 @@
 /* auto */ import { VpcOpCtg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512ComplexFontChanges } from './../../ui512/drawtext/ui512ComplexFontChanges';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -166,37 +167,37 @@ t.test('EvalHelpers.Number, very close numbers compare equal', () => {
     testEquality(false, '4', '-4');
 });
 
-t.test('VpcStyleToInt', () => {
-    assertEq(TextFontStyling.Default, SubstringStyleComplex.vpcStyleToInt([]), 'I#|');
+t.test('styleListToInt', () => {
+    assertEq(TextFontStyling.Default, UI512ComplexFontChanges.styleListToInt([]), 'I#|');
     assertEq(
         TextFontStyling.Default,
-        SubstringStyleComplex.vpcStyleToInt(['plain']),
+        UI512ComplexFontChanges.styleListToInt(['plain']),
         'I!|'
     );
-    assertEq(TextFontStyling.Bold, SubstringStyleComplex.vpcStyleToInt(['bold']), 'I |');
+    assertEq(TextFontStyling.Bold, UI512ComplexFontChanges.styleListToInt(['bold']), 'I |');
     assertEq(
         TextFontStyling.Bold | TextFontStyling.Italic,
-        SubstringStyleComplex.vpcStyleToInt(['bold', 'italic']),
+        UI512ComplexFontChanges.styleListToInt(['bold', 'italic']),
         'Iz|'
     );
     assertEq(
         TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline,
-        SubstringStyleComplex.vpcStyleToInt(['bold', 'italic', 'underline']),
+        UI512ComplexFontChanges.styleListToInt(['bold', 'italic', 'underline']),
         'Iy|'
     );
     assertEq(
         TextFontStyling.Shadow,
-        SubstringStyleComplex.vpcStyleToInt(['shadow']),
+        UI512ComplexFontChanges.styleListToInt(['shadow']),
         'Ix|'
     );
     assertEq(
         TextFontStyling.Shadow | TextFontStyling.Condense,
-        SubstringStyleComplex.vpcStyleToInt(['shadow', 'condense']),
+        UI512ComplexFontChanges.styleListToInt(['shadow', 'condense']),
         'Iw|'
     );
     assertEq(
         TextFontStyling.Shadow | TextFontStyling.Condense | TextFontStyling.Outline,
-        SubstringStyleComplex.vpcStyleToInt(['shadow', 'condense', 'outline']),
+        UI512ComplexFontChanges.styleListToInt(['shadow', 'condense', 'outline']),
         'Iv|'
     );
 });
@@ -225,42 +226,42 @@ t.test('testStringToTextFontStyling', () => {
         'Io|'
     );
 });
-t.test('vpcStyleFromInt', () => {
+t.test('intToStyleList', () => {
     assertEq(
         'plain',
-        SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Default),
+        UI512ComplexFontChanges.intToStyleList(TextFontStyling.Default),
         'In|'
     );
-    assertEq('bold', SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Bold), 'Im|');
+    assertEq('bold', UI512ComplexFontChanges.intToStyleList(TextFontStyling.Bold), 'Im|');
     assertEq(
         'bold,italic',
-        SubstringStyleComplex.vpcStyleFromInt(
+        UI512ComplexFontChanges.intToStyleList(
             TextFontStyling.Bold | TextFontStyling.Italic
         ),
         'Il|'
     );
     assertEq(
         'bold,italic,underline',
-        SubstringStyleComplex.vpcStyleFromInt(
+        UI512ComplexFontChanges.intToStyleList(
             TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline
         ),
         'Ik|'
     );
     assertEq(
         'shadow',
-        SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Shadow),
+        UI512ComplexFontChanges.intToStyleList(TextFontStyling.Shadow),
         'Ij|'
     );
     assertEq(
         'shadow,condense',
-        SubstringStyleComplex.vpcStyleFromInt(
+        UI512ComplexFontChanges.intToStyleList(
             TextFontStyling.Shadow | TextFontStyling.Condense
         ),
         'Ii|'
     );
     assertEq(
         'outline,shadow,condense',
-        SubstringStyleComplex.vpcStyleFromInt(
+        UI512ComplexFontChanges.intToStyleList(
             TextFontStyling.Shadow | TextFontStyling.Condense | TextFontStyling.Outline
         ),
         'Ih|'

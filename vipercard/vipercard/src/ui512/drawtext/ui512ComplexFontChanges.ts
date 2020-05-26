@@ -180,8 +180,8 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * set typeface of chunk
      */
-    setChunkTextFace(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, snext: string) {
-        let fn = (scurrent: string) => TextFontSpec.setTypeface(scurrent, snext);
+    setChunkTextFace(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, sNext: string) {
+        let fn = (scurrent: string) => TextFontSpec.setTypeface(scurrent, sNext);
         return this._setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     },
 
@@ -237,7 +237,8 @@ export const UI512ComplexFontChanges = /* static class */ {
 
         if (spec ==='plain') { return }
         let bitToModify = this.styleListToInt([spec])
-        let f = (low:string) => {
+        let f = (full:string) => {
+            let low = TextFontSpec.getFontStyle(full)
             let n = stringToTextFontStyling(low)
             if (isAdd) {
                 n |= bitToModify
@@ -245,7 +246,7 @@ export const UI512ComplexFontChanges = /* static class */ {
                 n &= ~bitToModify
             }
 
-            return textFontStylingToString(n)
+            return TextFontSpec.setFontStyle(full, textFontStylingToString(n))
         }
 
         this._setChunkTextAttribute(txt, defaultFont, inStart, inLen, f)
@@ -254,21 +255,22 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * return true if any characters have a style
      */
-    doAnyCharactersHaveThisStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, styleToCheck:string) {
+    doAnyCharactersNotHaveThisStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, styleToCheck:string) {
         checkThrow512(styleToCheck !=='plain', 'cannot ask if it contains plain')
         let bitToCheck = this.styleListToInt([styleToCheck])
-        let sawIt = false
-        let f = (low:string) => {
+        let sawOneWithoutIt = false
+        let f = (full:string) => {
+            let low = TextFontSpec.getFontStyle(full)
             let n = stringToTextFontStyling(low)
-            if ((n & bitToCheck) !== 0) {
-                sawIt = true
+            if ((n & bitToCheck) === 0) {
+                sawOneWithoutIt = true
             }
 
-            return '' 
+            return '_' 
         }
 
         this._getChunkTextAttribute(txt, defaultFont, inStart, inLen, f)
-        return sawIt
+        return sawOneWithoutIt
     },
 
     /**
@@ -284,11 +286,11 @@ export const UI512ComplexFontChanges = /* static class */ {
             this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, 'subtract-condense')
         }
 
-        let hasIt = this.doAnyCharactersHaveThisStyle(txt, defaultFont, inStart, inLen, spec)
-        if (hasIt) {
-            this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, 'subtract-' + spec)
-        } else {
+        let onesWithout = this.doAnyCharactersNotHaveThisStyle(txt, defaultFont, inStart, inLen, spec)
+        if (onesWithout) {
             this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, 'add-' + spec)
+        } else {
+            this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, 'subtract-' + spec)
         }
     },
 
@@ -309,14 +311,22 @@ export const UI512ComplexFontChanges = /* static class */ {
     },
 
     /**
-     * go from "add-bold" and "biuosdce" to "+biuosdce"
+     * go from ("add-bold", "biuosdce") to "+biuosdce"
      */
     setGeneralTextStyleAdvanced(low:string, spec:string) {
         let txt = new FormattedText()
         txt.fromSerialized('a')
-        txt.setFontAt(0, low)
+        let full = TextFontSpec.setFontStyle(UI512FontRequest.defaultFont, low)
+        txt.setFontAt(0, full)
         this.setChunkTextStyleAdvanced(txt, UI512FontRequest.defaultFont, 0, 1, [spec])
-        return txt.fontAt(0)
-    }
+        return TextFontSpec.getFontStyle(txt.fontAt(0))
+    },
+
+    /**
+     * go from ("add-bold", TextFontStyling.Italic) to TextFontStyling.Italic|Bold
+     */
+    setGeneralTextStyleAdvancedInt(n:number, spec:string) {
+        return stringToTextFontStyling(this.setGeneralTextStyleAdvanced(textFontStylingToString(n), spec))
+    },
 }
 

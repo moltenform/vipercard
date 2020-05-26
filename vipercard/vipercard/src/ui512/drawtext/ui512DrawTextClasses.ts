@@ -186,7 +186,9 @@ export function textFontStylingToString(e: TextFontStyling): string {
 export function stringToTextFontStyling(s: string): TextFontStyling {
     let ret = TextFontStyling.Default;
     for (let i = 0; i < s.length - 1; i++) {
-        if (s.charAt(i) === '+') {
+        let c = s.charAt(i)
+        checkThrow512(c !== '_', "passed in a spec?")
+        if (c === '+') {
             switch (s.charAt(i + 1)) {
                 case 'b':
                     ret |= TextFontStyling.Bold;
@@ -218,7 +220,7 @@ export function stringToTextFontStyling(s: string): TextFontStyling {
             }
         }
     }
-    
+
     return ret;
 }
 
@@ -297,30 +299,30 @@ export class TextFontSpec {
         return s.split('_')[2];
     }
 
-    static setTypeface(s: string, snext: string) {
+    static setTypeface(s: string, sNext: string) {
         let parts = s.split('_');
         assertTrue(
-            !snext.includes('_'),
+            !sNext.includes('_'),
             '3X|parts of a font cannot contain the "_" character'
         );
-        return [snext, parts[1], parts[2]].join('_');
+        return [sNext, parts[1], parts[2]].join('_');
     }
 
-    static setFontSize(s: string, snext: string) {
+    static setFontSize(s: string, sNext: string) {
         let parts = s.split('_');
         assertTrue(
-            !snext.includes('_'),
+            !sNext.includes('_'),
             '3W|parts of a font cannot contain the "_" character'
         );
-        return [parts[0], snext, parts[2]].join('_');
+        return [parts[0], sNext, parts[2]].join('_');
     }
 
-    static setFontStyle(s: string, snext: string) {
+    static setFontStyle(s: string, sNext: string) {
         let parts = s.split('_');
         assertTrue(
-            !snext.includes('_'),
+            !sNext.includes('_'),
             '3V|parts of a font cannot contain the "_" character'
         );
-        return [parts[0], parts[1], snext].join('_');
+        return [parts[0], parts[1], sNext].join('_');
     }
 }

@@ -10,6 +10,7 @@
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { TextFontSpec, specialCharNumNewline } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512ComplexFontChanges } from './../../ui512/drawtext/ui512ComplexFontChanges';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -111,12 +112,12 @@ export class VpcElField extends VpcElSizable {
         getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.getFmTxt().toUnformatted()];
         getters['defaulttextstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField) => SubstringStyleComplex.vpcStyleFromInt(me._defaulttextstyle)
+            (me: VpcElField) => UI512ComplexFontChanges.intToStyleList(me.getN('defaulttextstyle'))
         ];
         getters['style'] = [
             PrpTyp.Str,
             (me: VpcElField) => {
-                return getEnumToStrOrFallback(VpcFldStyleInclScroll, me._style);
+                return getEnumToStrOrFallback(VpcFldStyleInclScroll, me.getN('style'));
             }
         ];
 
@@ -127,7 +128,6 @@ export class VpcElField extends VpcElSizable {
         getters['textstyle'] = getters['defaulttextstyle'];
         getters['textfont'] = getters['defaulttextfont'];
         getters['textsize'] = getters['defaulttextsize'];
-
         getters['scroll'] = [
             PrpTyp.Num,
             (me: VpcElField) => {
@@ -155,7 +155,7 @@ export class VpcElField extends VpcElSizable {
         setters['textstyle'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string, h: VpcHandleLinkedVels) => {
-                me.setProp('defaulttextstyle', VpcValS(s), h);
+                me.setProp('defaulttextstyle', VpcValS(s), h)
                 me.setEntireFontFromDefaultFont(h);
             }
         ];
@@ -163,7 +163,7 @@ export class VpcElField extends VpcElSizable {
         setters['textfont'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string, h: VpcHandleLinkedVels) => {
-                me.setOnVel('defaulttextfont', s, h);
+                me.setProp('defaulttextfont', VpcValS(s), h);
                 me.setEntireFontFromDefaultFont(h);
             }
         ];
@@ -171,7 +171,7 @@ export class VpcElField extends VpcElSizable {
         setters['textsize'] = [
             PrpTyp.Num,
             (me: VpcElField, n: number, h: VpcHandleLinkedVels) => {
-                me.setOnVel('defaulttextsize', n, h);
+                me.setProp('defaulttextsize', VpcValN(n), h);
                 me.setEntireFontFromDefaultFont(h);
             }
         ];
@@ -190,8 +190,8 @@ export class VpcElField extends VpcElSizable {
         setters['defaulttextstyle'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string, h: VpcHandleLinkedVels) => {
-                let list = s.split(',').map(item => item.trim());
-                me.setOnVel('defaulttextstyle', SubstringStyleComplex.vpcStyleToInt(list), h);
+                let nextStyle = UI512ComplexFontChanges.setGeneralTextStyleAdvancedInt(me.getN('defaulttextstyle'), s)
+                me.setOnVel('defaulttextstyle', nextStyle, h)
             }
         ];
 

@@ -4,6 +4,7 @@
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { TextFontSpec } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512ComplexFontChanges } from './../../ui512/drawtext/ui512ComplexFontChanges';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -65,11 +66,11 @@ export class VpcElButton extends VpcElSizable {
      */
     static btnGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
-        getters['textstyle'] = [PrpTyp.Str, (me: VpcElButton) => SubstringStyleComplex.vpcStyleFromInt(me._textstyle)];
+        getters['textstyle'] = [PrpTyp.Str, (me: VpcElButton) => UI512ComplexFontChanges.intToStyleList(me.getN('textstyle'))];
         getters['style'] = [
             PrpTyp.Str,
             (me: VpcElButton) => {
-                let ret = getEnumToStrOrFallback(VpcBtnStyle, me._style);
+                let ret = getEnumToStrOrFallback(VpcBtnStyle, me.getN('style'));
                 return ret.replace(/osstandard/g, 'standard').replace(/osdefault/g, 'default');
             }
         ];
@@ -99,8 +100,8 @@ export class VpcElButton extends VpcElSizable {
         setters['textstyle'] = [
             PrpTyp.Str,
             (me: VpcElButton, s: string, h: VpcHandleLinkedVels) => {
-                let list = s.split(',').map(item => item.trim());
-                me.setOnVel('textstyle', SubstringStyleComplex.vpcStyleToInt(list), h);
+                let next = UI512ComplexFontChanges.setGeneralTextStyleAdvancedInt(me.getN('textstyle'), s)
+                me.setOnVel('textstyle', next, h);
             }
         ];
 

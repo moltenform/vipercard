@@ -203,7 +203,11 @@ on domenu_changefontstyle key, pl, pb
         domenu_exitifcompatmodeenabled
         if "setAll|" is in pb then
             replace "setAll|" with "" in pb
-            set the textstyle of pb to plain
+            if pl == "plain" then
+                set the textstyle of pb to plain
+            else
+                set the textstyle of pb to "toggle-" & pl
+            end if
         else if pl == "plain" then
             set the textstyle of the selectedchunk to plain
         else
