@@ -248,6 +248,7 @@ export class VelRenderId {
      */
     static parseFromString(s: string) {
         s = s.trim();
+        checkThrow(s, "Cannot parse from string. No such object or selection.")
 
         /* remove of this stack, of this bg */
         let sRemove = ' of this stack';

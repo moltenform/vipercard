@@ -283,7 +283,7 @@ set the left of cd btn "myBtn" to 2
 `
 
 ============================================================
-========================= New Functions
+========================= User Functions
 ============================================================
 
 An example of how to define and call a custom function:

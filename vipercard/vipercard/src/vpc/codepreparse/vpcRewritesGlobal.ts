@@ -108,12 +108,13 @@ export const VpcRewritesGlobal = /* static class */ {
     rewriteSpecifyCdOrBgPartAndMore(line: ChvITk[], rw: VpcSuperRewrite, compatMode: boolean): ChvITk[] {
         let ret: ChvITk[] = [];
         for (let i = 0; i < line.length - 1; i++) {
-            
+            /* omit certain symbols */
             if (! this._shouldOmit(line, i)
             ) {
                 ret.push(line[i]);
             }
 
+            /* btn 4 -> cd btn 4 */
             if ((line[i + 1].tokenType === tks.tkBtn || line[i + 1].tokenType === tks.tkFld ||
                 line[i + 1].tokenType === tks.tkBtnPlural || line[i + 1].tokenType === tks.tkFldPlural) &&
                 line[i].image !== 'choose') {
@@ -134,6 +135,19 @@ export const VpcRewritesGlobal = /* static class */ {
                     }
                 }
             }
+
+            /* 'textfont of the selectedchunk to "bold"'
+            to 'textfont of char (word 2 of the selectedchunk)
+            to (word 4 of the selectedchunk) of the selectedfield to "bold"' */
+           if (i>=3 && line[i].tokenType === tks.tkIdentifier && line[i].image === 'selectedchunk' &&
+           line[i-1].tokenType === tks._the && line[i-2].tokenType === tks.tkOfOnly && line[i-3].tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready &&
+           '|textfont|textstyle|textsize|'.includes('|'+line[i-3].image+'|')) {
+               ret.pop() /* delete 'selectedchunk' */
+               ret.pop() /* delete 'the' */
+               let gen = rw.gen(longstr(`char ( word 2 of the selectedchunk ) to
+                ( word 4 of the selectedchunk ) of the selectedfield`), line[0])
+                ret = ret.concat(gen[0])
+           }
         }
 
         ret.push(line[line.length - 1]);
