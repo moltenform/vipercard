@@ -121,7 +121,7 @@ BuiltinCmdSelect:=...  tkStringLiteral [ <HContainer> ]
 // setting a property
 // original product supports 'put "char 2 of cd fld 1" into x, set the textfont of x to bold',
 // but we only support this for 'the selectedchunk' via rewriting selectedchunk
-BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> { <ObjectFld> | _me | [_the] _target } | <Object> } ] _to <AnyPropertyVal>    
+BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> { <ObjectFld> | _me | [_the] _target } | <Object> } ] _to <AnyPropertyVal>           --->Custom--->IntermedMapOfIntermedVals
 // show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
 // we don't yet support show all cards or show 6 cards
 BuiltinCmdShow:=...  <Object> [ tkSyntaxMark <Lvl4Expression> [tkComma <Lvl4Expression>]  ]                                  

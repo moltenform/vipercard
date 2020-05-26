@@ -3,7 +3,7 @@
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { IntermedMapOfIntermedVals, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { LogToReplMsgBox } from './../vpcutils/vpcUtils';
-/* auto */ import { tkstr } from './vpcTokens';
+/* auto */ import { tkstr, ChvITk } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolutionUtils';
@@ -38,6 +38,11 @@ type Constructor<T> = new (...args: any[]) => T;
 /**
  * create a mixin adding more methods to the visitor
  * this class contains the custom visitor logic not created by genparse.py
+ * 
+ * 
+ * places where we don't use the normal visit() mechanism and traverse ourself (look for .children):
+ * RuleHUnaryPropertyGet looks ahead for a ObjectInterpretedFromString to get 'char 2 of' phrases 
+ * 
  */
 export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterface>>(Base: T) {
     return class extends Base {
@@ -203,7 +208,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return ref;
         }
 
-        RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef {
+        Help$ObjectInterpretedFromString(ctx: VisitingContext): VpcVal {
             let val = VpcVal.Empty;
             if (ctx.RuleHAnyAllowedVariableName && ctx.RuleHAnyAllowedVariableName[0]) {
                 let s: string = this.visit(ctx.RuleHAnyAllowedVariableName[0]).image;
@@ -212,11 +217,6 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 req.variable = s;
                 let resolved = this.outside.ResolveContainerReadable(req);
                 val = VpcValS(resolved.getRawString());
-            } else if (ctx._target && ctx._target[0]) {
-                /* note: here we're looking up a true object, not reading the results of a variable */
-                let ref = new RequestedVelRef(VpcElType.Unknown);
-                ref.isReferenceToTarget = true;
-                return ref;
             } else if (ctx.RuleExpr && ctx.RuleExpr[0]) {
                 val = this.visit(ctx.RuleExpr[0]);
             } else if (ctx.tkStringLiteral && ctx.tkStringLiteral[0]) {
@@ -239,11 +239,21 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 checkThrow(false, 'SB|no branch');
             }
 
-            checkThrow(val instanceof VpcVal, 'SA|');
-            return VelRenderId.parseFromString(val.readAsString());
+            return val
         }
 
-        
+        RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef {
+            if (ctx._target && ctx._target[0]) {
+                /* note: here we're looking up a true object, not reading the results of a variable */
+                let ref = new RequestedVelRef(VpcElType.Unknown);
+                ref.isReferenceToTarget = true;
+                return ref;
+            } else {
+                let val = this.Help$ObjectInterpretedFromString(ctx)
+                checkThrow(val instanceof VpcVal, 'SA|');
+                return VelRenderId.parseFromString(val.readAsString());
+            }
+        }
 
         /*
         something interesting about Chevtrotain:
@@ -483,7 +493,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return this.outside.CallBuiltinFunction(fnName, args);
         }
 
-        helper$fieldChunkProp(ctx: VisitingContext): [RequestedVelRef, RequestedChunk] {
+        Helper$fieldChunkProp(ctx: VisitingContext): [RequestedVelRef, RequestedChunk] {
             /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
             let chunk = this.visit(ctx.RuleHChunk[0]);
             checkThrow(chunk instanceof RequestedChunk, `9B|internal error, expected RuleHChunk to be a chunk`);
@@ -513,18 +523,40 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             checkThrow(!ctx.RuleWindow || !ctx.RuleWindow[0], "R_|don't yet support looking up property on window");
             checkThrow(!ctx.RuleMenuItem || !ctx.RuleMenuItem[0], "R^|don't yet support looking up property on menuitem");
             checkThrow(!ctx.RuleMenu || !ctx.RuleMenu[0], "R]|don't yet support looking up property on menu");
+            let [velRef, chunk]= this.Helper$PropertyMightChunk(propName, ctx);
+            checkThrow(velRef instanceof RequestedVelRef, `99|internal error, expected RuleObject to be a RequestedElRef`);
+            return this.outside.GetProp(velRef, propName, adjective, chunk);
+        }
+
+        protected Helper$PropertyMightChunk(propName: string, ctx: VisitingContext): [O<RequestedVelRef>, O<RequestedChunk>] {
             checkThrow(typeof propName === 'string', `9C|internal error, expected AnyPropertyName to be a string`);
+            let velRef: O<RequestedVelRef>;
+            let chunk: O<RequestedChunk>;
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
                 /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
                 /* see "Pseudo-functions that refer to objects" in internaldocs.md */
-                let [ref, chunk] = this.helper$fieldChunkProp(ctx);
-                return this.outside.GetProp(ref, propName, adjective, chunk);
-            } else {
-                /* put the locktext of cd fld "myFld" into x */
-                let velRef = this.visit(ctx.RuleObject[0]);
-                checkThrow(velRef instanceof RequestedVelRef, `99|internal error, expected RuleObject to be a RequestedElRef`);
-                return this.outside.GetProp(velRef, propName, adjective, undefined);
+                let got = this.Helper$fieldChunkProp(ctx);
+                velRef = got[0];
+                chunk = got[1];
             }
+            else {
+                /* put "char 4 to 7 of cd fld id 123" into x; get the textfont of x */
+                if (propName.startsWith('text') && ctx.RuleObject && ctx.RuleObject[0] && ctx.RuleObject[0].children.RuleObjectInterpretedFromString && ctx.RuleObject[0].children.RuleObjectInterpretedFromString[0]) {
+                    let val = this.Help$ObjectInterpretedFromString(ctx.RuleObject[0].children.RuleObjectInterpretedFromString[0].children);
+                    checkThrow(val.readAsString(), "Empty string given. Perhaps there is no selection.");
+                    let got = RequestedChunk.parseFromString(val.readAsString());
+                    if (got[0]) {
+                        chunk = got[0];
+                        velRef = VelRenderId.parseFromString(got[1]);
+                    }
+                }
+                /* put the locktext of cd fld "myFld" into x */
+                if (!chunk && ctx.RuleObject && ctx.RuleObject[0]) {
+                    velRef = this.visit(ctx.RuleObject[0]);
+                }
+            }
+
+            return [velRef, chunk];
         }
 
         RuleHOldStyleFnNonNullary(ctx: VisitingContext): VpcVal {
@@ -624,6 +656,26 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             }
 
             return val;
+        }
+
+        /**
+         * customize, for setting
+         */
+        RuleBuiltinCmdSet(ctx: VisitingContext) : IntermedMapOfIntermedVals {
+            let ret = new IntermedMapOfIntermedVals()
+            let propName = this.visit(ctx.RuleHCouldBeAPropertyToSet[0])
+            ret.vals[tkstr.RuleHCouldBeAPropertyToSet] = [propName]
+            ret.vals[tkstr.RuleAnyPropertyVal] = [this.visit(ctx.RuleAnyPropertyVal[0])]
+            let sPropName = (propName as ChvITk).image
+            checkThrow(typeof sPropName === 'string', `9C|internal error, expected AnyPropertyName to be a string`);
+            let [velRef, chunk]= this.Helper$PropertyMightChunk(sPropName, ctx);
+            if (velRef) {
+                ret.vals["velRef"] = [velRef]
+            }
+            if (chunk) {
+                ret.vals["chunk"] = [chunk]
+            }
+           return ret
         }
     };
 }

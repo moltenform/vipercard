@@ -222,9 +222,9 @@ ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef
 
 // ObjectInterpretedFromString:
 // don't need to support HOldStyleFnNonNullary
-// maybe use HUnaryPropertyGet to support 'the owner of'. now use tkAllUnaryPropertiesIfNotAlready for owner.
-// since HUnaryPropertyGet has an optional "the", it's complicated to do that now.
-// original product allows an hchunk: 'get the short id of line 3 of cd fld "a"' but that would make 'get the textfont of line 3 of cd fld "a"' ambiguous.
+// to support 'the owner of', why tkAllUnaryPropertiesIfNotAlready and not HUnaryPropertyGet ?
+// HUnaryPropertyGet has an optional "the", so it's complicated to parse that now.
+// also note that original product allows an hchunk: 'get the short id of line 3 of cd fld "a"' but that would make 'get the textfont of line 3 of cd fld "a"' ambiguous.
 // so I won't support an hchunk for now, you'll have to use parens
 ObjectInterpretedFromString:={ tkStringLiteral | _target | tkLParen <Expr> tkRParen | <HAnyAllowedVariableName> | <HOldStyleFnNullaryOrNullaryPropGet> | _the [tkAdjective] tkAllUnaryPropertiesIfNotAlready tkOfOnly <Object> }       --->Custom--->RequestedVelRef
 
@@ -305,7 +305,7 @@ HSource:={<HSource_1> | <HGenericFunctionCall> | <HSimpleContainer>}   --->Custo
 HSource_1:=  {tkStringLiteral | tkNumLiteral}                 --->Custom--->VpcVal
 HFnCallWParens:={ <HAnyFnName> tkLParen MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP tkRParen  }         --->Custom--->VpcVal
 // original product supports 'put "char 2 of cd fld 1" into x, get the textfont of x',
-// but we only support this for 'the selectedchunk' via rewriting selectedchunk
+// we support this in the visitor by looking ahead to see if it is a ObjectInterpretedFromString and calling RequestedChunk.parseFromString
 HUnaryPropertyGet:=[_the] [ tkAdjective ] <HAllPropertiesThatCouldBeUnary> tkOfOnly { <Object> | <Window> | <MenuItem> <Of> <Menu> | <HChunk> { <ObjectFld> | _me | [_the] _target } }       --->Custom--->VpcVal
 HOldStyleFnNonNullary:=_the <HAnyFnName> tkOfOnly <Lvl6Expression>                                                                             --->Custom--->VpcVal
 HOldStyleFnNullaryOrNullaryPropGet:= _the [ tkAdjective ] <HAnyFnNameOrAllPropertiesThatCouldBeNullary>             --->Custom--->VpcVal

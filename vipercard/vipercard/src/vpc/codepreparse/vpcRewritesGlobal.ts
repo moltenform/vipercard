@@ -135,19 +135,6 @@ export const VpcRewritesGlobal = /* static class */ {
                     }
                 }
             }
-
-            /* 'textfont of the selectedchunk to "bold"'
-            to 'textfont of char (word 2 of the selectedchunk)
-            to (word 4 of the selectedchunk) of the selectedfield to "bold"' */
-           if (i>=3 && line[i].tokenType === tks.tkIdentifier && line[i].image === 'selectedchunk' &&
-           line[i-1].tokenType === tks._the && line[i-2].tokenType === tks.tkOfOnly && line[i-3].tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready &&
-           '|textfont|textstyle|textsize|'.includes('|'+line[i-3].image+'|')) {
-               ret.pop() /* delete 'selectedchunk' */
-               ret.pop() /* delete 'the' */
-               let gen = rw.gen(longstr(`char ( word 2 of the selectedchunk ) to
-                ( word 4 of the selectedchunk ) of the selectedfield`), line[0])
-                ret = ret.concat(gen[0])
-           }
         }
 
         ret.push(line[line.length - 1]);

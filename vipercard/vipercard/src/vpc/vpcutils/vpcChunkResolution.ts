@@ -26,7 +26,7 @@
         put x into char 3 to 5 of the selection (write)
         add 1 to char 3 to 5 of the selection, nyi
         delete char 3 to 5 of y (delete)
-        set the textsize of the selectedchunk to 12 (done in rewrites)
+        set the textsize of the selectedchunk to 12 (done in visitor, RuleHUnaryPropertyGet looks ahead)
  */
 
 /**

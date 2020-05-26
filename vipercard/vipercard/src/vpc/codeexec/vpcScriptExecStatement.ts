@@ -362,8 +362,8 @@ export class ExecuteStatement {
      * set the {property} of {button|field} to {value}
      */
     goSet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
-        let velRef = this.h.findChildVelRef(vals, tkstr.RuleObject);
-        let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk);
+        let velRef = this.h.findChildAndCast(RequestedVelRef, vals, "velRef");
+        let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, "chunk");
         let tk = ensureDefined(vals.vals[tkstr.RuleHCouldBeAPropertyToSet], 'R(|')[0];
         let propName = (tk as ChvITk).image;
 
@@ -384,31 +384,13 @@ export class ExecuteStatement {
 
         checkThrow(strings.length > 0, '7L|could not find RuleAnyPropertyVal or its child', nm);
         let combined = VpcValS(strings.join(','));
-        if (velRefChunk) {
-            /* see "Pseudo-functions that refer to objects" in internaldocs.md */
-            let ref: RequestedVelRef;
-            if (vals.vals[tkstr.RuleObjectFld]) {
-                ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObjectFld), '');
-            } else if (vals.vals[tkstr._target]) {
-                ref = new RequestedVelRef(VpcElType.Unknown);
-                ref.isReferenceToTarget = true;
-            } else if (vals.vals[tkstr._me]) {
-                ref = new RequestedVelRef(VpcElType.Unknown);
-                ref.isReferenceToMe = true;
-            } else {
-                checkThrowInternal(false, 'no branch seen');
-            }
-
-            this.outside.SetProp(cast(RequestedVelRef, ref), propName, combined, velRefChunk);
-        } else {
-            if (!velRef) {
-                /* no velref? this is a productopts */
-                velRef = new RequestedVelRef(VpcElType.Product);
-                velRef.lookByRelative = OrdinalOrPosition.This;
-            }
-
-            this.outside.SetProp(velRef, propName, combined, undefined);
+        if (!velRef) {
+            /* no velref? this is a productopts */
+            velRef = new RequestedVelRef(VpcElType.Product);
+            velRef.lookByRelative = OrdinalOrPosition.This;
         }
+
+        this.outside.SetProp(velRef, propName, combined, velRefChunk);
     }
     /**
      * show {button|field}
