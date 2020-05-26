@@ -774,6 +774,7 @@ New in 0.24
 * Improvements to load time by loading some libraries asynchronously
 * Common commands in script execution are faster
 * Scripts can dynamically create/delete objects, and set scripts
+* New features like `set the textstyle of line 3 of cd fld "myFld" to "toggle-bold"`
 
 
 ============================================================

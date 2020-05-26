@@ -1,22 +1,22 @@
 
-/* auto */ import { ScriptTestBatch } from './../vpc/vpcTestScriptRunBase';
-/* auto */ import { PropAdjective } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
-/* auto */ import { cProductName, vpcVersion } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, assertWarnEq, longstr } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
-/* auto */ import { h3 } from './test03lexer';
+/* auto */ import { ScriptTestBatch } from './../../vpc/vpcTestScriptRunBase';
+/* auto */ import { PropAdjective } from './../../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
+/* auto */ import { cProductName, vpcVersion } from './../../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, assertWarn } from './../../../ui512/utils/util512Assert';
+/* auto */ import { Util512, assertWarnEq, longstr } from './../../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection } from './../../testUtils/testUtils';
+/* auto */ import { h3 } from './../test03lexer';
 
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
 
-let t = new SimpleUtil512TestCollection('testCollection03propComputed');
-export let testCollection03propComputed = t;
+let t = new SimpleUtil512TestCollection('testCollection03propsComputed');
+export let testCollection03propsComputed = t;
 
-t.atest('--init--testCollection03propComputed', async () => {
+t.atest('--init--testCollection03propsComputed', async () => {
     assertTrue(h3, longstr(`forgot to include the
         _testCollection03lexer_ test? put it below this test in _testTop_.ts`))
 });

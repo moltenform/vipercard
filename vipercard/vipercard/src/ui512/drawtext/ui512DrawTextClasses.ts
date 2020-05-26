@@ -218,6 +218,7 @@ export function stringToTextFontStyling(s: string): TextFontStyling {
             }
         }
     }
+    
     return ret;
 }
 

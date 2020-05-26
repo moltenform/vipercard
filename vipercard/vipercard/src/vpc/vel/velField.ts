@@ -1,6 +1,5 @@
 
 /* auto */ import { VpcValN, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
 /* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';

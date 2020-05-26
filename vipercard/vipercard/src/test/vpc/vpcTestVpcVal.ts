@@ -1,7 +1,6 @@
 
 /* auto */ import { VpcEvalHelpers } from './../../vpc/vpcutils/vpcValEval';
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { SubstringStyleComplex } from './../../vpc/vpcutils/vpcStyleComplex';
 /* auto */ import { VpcOpCtg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/drawtext/ui512DrawTextClasses';

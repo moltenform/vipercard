@@ -1,6 +1,5 @@
 
 /* auto */ import { VpcVal, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
 /* auto */ import { VpcGranularity, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolutionUtils';
 /* auto */ import { ChunkResolution } from './../vpcutils/vpcChunkResolution';
@@ -8,12 +7,13 @@
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcHandleLinkedVels } from './velBase';
 /* auto */ import { fitIntoInclusive, longstr } from './../../ui512/utils/util512';
+/* auto */ import { UI512ComplexFontChanges } from './../../ui512/drawtext/ui512ComplexFontChanges';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
 /**
- * apply changes when the user chooses something from the Font or Style menu
+ * apply changes for character-specific properties
  */
 export class VpcFontSpecialChunk {
     constructor(public vel: VpcElField) {}
@@ -24,13 +24,13 @@ export class VpcFontSpecialChunk {
         let newTxt = this.vel.getFmTxt().getUnlockedCopy();
         let len = charend - charstart;
         if (prop === 'textstyle') {
-            let list = s.split(',').map(item => item.trim());
-            SubstringStyleComplex.setChunkTextStyle(newTxt, this.vel.getDefaultFontAsUi512(), charstart, len, list);
+            let list = s.split(',').map(item => item.trim().toLowerCase());
+            UI512ComplexFontChanges.setChunkTextStyleAdvanced(newTxt, this.vel.getDefaultFontAsUi512(), charstart, len, list);
         } else if (prop === 'textfont') {
-            SubstringStyleComplex.setChunkTextFace(newTxt, this.vel.getDefaultFontAsUi512(), charstart, len, s);
+            UI512ComplexFontChanges.setChunkTextFace(newTxt, this.vel.getDefaultFontAsUi512(), charstart, len, s);
         } else if (prop === 'textsize') {
             let n = VpcValS(s).readAsStrictInteger();
-            SubstringStyleComplex.setChunkTextSize(newTxt, this.vel.getDefaultFontAsUi512(), charstart, len, n);
+            UI512ComplexFontChanges.setChunkTextSize(newTxt, this.vel.getDefaultFontAsUi512(), charstart, len, n);
         } else {
             checkThrow(
                 false,
@@ -49,7 +49,7 @@ export class VpcFontSpecialChunk {
         let len = charend - charstart;
         if (prop === 'textstyle') {
             /* returns comma-delimited styles, or the string 'mixed' */
-            let list = SubstringStyleComplex.getChunkTextStyle(
+            let list = UI512ComplexFontChanges.getChunkTextStyleOrMixed(
                 this.vel.getFmTxt(),
                 this.vel.getDefaultFontAsUi512(),
                 charstart,
@@ -59,7 +59,7 @@ export class VpcFontSpecialChunk {
             return list.join(',');
         } else if (prop === 'textfont') {
             /* returns typeface name or the string 'mixed' */
-            return SubstringStyleComplex.getChunkTextFace(
+            return UI512ComplexFontChanges.getChunkTextFaceOrMixed(
                 this.vel.getFmTxt(),
                 this.vel.getDefaultFontAsUi512(),
                 charstart,
@@ -67,7 +67,7 @@ export class VpcFontSpecialChunk {
             );
         } else if (prop === 'textsize') {
             /* as per spec this can return either an integer or the string 'mixed' */
-            return SubstringStyleComplex.getChunkTextSize(
+            return UI512ComplexFontChanges.getChunkTextSizeOrMixed(
                 this.vel.getFmTxt(),
                 this.vel.getDefaultFontAsUi512(),
                 charstart,
