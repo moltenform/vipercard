@@ -332,7 +332,8 @@ export class ExecuteStatement {
     }
     /**
      * selects text
-     * don't need to support 'put "cd fld id 213" into x; select line 3 of x'
+     * does support 'put "cd fld id 213" into x; select line 3 of x'
+     * doesn't need to support 'select line 3 of the target; select line 3 of the selection'
      */
     goSelect(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals);

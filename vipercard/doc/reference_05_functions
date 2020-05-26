@@ -537,12 +537,17 @@ put seconds() into x
 ========================= selectedChunk()
 ============================================================
 
-Current selection, looks something like 'char 2 to 4 of cd fld id 1234'.
+A full description of the current selection, or "" if there is no selection.
+
+Returns a string that looks like this: `char 2 to 4 of cd fld id 567`.
 
 Examples:
 
-put selectedChunk() into x
-
+set the textSize of the selectedChunk to 24
+put the textFont of the selectedChunk into x
+put word 2 of the selectedChunk into selStart 
+put word 4 of the selectedChunk into selEnd 
+put the selectedChunk into x
 
 ============================================================
 ========================= selectedField()

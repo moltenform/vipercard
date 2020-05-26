@@ -217,16 +217,21 @@ end domenu_changefontstyle
 
 on domenu_changefontalign key, pl, pb
     put true into ret
-    if pl is "align left" or pl is "alignleft" then
+    put "|align left|alignleft|align center|aligncenter|" into keys
+    if key is in keys then
         domenu_exitifcompatmodeenabled
-        set the textalign of the selectedfield to "left"
-    else if pl is "align center" or pl is "aligncenter" then
-        domenu_exitifcompatmodeenabled
-        set the textalign of the selectedfield to "center"
+        if "left" is in pl then put "left" into direction
+        else put "center" into direction
+        if "setAll|" is in pb then
+            replace "setAll|" with "" in pb
+            set the textalign of pb to direction
+        else
+            set the textalign of the selectedfield to direction
+        end if
+        return true
     else
-        put false into ret
+        return false
     end if
-    return ret
 end domenu_changefontalign
 
 on domenu_exitifcompatmodeenabled

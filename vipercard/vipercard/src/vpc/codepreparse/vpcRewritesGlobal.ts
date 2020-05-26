@@ -82,7 +82,7 @@ export const VpcRewritesGlobal = /* static class */ {
                 return true
             }
         
-        /* transform 'the params()' into 'the params' */
+        /* transform 'the clickloc()' into 'the clickloc' */
         if (i >= 2 && line[i].tokenType === tks.tkLParen && this.fixOldSyntaxFor[line[i-1].image] && line[i-2].tokenType === tks._the) {
             return true
         } else if (i >= 3 && line[i].tokenType === tks.tkRParen && line[i-1].tokenType === tks.tkLParen && this.fixOldSyntaxFor[line[i-2].image] && line[i-3].tokenType === tks._the) {
@@ -103,7 +103,7 @@ export const VpcRewritesGlobal = /* static class */ {
      * the ambiguity: the name of cd fld 1 could be parsed either way.
      * 2) go from 'the hilite of the target' to 'the hilite of target' for compat.
      *      see bgrammar_01.ccc for an explanation of why
-     * 3) go from 'the params()' to 'the params' for compat with old vipercard scripts.
+     * 3) go from 'the clickloc()' to 'the clickloc' for compat with old vipercard scripts.
      */
     rewriteSpecifyCdOrBgPartAndMore(line: ChvITk[], rw: VpcSuperRewrite, compatMode: boolean): ChvITk[] {
         let ret: ChvITk[] = [];
