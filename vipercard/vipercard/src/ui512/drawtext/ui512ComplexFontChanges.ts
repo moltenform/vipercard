@@ -312,10 +312,12 @@ export const UI512ComplexFontChanges = /* static class */ {
 
     /**
      * go from ("add-bold", "biuosdce") to "+biuosdce"
+     * do this by creating a temp string and calling setChunkTextStyleAdvanced
      */
     setGeneralTextStyleAdvanced(low:string, spec:string) {
         let txt = new FormattedText()
-        txt.fromSerialized('a')
+        /* it doesn't matter what character is used */
+        txt.fromSerialized(' ')
         let full = TextFontSpec.setFontStyle(UI512FontRequest.defaultFont, low)
         txt.setFontAt(0, full)
         this.setChunkTextStyleAdvanced(txt, UI512FontRequest.defaultFont, 0, 1, [spec])

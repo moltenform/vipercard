@@ -56,7 +56,7 @@ export const VpcStateSerialize = /* static class */ {
 
         ret.attrs = VpcGettableSerialization.serializeGettable(vel);
 
-        /* adds unnecessary noise to the file */
+        /* remove unnecessary noise */
         delete ret['__isUtil512Serializable'];
         return ret;
     },

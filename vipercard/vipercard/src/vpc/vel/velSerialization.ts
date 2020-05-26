@@ -141,13 +141,6 @@ export const VpcGettableSerialization = /* static class */ {
     },
 
     /**
-     * copy over the prop values of one object onto another object
-     */
-    copyPropsOver(getter: UI512Gettable, setter: UI512Settable) {
-        checkThrow(false, 'T=|nyi -- use serialization instead');
-    },
-
-    /**
      * use base64 if the string contains nonprintable or nonascii chars
      */
     serializePlain(v: string | number | boolean): string | number | boolean {
