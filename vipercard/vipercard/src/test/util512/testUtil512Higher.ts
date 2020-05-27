@@ -142,6 +142,18 @@ t.test('serialize: getting extra data is fine', () => {
     assertEq('c', oGot.optional_f1, 'P*|');
     assertEq('d', oGot.optional_f2, 'P)|');
     assertEq('not serialized', oGot.__private, 'P(|');
+    t.say(/*——————————*/ 'test loose');
+    oGot = Util512SerializableHelpers.deserializeObjLoose(DemoSerializable, JSON.parse(s));
+    ks = sorted(Util512.getMapKeys(oGot)).join(',');
+    assertEq(
+        '__isUtil512Serializable,f1,f2,fld1,fld2,somethingelse',
+        ks,
+        'P-|'
+    );
+    assertEq('a', oGot.fld1, 'P,|');
+    assertEq('b', oGot.fld2, 'P+|');
+    assertEq('c', oGot['f1'], 'P*|');
+    assertEq('d', oGot['f2'], 'P)|');
 });
 t.test('serialize: throw on missing field ', () => {
     let badIncoming = { fld1: 'fld 1', f1: 'an optional field', f2: 'also optional' };

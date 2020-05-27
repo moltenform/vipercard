@@ -108,6 +108,26 @@ export const Util512SerializableHelpers = /* static class */ {
     },
 
     /**
+     * like deserializeObj, but with less validation
+     */
+    deserializeObjLoose<T extends IsUtil512Serializable>(
+        ctor: NoParameterCtor<T>,
+        incoming: IsUtil512Serializable
+    ): T {
+        let objNew = new ctor();
+        let prop = '';
+        for (prop in objNew) {
+            if (this.shouldSerializeProperty(objNew, prop) && !prop.startsWith('optional_')) {
+                let onGot = incoming[prop]
+                checkThrow512(onGot !== null && onGot !== undefined, '')
+            }
+        }
+
+        incoming['__isUtil512Serializable'] = true
+        return incoming as T
+    },
+
+    /**
      * helper that cals json parse for you
      */
     deserializeFromJson<T extends IsUtil512Serializable>(
