@@ -148,7 +148,7 @@ t.test('serialize: getting extra data is fine', () => {
         JSON.parse(s)
     );
     ks = sorted(Util512.getMapKeys(oGot)).join(',');
-    assertEq('__isUtil512Serializable,__private,f1,f2,fld1,fld2,optional_f1,optional_f2,somethingelse', ks, 'P-|');
+    assertEq('__isUtil512Serializable,f1,f2,fld1,fld2,somethingelse', ks, 'P-|');
     assertEq('a', oGot.fld1, 'P,|');
     assertEq('b', oGot.fld2, 'P+|');
     assertEq('c', oGot['f1'], 'P*|');

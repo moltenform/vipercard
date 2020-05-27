@@ -123,12 +123,12 @@ export const Util512SerializableHelpers = /* static class */ {
             ) {
                 //~ let onGot = incoming[prop];
                 //~ checkThrow512(onGot !== null && onGot !== undefined, 'VB|');
-                objNew[prop] = incoming[prop]
+                //~ objNew[prop] = incoming[prop]
             }
         }
 
-        objNew['__isUtil512Serializable'] = true;
-        return objNew;
+        incoming['__isUtil512Serializable'] = true;
+        return incoming as T;
     },
 
     /**

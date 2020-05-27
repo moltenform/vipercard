@@ -177,7 +177,7 @@ export class VpcSave implements VpcSaveInterface {
             prevStackNameToShow = 'Untitled ' + Util512Higher.getRandIntInclusiveWeak(1, 100);
         }
 
-        let newName = await this.pr.askMsgAsync('Save as:', prevStackNameToShow)[0];
+        let newName = (await this.pr.askMsgAsync('Save as:', prevStackNameToShow))[0];
         if (newName && newName.trim().length) {
             newName = newName.trim();
             let lineageBeforeChanges = this.pr.vci.getModel().stack.getS('stacklineage');
