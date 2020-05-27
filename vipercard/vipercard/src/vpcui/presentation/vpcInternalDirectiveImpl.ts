@@ -129,8 +129,8 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
      * make a background
      */
     protected makeBgWithoutMsg(cur:VpcElCard) { 
-        let bg = this.createOneVelUsedOnlyByDeserialize(this.vci.getModel().stack.idInternal, VpcElType.Bg, -1);
-        this.createOneVelUsedOnlyByDeserialize(bg.idInternal, VpcElType.Card, -1);
+        let bg = this.rawCreateOneVelUseCarefully(this.vci.getModel().stack.idInternal, VpcElType.Bg, -1);
+        this.rawCreateOneVelUseCarefully(bg.idInternal, VpcElType.Card, -1);
         return bg
     }
 
@@ -142,7 +142,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         let currentBg = this.vci.getModel().getById(VpcElBg, cur.parentIdInternal);
         let currentIndex = currentBg.cards.findIndex(cd => cd.idInternal === cur.idInternal);
         let indexRelativeToBg = currentIndex === -1 ? 0 : currentIndex + 1;
-        let vel = this.createOneVelUsedOnlyByDeserialize(cur.parentIdInternal, VpcElType.Card, indexRelativeToBg);
+        let vel = this.rawCreateOneVelUseCarefully(cur.parentIdInternal, VpcElType.Card, indexRelativeToBg);
         if (isDupePaint) {
             /* can't use copy card/paste card since it's not yet impl'd */
             /* use this workaround instead (only copies the paint) */
@@ -176,7 +176,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         let newX = this.pr.userBounds[0] + Util512Higher.getRandIntInclusiveWeak(20, 200);
         let newY = this.pr.userBounds[1] + Util512Higher.getRandIntInclusiveWeak(20, 200);
         let currentCardId = this.vci.getOutside().GetOptionS('currentCardId');
-        let vel = this.createOneVelUsedOnlyByDeserialize(currentCardId, type, -1);
+        let vel = this.rawCreateOneVelUseCarefully(currentCardId, type, -1);
         assertTrue(vel instanceof VpcElSizable, '6u|not VpcElSizable');
         vel.setDimensions(newX,newY, w, h, this.vci.getModel());
         vel.setOnVel(
@@ -250,7 +250,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
     /**
      * create an element and add it to the model
      */
-    createOneVelUsedOnlyByDeserialize(parentId: string, type: VpcElType, insertIndex = -1, newId: O<string> = undefined) {
+    rawCreateOneVelUseCarefully(parentId: string, type: VpcElType, insertIndex = -1, newId: O<string> = undefined) {
         if (!newId) {
             newId = this.vci.getModel().stack.getNextId(this.vci.getModel());
         }

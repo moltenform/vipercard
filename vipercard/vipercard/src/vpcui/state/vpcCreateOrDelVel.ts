@@ -184,8 +184,8 @@ export abstract class UndoableActionCreateOrDelVel {
                 model.stack.setOnVel('name', 'my stack', model);
                 if (createFirstCard) {
                     let creator = vci.getCodeExec().directiveImpl
-                    let firstBg = creator.createOneVelUsedOnlyByDeserialize(model.stack.idInternal, VpcElType.Bg, -1, undefined);
-                    creator.createOneVelUsedOnlyByDeserialize(firstBg.idInternal, VpcElType.Card, -1, undefined);
+                    let firstBg = creator.rawCreateOneVelUseCarefully(model.stack.idInternal, VpcElType.Bg, -1, undefined);
+                    creator.rawCreateOneVelUseCarefully(firstBg.idInternal, VpcElType.Card, -1, undefined);
                 }
             });
         }

@@ -25,7 +25,7 @@ export abstract class VpcExecInternalDirectiveAbstract {
     abstract getCardHistory():RememberHistory;
     abstract goMakevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]):VpcElBase
     abstract goRemovevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]):void
-    abstract createOneVelUsedOnlyByDeserialize(parentId: string, type: VpcElType, insertIndex:number, newId: O<string>):VpcElBase
+    abstract rawCreateOneVelUseCarefully(parentId: string, type: VpcElType, insertIndex:number, newId: O<string>):VpcElBase
     abstract setSelection(vel:O<VpcElField>, start:number, end:number):void
 
     /**
