@@ -237,25 +237,25 @@ t.test('evalExprConfirmFailure', () => {
     b.batchEvaluate(h);
 
     /* fails, wrong result */
-    assertAsserts('Q)|', 'DIFF RESULT', () => {
+    assertAsserts('Un|', 'DIFF RESULT', () => {
         b = new ScriptTestBatch();
         b.t('true and false', 'true');
         b.batchEvaluate(h);
     });
     /* fails, runtime err */
-    assertAsserts('Q(|', 'needs one of', () => {
+    assertAsserts('Um|', 'needs one of', () => {
         b = new ScriptTestBatch();
         b.t('1 is a integer1', 'true');
         b.batchEvaluate(h);
     });
     /* fails, runtime err with wrong message */
-    assertAsserts('Q&|', 'wrong err message', () => {
+    assertAsserts('Ul|', 'wrong err message', () => {
         b = new ScriptTestBatch();
         b.t('1 is a integer1', 'ERR:(incorrectmessage)');
         b.batchEvaluate(h);
     });
     /* runtime err expected but not got */
-    assertAsserts('Q%|', 'error not seen', () => {
+    assertAsserts('Uk|', 'error not seen', () => {
         b = new ScriptTestBatch();
         b.t('true and false', 'ERR:(incorrectmessage)');
         b.batchEvaluate(h);

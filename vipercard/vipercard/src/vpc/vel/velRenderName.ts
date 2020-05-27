@@ -248,7 +248,7 @@ export class VelRenderId {
      */
     static parseFromString(s: string) {
         s = s.trim();
-        checkThrow(s, 'Cannot parse from string. No such object or selection.');
+        checkThrow(s, 'Vl|Cannot parse from string. No such object or selection.');
 
         /* remove of this stack, of this bg */
         let sRemove = ' of this stack';
@@ -318,7 +318,7 @@ export class VelRenderId {
             return getStrToEnum<VpcElType>(VpcElType, 'element type, expected "card" or "button"', sIn);
         };
 
-        checkThrow(words.length >= 2, 'too short, expected something like `card id 123`');
+        checkThrow(words.length >= 2, 'Vk|too short, expected something like `card id 123`');
         let isPartFld = findStrToEnum<VpcElType>(VpcElType, words[1]) === VpcElType.Fld;
         let isPartBtn = findStrToEnum<VpcElType>(VpcElType, words[1]) === VpcElType.Btn;
         if (isPartFld || isPartBtn) {
@@ -328,7 +328,7 @@ export class VelRenderId {
             } else if (cdOrBg === VpcElType.Bg) {
                 ret.partIsBg = true;
             } else {
-                checkThrow(false, 'expected something like `cd btn id 123`, got something like `stack btn id 123`');
+                checkThrow(false, 'Vj|expected something like `cd btn id 123`, got something like `stack btn id 123`');
             }
 
             /* remove the cd/bg prefix */
@@ -338,7 +338,7 @@ export class VelRenderId {
         let realType = getType(words[0]);
         ret.type = realType;
         if (words[1] === 'id') {
-            checkThrow(words.length >= 3, 'too short, expected something like `card id 123`');
+            checkThrow(words.length >= 3, 'Vi|too short, expected something like `card id 123`');
             let theId = Util512.parseInt(words[2]);
             checkThrow(theId, 'Tz|invalid number. expected something like `card id 123`');
             ret.lookById = theId;
@@ -347,7 +347,7 @@ export class VelRenderId {
             if (restOfString.startsWith('"') && restOfString.endsWith('"')) {
                 ret.lookByName = restOfString.slice(1, -1);
             } else {
-                checkThrow(false, 'expected either `cd id 123` or `cd "name"`');
+                checkThrow(false, 'Vh|expected either `cd id 123` or `cd "name"`');
             }
         }
 

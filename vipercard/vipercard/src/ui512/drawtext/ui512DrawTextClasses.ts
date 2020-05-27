@@ -187,7 +187,7 @@ export function stringToTextFontStyling(s: string): TextFontStyling {
     let ret = TextFontStyling.Default;
     for (let i = 0; i < s.length - 1; i++) {
         let c = s.charAt(i);
-        checkThrow512(c !== '_', 'passed in a spec?');
+        checkThrow512(c !== '_', 'V7|passed in a spec?');
         if (c === '+') {
             switch (s.charAt(i + 1)) {
                 case 'b':
@@ -247,7 +247,10 @@ function typefacenameToTypefaceId(s: string): string {
         case 'symbol':
             return '07';
         default:
-            assertTrue(!s.startsWith('0'), 'expecting a string but looks like id given?');
+            assertTrue(
+                !s.startsWith('0'),
+                'V6|expecting a string but looks like id given?'
+            );
             return '00';
     }
 }

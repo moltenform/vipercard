@@ -14,7 +14,7 @@ export let testCollection03propsChunk = t;
 t.atest('--init--testCollection03propsChunk', async () => {
     assertTrue(
         h3,
-        longstr(`forgot to include the
+        longstr(`U;|forgot to include the
         _testCollection03lexer_ test? put it below this test in _testTop_.ts`)
     );
 });
@@ -32,8 +32,8 @@ function setupManyFonts(b: ScriptTestBatch) {
     b.t(`set the textsize of cd fld 1 to 14\\the textsize of cd fld 1`, '14');
     b.t(`set the textfont of cd fld 1 to "courier"\\the textfont of cd fld 1`, 'courier');
     b.t(`set the textstyle of cd fld 1 to "bold"\\the textstyle of cd fld 1`, 'bold');
-    assertTrue(sizes.length === styles.length, '');
-    assertTrue(sizes.length === fonts.length, '');
+    assertTrue(sizes.length === styles.length, 'U:|');
+    assertTrue(sizes.length === fonts.length, 'U/|');
     let a = 'a'.charCodeAt(0);
     let s = Util512.range(a, a + (3 + 3 * sizes.length))
         .map(n => String.fromCharCode(a))

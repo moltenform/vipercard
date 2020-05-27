@@ -17,12 +17,12 @@ export let testCollection03exprObjectRef = t;
 t.atest('--init--testCollection03exprObjectRef', async () => {
     assertTrue(
         h3,
-        longstr(`forgot to include the
+        longstr(`U+|forgot to include the
         _testCollection03lexer_ test? put it below this test in _testTop_.ts`)
     );
 });
 t.test('03ObjectSpecial', () => {
-    assertWarn(!h3.vcstate.model.stack.getB('compatibilitymode'), '');
+    assertWarn(!h3.vcstate.model.stack.getB('compatibilitymode'), 'U*|');
     let b = new ScriptTestBatch();
     /* special objects. see pseudoObjects for more on 'me', 'target' */
     b.t(`the short id of ${cProductName}`, `WILD`);
@@ -66,7 +66,7 @@ t.test('03Object look by id', () => {
         }
     }
 
-    assertWarnEq(map.getKeys().length * map.getKeys().length, b.tests.length, '');
+    assertWarnEq(map.getKeys().length * map.getKeys().length, b.tests.length, 'U)|');
     b.batchEvaluate(h3, [EvaluateThereIs]);
     /* looking by id with incorrect parent must also fail! */
     b = new ScriptTestBatch();
@@ -673,8 +673,8 @@ class EvaluateThereIs extends TestMultiplier {
         }
     }
     protected convertCode(s: string) {
-        assertWarn(s.startsWith('the short id of'), '');
-        assertWarn(!s.includes('\\'), '');
+        assertWarn(s.startsWith('the short id of'), 'U(|');
+        assertWarn(!s.includes('\\'), 'U&|');
         return s.replace(/the short id of/, 'there is a');
     }
     protected convertExpected(s: string) {
@@ -683,7 +683,7 @@ class EvaluateThereIs extends TestMultiplier {
         } else if (s.startsWith('ERR:') || s.startsWith('PREPARSEERR:')) {
             return s;
         } else {
-            assertWarn(s === 'WILD' || Util512.parseIntStrict(s) !== undefined, '');
+            assertWarn(s === 'WILD' || Util512.parseIntStrict(s) !== undefined, 'U%|');
             return 'true';
         }
     }

@@ -108,17 +108,17 @@ t.test('parseIntStrict', () => {
     assertEq(12, Util512.parseIntStrict('0012'), 'N)|');
 });
 t.test('truncateWithEllipsis', () => {
-    assertEq('', Util512.truncateWithEllipsis('', 2), '');
-    assertEq('a', Util512.truncateWithEllipsis('a', 2), '');
-    assertEq('ab', Util512.truncateWithEllipsis('ab', 2), '');
-    assertEq('ab', Util512.truncateWithEllipsis('abc', 2), '');
-    assertEq('ab', Util512.truncateWithEllipsis('abcd', 2), '');
-    assertEq('', Util512.truncateWithEllipsis('', 4), '');
-    assertEq('a', Util512.truncateWithEllipsis('a', 4), '');
-    assertEq('ab', Util512.truncateWithEllipsis('ab', 4), '');
-    assertEq('abcd', Util512.truncateWithEllipsis('abcd', 4), '');
-    assertEq('a...', Util512.truncateWithEllipsis('abcde', 4), '');
-    assertEq('a...', Util512.truncateWithEllipsis('abcdef', 4), '');
+    assertEq('', Util512.truncateWithEllipsis('', 2), 'Ub|');
+    assertEq('a', Util512.truncateWithEllipsis('a', 2), 'Ua|');
+    assertEq('ab', Util512.truncateWithEllipsis('ab', 2), 'UZ|');
+    assertEq('ab', Util512.truncateWithEllipsis('abc', 2), 'UY|');
+    assertEq('ab', Util512.truncateWithEllipsis('abcd', 2), 'UX|');
+    assertEq('', Util512.truncateWithEllipsis('', 4), 'UW|');
+    assertEq('a', Util512.truncateWithEllipsis('a', 4), 'UV|');
+    assertEq('ab', Util512.truncateWithEllipsis('ab', 4), 'UU|');
+    assertEq('abcd', Util512.truncateWithEllipsis('abcd', 4), 'UT|');
+    assertEq('a...', Util512.truncateWithEllipsis('abcde', 4), 'US|');
+    assertEq('a...', Util512.truncateWithEllipsis('abcdef', 4), 'UR|');
 });
 t.test('add', () => {
     assertEq(0, Util512.add(0, 0), 'N(|');

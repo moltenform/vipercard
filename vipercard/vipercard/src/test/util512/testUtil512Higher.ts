@@ -135,12 +135,12 @@ t.test('serialize: getting extra data is fine', () => {
     assertEq(
         '__isUtil512Serializable,__private,fld1,fld2,optional_f1,optional_f2',
         ks,
-        'P-|'
+        'Ug|'
     );
-    assertEq('a', oGot.fld1, 'P,|');
-    assertEq('b', oGot.fld2, 'P+|');
-    assertEq('c', oGot.optional_f1, 'P*|');
-    assertEq('d', oGot.optional_f2, 'P)|');
+    assertEq('a', oGot.fld1, 'Uf|');
+    assertEq('b', oGot.fld2, 'Ue|');
+    assertEq('c', oGot.optional_f1, 'Ud|');
+    assertEq('d', oGot.optional_f2, 'Uc|');
     assertEq('not serialized', oGot.__private, 'P(|');
     t.say(/*——————————*/ 'test loose');
     oGot = Util512SerializableHelpers.deserializeObjLoose(

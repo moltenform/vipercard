@@ -257,7 +257,7 @@ export class UI512ErrorHandling {
     }
 
     protected static decodeErrMsg(compressed: string) {
-        assertTrue(BridgedLZString(), 'lzstring not yet loaded');
+        assertTrue(BridgedLZString(), 'VA|lzstring not yet loaded');
         return UI512Compress.decompressString(compressed);
     }
 

@@ -145,7 +145,7 @@ export class RWContainerFldSelection implements WritableContainer {
     }
 
     splice(insertion: number, lenToDelete: number, newstring: string) {
-        checkThrow(this.fld, "There isn't a selection");
+        checkThrow(this.fld, "Vm|There isn't a selection");
         let txt = this.fld.getFmTxt();
         if (insertion === 0 && lenToDelete >= txt.len() && this.start === 0 && this.end >= txt.len() - 1) {
             /* follow emulator, there is different behavior

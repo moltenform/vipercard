@@ -138,7 +138,7 @@ export class VpcRewriteForCommands {
         return [this.hBuildNyi('the debug command', line[0])];
     }
     rewriteDelete(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args');
+        checkThrow(line.length > 1, 'Vc|not enough args');
         if (
             line[1]?.tokenType === tks.tkChunkGranularity ||
             (line[1]?.tokenType === tks.tkOrdinalOrPosition && line[2]?.tokenType === tks.tkChunkGranularity) ||
@@ -265,7 +265,7 @@ end if`;
         }
     }
     rewriteMark(line: ChvITk[], fromUnmark = false): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args for mark/unmark.');
+        checkThrow(line.length > 1, 'Vb|not enough args for mark/unmark.');
         let isAll = false;
         if (line[1].image === 'cards') {
             if (line[2].image === 'where') {
@@ -277,7 +277,7 @@ end if`;
             if (line[2].image === 'cards' || line[2].image === 'cds') {
                 isAll = true;
             } else {
-                checkThrow(false, 'expected mark all cards');
+                checkThrow(false, 'Va|expected mark all cards');
             }
         }
 
@@ -650,7 +650,7 @@ end repeat`;
     hBuildMarkExpression(expression: ChvITk[], fromUnmark: boolean): ChvITk[][] {
         /* can't put this in standardlib, it needs "each" access */
         /* go to each card, so that bg field accesses work */
-        checkThrow(expression?.length, 'requires expression');
+        checkThrow(expression?.length, 'VZ|requires expression');
         let code = `
 put the short id of this cd into prevCard%UNIQUE%
 put 1 into i%UNIQUE%

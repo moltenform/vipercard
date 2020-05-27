@@ -59,7 +59,7 @@ export class RequestedVelRef extends VpcIntermedValBase {
                 total += 1;
             }
 
-            assertWarn(total <= 1, 'too many specified');
+            assertWarn(total <= 1, 'WP|too many specified');
         }
     }
 }

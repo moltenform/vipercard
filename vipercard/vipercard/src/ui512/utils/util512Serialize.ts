@@ -122,7 +122,7 @@ export const Util512SerializableHelpers = /* static class */ {
                 !prop.startsWith('optional_')
             ) {
                 let onGot = incoming[prop];
-                checkThrow512(onGot !== null && onGot !== undefined, '');
+                checkThrow512(onGot !== null && onGot !== undefined, 'VB|');
             }
         }
 

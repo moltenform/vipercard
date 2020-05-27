@@ -14,7 +14,7 @@ export let testCollection03fnsStandalone = t;
 t.atest('--init--testCollection03fnsStandalone', async () => {
     assertTrue(
         h3,
-        longstr(`forgot to include the
+        longstr(`U.|forgot to include the
         _testCollection03lexer_ test? put it below this test in _testTop_.ts`)
     );
 });

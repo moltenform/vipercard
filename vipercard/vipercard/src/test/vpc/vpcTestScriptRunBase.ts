@@ -46,7 +46,7 @@ export class ScriptTestBatch {
     }
 
     t(s1: string, s2: string) {
-        assertTrue(!this.locked, 'forgot to create a new batch after evaluating?');
+        assertTrue(!this.locked, 'Ux|forgot to create a new batch after evaluating?');
         this.tests.push([s1, s2]);
     }
 
@@ -129,7 +129,7 @@ export class ScriptTestBatch {
             }
         }
 
-        assertTrue(!foundSome, 'Test batch(es) left pending');
+        assertTrue(!foundSome, 'Uw|Test batch(es) left pending');
     }
 }
 
@@ -578,14 +578,14 @@ put ${s} into testresult`;
                 /* if it's like "doSomeCode\\0" then it is a line of code */
                 assertTrue(
                     pts[1] === 'x' || pts[1] === '0',
-                    longstr(`It looks like this test expects a preparseerr.
+                    longstr(`Uv|It looks like this test expects a preparseerr.
                      So, it can't have a \\\\expression, the first part needs
                      to end with \\\\0, since it is ignored`)
                 );
                 line = pts[0];
             } else {
                 /* if it's like "doSomeCode" then it is a statement */
-                assertTrue(pts[1], 'blank?');
+                assertTrue(pts[1], 'Uu|blank?');
                 line = `put ${pts[1]} into testpreparseerr`;
             }
 

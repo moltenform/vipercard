@@ -370,9 +370,9 @@ export class VpcExecTop {
             let bgParts = template.parts.filter(vel => vel.getS('is_bg_velement_id').length);
             let bgIdsSeen = new OrderedHash<VpcElType>();
             for (let pt of bgParts) {
-                assertWarn(!idsSeen.exists(pt.getS('is_bg_velement_id')), 'bg id seen twice across bgs');
+                assertWarn(!idsSeen.exists(pt.getS('is_bg_velement_id')), 'VO|bg id seen twice across bgs');
                 idsSeen.add(pt.getS('is_bg_velement_id'), true);
-                assertWarn(!bgIdsSeen.find(pt.getS('is_bg_velement_id')), 'bg id seen twice');
+                assertWarn(!bgIdsSeen.find(pt.getS('is_bg_velement_id')), 'VN|bg id seen twice');
                 bgIdsSeen.insertNew(pt.getS('is_bg_velement_id'), pt.getType());
             }
 
@@ -384,11 +384,11 @@ export class VpcExecTop {
 
                 let bgIdsSeenThisCd = new OrderedHash<VpcElType>();
                 for (let pt of bgParts) {
-                    assertWarn(!bgIdsSeenThisCd.find(pt.getS('is_bg_velement_id')), 'bg id seen twice');
+                    assertWarn(!bgIdsSeenThisCd.find(pt.getS('is_bg_velement_id')), 'VM|bg id seen twice');
                     bgIdsSeenThisCd.insertNew(pt.getS('is_bg_velement_id'), pt.getType());
                 }
 
-                assertWarnEq(expect, orderedHashSummary(bgIdsSeenThisCd), '');
+                assertWarnEq(expect, orderedHashSummary(bgIdsSeenThisCd), 'VL|');
             }
         }
     }

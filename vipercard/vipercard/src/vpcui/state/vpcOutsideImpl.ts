@@ -448,7 +448,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             )
         );
         let args = this.MakeUI512PaintDispatchFromCurrentOptions(false, mods);
-        checkThrow(argsGiven.length % 2 === 0, 'expected even #');
+        checkThrow(argsGiven.length % 2 === 0, 'Wb|expected even #');
         for (let i = 0; i < argsGiven.length; i += 2) {
             args.xPts.push(argsGiven[i]);
             args.yPts.push(argsGiven[i + 1]);

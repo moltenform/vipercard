@@ -146,7 +146,7 @@ export const VpcRewritesGlobal = /* static class */ {
                     } else {
                         checkThrow(
                             false,
-                            longstr(`You should specify 'cd fld "myFld"' or
+                            longstr(`Vd|You should specify 'cd fld "myFld"' or
                         cd btn "myBtn" instead of just fld "myFld" or btn "myBtn".
                         If you need this, go Object->Stack Info and turn on compatibility mode.`)
                         );

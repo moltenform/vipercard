@@ -33,7 +33,7 @@ export const ChunkResolutionUtils = /* static class */ {
         } else if (type === VpcGranularity.Words) {
             return new RegExp('(\\n| )+', 'g');
         } else {
-            checkThrowInternal(false, 'no regex for this granularity');
+            checkThrowInternal(false, 'WO|no regex for this granularity');
         }
     },
 
@@ -163,7 +163,7 @@ export const ChunkResolutionUtils = /* static class */ {
         let first = ch.first;
         let last = ch.last;
 
-        checkThrow(first >= 0 && (!last || last >= 0), 'do not allow negative');
+        checkThrow(first >= 0 && (!last || last >= 0), 'WN|do not allow negative');
         if (ch.granularity === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
             return undefined;
@@ -215,7 +215,7 @@ export const ChunkResolutionUtils = /* static class */ {
                 upperBound = ChunkResolutionUtils.applyCount(sInput, itemDel, ch.granularity, false);
             }
 
-            ch.first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, upperBound), 'too big an index');
+            ch.first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal, 0, 1, upperBound), 'WM|too big an index');
             ch.last = ch.first;
             ch.ordinal = undefined;
         }
@@ -230,7 +230,7 @@ export const ChunkResolutionUtils = /* static class */ {
         let first = ch.first;
         let last = ch.last;
 
-        checkThrow(first >= 0 && (!last || last >= 0), 'do not allow negative');
+        checkThrow(first >= 0 && (!last || last >= 0), 'WL|do not allow negative');
         assertTrue(first !== null && first !== undefined && last !== null, '5;|invalid first or last');
         if (ch.granularity === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
@@ -382,14 +382,14 @@ export const ChunkResolutionUtils = /* static class */ {
                 checkThrow(false, `5,|unknown preposition ${prep}`);
             }
         } else {
-            assertTrue(!newString, '');
-            assertTrue(!prep || prep === VpcChunkPreposition.Into, '');
+            assertTrue(!newString, 'WK|');
+            assertTrue(!prep || prep === VpcChunkPreposition.Into, 'WJ|');
             retbounds = this._getBoundsForGet(unformatted, itemDel, request);
         }
 
         if (retbounds) {
             let ret = new ResolvedChunk(parent.container, parent.startPos + retbounds[0], parent.startPos + retbounds[1]);
-            checkThrow(ret.startPos >= 0 && ret.endPos >= 0, 'somehow got a negative');
+            checkThrow(ret.startPos >= 0 && ret.endPos >= 0, 'WI|somehow got a negative');
             return [ret, addedExtraText];
         } else {
             return [undefined, addedExtraText];

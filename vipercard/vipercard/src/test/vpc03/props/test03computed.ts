@@ -17,7 +17,7 @@ export let testCollection03propsComputed = t;
 t.atest('--init--testCollection03propsComputed', async () => {
     assertTrue(
         h3,
-        longstr(`forgot to include the
+        longstr(`V1|forgot to include the
         _testCollection03lexer_ test? put it below this test in _testTop_.ts`)
     );
 });
@@ -137,12 +137,12 @@ t.test('03date computed property', () => {
     b.batchEvaluate(h3);
     let d1 = h3.vcstate.vci.getCodeExec().globals.get('d1');
     let pts = d1.readAsString().split('~');
-    assertWarn('' === pts[0], '');
-    assertWarn(/[0-9]+\/[0-9]+\/[0-9]+/.test(pts[1]), '');
-    assertWarn(/[0-9]+\/[0-9]+\/[0-9]+/.test(pts[2]), '');
-    assertWarn(/[a-zA-Z]{3}, [a-zA-Z]{3} [0-9]+, [0-9]+/.test(pts[3]), '');
-    assertWarn(/[a-zA-Z]+, [a-zA-Z]+ [0-9]+, [0-9]+/.test(pts[4]), '');
-    assertWarn(/[a-zA-Z]+, [a-zA-Z]+ [0-9]+, [0-9]+/.test(pts[5]), '');
+    assertWarn('' === pts[0], 'V0|');
+    assertWarn(/[0-9]+\/[0-9]+\/[0-9]+/.test(pts[1]), 'U~|');
+    assertWarn(/[0-9]+\/[0-9]+\/[0-9]+/.test(pts[2]), 'U}|');
+    assertWarn(/[a-zA-Z]{3}, [a-zA-Z]{3} [0-9]+, [0-9]+/.test(pts[3]), 'U||');
+    assertWarn(/[a-zA-Z]+, [a-zA-Z]+ [0-9]+, [0-9]+/.test(pts[4]), 'U{|');
+    assertWarn(/[a-zA-Z]+, [a-zA-Z]+ [0-9]+, [0-9]+/.test(pts[5]), 'U_|');
     let testDateUtils: any = Util512.shallowClone(VpcBuiltinFunctionsDateUtils);
     testDateUtils._getDateCurrent = () => {
         return [0, 1, 0, 1900];
@@ -150,30 +150,38 @@ t.test('03date computed property', () => {
     assertWarnEq(
         'Sun, Jan 1, 1900',
         testDateUtils.go(PropAdjective.Abbrev).readAsString(),
-        ''
+        'U^|'
     );
-    assertWarnEq('1/1/1900', testDateUtils.go(PropAdjective.Empty).readAsString(), '');
+    assertWarnEq('1/1/1900', testDateUtils.go(PropAdjective.Empty).readAsString(), 'U]|');
     assertWarnEq(
         'Sunday, January 1, 1900',
         testDateUtils.go(PropAdjective.Long).readAsString(),
-        ''
+        'U[|'
     );
-    assertWarnEq('1/1/1900', testDateUtils.go(PropAdjective.Short).readAsString(), '');
+    assertWarnEq('1/1/1900', testDateUtils.go(PropAdjective.Short).readAsString(), 'U@|');
     testDateUtils._getDateCurrent = () => {
         return [6, 31, 11, 2025];
     };
     assertWarnEq(
         'Sat, Dec 31, 2025',
         testDateUtils.go(PropAdjective.Abbrev).readAsString(),
-        ''
+        'U?|'
     );
-    assertWarnEq('12/31/2025', testDateUtils.go(PropAdjective.Empty).readAsString(), '');
+    assertWarnEq(
+        '12/31/2025',
+        testDateUtils.go(PropAdjective.Empty).readAsString(),
+        'U>|'
+    );
     assertWarnEq(
         'Saturday, December 31, 2025',
         testDateUtils.go(PropAdjective.Long).readAsString(),
-        ''
+        'U=|'
     );
-    assertWarnEq('12/31/2025', testDateUtils.go(PropAdjective.Short).readAsString(), '');
+    assertWarnEq(
+        '12/31/2025',
+        testDateUtils.go(PropAdjective.Short).readAsString(),
+        'U<|'
+    );
 });
 t.test('03version computed property', () => {
     let b = new ScriptTestBatch();

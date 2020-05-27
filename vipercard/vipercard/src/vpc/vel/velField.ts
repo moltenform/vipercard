@@ -314,7 +314,7 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
     }
 
     getReadOnlyUI512(): UI512ElTextField {
-        return ensureDefined(this.el512, '');
+        return ensureDefined(this.el512, 'Ve|');
     }
 
     getScrollAmt(): number {

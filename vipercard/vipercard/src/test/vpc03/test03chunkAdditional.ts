@@ -21,7 +21,7 @@ export let testCollection03chunkAdditional = t;
 t.atest('--init--testCollection03chunkAdditional', async () => {
     assertTrue(
         h3,
-        longstr(`forgot to include the
+        longstr(`U!|forgot to include the
         _testCollection03lexer_ test? put it below this test in _testTop_.ts`)
     );
 
@@ -740,19 +740,19 @@ end sum2d
     `;
     h3.runGeneralCode(code, 'global testresult1\nput sum1d("") into testresult1');
     let got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
-    assertWarnEq('0', got, '');
+    assertWarnEq('0', got, 'U |');
     h3.runGeneralCode(
         code,
         'global testresult1, arrayLike\nput sum1d(arrayLike) into testresult1'
     );
     got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
-    assertWarnEq((11 + 9 + 12).toString(), got, '');
+    assertWarnEq((11 + 9 + 12).toString(), got, 'Uz|');
     h3.runGeneralCode(
         code,
         'global testresult1, arr2d\nput sum2d(arr2d) into testresult1'
     );
     got = h3.vcstate.runtime.codeExec.globals.get(`testresult1`).readAsString();
-    assertWarnEq((12 + 21 + 9 + 20 + 22).toString(), got, '');
+    assertWarnEq((12 + 21 + 9 + 20 + 22).toString(), got, 'Uy|');
     h3.vcstate.vci.doWithoutAbilityToUndo(() =>
         h3.vcstate.model.stack.setOnVel('compatibilitymode', true, h3.vcstate.model)
     );

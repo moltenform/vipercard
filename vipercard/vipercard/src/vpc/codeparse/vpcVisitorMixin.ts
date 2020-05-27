@@ -224,9 +224,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 val = VpcValS(im.slice(1, -1));
             } else if (ctx.tkAllUnaryPropertiesIfNotAlready && ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
                 /* get the short id of the owner of cd btn 1 */
-                checkThrow(ctx.RuleObject && ctx.RuleObject[0], 'RuleObject is undefined');
+                checkThrow(ctx.RuleObject && ctx.RuleObject[0], 'VW|RuleObject is undefined');
                 let velRef = this.visit(ctx.RuleObject[0]);
-                checkThrow(velRef instanceof RequestedVelRef, `99|internal error, expected RuleObject to be a RequestedElRef`);
+                checkThrow(velRef instanceof RequestedVelRef, `VV|internal error, expected RuleObject to be a RequestedElRef`);
                 let adjective =
                     ctx.tkAdjective && ctx.tkAdjective[0]
                         ? getStrToEnum<PropAdjective>(PropAdjective, 'PropAdjective', ctx.tkAdjective[0].image)
@@ -325,7 +325,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
-            checkThrow(ctx.RuleHChunkOne && ctx.RuleHChunkOne[0], 'S3|RuleHChunkOne');
+            checkThrow(ctx.RuleHChunkOne && ctx.RuleHChunkOne[0], 'VU|RuleHChunkOne');
             let ret = cast(RequestedChunk, this.visit(arLast(ctx.RuleHChunkOne)));
             let hasBackwards = ret.hasBackwardsBounds();
             let current = ret;
@@ -338,7 +338,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
             checkThrow(
                 current === ret || !hasBackwards,
-                `backwards bounds in a recursive chunk.
+                `VT|backwards bounds in a recursive chunk.
             you can't do 'put item 3 to 2 of line 2 of "abc" into x', if you need to you can do
             'put line 2 of "abc"' into x1' and 'put item 3 to 2 of x1 into x'`
             );
@@ -369,7 +369,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 return VpcVal.getScientificNotation(ctx.tkNumLiteral[0].image);
             } else if (ctx.RuleHSimpleContainer && ctx.RuleHSimpleContainer[0]) {
                 let container = this.visit(ctx.RuleHSimpleContainer[0]);
-                checkThrow(container instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
+                checkThrow(container instanceof RequestedContainerRef, `VS|internal error, expected IntermedValContainer`);
                 return VpcValS(this.outside.ContainerRead(container));
             } else {
                 checkThrowInternal(false, '|3|null');
@@ -505,7 +505,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ref = new RequestedVelRef(VpcElType.Unknown);
                 ref.isReferenceToTarget = true;
             } else {
-                checkThrowInternal(false, 'no branch seen');
+                checkThrowInternal(false, 'VR|no branch seen');
             }
 
             checkThrow(ref instanceof RequestedVelRef, `9A|internal error, expected RuleObjectFld to be a RequestedElRef`);
@@ -527,7 +527,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         protected Helper$PropertyMightChunk(propName: string, ctx: VisitingContext): [O<RequestedVelRef>, O<RequestedChunk>] {
-            checkThrow(typeof propName === 'string', `9C|internal error, expected AnyPropertyName to be a string`);
+            checkThrow(typeof propName === 'string', `VQ|internal error, expected AnyPropertyName to be a string`);
             let velRef: O<RequestedVelRef>;
             let chunk: O<RequestedChunk>;
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
@@ -548,7 +548,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                     let val = this.Help$ObjectInterpretedFromString(
                         ctx.RuleObject[0].children.RuleObjectInterpretedFromString[0].children
                     );
-                    checkThrow(val.readAsString(), 'Empty string given. Perhaps there is no selection.');
+                    checkThrow(val.readAsString(), 'VP|Empty string given. Perhaps there is no selection.');
                     let got = RequestedChunk.parseFromString(val.readAsString());
                     if (got[0]) {
                         chunk = got[0];

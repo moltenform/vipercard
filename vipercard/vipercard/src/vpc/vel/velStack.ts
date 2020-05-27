@@ -70,7 +70,7 @@ export class VpcElStack extends VpcElBase {
      */
     alterCardOrder(fn: (a: string[]) => string[], h: VpcHandleLinkedVels) {
         let got = fn(this.getCardOrder());
-        assertTrue(got.length, '');
+        assertTrue(got.length, 'W2|');
         this.setOnVel('cardorder', got.join('|'), h);
     }
 

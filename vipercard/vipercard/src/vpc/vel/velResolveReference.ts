@@ -47,7 +47,7 @@ export class VelResolveReference {
 
         /* some things should not be by position */
         if (ref.type === VpcElType.Btn || ref.type === VpcElType.Fld) {
-            checkThrow(!ref.lookByRelative || !ordinalOrPositionIsPosition(ref.lookByRelative), 'cannot be by position');
+            checkThrow(!ref.lookByRelative || !ordinalOrPositionIsPosition(ref.lookByRelative), 'W1|cannot be by position');
         }
 
         /* combine parents into one chain */
@@ -58,17 +58,17 @@ export class VelResolveReference {
         let parentBg: O<VpcElBg>;
         if (ref.parentCdInfo) {
             let aParentCard = this.go(ref.parentCdInfo, me, target, cardHistory);
-            checkThrow(aParentCard, 'break, not found, parent not found');
+            checkThrow(aParentCard, 'W0|break, not found, parent not found');
             parentCard = cast(VpcElCard, aParentCard, 'break, not found, wrong parent type');
         }
         if (ref.parentBgInfo) {
             let aParentBg = this.go(ref.parentBgInfo, me, target, cardHistory);
-            checkThrow(aParentBg, 'break, not found, parent not found');
+            checkThrow(aParentBg, 'V~|break, not found, parent not found');
             parentBg = cast(VpcElBg, aParentBg, 'break, not found, wrong parent type');
         }
         if (ref.parentStackInfo) {
             let aParentStack = this.go(ref.parentStackInfo, me, target, cardHistory);
-            checkThrow(aParentStack, 'break, not found, parent not found');
+            checkThrow(aParentStack, 'V}|break, not found, parent not found');
             cast(VpcElStack, aParentStack, 'break, not found, wrong parent type');
             /* we can now safely ignore parentStack,
             since the only options are 1) doesn't exist
@@ -104,8 +104,8 @@ export class VelResolveReference {
      * bg parts are complicated
      */
     protected lookForBgPart(ref: RequestedVelRef, parentCard: O<VpcElCard>, parentBg: O<VpcElBg>): O<VpcElBase> {
-        checkThrow(!parentBg, "can't say bg fld 1 of bg 3, have to access via a card");
-        checkThrow(ref.type === VpcElType.Btn || ref.type === VpcElType.Fld, 'only parts can belong to a bg');
+        checkThrow(!parentBg, "V||can't say bg fld 1 of bg 3, have to access via a card");
+        checkThrow(ref.type === VpcElType.Btn || ref.type === VpcElType.Fld, 'V{|only parts can belong to a bg');
         parentCard = parentCard ?? this.model.getCurrentCard();
         let arr = parentCard.parts.filter(vel => vel.getS('is_bg_velement_id').length > 0 && vel.getType() === ref.type);
         if (ref.lookById) {
@@ -120,7 +120,7 @@ export class VelResolveReference {
             let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, 0, 0, arr.length - 1);
             return index === undefined ? undefined : arr[index];
         } else {
-            checkThrow(false, 'no specifier');
+            checkThrow(false, 'V_|no specifier');
         }
     }
 
@@ -134,30 +134,30 @@ export class VelResolveReference {
         parentBg: O<VpcElBg>
     ) {
         if (found && found.getType() === VpcElType.Stack) {
-            checkThrow(!parentCard, 'break, not found, cannot have this this type of parent');
-            checkThrow(!parentBg, 'break, not found, cannot have this this type of parent');
+            checkThrow(!parentCard, 'V^|break, not found, cannot have this this type of parent');
+            checkThrow(!parentBg, 'V]|break, not found, cannot have this this type of parent');
         } else if (found && found.getType() === VpcElType.Bg) {
-            checkThrow(!parentCard, 'break, not found, cannot have this this type of parent');
-            checkThrow(!parentBg, 'break, not found, cannot have this this type of parent');
+            checkThrow(!parentCard, 'V[|break, not found, cannot have this this type of parent');
+            checkThrow(!parentBg, 'V@|break, not found, cannot have this this type of parent');
         } else if (found && found.getType() === VpcElType.Card) {
-            checkThrow(!parentCard, 'break, not found, cannot have this this type of parent');
+            checkThrow(!parentCard, 'V?|break, not found, cannot have this this type of parent');
         }
 
         /* double-check classes */
         if (found && found.getType() === VpcElType.Card) {
-            checkThrow(found instanceof VpcElCard, 'break, not found, incorrect class');
+            checkThrow(found instanceof VpcElCard, 'V>|break, not found, incorrect class');
         } else if (found && found.getType() === VpcElType.Fld) {
-            checkThrow(found instanceof VpcElField, 'break, not found, incorrect class');
+            checkThrow(found instanceof VpcElField, 'V=|break, not found, incorrect class');
         } else if (found && found.getType() === VpcElType.Product) {
-            checkThrow(found instanceof VpcElProductOpts, 'break, not found, incorrect class');
+            checkThrow(found instanceof VpcElProductOpts, 'V<|break, not found, incorrect class');
         } else if (found && found.getType() === VpcElType.Stack) {
-            checkThrow(found instanceof VpcElStack, 'break, not found, incorrect class');
+            checkThrow(found instanceof VpcElStack, 'V;|break, not found, incorrect class');
         } else if (found && found.getType() === VpcElType.Bg) {
-            checkThrow(found instanceof VpcElBg, 'break, not found, incorrect class');
+            checkThrow(found instanceof VpcElBg, 'V:|break, not found, incorrect class');
         } else if (found && found.getType() === VpcElType.Btn) {
-            checkThrow(found instanceof VpcElButton, 'break, not found, incorrect class');
+            checkThrow(found instanceof VpcElButton, 'V/|break, not found, incorrect class');
         } else if (found) {
-            checkThrow(false, 'unknown type');
+            checkThrow(false, 'V.|unknown type');
         }
     }
 
@@ -175,32 +175,35 @@ export class VelResolveReference {
         }
 
         /* confirm type lines up with what we expect */
-        checkThrow(!found || ref.type === VpcElType.Unknown || ref.type === found.getType(), 'break, not found, unexpected type');
+        checkThrow(
+            !found || ref.type === VpcElType.Unknown || ref.type === found.getType(),
+            'V-|break, not found, unexpected type'
+        );
 
         if (found.getType() === VpcElType.Card) {
-            checkThrow(!parentBg || found.parentIdInternal === parentBg.idInternal, 'break, not found, wrong card parent');
+            checkThrow(!parentBg || found.parentIdInternal === parentBg.idInternal, 'V,|break, not found, wrong card parent');
         } else if (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld) {
-            checkThrow(!parentCard || found.parentIdInternal === parentCard.idInternal, 'break, not found, wrong card parent');
-            checkThrow(!parentBg, "break, not found, a card element can't belong to a bg");
+            checkThrow(!parentCard || found.parentIdInternal === parentCard.idInternal, 'V+|break, not found, wrong card parent');
+            checkThrow(!parentBg, "V*|break, not found, a card element can't belong to a bg");
         }
 
-        checkThrow(!ref.cardLookAtMarkedOnly || ref.type === VpcElType.Card, 'marked only is only for cards');
+        checkThrow(!ref.cardLookAtMarkedOnly || ref.type === VpcElType.Card, 'V)|marked only is only for cards');
         if (found && found.getType() !== VpcElType.Fld && found.getType() !== VpcElType.Btn) {
-            checkThrow(!ref.partIsBg, 'does not make sense to belong to bg');
-            checkThrow(!ref.partIsCd, 'does not make sense to belong to cd');
+            checkThrow(!ref.partIsBg, 'V(|does not make sense to belong to bg');
+            checkThrow(!ref.partIsCd, 'V&|does not make sense to belong to cd');
         } else if (found) {
-            assertWarn(ref.partIsCd || ref.partIsBg || ref.partIsCdOrBg, 'expect to look up by cd or by bg');
+            assertWarn(ref.partIsCd || ref.partIsBg || ref.partIsCdOrBg, 'V%|expect to look up by cd or by bg');
         }
 
         if (ref.partIsCd) {
             /* important for preventing someone from
             using the internal true id to look up a bg btn */
-            checkThrow(found.getS('is_bg_velement_id').length === 0, 'break, not found, said to belong to card');
-            checkThrow(!ref.partIsBg, '');
+            checkThrow(found.getS('is_bg_velement_id').length === 0, 'V#|break, not found, said to belong to card');
+            checkThrow(!ref.partIsBg, 'V!|');
         }
         if (ref.partIsBg) {
-            checkThrow(found.getS('is_bg_velement_id').length > 0, 'break, not found, said to belong to bg');
-            checkThrow(!ref.partIsCd, '');
+            checkThrow(found.getS('is_bg_velement_id').length > 0, 'V |break, not found, said to belong to bg');
+            checkThrow(!ref.partIsCd, 'Vz|');
         }
 
         return found;
@@ -280,7 +283,7 @@ export class VelResolveReference {
                 !ref.lookById &&
                 !ref.lookByName &&
                 (!ref.lookByRelative || ref.lookByRelative === OrdinalOrPosition.This),
-            'only one productOpts'
+            'Vy|only one productOpts'
         );
         return this.model.productOpts;
     }
@@ -337,7 +340,7 @@ export class VelResolveReference {
             let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, curIndex, 0, arr.length - 1);
             return index === undefined ? undefined : arr[index];
         } else {
-            checkThrow(false, 'T,|unknown object reference');
+            checkThrow(false, 'Vx|unknown object reference');
         }
     }
 
@@ -363,7 +366,7 @@ export class VelResolveReference {
                 /* this doesn't happen for bg names. */
                 let prevLen = arr.length;
                 arr = arr.slice(pivot + 1).concat(arr.slice(0, pivot + 1));
-                assertWarnEq(prevLen, arr.length, '');
+                assertWarnEq(prevLen, arr.length, 'Vw|');
             }
             return arr.find(vel => vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase());
         } else if (ref.lookByAbsolute !== undefined) {
@@ -394,16 +397,16 @@ export class VelResolveReference {
             /* `the short id of this cd of bg 2` should fail if this cd is not in bg 2 */
             checkThrow(
                 !(keepCurCd && justMe.length === 0 && arr.length === 1 && arr[0].idInternal === currCdId),
-                'break, not found, this/next does not meet criteria'
+                'Vv|break, not found, this/next does not meet criteria'
             );
             checkThrow(
                 !(ref.lookByRelative === OrdinalOrPosition.This && curIndex === -1),
-                "break, not found, 'this' card does not meet criteria"
+                "Vu|break, not found, 'this' card does not meet criteria"
             );
             let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, curIndex, 0, arr.length - 1);
             return index === undefined ? undefined : arr[index];
         } else {
-            checkThrowInternal(false, 'T,|unknown object reference');
+            checkThrowInternal(false, 'Vt|unknown object reference');
         }
     }
 
@@ -411,8 +414,8 @@ export class VelResolveReference {
      * resolve a button or field
      */
     protected goBtnOrFld(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>): O<VpcElBase> {
-        checkThrow(!ref.partIsBg, 'should be covered elsewhere');
-        checkThrow(!parentBg, 'does not make sense to have a parent bg');
+        checkThrow(!ref.partIsBg, 'Vs|should be covered elsewhere');
+        checkThrow(!parentBg, 'Vr|does not make sense to have a parent bg');
         parentCd = parentCd ?? this.model.getCurrentCard();
         if (ref.lookByName !== undefined) {
             /* `the short id of cd btn "theName"` */
@@ -450,7 +453,7 @@ export class VelResolveReference {
             return 1;
         } else if (type === VpcElType.Bg) {
             /* ensure parent exists and is a stack */
-            checkThrow(parent && parent instanceof VpcElStack, 'could not find this object parent');
+            checkThrow(parent && parent instanceof VpcElStack, 'Vq|could not find this object parent');
             return this.model.stack.bgs.length;
         } else if (type === VpcElType.Card) {
             if (parent instanceof VpcElStack) {
@@ -470,7 +473,7 @@ export class VelResolveReference {
                     return arr.length;
                 }
             } else {
-                checkThrow(false, 'could not find this object parent or incorrect type');
+                checkThrow(false, 'Vp|could not find this object parent or incorrect type');
             }
         } else if (type === VpcElType.Btn || type === VpcElType.Fld) {
             if (parent instanceof VpcElBg) {
@@ -482,10 +485,10 @@ export class VelResolveReference {
                 let arr = parent.parts.filter(vel => vel.getType() === type && !vel.getS('is_bg_velement_id').length);
                 return arr.length;
             } else {
-                checkThrow(false, 'could not find this object parent or incorrect type');
+                checkThrow(false, 'Vo|could not find this object parent or incorrect type');
             }
         } else {
-            checkThrow(false, 'unknown type');
+            checkThrow(false, 'Vn|unknown type');
         }
     }
 }

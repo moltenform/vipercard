@@ -107,7 +107,7 @@ export abstract class UndoableActionCreateOrDelVel {
         if (this.isBg && (this.type === VpcElType.Btn || this.type === VpcElType.Fld)) {
             let userFacingId = vci.getModel().stack.getNextId(vci.getModel());
             console.log(userFacingId);
-            checkThrow(false, 'not yet implemented');
+            checkThrow(false, 'Wa|not yet implemented');
         } else {
             return this.createImpl(vci);
         }

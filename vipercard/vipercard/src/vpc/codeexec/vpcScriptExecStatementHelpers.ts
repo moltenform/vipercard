@@ -82,7 +82,7 @@ export class VpcScriptExecuteStatementHelpers {
         checkThrow(sawExpected, 'JM|syntax error did not see ', expectSee);
         this.outside.SimulateClick(argsGiven, mods);
         if (msg && argsGiven.length >= 2) {
-            checkThrowInternal(msg instanceof VpcScriptMessage, 'wrong type');
+            checkThrowInternal(msg instanceof VpcScriptMessage, 'VK|wrong type');
             /* add click to the pr's click tracking.
             confirmed in emulator that it uses first coordinates.
             don't update lastSeenClickId--

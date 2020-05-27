@@ -395,8 +395,8 @@ export class TestDrawUI512Text {
         };
         let w = maxWidths[size];
         let h = maxHeights[size];
-        assertTrue(w, 'could not find in maxWidths');
-        assertTrue(h, 'could not find in maxHeights');
+        assertTrue(w, 'Ui|could not find in maxWidths');
+        assertTrue(h, 'Uh|could not find in maxHeights');
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = bool(

@@ -78,7 +78,7 @@ export const ChunkResolution = /* static class */ {
 
         /* compatibility */
         chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compat);
-        checkThrow(itemDel !== '\n', "we haven't tested with an itemdel of newline");
+        checkThrow(itemDel !== '\n', "WH|we haven't tested with an itemdel of newline");
 
         /* make parent objects */
         let resolved = new ResolvedChunk(cont, 0, cont.len());
@@ -103,7 +103,7 @@ export const ChunkResolution = /* static class */ {
                 isChildOfAddedText
             );
 
-            resolved = ensureDefined(got[0], '');
+            resolved = ensureDefined(got[0], 'WG|');
             isChildOfAddedText = isChildOfAddedText || /* bool */ got[1];
             current = current.child;
         }
@@ -111,7 +111,7 @@ export const ChunkResolution = /* static class */ {
         /* insert the real text */
         ensureDefined(
             ChunkResolutionUtils.doResolveOne(current, resolved, itemDel, newString, compat, prep, true, isChildOfAddedText)[0],
-            ''
+            'WF|'
         );
     },
 
@@ -131,22 +131,22 @@ export const ChunkResolution = /* static class */ {
         /* it gets thrown off because it won't see the inserted text */
         checkThrow(
             cont['start'] === undefined && cont['end'] === undefined,
-            "we don't yet support 'add 3 to item 1 of the selection' _RWContainerFldSelection_"
+            "WE|we don't yet support 'add 3 to item 1 of the selection' _RWContainerFldSelection_"
         );
 
         /* haven't tested this, note that newline is sometimes a special char even for items */
-        checkThrow(itemDel !== '\n', "we haven't tested with an itemdel of newline");
+        checkThrow(itemDel !== '\n', "WD|we haven't tested with an itemdel of newline");
 
         /* use a sentinel value to ensure we get the same results as a "put" */
         let marker = '\x01\x01~~internalvpcmarker~~\x01\x01';
         let unformatted = cont.getRawString();
-        checkThrow(!unformatted.includes(marker), 'cannot contain the string ' + marker);
+        checkThrow(!unformatted.includes(marker), 'WC|cannot contain the string ' + marker);
         this.applyPut(cont, chunk, itemDel, marker, VpcChunkPreposition.Into, compat);
 
         /* now we look at the results and see where it got put! */
         let results = cont.getRawString();
         let index = results.indexOf(marker);
-        checkThrow(index >= 0, 'applyModify did not find marker');
+        checkThrow(index >= 0, 'WB|applyModify did not find marker');
 
         if (results.length - marker.length > unformatted.length) {
             /* the case where we had to insert commas and stuff afterwards */
@@ -219,8 +219,8 @@ export const ChunkResolution = /* static class */ {
     applyDelete(cont: WritableContainer, chunk: RequestedChunk, itemDel: string, compat: boolean) {
         /* don't allow backwards bounds. only have to check the first one since
         there's a check in vpcVisitorMixin for recursive scopes. */
-        checkThrow(!chunk.hasBackwardsBounds(), "backwards bounds - don't allow delete item 3 to 2 of x.");
-        checkThrow(itemDel !== '\n', "we haven't tested with an itemdel of newline");
+        checkThrow(!chunk.hasBackwardsBounds(), "WA|backwards bounds - don't allow delete item 3 to 2 of x.");
+        checkThrow(itemDel !== '\n', "W9|we haven't tested with an itemdel of newline");
 
         /* use same funky logic as put */
         chunk = this._rearrangeChunksToMatchOriginalProduct(chunk, compat);
@@ -248,11 +248,11 @@ export const ChunkResolution = /* static class */ {
          */
         checkThrow(
             finalChild.ordinal !== undefined || finalChild.last === undefined || finalChild.first === finalChild.last,
-            "we don't yet support deleting ranges"
+            "W8|we don't yet support deleting ranges"
         );
         checkThrow(
             finalChild.ordinal !== undefined || finalChild.last === undefined || finalChild.first <= finalChild.last,
-            "we don't support backwards bounds"
+            "W7|we don't support backwards bounds"
         );
 
         /* first, narrow the scope */
@@ -313,7 +313,7 @@ export const ChunkResolution = /* static class */ {
                 isChild ? resolved.startPos : -1
             );
         } else {
-            checkThrowInternal(false, 'unknown type');
+            checkThrowInternal(false, 'W6|unknown type');
         }
 
         let [start, end] = startAndEnd;
@@ -500,7 +500,7 @@ export const ChunkResolution = /* static class */ {
             if (!compat) {
                 checkThrow(
                     lastKey === -1 || key <= lastKey,
-                    longstr(`you can put something into char 1 of
+                    longstr(`W5|you can put something into char 1 of
                  word 1 of x, but you can't put something into word 1 of char 1 of x.
                 The order must be char, word, item, line. To allow other orders, go to
                 Object->Stack Info and turn on compatibility mode, but be aware that
@@ -509,7 +509,7 @@ export const ChunkResolution = /* static class */ {
                 );
                 checkThrow(
                     lastKey === -1 || key < lastKey,
-                    longstr(`you can't put something into word 2 of
+                    longstr(`W4|you can't put something into word 2 of
                 word 1 of x. To allow this, go Object->Stack Info and turn on
                 compatibility mode, be aware though that if you say something like
                 put "" into word 2 of word 1 of x it will disregard the word 1 of x.`)
@@ -544,6 +544,6 @@ export const ChunkResolution = /* static class */ {
             rebuild.child = undefined;
         }
 
-        return ensureDefined(newRoot, 'newRoot');
+        return ensureDefined(newRoot, 'W3|newRoot');
     }
 };

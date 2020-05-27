@@ -251,9 +251,9 @@ export class ExecuteStatement {
                 }
             }
         } else {
-            let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), 'no object?');
-            let vel = ensureDefined(this.outside.ResolveVelRef(ref), 'could not find card');
-            checkThrow(vel.getType() === VpcElType.Card, 'you can only mark a card');
+            let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), 'VJ|no object?');
+            let vel = ensureDefined(this.outside.ResolveVelRef(ref), 'VI|could not find card');
+            checkThrow(vel.getType() === VpcElType.Card, 'VH|you can only mark a card');
             vel.setOnVel('marked', shouldMark, this.outside.Model());
         }
     }
@@ -341,9 +341,9 @@ export class ExecuteStatement {
             this.directiveImpl.setSelection(undefined, 0, 0);
         } else {
             let chunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk);
-            let velRef = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), '');
+            let velRef = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), 'VG|');
             let resolved = this.outside.ResolveVelRef(velRef);
-            checkThrow(resolved instanceof VpcElField, 'expected a field');
+            checkThrow(resolved instanceof VpcElField, 'VF|expected a field');
             if (resolved.parentIdInternal !== this.outside.GetCurrentCardId()) {
                 /* trying to select something on another card is a no-op */
             } else {
@@ -506,8 +506,8 @@ export class ExecuteStatement {
     protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
         let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), '59|');
         let vel = this.outside.ResolveVelRef(ref);
-        checkThrow(vel, 'could not find this object');
-        checkThrow(vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld, 'object not a btn or fld');
+        checkThrow(vel, 'VE|could not find this object');
+        checkThrow(vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld, 'VD|object not a btn or fld');
         this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
     }
 }

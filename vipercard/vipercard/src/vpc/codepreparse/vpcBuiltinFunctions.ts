@@ -693,9 +693,9 @@ export class VpcBuiltinFunctions {
         let ref = new RequestedVelRef(VpcElType.Unknown);
         ref.partIsCdOrBg = true;
         ref.lookById = Util512.parseInt(idInternal);
-        checkThrow(ref.lookById, 'id not a number');
+        checkThrow(ref.lookById, 'VY|id not a number');
         let sInfo = this.readoutside.ElementExists(ref);
-        checkThrow(sInfo, 'not found');
+        checkThrow(sInfo, 'VX|not found');
         if (this.getCompatMode()) {
             let words = sInfo.split(' ');
             let objType = words[0];

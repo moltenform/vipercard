@@ -778,7 +778,7 @@ export class VpcExecFrameStack {
         if (curLine.excerptToParse.length > 2) {
             checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2].tokenType, 'Rl|');
             variable = curLine.excerptToParse[2].image;
-            variableSend.val = curFrame.locals.get(ensureDefined(variable, 'Ri|')).readAsString();
+            variableSend.val = curFrame.locals.get(ensureDefined(variable, 'VC|')).readAsString();
         }
 
         let sendMsgParam: [string, string] = ['', ''];

@@ -189,13 +189,13 @@ export class VpcModelTop implements VpcHandleLinkedVels {
      * we've created a new card. copy over the vels
      */
     copyBgVelsOnNewCard(newCard: VpcElBase) {
-        checkThrow(newCard instanceof VpcElCard, '');
+        checkThrow(newCard instanceof VpcElCard, 'Vg|');
         let bg = this.getById(VpcElBg, newCard.parentIdInternal);
         /* use the first card in the bg as a template */
         for (let part of bg.getTemplateCard().parts) {
             let group = part.getS('is_bg_velement_id');
             if (group) {
-                checkThrow(false, 'nyi');
+                checkThrow(false, 'Vf|nyi');
             }
         }
     }

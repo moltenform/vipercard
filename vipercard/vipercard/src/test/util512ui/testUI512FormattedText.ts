@@ -83,7 +83,7 @@ t.test('FormattedTextNewFromUnformatted.EmptyStringIsOK', () => {
     assertEq(undefined, txt.fontAt(0), 'BT|');
 });
 t.test('FormattedTextNewFromUnformatted.ShouldStripSpecialCharFontChange', () => {
-    assertThrows('', 'cannot include', () =>
+    assertThrows('Uj|', 'cannot include', () =>
         FormattedText.newFromUnformatted(
             `${specialCharFontChange}a${specialCharFontChange}`
         )

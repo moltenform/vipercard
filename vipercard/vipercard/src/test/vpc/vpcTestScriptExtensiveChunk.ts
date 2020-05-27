@@ -122,7 +122,7 @@ class RunExtensiveChunkTests {
         for (let item of data) {
             let pts = item.split('\t');
             if (pts[0] === 'R+W+D') {
-                assertWarnEq(6, pts.length, item);
+                assertWarnEq(6, pts.length, 'Ut|not enough parts', item);
                 let [type, ch, target, resread, reswrite, resdelete] = pts;
                 ret.push(['READ', ch, target, resread].join('\t'));
                 ret.push(['WRITE', ch, target, reswrite].join('\t'));
@@ -218,7 +218,7 @@ class RunExtensiveChunkTests {
     protected genTestCode(entry: string, expecteds: string[], i: number) {
         let code = '';
         let pts = entry.split('\t');
-        assertTrue(pts.length === 4, 'not 4 parts?', entry);
+        assertTrue(pts.length === 4, 'Us|not 4 parts?', entry);
         expecteds.push(pts[3]);
         let targetStringForInput = `"${pts[2]}"`;
         targetStringForInput = VpcEvalHelpers.escapeWithinString(targetStringForInput);
@@ -233,16 +233,16 @@ class RunExtensiveChunkTests {
             code += `\nput ${targetStringForInput} into results${i}`;
             code += `\ndelete ${pts[1]} results${i}`;
         } else if (pts[0] === 'COUNTITEM') {
-            assertWarn(!pts[1].length, '');
+            assertWarn(!pts[1].length, 'Ur|');
             code += `\nput the number of items in (${targetStringForInput}) into results${i}`;
         } else if (pts[0] === 'COUNTWORD') {
-            assertWarn(!pts[1].length, '');
+            assertWarn(!pts[1].length, 'Uq|');
             code += `\nput the number of words in (${targetStringForInput}) into results${i}`;
         } else if (pts[0] === 'COUNTLINE') {
-            assertWarn(!pts[1].length, '');
+            assertWarn(!pts[1].length, 'Up|');
             code += `\nput the number of lines in (${targetStringForInput}) into results${i}`;
         } else {
-            checkThrowInternal(false, 'unknown test');
+            checkThrowInternal(false, 'Uo|unknown test');
         }
 
         return code;

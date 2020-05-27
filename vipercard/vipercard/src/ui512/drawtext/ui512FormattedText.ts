@@ -86,7 +86,7 @@ export class FormattedText {
     slice(start: number, end: number) {
         assertTrue(
             end >= start && start >= 0 && end >= 0,
-            'invalid slice bounds',
+            'V9|invalid slice bounds',
             start,
             end
         );
@@ -347,7 +347,7 @@ export class FormattedText {
     static throwIfContainsControlCharacters(s: string) {
         checkThrow512(
             !s.includes(specialCharFontChange),
-            'Text cannot include this character.'
+            'V8|Text cannot include this character.'
         );
     }
 }

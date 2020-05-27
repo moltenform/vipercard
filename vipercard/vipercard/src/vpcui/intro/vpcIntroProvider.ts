@@ -84,7 +84,7 @@ export class VpcIntroProvider {
             if (rootHigher?.hasLoadedExternalDelay === 'success') {
                 break;
             } else if (rootHigher?.hasLoadedExternalDelay) {
-                checkThrow(false, 'Failed to delay-load' + rootHigher?.hasLoadedExternalDelay);
+                checkThrow(false, 'WW|Failed to delay-load' + rootHigher?.hasLoadedExternalDelay);
             } else {
                 await Util512Higher.sleep(100);
             }

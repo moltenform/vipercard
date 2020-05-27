@@ -15,7 +15,7 @@ export class VpcTable {
     numericKeys = true;
 
     set(place: VpcVal, v: VpcVal) {
-        checkThrow(place && place.readAsString(), 'not a valid place');
+        checkThrow(place && place.readAsString(), 'WT|not a valid place');
         let s = place.readAsString();
         let parsed = Util512.parseIntStrict(s);
         if (parsed === undefined) {
@@ -41,16 +41,16 @@ export class VpcTable {
     }
 
     putAfterAll(v: VpcVal) {
-        checkThrow(this.numericKeys, 'after only works if there are no string keys in the table');
+        checkThrow(this.numericKeys, 'WS|after only works if there are no string keys in the table');
         let len = this.data.data().length;
         this.data.set(len.toString(), v);
     }
 
     putAfterPlace(place: VpcVal, v: VpcVal) {
-        checkThrow(this.numericKeys, 'after only works if there are no string keys in the table');
+        checkThrow(this.numericKeys, 'WR|after only works if there are no string keys in the table');
         let s = place.readAsString();
         let parsed = Util512.parseIntStrict(s);
-        checkThrow(parsed !== undefined, 'must be a number');
+        checkThrow(parsed !== undefined, 'WQ|must be a number');
     }
 }
 

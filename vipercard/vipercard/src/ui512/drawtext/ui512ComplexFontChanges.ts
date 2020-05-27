@@ -314,7 +314,7 @@ export const UI512ComplexFontChanges = /* static class */ {
         inLen: number,
         styleToCheck: string
     ) {
-        checkThrow512(styleToCheck !== 'plain', 'cannot ask if it contains plain');
+        checkThrow512(styleToCheck !== 'plain', 'V5|cannot ask if it contains plain');
         let bitToCheck = this.styleListToInt([styleToCheck]);
         let sawOneWithoutIt = false;
         let f = (full: string) => {
@@ -341,9 +341,9 @@ export const UI512ComplexFontChanges = /* static class */ {
         inLen: number,
         spec: string
     ) {
-        checkThrow512(spec.startsWith('toggle-'), '');
+        checkThrow512(spec.startsWith('toggle-'), 'V4|');
         spec = spec.substr('toggle-'.length);
-        checkThrow512(spec !== 'plain', 'cannot say toggle-plain');
+        checkThrow512(spec !== 'plain', 'V3|cannot say toggle-plain');
         if (spec === 'condense') {
             this._setChunkTextStyleAddOrSub(
                 txt,
@@ -431,7 +431,7 @@ export const UI512ComplexFontChanges = /* static class */ {
                     item.startsWith('subtract-') ||
                     item.startsWith('toggle-')
             ),
-            'you can only say add- subtract- or toggle- if one style is given'
+            'V2|you can only say add- subtract- or toggle- if one style is given'
         );
         return this.setChunkTextStyleSimple(txt, defaultFont, inStart, inLen, list);
     },

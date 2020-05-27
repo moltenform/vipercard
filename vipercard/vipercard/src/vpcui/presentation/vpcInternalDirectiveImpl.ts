@@ -75,7 +75,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         } else if (param.val === 'bg' || param.val === 'bkgnd') {
             vel = this.makeBgWithoutMsg(cur);
         } else {
-            checkThrowInternal(false, 'cannot make this type');
+            checkThrowInternal(false, 'WZ|cannot make this type');
         }
 
         param.val = vel.getUserFacingId();
@@ -89,7 +89,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         let id = this.vci.getOptionS('copiedVelId');
         let found = this.vci.getModel().findByIdUntyped(id);
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
-            checkThrow(!found.getS('is_bg_velement_id'), 'bg elems not yet supported');
+            checkThrow(!found.getS('is_bg_velement_id'), 'WY|bg elems not yet supported');
             let dupe = this.makeBtnFldWithoutMsg(found.getType(), true);
             let asObj = VpcGettableSerialization.serializeGettable(found);
             let asNewObj = JSON.parse(JSON.stringify(asObj));
@@ -200,7 +200,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
             vel.setFmTxt(newTxt, this.vci.getModel());
             vel.setProp('style', VpcValS('scrolling'), this.vci.getModel());
         } else {
-            checkThrowInternal(false, 'btn or fld expected');
+            checkThrowInternal(false, 'WX|btn or fld expected');
         }
 
         /* important: only mess with proppanels if not fromui!
