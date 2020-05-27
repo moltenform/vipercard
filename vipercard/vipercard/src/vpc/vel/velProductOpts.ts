@@ -192,6 +192,8 @@ export class VpcElProductOpts extends VpcElBase {
             (me: VpcElProductOpts, s: string) => {
                 if (s === 'faster') {
                     me.setProductOpt('suggestedIdleRate', 'faster');
+                } else if (s === 'faster2') {
+                    me.setProductOpt('suggestedIdleRate', 'faster2');
                 } else if (!s || s === 'default') {
                     me.setProductOpt('suggestedIdleRate', 'default');
                 } else {

@@ -1,51 +1,10 @@
 
-/* auto */ import { testCollectionvpcuiServer } from './../vpc/vpcuiTestServer';
-/* auto */ import { testCollectionvpcuiMsgBox } from './../vpc/vpcuiTestMsgBox';
-/* auto */ import { testCollectionvpcuiIntroProvider } from './../vpc/vpcuiTestIntroProvider';
-/* auto */ import { testCollectionvpcVpcVal } from './../vpc/vpcTestVpcVal';
-/* auto */ import { testCollectionvpcScriptRunSyntax } from './../vpc/vpcTestScriptRunSyntax';
-/* auto */ import { testCollectionScriptRunCustomFns } from './../vpc/vpcTestScriptRunCustomFns';
-/* auto */ import { testCollectionScriptRunCmd } from './../vpc/vpcTestScriptRunCmd';
 /* auto */ import { ScriptTestBatch } from './../vpc/vpcTestScriptRunBase';
-/* auto */ import { testCollectionScriptRewrites } from './../vpc/vpcTestScriptRewrites';
-/* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
-/* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
-/* auto */ import { testCollectionScriptExprLvl } from './../vpc/vpcTestScriptExprLvl';
-/* auto */ import { testCollectionvpcScriptEval } from './../vpc/vpcTestScriptEval';
-/* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
-/* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
 /* auto */ import { VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, ValHolder } from './../../ui512/utils/util512';
-/* auto */ import { testCollectionUtilsDraw } from './../util512/testUtilsDraw';
-/* auto */ import { testCollectionUtilsCanvasWrapper } from './../util512/testUtilsCanvasWrapper';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
-/* auto */ import { testCollectionUtil512Higher } from './../util512/testUtil512Higher';
-/* auto */ import { testCollectionUtil512Class } from './../util512/testUtil512Class';
-/* auto */ import { testCollectionUtil512Assert } from './../util512/testUtil512Assert';
-/* auto */ import { testCollectionUtil512 } from './../util512/testUtil512';
-/* auto */ import { testCollectionUI512TextSelectEvents } from './../util512ui/testUI512TextSelectEvents';
-/* auto */ import { testCollectionUI512TextModify } from './../util512ui/testUI512TextModify';
-/* auto */ import { testCollectionUI512TextEdit } from './../util512ui/testUI512TextEdit';
-/* auto */ import { testCollectionUI512Paint } from './../util512ui/testUI512Paint';
-/* auto */ import { testCollectionUI512MenuRender } from './../util512ui/testUI512MenuRender';
-/* auto */ import { testCollectionUI512FormattedText } from './../util512ui/testUI512FormattedText';
-/* auto */ import { testCollectionUI512ElementsViewButtons } from './../util512ui/testUI512ElementsViewButtons';
-/* auto */ import { testCollectionUI512Elements } from './../util512ui/testUI512Elements';
-/* auto */ import { testCollectionUI512DrawText } from './../util512ui/testUI512DrawText';
-/* auto */ import { testCollectionUI512Composites } from './../util512ui/testUI512Composites';
-/* auto */ import { testCollectionUI512CodeEditor } from './../util512ui/testUI512CodeEditor';
-/* auto */ import { testCollectionExternalLibs } from './../util512/testExternalLibs';
-/* auto */ import { testCollection03fnsStandalone } from './../vpc03/fns/test03standalone';
-/* auto */ import { testCollection03objectRenderName } from './../vpc03/test03objectRenderName';
-/* auto */ import { testCollection03lexer } from './../vpc03/test03lexer';
-/* auto */ import { testCollection03exprPseudoObjects } from './../vpc03/test03exprPseudoObjects';
-/* auto */ import { testCollection03exprObjectRef } from './../vpc03/test03exprObjectRef';
-/* auto */ import { testCollection03propsComputed } from './../vpc03/props/test03computed';
-/* auto */ import { testCollection03chunkBasic } from './../vpc03/test03chunkBasic';
-/* auto */ import { testCollection03chunkAdditional } from './../vpc03/test03chunkAdditional';
-/* auto */ import { testCollection03propsChunk } from './../vpc03/props/test03chunk';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -65,10 +24,10 @@ export const SimpleUtil512Tests = /* static class */ {
 
         /* order tests from high to low */
         let colls: SimpleUtil512TestCollection[] = [
-            testCollectionvpcuiServer,
+            /* testCollectionvpcuiServer, */
             /* testCollectionScriptExtensiveIf */
 
-            testCollection03exprPseudoObjects,
+            /*testCollection03exprPseudoObjects,
             testCollection03objectRenderName,
             testCollection03exprObjectRef,
             testCollection03fnsStandalone,
@@ -77,7 +36,7 @@ export const SimpleUtil512Tests = /* static class */ {
             testCollection03chunkAdditional,
             testCollection03chunkBasic,
             testCollection03lexer,
-            /* testCollectionScriptExtensiveChunk, */
+            testCollectionScriptExtensiveChunk,
             testCollectionScriptRewrites,
             testCollectionScriptRunCustomFns,
             testCollectionScriptRunCmd,
@@ -90,25 +49,25 @@ export const SimpleUtil512Tests = /* static class */ {
             testCollectionvpcElements,
             testCollectionvpcuiMsgBox,
             testCollectionvpcuiIntroProvider,
-            //~ testCollectionvpcVpcVal,
-            //~ testCollectionUI512CodeEditor,
-            //~ testCollectionUI512Composites,
-            //~ testCollectionUI512DrawText, 
-            //~ testCollectionUI512Elements,
-            //~ testCollectionUI512ElementsViewButtons,
-            //~ testCollectionUI512FormattedText,
-            //~ testCollectionUI512MenuRender,
-            //~ testCollectionUI512Paint,
-            //~ testCollectionUI512TextEdit,
-            //~ testCollectionUI512TextModify,
-            //~ testCollectionUI512TextSelectEvents,
-            //~ testCollectionUtilsCanvasWrapper,
-            //~ testCollectionUtilsDraw,
-            //~ testCollectionUtil512Higher,
-            //~ testCollectionUtil512Class,
-            //~ testCollectionUtil512,
-            //~ testCollectionUtil512Assert,
-            //~ testCollectionExternalLibs
+            testCollectionvpcVpcVal,
+            testCollectionUI512CodeEditor,
+            testCollectionUI512Composites,
+            testCollectionUI512DrawText,
+            testCollectionUI512Elements,
+            testCollectionUI512ElementsViewButtons,
+            testCollectionUI512FormattedText,
+            testCollectionUI512MenuRender,
+            testCollectionUI512Paint,
+            testCollectionUI512TextEdit,
+            testCollectionUI512TextModify,
+            testCollectionUI512TextSelectEvents,
+            testCollectionUtilsCanvasWrapper,
+            testCollectionUtilsDraw,
+            testCollectionUtil512Higher,
+            testCollectionUtil512Class,
+            testCollectionUtil512,
+            testCollectionUtil512Assert,
+            testCollectionExternalLibs*/
         ];
 
         if (!colls || !colls.length) {

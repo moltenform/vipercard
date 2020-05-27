@@ -258,7 +258,13 @@ export class FullRootUI512 implements RootHigher {
     }
 
     setTimerRate(s: string): void {
-        let rate = s === 'faster' ? 50 : 100;
+        let rate = 100;
+        if (s === 'faster') {
+            rate = 50;
+        } else if (s === 'faster2') {
+            rate = 25;
+        }
+
         this.timerSendIdleEvent = new RepeatingTimer(rate);
     }
 

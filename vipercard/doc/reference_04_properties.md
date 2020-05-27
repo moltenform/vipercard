@@ -1022,6 +1022,7 @@ Examples:
 
 set the idlerate to "default"
 set the idlerate to "faster"
+set the idlerate to "faster2"
 
 
 ```

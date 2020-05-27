@@ -72,21 +72,21 @@ module.exports = {
         hints: false
     },
     optimization: {
-        minimize: false,
-        //~ minimizer: [
-            //~ new UglifyJsPlugin({
-                //~ uglifyOptions: {
-                    //~ output: {
-                        //~ comments: false,
-                        //~ beautify: false,
-                    //~ },
-                    //~ mangle: {
-                        //~ properties: false
-                    //~ },
-                    //~ compress: true,
-                //~ },
-            //~ }),
-        //~ ],
+        minimize: true,
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    output: {
+                        comments: false,
+                        beautify: false,
+                    },
+                    mangle: {
+                        properties: false
+                    },
+                    compress: true,
+                },
+            }),
+        ],
     },
 };
 
