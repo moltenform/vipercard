@@ -273,7 +273,10 @@ export const VpcPresenterEvents = /* static class */ {
 
                 if (translated) {
                     pr.vci.performMenuAction(translated);
-                    d.setHandled();
+                    /* arrowkeys should also send afterKeyDown etc. messages */
+                    if (!d.readableShortcut.startsWith('Arrow')) {
+                        d.setHandled();
+                    }
                 }
             }
 

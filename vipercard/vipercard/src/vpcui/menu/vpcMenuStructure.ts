@@ -228,7 +228,6 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
         this.keyMappings['Cmd+3'] = 'mnuGoCardNext';
         this.keyMappings['Cmd+4'] = 'mnuGoCardLast';
         this.keyMappings['Cmd+M'] = 'mnuMsgBox';
-        this.keyMappings['Cmd+Shift+J'] = 'mnuCreateManyButtons';
     }
 
     /**
