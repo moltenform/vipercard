@@ -10,7 +10,7 @@ from bn_python_common import *
 
 def getSymbolsFromLine(s):
     # negative lookahead so that we don't include abc| or abc"
-    for m in re.finditer(r'''(^|[^'"`a-zA-Z_])([a-zA-Z_][0-9a-zA-Z_]*)(?!['"`|])''', s):
+    for m in re.finditer(r'''(^|[^'"`a-zA-Z_])([a-zA-Z_][0-9a-zA-Z_]*)(?![0-9'"`|])''', s):
         yield m.group(2)
 
 def getFileLines(f, tryToStripComments):

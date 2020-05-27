@@ -122,6 +122,12 @@ export const Util512 = /* static class */ {
     },
 
     /**
+     * for unused-variable warnings
+     */
+    unused(...args: unknown[]) {
+    },
+
+    /**
      * useful for map/reduce
      */
     add(n1: number, n2: number) {

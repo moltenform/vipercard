@@ -1,5 +1,5 @@
 
-/* auto */ import { VpcValBool, VpcValN } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { VpcValN } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { BatchType, ScriptTestBatch, TestMultiplierCommutative, TestMultiplierInvert, TestMultiplierInvertLeaveUnderscores, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcStateSerialize } from './../../vpcui/state/vpcStateSerialize';
 /* auto */ import { VpcState } from './../../vpcui/state/vpcState';
@@ -1224,19 +1224,19 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
         //~ /* modify bg btn - for card bb */
         //~ let bgbtn = h.vcstate.model.getById(VpcElButton, h.ids.bgbB1);
         //~ bgbtn.set('sharedhilite', false);
-        //~ bgbtn.setProp('hilite', VpcValBool(true), h.ids.cdBB);
-        //~ bgbtn.setProp('checkmark', VpcValBool(false), h.ids.cdBB);
+        //~ bgbtn.setProp('hilite', VpcValBoolea(true), h.ids.cdBB);
+        //~ bgbtn.setProp('checkmark', VpcValBoolea(false), h.ids.cdBB);
 
         //~ /* modify bg btn - for card bc */
-        //~ bgbtn.setProp('hilite', VpcValBool(false), h.ids.cdBC);
-        //~ bgbtn.setProp('checkmark', VpcValBool(true), h.ids.cdBC);
+        //~ bgbtn.setProp('hilite', VpcValBoolea(false), h.ids.cdBC);
+        //~ bgbtn.setProp('checkmark', VpcValBoolea(true), h.ids.cdBC);
 
         //~ /* modify bg btn - shared contents */
         //~ bgbtn.set('sharedhilite', true);
-        //~ bgbtn.setProp('hilite', VpcValBool(true), h.ids.cdBC);
-        //~ bgbtn.setProp('checkmark', VpcValBool(true), h.ids.cdBC);
-        //~ bgbtn.setProp('hilite', VpcValBool(true), h.ids.cdBD);
-        //~ bgbtn.setProp('checkmark', VpcValBool(true), h.ids.cdBD);
+        //~ bgbtn.setProp('hilite', VpcValBoolea(true), h.ids.cdBC);
+        //~ bgbtn.setProp('checkmark', VpcValBoolea(true), h.ids.cdBC);
+        //~ bgbtn.setProp('hilite', VpcValBoolea(true), h.ids.cdBD);
+        //~ bgbtn.setProp('checkmark', VpcValBoolea(true), h.ids.cdBD);
         //~ bgbtn.set('sharedhilite', false);
 
         return txt;

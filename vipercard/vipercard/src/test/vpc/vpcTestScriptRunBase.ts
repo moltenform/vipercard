@@ -6,7 +6,7 @@
 /* auto */ import { VpcPresenterEvents } from './../../vpcui/presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
-/* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
@@ -229,12 +229,12 @@ export class TestVpcScriptRunBase {
         let fCD1 = makeVel('field')
         let bCD1 = makeVel('button')
 
-        //~ let bgfB1 = this.vcstate.createVel(bgB.idInternal, VpcElType.Fld, -1);
-        //~ let bgfB2 = this.vcstate.createVel(bgB.idInternal, VpcElType.Fld, -1);
-        //~ let bgfC1 = this.vcstate.createVel(bgC.idInternal, VpcElType.Fld, -1);
-        //~ let bgbB1 = this.vcstate.createVel(bgB.idInternal, VpcElType.Btn, -1);
-        //~ let bgbB2 = this.vcstate.createVel(bgB.idInternal, VpcElType.Btn, -1);
-        //~ let bgbC1 = this.vcstate.createVel(bgC.idInternal, VpcElType.Btn, -1);
+        //~ let bgfB1 = this.vcstate.createVel(bgB.idInternal, VpcElType0.Fld, -1);
+        //~ let bgfB2 = this.vcstate.createVel(bgB.idInternal, VpcElType0.Fld, -1);
+        //~ let bgfC1 = this.vcstate.createVel(bgC.idInternal, VpcElType0.Fld, -1);
+        //~ let bgbB1 = this.vcstate.createVel(bgB.idInternal, VpcElType0.Btn, -1);
+        //~ let bgbB2 = this.vcstate.createVel(bgB.idInternal, VpcElType0.Btn, -1);
+        //~ let bgbC1 = this.vcstate.createVel(bgC.idInternal, VpcElType0.Btn, -1);
         //~ bgfB1.setOnVel('name', 'p1', model);
         //~ bgfB2.setOnVel('name', 'p2', model);
         //~ bgfC1.setOnVel('name', 'p1', model);

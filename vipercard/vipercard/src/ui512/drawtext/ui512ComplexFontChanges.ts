@@ -320,7 +320,7 @@ export const UI512ComplexFontChanges = /* static class */ {
         txt.fromSerialized(' ')
         let full = TextFontSpec.setFontStyle(UI512FontRequest.defaultFont, low)
         txt.setFontAt(0, full)
-        this.setChunkTextStyleAdvanced(txt, UI512FontRequest.defaultFont, 0, 1, [spec])
+        this.setChunkTextStyleAdvanced(txt, UI512FontRequest.defaultFont, 0, 1, spec.split(','))
         return TextFontSpec.getFontStyle(txt.fontAt(0))
     },
 

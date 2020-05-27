@@ -2,7 +2,6 @@
 /* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { RememberHistory } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { UndoableActionCreateVel, UndoableActionDeleteVel } from './../state/vpcUndo';
-/* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcExecInternalDirectiveAbstract } from './../../vpc/codeexec/vpcScriptExecInternalDirective';
 /* auto */ import { RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
@@ -15,7 +14,6 @@
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
-/* auto */ import { Util512SerializableHelpers } from './../../ui512/utils/util512Serialize';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';

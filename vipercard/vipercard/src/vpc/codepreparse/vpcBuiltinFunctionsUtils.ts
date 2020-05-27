@@ -2,6 +2,7 @@
 /* auto */ import { VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { PropAdjective } from './../vpcutils/vpcEnums';
 /* auto */ import { vpcVersion } from './../../ui512/utils/util512Base';
+/* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -14,6 +15,7 @@ export const VpcBuiltinFunctionsDateUtils = /* static class */ {
     /* render short date. */
     _getShortDate() {
         let [nDay, nDate, nMonth, nYear] = this._getDateCurrent();
+        Util512.unused(nDay)
         return `${nMonth + 1}/${nDate}/${nYear}`;
     },
 

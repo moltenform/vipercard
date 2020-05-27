@@ -1,5 +1,4 @@
 
-/* auto */ import { OrdinalOrPosition, checkThrow } from './vpcEnums';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

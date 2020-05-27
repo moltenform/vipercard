@@ -127,6 +127,7 @@ class RunExtensiveChunkTests {
                 ret.push(['READ', ch, target, resread].join('\t'));
                 ret.push(['WRITE', ch, target, reswrite].join('\t'));
                 ret.push(['DELETE', ch, target, resdelete].join('\t'));
+                Util512.unused(type)
             } else {
                 ret.push(item);
             }

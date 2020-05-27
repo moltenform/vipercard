@@ -13,7 +13,7 @@ let t = new SimpleUtil512TestCollection('testCollectionScriptExtensiveIf', true)
 export let testCollectionScriptExtensiveIf = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
-t.atest('--init--testCollectionScriptExtensive', async () => {
+t.atest('--init--testCollectionScriptExtensiveIf', async () => {
     h = new TestVpcScriptRunBase(t);
     return h.initEnvironment();
 });

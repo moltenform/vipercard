@@ -1,4 +1,5 @@
 
+/* auto */ import { testCollectionvpcuiServer } from './../vpc/vpcuiTestServer';
 /* auto */ import { testCollectionvpcuiMsgBox } from './../vpc/vpcuiTestMsgBox';
 /* auto */ import { testCollectionvpcuiIntroProvider } from './../vpc/vpcuiTestIntroProvider';
 /* auto */ import { testCollectionvpcVpcVal } from './../vpc/vpcTestVpcVal';
@@ -64,8 +65,8 @@ export const SimpleUtil512Tests = /* static class */ {
 
         /* order tests from high to low */
         let colls: SimpleUtil512TestCollection[] = [
-            /* testCollectionvpcuiServer, */
-            /* testCollectionScriptExtensive, */
+             testCollectionvpcuiServer, 
+            /* testCollectionScriptExtensiveIf */
 
             testCollection03exprPseudoObjects,
             testCollection03objectRenderName,
@@ -89,24 +90,24 @@ export const SimpleUtil512Tests = /* static class */ {
             testCollectionvpcuiMsgBox,
             testCollectionvpcuiIntroProvider,
             testCollectionvpcVpcVal,
-            //~ testCollectionUI512CodeEditor,
-            //~ testCollectionUI512Composites,
-            //~ testCollectionUI512DrawText,
-            //~ testCollectionUI512Elements,
-            //~ testCollectionUI512ElementsViewButtons,
-            //~ testCollectionUI512FormattedText,
-            //~ testCollectionUI512MenuRender,
-            //~ testCollectionUI512Paint,
-            //~ testCollectionUI512TextEdit,
-            //~ testCollectionUI512TextModify,
-            //~ testCollectionUI512TextSelectEvents,
-            //~ testCollectionUtilsCanvasWrapper,
-            //~ testCollectionUtilsDraw,
-            //~ testCollectionUtil512Higher,
-            //~ testCollectionUtil512Class,
-            //~ testCollectionUtil512,
-            //~ testCollectionUtil512Assert,
-            //~ testCollectionExternalLibs
+            testCollectionUI512CodeEditor,
+            testCollectionUI512Composites,
+            testCollectionUI512DrawText,
+            testCollectionUI512Elements,
+            testCollectionUI512ElementsViewButtons,
+            testCollectionUI512FormattedText,
+            testCollectionUI512MenuRender,
+            testCollectionUI512Paint,
+            testCollectionUI512TextEdit,
+            testCollectionUI512TextModify,
+            testCollectionUI512TextSelectEvents,
+            testCollectionUtilsCanvasWrapper,
+            testCollectionUtilsDraw,
+            testCollectionUtil512Higher,
+            testCollectionUtil512Class,
+            testCollectionUtil512,
+            testCollectionUtil512Assert,
+            testCollectionExternalLibs
         ];
 
         if (!colls || !colls.length) {

@@ -1369,7 +1369,6 @@ t.test('builtinFunctions', () => {
 
     b.batchEvaluate(h, [], BatchType.floatingPoint);
     b = new ScriptTestBatch();
-    let userBounds = h.pr.userBounds;
 
     /* unknown */
     b.t('xyz()', 'ERR:no handler');

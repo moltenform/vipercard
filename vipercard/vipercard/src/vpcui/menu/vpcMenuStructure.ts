@@ -3,7 +3,6 @@
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512MenuDefn } from './../../ui512/menu/ui512MenuPositioning';
 /* auto */ import { KeyDownEventDetails } from './../../ui512/menu/ui512Events';
-/* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

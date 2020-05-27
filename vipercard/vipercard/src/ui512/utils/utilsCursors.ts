@@ -165,6 +165,12 @@ hotCoords[UI512Cursors.css_busy2] = [7, 7];
 hotCoords[UI512Cursors.css_busy3] = [7, 7];
 hotCoords[UI512Cursors.css_busy4] = [7, 7];
 
+/* cross is slightly different in
+the css version,
+part of what makes the css cursors look terrible
+is that the white-to-transparent transition becomes
+a faint gray line. so add no white pixels
+in the css version */
 const cssCursorFilenames: { [key: number]: string } = {};
 cssCursorFilenames[UI512Cursors.css_paintbrush] = 'brush5,14.png';
 cssCursorFilenames[UI512Cursors.css_cross] = 'cross7,7.png';
@@ -186,14 +192,6 @@ cssCursorFallbacks[UI512Cursors.css_busy2] = 'wait';
 cssCursorFallbacks[UI512Cursors.css_busy3] = 'wait';
 cssCursorFallbacks[UI512Cursors.css_busy4] = 'wait';
 cssCursorFallbacks[UI512Cursors.css_cross] = 'crosshair';
-
-/* cross is slightly different in
-the css version,
-part of what makes the css cursors look terrible
-is that the white-to-transparent transition becomes
-a faint gray line. so add no white pixels
-in the css version */
-const filenames: { [key: number]: boolean } = {};
 
 /**
  * certain cursors are neither black nor white,

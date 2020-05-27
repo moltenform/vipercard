@@ -628,7 +628,7 @@ export class VpcExecFrameStack {
             'Rt|visitSendStatement expected both RuleExpr and RuleObject'
         );
 
-        let isDo = visited.vals[tkstr.tkStringLiteral] && visited.vals[tkstr.tkStringLiteral][0] === 'do'
+        //~ let isDo = visited.vals[tkstr.tkStringLiteral] && visited.vals[tkstr.tkStringLiteral][0] === 'do'
         let val = visited.vals.RuleExpr[0];
         checkThrow(val instanceof VpcVal, 'Rs|visitSendStatement expected a string.');
         let newLineAndLowercaseCode = '\n' + val.readAsString().toLowerCase();

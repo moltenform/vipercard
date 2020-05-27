@@ -13,8 +13,6 @@
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { ElementObserverDefault, ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 
-import { FormattedText } from '../../ui512/drawtext/ui512FormattedText';
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 

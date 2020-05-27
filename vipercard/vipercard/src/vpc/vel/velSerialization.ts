@@ -1,11 +1,11 @@
 
-/* auto */ import { VpcElType, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBase, VpcHandleLinkedVels } from './velBase';
 /* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
-/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512PublicSettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512PublicSettable } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { bridgedBase64Js } from './../../bridge/bridgeBase64Js';
 

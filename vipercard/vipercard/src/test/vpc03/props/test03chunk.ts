@@ -20,12 +20,8 @@ t.atest('--init--testCollection03propsChunk', async () => {
 t.test('03chunkTestReadStyle', () => {
     let b = new ScriptTestBatch();
     b.t(`go to card id ${h3.ids.cdBC}\\1`, '1')
-    let s = setupManyFonts(b)
+    setupManyFonts(b)
     b.t(`the textstyle of cd fld 1`, 'bold')
-    for (let i=0; i<s.length; i++) {
-        let index = Math.trunc((i+1)/3)
-    }
-
     b.t(`put "" into cd fld 1\\1`, '1')
     b.batchEvaluate(h3);
 });
