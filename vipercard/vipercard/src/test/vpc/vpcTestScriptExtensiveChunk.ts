@@ -127,7 +127,7 @@ class RunExtensiveChunkTests {
                 ret.push(['READ', ch, target, resread].join('\t'));
                 ret.push(['WRITE', ch, target, reswrite].join('\t'));
                 ret.push(['DELETE', ch, target, resdelete].join('\t'));
-                Util512.unused(type)
+                Util512.unused(type);
             } else {
                 ret.push(item);
             }
@@ -221,7 +221,7 @@ class RunExtensiveChunkTests {
         assertTrue(pts.length === 4, 'not 4 parts?', entry);
         expecteds.push(pts[3]);
         let targetStringForInput = `"${pts[2]}"`;
-        targetStringForInput = VpcEvalHelpers.escapeWithinString(targetStringForInput)
+        targetStringForInput = VpcEvalHelpers.escapeWithinString(targetStringForInput);
         code += `\nglobal results${i}`;
         if (pts[0] === 'READ') {
             code += `\nput ${targetStringForInput} into z`;

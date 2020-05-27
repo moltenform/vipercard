@@ -71,26 +71,35 @@ export class RenderIcon {
         }
     }
 
-    drawAtLocationAndClipFromBox(canvas: CanvasWrapper,
+    drawAtLocationAndClipFromBox(
+        canvas: CanvasWrapper,
         info: IconInfo,
-        destX:number,
-        destY:number,
+        destX: number,
+        destY: number,
         boxX0: number,
         boxY0: number,
         boxW: number,
-        boxH: number) {
-            let srcRect = [
-                this.srcRect[0] + info.adjustSrcX,
-                this.srcRect[1] + info.adjustSrcY,
-                this.srcRect[2] + info.adjustWidth - info.adjustSrcX,
-                this.srcRect[3] + info.adjustHeight - info.adjustSrcY
-            ];
-            canvas.drawFromImage(this.set.image, srcRect[0], srcRect[1], srcRect[2], srcRect[3],
-                destX+ info.adjustX, destY+ info.adjustY, 
-                boxX0,
-                boxY0,
-                boxW,
-                boxH)
+        boxH: number
+    ) {
+        let srcRect = [
+            this.srcRect[0] + info.adjustSrcX,
+            this.srcRect[1] + info.adjustSrcY,
+            this.srcRect[2] + info.adjustWidth - info.adjustSrcX,
+            this.srcRect[3] + info.adjustHeight - info.adjustSrcY
+        ];
+        canvas.drawFromImage(
+            this.set.image,
+            srcRect[0],
+            srcRect[1],
+            srcRect[2],
+            srcRect[3],
+            destX + info.adjustX,
+            destY + info.adjustY,
+            boxX0,
+            boxY0,
+            boxW,
+            boxH
+        );
     }
 }
 

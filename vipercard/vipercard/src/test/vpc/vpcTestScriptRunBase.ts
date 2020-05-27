@@ -105,8 +105,11 @@ export class ScriptTestBatch {
                     multiplier.thirdTransformation(item[0], item[1])
                 );
 
-                let nextCurItems = first.concat(second, third)
-                curItems = nextCurItems.filter(item=>item !== undefined) as [string, string][];
+                let nextCurItems = first.concat(second, third);
+                curItems = nextCurItems.filter(item => item !== undefined) as [
+                    string,
+                    string
+                ][];
             }
 
             ret = ret.concat(curItems);
@@ -196,38 +199,41 @@ export class TestVpcScriptRunBase {
         assertEq(1, model.stack.bgs.length, '2f|');
         assertEq(1, model.stack.bgs[0].cards.length, '2e|');
 
-        let makeVel = (typ:string) => {
-            let creator = this.vcstate.vci.getCodeExec().directiveImpl
-            return creator.goMakevelwithoutmsg(new ValHolder(typ), model.getCurrentCard(), ['', ''])
-        }
-
+        let makeVel = (typ: string) => {
+            let creator = this.vcstate.vci.getCodeExec().directiveImpl;
+            return creator.goMakevelwithoutmsg(
+                new ValHolder(typ),
+                model.getCurrentCard(),
+                ['', '']
+            );
+        };
 
         let bgA = model.stack.bgs[0];
         let cdA = bgA.cards[0];
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdA.idInternal);
-        let bgB = cast(VpcElBg, makeVel('bkgnd'))
-        let cdBB = bgB.cards[0]
+        let bgB = cast(VpcElBg, makeVel('bkgnd'));
+        let cdBB = bgB.cards[0];
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBB.idInternal);
-        let cdBC = cast(VpcElCard, makeVel('card'))
+        let cdBC = cast(VpcElCard, makeVel('card'));
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBC.idInternal);
-        let cdBD = cast(VpcElCard, makeVel('card'))
+        let cdBD = cast(VpcElCard, makeVel('card'));
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBD.idInternal);
-        let bgC = cast(VpcElBg, makeVel('bkgnd'))
-        let cdCD = bgC.cards[0]
+        let bgC = cast(VpcElBg, makeVel('bkgnd'));
+        let cdCD = bgC.cards[0];
 
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBC.idInternal);
-        let fBC1 = makeVel('field')
-        let fBC2 = makeVel('field')
-        let fBC3 = makeVel('field')
-        let bBC1 = makeVel('button')
-        let bBC2 = makeVel('button')
+        let fBC1 = makeVel('field');
+        let fBC2 = makeVel('field');
+        let fBC3 = makeVel('field');
+        let bBC1 = makeVel('button');
+        let bBC2 = makeVel('button');
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdBD.idInternal);
-        let fBD1 = makeVel('field')
-        let fBD2 = makeVel('field')
-        let bBD1 = makeVel('button')
+        let fBD1 = makeVel('field');
+        let fBD2 = makeVel('field');
+        let bBD1 = makeVel('button');
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdCD.idInternal);
-        let fCD1 = makeVel('field')
-        let bCD1 = makeVel('button')
+        let fCD1 = makeVel('field');
+        let bCD1 = makeVel('button');
 
         //~ let bgfB1 = this.vcstate.createVel(bgB.idInternal, VpcElType0.Fld, -1);
         //~ let bgfB2 = this.vcstate.createVel(bgB.idInternal, VpcElType0.Fld, -1);
@@ -242,7 +248,7 @@ export class TestVpcScriptRunBase {
         //~ bgbB2.setOnVel('name', 'p2', model);
         //~ bgbC1.setOnVel('name', 'p1', model);
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdA.idInternal);
-        let go = makeVel('button')
+        let go = makeVel('button');
 
         model.stack.setOnVel('name', 'teststack', model);
         bgA.setOnVel('name', 'a', model);
@@ -263,7 +269,7 @@ export class TestVpcScriptRunBase {
         bBD1.setOnVel('name', 'p1', model);
         fCD1.setOnVel('name', 'p1', model);
         bCD1.setOnVel('name', 'p1', model);
-        
+
         go.setOnVel('name', 'go', model);
 
         this.ids = {
@@ -380,7 +386,7 @@ export class TestVpcScriptRunBase {
         expectErrLine?: number,
         expectPreparseErr?: boolean,
         addNoHandler?: boolean,
-        targetId=this.ids.go
+        targetId = this.ids.go
     ) {
         let caughtErr: O<VpcErr>;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
@@ -403,16 +409,21 @@ export class TestVpcScriptRunBase {
         built = FormattedText.fromExternalCharset(built, BrowserInfo.get().os);
 
         let vel = this.vcstate.model.getByIdUntyped(targetId);
-        this.setScript(vel.idInternal, built)
+        this.setScript(vel.idInternal, built);
 
         /* fake a click inside a btn, usually btnGo */
         assertEq(VpcTool.Browse, this.pr.getTool(), 'HY|');
-        let cursorX = vel.ui512GettableHas('x') ? vel.getN('x') + 1 : this.pr.userBounds[0] + 100
-        let cursorY = vel.ui512GettableHas('y') ? vel.getN('y') + 1 : this.pr.userBounds[1] + 100
+        let cursorX = vel.ui512GettableHas('x')
+            ? vel.getN('x') + 1
+            : this.pr.userBounds[0] + 100;
+        let cursorY = vel.ui512GettableHas('y')
+            ? vel.getN('y') + 1
+            : this.pr.userBounds[1] + 100;
         this.pr.trackMouse = [cursorX, cursorY];
         let fakeEvent = new MouseUpEventDetails(
             1,
-            cursorX, cursorY,
+            cursorX,
+            cursorY,
             0,
             ModifierKeys.None
         );

@@ -133,13 +133,13 @@ export class TestDrawUI512Buttons {
         areHighlighted: boolean,
         idPrefix: string,
         dims = [90, 65],
-        onlyFirst:O<number> = undefined
+        onlyFirst: O<number> = undefined
     ) {
         let nRows = drawBlank
             ? BtnPropsToTest.BtnPropsToTestMax
             : BtnPropsToTest.NoIconNoLabel;
         if (onlyFirst !== undefined) {
-            nRows = Math.min(onlyFirst, nRows)
+            nRows = Math.min(onlyFirst, nRows);
         }
 
         let rows = Util512.range(0, nRows);

@@ -38,7 +38,7 @@ export class VpcElProductOpts extends VpcElBase {
     allowSetCurrentTool = false;
     allowSetCurrentCard = false;
     protected _itemDel = ',';
-    protected _script = VpcStandardLibDoMenu.script + '\n' + VpcStandardLibScript.script
+    protected _script = VpcStandardLibDoMenu.script + '\n' + VpcStandardLibScript.script;
     protected _name = `${cProductName}`;
     constructor(id: string, parentId: string) {
         super(id, parentId);
@@ -122,20 +122,26 @@ export class VpcElProductOpts extends VpcElBase {
         ];
 
         /* paint settings */
-        getters['linesize'] = [PrpTyp.Num, (me: VpcElProductOpts) => {
-            return me.getB('optWideLines') ? 2 : 1
-        }];
-        getters['filled'] = [PrpTyp.Str, (me: VpcElProductOpts) => {
-            let v = me.getN('optPaintFillColor')
-            if (v===clrBlack) {
-                return 'true'
-            } else if (v===clrWhite) {
-                return 'white'
-            } else {
-                return 'false'
+        getters['linesize'] = [
+            PrpTyp.Num,
+            (me: VpcElProductOpts) => {
+                return me.getB('optWideLines') ? 2 : 1;
             }
-        }];
-        
+        ];
+        getters['filled'] = [
+            PrpTyp.Str,
+            (me: VpcElProductOpts) => {
+                let v = me.getN('optPaintFillColor');
+                if (v === clrBlack) {
+                    return 'true';
+                } else if (v === clrWhite) {
+                    return 'white';
+                } else {
+                    return 'false';
+                }
+            }
+        ];
+
         getters['multiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
         getters['pattern'] = [PrpTyp.Num, 'currentPattern'];
         getters['linecolor'] = [PrpTyp.Num, 'optPaintLineColor'];
@@ -195,24 +201,30 @@ export class VpcElProductOpts extends VpcElBase {
         ];
 
         /* paint settings */
-        setters['linesize'] = [PrpTyp.Num, (me: VpcElProductOpts, s: string, h: VpcHandleLinkedVels) => {
-            let n = Util512.parseInt(s)
-            if (n!==undefined && n >= 2) {
-                me.setOnVel('optWideLines', true, h)
-            } else if (n!==undefined) {
-                me.setOnVel('optWideLines', false, h)
+        setters['linesize'] = [
+            PrpTyp.Num,
+            (me: VpcElProductOpts, s: string, h: VpcHandleLinkedVels) => {
+                let n = Util512.parseInt(s);
+                if (n !== undefined && n >= 2) {
+                    me.setOnVel('optWideLines', true, h);
+                } else if (n !== undefined) {
+                    me.setOnVel('optWideLines', false, h);
+                }
             }
-        }]
-        setters['filled'] = [PrpTyp.Str, (me: VpcElProductOpts, s: string, h: VpcHandleLinkedVels) => {
-            if (s.toLowerCase() === 'white') {
-                me.setOnVel('optPaintFillColor', clrWhite, h)
-            } else if (s.toLowerCase() === 'black' || s.toLowerCase() === 'true') {
-                me.setOnVel('optPaintFillColor', clrBlack, h)
-            } else {
-                /* make transparent */
-                me.setOnVel('optPaintFillColor', -1, h)
+        ];
+        setters['filled'] = [
+            PrpTyp.Str,
+            (me: VpcElProductOpts, s: string, h: VpcHandleLinkedVels) => {
+                if (s.toLowerCase() === 'white') {
+                    me.setOnVel('optPaintFillColor', clrWhite, h);
+                } else if (s.toLowerCase() === 'black' || s.toLowerCase() === 'true') {
+                    me.setOnVel('optPaintFillColor', clrBlack, h);
+                } else {
+                    /* make transparent */
+                    me.setOnVel('optPaintFillColor', -1, h);
+                }
             }
-        }]
+        ];
 
         setters['multiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
         setters['pattern'] = [PrpTyp.Num, 'currentPattern'];

@@ -396,16 +396,16 @@ do not change the current card */
                 xx{{NEWLINE}}go to card xx\\the short id of this cd`),
         `${h.ids.cdA}`
     );
-    /* unfortunatly can't use a TestMultiplier because a lot of these 
-    have state. should fix this by putting a go to card 1 in front of 
+    /* unfortunatly can't use a TestMultiplier because a lot of these
+    have state. should fix this by putting a go to card 1 in front of
     each test so that each line is independent. */
-    let savedTests = b.tests
+    let savedTests = b.tests;
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-    for (let i=0; i<savedTests.length; i++) {
-        savedTests[i][0] = savedTests[i][0].replace(/go to /g, "go ")
+    for (let i = 0; i < savedTests.length; i++) {
+        savedTests[i][0] = savedTests[i][0].replace(/go to /g, 'go ');
     }
-    b.tests = savedTests
+    b.tests = savedTests;
     b.batchEvaluate(h);
 });
 t.test('execCommands disable and enable', () => {
@@ -1055,7 +1055,7 @@ send code to this stack\\g`,
     b = new ScriptTestBatch();
 
     /* make sure that invalid code is cleaned out after a preparse failure. */
-    h.setScript(h.ids.stack, '')
+    h.setScript(h.ids.stack, '');
     b.t('send "$$$#$%#$" to this stack\\0', 'ERR:4:lex error');
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
@@ -1070,7 +1070,7 @@ send code to this stack\\g`,
     b = new ScriptTestBatch();
 
     /* make sure that code can run after a runtime failure. */
-    h.setScript(h.ids.stack, '')
+    h.setScript(h.ids.stack, '');
     b.t('send "put 1 into cd fld 999" to this stack\\0', 'ERR:4:element not found');
 
     b.batchEvaluate(h);

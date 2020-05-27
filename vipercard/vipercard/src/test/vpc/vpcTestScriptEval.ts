@@ -654,8 +654,9 @@ t.test('vpcProperties', () => {
 
     /* setting style */
     const fld = h.vcstate.model.getById(VpcElField, h.ids.fBC1);
-    h.vcstate.vci.doWithoutAbilityToUndo(()=>
-    fld.setOnVel('style', UI512FldStyle.Rectangle, h.vcstate.model))
+    h.vcstate.vci.doWithoutAbilityToUndo(() =>
+        fld.setOnVel('style', UI512FldStyle.Rectangle, h.vcstate.model)
+    );
     assertEq(UI512FldStyle.Rectangle, fld.getN('style'), '1 |');
     b.t('the style of cd fld "p1"', 'rectangle');
     b.t('set the style of cd fld "p1" to "xyz"\\0', 'ERR:Field style or');
@@ -925,7 +926,10 @@ t.test('vpcProperties', () => {
     b.t('the name of cd btn "p1"', 'card button "p1"');
     b.t('the abbr name of cd btn "p1"', 'card button "p1"');
     b.t('the short name of cd btn "p1"', 'p1');
-    b.t('the long name of cd btn "p1"', 'card button "p1" of card "c" of stack "teststack"');
+    b.t(
+        'the long name of cd btn "p1"',
+        'card button "p1" of card "c" of stack "teststack"'
+    );
     b.t('the id of cd btn "p1"', `${h.ids.bBC1}`);
     b.t('the abbr id of cd btn "p1"', `${h.ids.bBC1}`);
     b.t('the short id of cd btn "p1"', `${h.ids.bBC1}`);
@@ -950,7 +954,10 @@ t.test('vpcProperties', () => {
     b.t('the name of cd fld "p1"', 'card field "p1"');
     b.t('the abbr name of cd fld "p1"', 'card field "p1"');
     b.t('the short name of cd fld "p1"', 'p1');
-    b.t('the long name of cd fld "p1"', 'card field "p1" of card "c" of stack "teststack"');
+    b.t(
+        'the long name of cd fld "p1"',
+        'card field "p1" of card "c" of stack "teststack"'
+    );
     b.t('the id of cd fld "p1"', `${h.ids.fBC1}`);
     b.t('the abbr id of cd fld "p1"', `${h.ids.fBC1}`);
     b.t('the short id of cd fld "p1"', `${h.ids.fBC1}`);

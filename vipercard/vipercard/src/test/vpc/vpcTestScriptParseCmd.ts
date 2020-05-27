@@ -87,10 +87,7 @@ t.test(`TestVpcParseCmdSet.can't take chunks of anything else`, () => {
         `set topleft of word 1 to 2 of cd btn 3 to 4`,
         `NoViableAltException: Expecting: one of these poss`
     );
-    assertFailsCmdSet(
-        `set topleft of word 1 to 2 of this stack to 4`,
-        `Exception`
-    );
+    assertFailsCmdSet(`set topleft of word 1 to 2 of this stack to 4`, `Exception`);
     assertFailsCmdSet(
         `set topleft of word 1 to 2 of x to 4`,
         `NoViableAltException: Expecting: one of these poss`

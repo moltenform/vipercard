@@ -138,13 +138,20 @@ export class VpcRewriteForCommands {
         return [this.hBuildNyi('the debug command', line[0])];
     }
     rewriteDelete(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, "not enough args")
-        if (line[1]?.tokenType === tks.tkChunkGranularity || line[1]?.tokenType === tks.tkOrdinalOrPosition && line[2]?.tokenType === tks.tkChunkGranularity 
-            || line[1]?.tokenType === tks._the && line[2]?.tokenType === tks.tkOrdinalOrPosition && line[3]?.tokenType === tks.tkChunkGranularity) {
-                return this.hReturnNyiIfMenuMentionedOutsideParens(line);
+        checkThrow(line.length > 1, 'not enough args');
+        if (
+            line[1]?.tokenType === tks.tkChunkGranularity ||
+            (line[1]?.tokenType === tks.tkOrdinalOrPosition && line[2]?.tokenType === tks.tkChunkGranularity) ||
+            (line[1]?.tokenType === tks._the &&
+                line[2]?.tokenType === tks.tkOrdinalOrPosition &&
+                line[3]?.tokenType === tks.tkChunkGranularity)
+        ) {
+            return this.hReturnNyiIfMenuMentionedOutsideParens(line);
         } else {
-/* rewrite to internalvpcdeletevelhelper */
-return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0% , the short id of %ARG0%`,line[0], [line.slice(1)]  )
+            /* rewrite to internalvpcdeletevelhelper */
+            return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0% , the short id of %ARG0%`, line[0], [
+                line.slice(1)
+            ]);
         }
     }
     rewriteDisable(line: ChvITk[]): ChvITk[][] {
@@ -220,7 +227,7 @@ return this.rw.gen(`internalvpcdeletevelhelper the internalid of %ARG0% , the sh
         }
 
         let template = '';
-        if (line.length === 2 && (line[1].tokenType === tks.tkOrdinalOrPosition)) {
+        if (line.length === 2 && line[1].tokenType === tks.tkOrdinalOrPosition) {
             template = `
 if there is a %ARG0% card then
     internalvpcmovecardhelper ( the internalid of %ARG0% card ) , ${shouldSuspendHistory}
@@ -257,35 +264,35 @@ end if`;
             return [[line[0]]];
         }
     }
-    rewriteMark(line: ChvITk[], fromUnmark=false): ChvITk[][] {
-        checkThrow(line.length > 1, "not enough args for mark/unmark.");
-        let isAll = false
+    rewriteMark(line: ChvITk[], fromUnmark = false): ChvITk[][] {
+        checkThrow(line.length > 1, 'not enough args for mark/unmark.');
+        let isAll = false;
         if (line[1].image === 'cards') {
             if (line[2].image === 'where') {
-                return this.hBuildMarkExpression(line.slice(3), fromUnmark)
+                return this.hBuildMarkExpression(line.slice(3), fromUnmark);
             } else {
                 return [this.hBuildNyi('this type of mark expression', line[0])];
             }
         } else if (line[1].image === 'all') {
             if (line[2].image === 'cards' || line[2].image === 'cds') {
-                isAll = true
+                isAll = true;
             } else {
-                checkThrow(false, "expected mark all cards")
+                checkThrow(false, 'expected mark all cards');
             }
         }
 
-        let ret:ChvITk[] = [this.rw.tokenFromEnglishTerm('mark', line[0])]
+        let ret: ChvITk[] = [this.rw.tokenFromEnglishTerm('mark', line[0])];
         if (fromUnmark) {
-            ret.push(this.rw.tokenFromEnglishTerm('not', line[0]))
+            ret.push(this.rw.tokenFromEnglishTerm('not', line[0]));
         }
 
         if (isAll) {
-            ret.push(line[1])
+            ret.push(line[1]);
         } else {
-            ret.push(BuildFakeTokens.makeSyntaxMarker(line[0]))
-            ret = ret.concat(line.slice(1))
+            ret.push(BuildFakeTokens.makeSyntaxMarker(line[0]));
+            ret = ret.concat(line.slice(1));
         }
-        return [ret]
+        return [ret];
     }
     rewriteMultiply(line: ChvITk[]): ChvITk[][] {
         this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'by', true);
@@ -379,8 +386,8 @@ put the result %ARG0%`;
         }
     }
     rewriteSend(line: ChvITk[]): ChvITk[][] {
-        line.splice(1, 0, BuildFakeTokens.makeStringLiteral(line[0], 'send'))
-        return [line]
+        line.splice(1, 0, BuildFakeTokens.makeStringLiteral(line[0], 'send'));
+        return [line];
     }
     rewriteSave(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the save command', line[0])];
@@ -389,7 +396,7 @@ put the result %ARG0%`;
         checkThrow(line.length > 1, 'S>|not enough args');
         if (line[1].image === 'empty') {
             checkThrowEq(2, line.length, 'S=|select empty should be alone');
-            return [[line[0], BuildFakeTokens.makeStringLiteral(line[0], 'empty') ]];
+            return [[line[0], BuildFakeTokens.makeStringLiteral(line[0], 'empty')]];
         } else {
             let startContainer = 1;
             let ret = [line[0]];
@@ -408,7 +415,7 @@ put the result %ARG0%`;
             );
             if ('text' === line[startContainer].image) {
                 startContainer += 1;
-                checkThrowEq('of', line[startContainer].image, 'S;|incorrect syntax for select, no \'of\' seen');
+                checkThrowEq('of', line[startContainer].image, "S;|incorrect syntax for select, no 'of' seen");
                 startContainer += 1;
             }
 
@@ -546,7 +553,7 @@ put the result %ARG0%`;
         }
     }
     rewriteUnmark(line: ChvITk[]): ChvITk[][] {
-        return this.rewriteMark(line, true)
+        return this.rewriteMark(line, true);
     }
     rewriteVisual(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'S-|not enough args');
@@ -643,7 +650,7 @@ end repeat`;
     hBuildMarkExpression(expression: ChvITk[], fromUnmark: boolean): ChvITk[][] {
         /* can't put this in standardlib, it needs "each" access */
         /* go to each card, so that bg field accesses work */
-        checkThrow(expression?.length, "requires expression")
+        checkThrow(expression?.length, 'requires expression');
         let code = `
 put the short id of this cd into prevCard%UNIQUE%
 put 1 into i%UNIQUE%
@@ -660,7 +667,7 @@ repeat
     end if
 end repeat
 go cd id prevCard%UNIQUE%
-        `
+        `;
         return this.rw.gen(code, expression[0], [expression]);
     }
 }

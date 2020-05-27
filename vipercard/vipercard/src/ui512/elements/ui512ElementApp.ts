@@ -42,16 +42,16 @@ export class UI512Application implements UI512ApplicationInterface {
     /**
      * return index where condition is true
      */
-    findIndex(fn:(a:UI512ElGroup)=>boolean):number {
-        let i = 0
+    findIndex(fn: (a: UI512ElGroup) => boolean): number {
+        let i = 0;
         for (let grp of this.groups.iter()) {
             if (fn(grp)) {
-                return i
+                return i;
             }
 
-            i++
+            i++;
         }
-        return -1
+        return -1;
     }
 
     /**
@@ -77,7 +77,7 @@ export class UI512Application implements UI512ApplicationInterface {
         if (index === -1) {
             this.groups.insertNew(grp.id, grp);
         } else {
-            this.groups.insertAt(grp.id, grp, index)
+            this.groups.insertAt(grp.id, grp, index);
         }
 
         this.observer.changeSeen(context, grp.id, '(addgrp)', 0, 0);

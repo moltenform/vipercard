@@ -186,8 +186,8 @@ export function textFontStylingToString(e: TextFontStyling): string {
 export function stringToTextFontStyling(s: string): TextFontStyling {
     let ret = TextFontStyling.Default;
     for (let i = 0; i < s.length - 1; i++) {
-        let c = s.charAt(i)
-        checkThrow512(c !== '_', "passed in a spec?")
+        let c = s.charAt(i);
+        checkThrow512(c !== '_', 'passed in a spec?');
         if (c === '+') {
             switch (s.charAt(i + 1)) {
                 case 'b':

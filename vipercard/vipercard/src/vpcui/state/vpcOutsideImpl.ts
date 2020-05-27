@@ -192,7 +192,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * by casting to readablecontainer this provides read-only access
      */
     ResolveContainerReadable(container: RequestedContainerRef): ReadableContainer {
-        return this.ResolveContainerWritable(container) as ReadableContainer
+        return this.ResolveContainerWritable(container) as ReadableContainer;
     }
 
     /**
@@ -202,8 +202,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     ResolveContainerWritable(container: RequestedContainerRef): WritableContainer {
         checkThrow(container instanceof RequestedContainerRef, '8<|not a valid container');
         if (container.isJustSelection) {
-            let selPts = this.FindSelectedTextBounds()
-            return new RWContainerFldSelection(selPts[0], this.Model(), selPts[1], selPts[2])
+            let selPts = this.FindSelectedTextBounds();
+            return new RWContainerFldSelection(selPts[0], this.Model(), selPts[1], selPts[2]);
         } else if (container.vel) {
             let vel = this.ResolveVelRef(container.vel);
             checkThrow(vel, `8;|element not found`);
@@ -241,7 +241,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * makes the bounds ordered min to max, and ensures that they are within range.
      * also checks for a field marked as can't-select.
      */
-    protected fixSelectionBounds(fld:VpcElField) : O<[number, number]> {
+    protected fixSelectionBounds(fld: VpcElField): O<[number, number]> {
         let generic = new VpcTextFieldAsGeneric(undefined, fld, this.Model());
         return TextSelModify.getSelectedTextBounds(generic);
     }
@@ -253,13 +253,13 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let selFld = this.vci.getCurrentFocusVelField();
         if (selFld) {
             /* check if it's locktext/non selectable */
-            let bounds = this.fixSelectionBounds(selFld)
+            let bounds = this.fixSelectionBounds(selFld);
             if (bounds) {
-                return [selFld, bounds[0], bounds[1]]
+                return [selFld, bounds[0], bounds[1]];
             }
         }
 
-        return [undefined, 0, 0]
+        return [undefined, 0, 0];
     }
 
     /**
@@ -300,7 +300,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
             return VpcValS(renderer.go(vel, adjective, this.Model().stack.getB('compatibilitymode')));
         } else if (prop === 'internalid') {
-            /* put the internalid of cd btn 1 into x 
+            /* put the internalid of cd btn 1 into x
             for bg elements, id !== internalid */
             return VpcValS(vel.idInternal);
         } else if (prop === 'number') {
@@ -448,7 +448,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             )
         );
         let args = this.MakeUI512PaintDispatchFromCurrentOptions(false, mods);
-        checkThrow(argsGiven.length % 2 === 0, "expected even #")
+        checkThrow(argsGiven.length % 2 === 0, 'expected even #');
         for (let i = 0; i < argsGiven.length; i += 2) {
             args.xPts.push(argsGiven[i]);
             args.yPts.push(argsGiven[i + 1]);
@@ -468,15 +468,20 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     /**
      * get mouse and keyboard state
      */
-    GetMouseAndKeyState(mouseCoords:[number, number],  trackClick:[number, number, number], buttons:ValHolder<boolean[]>, mods:ValHolder<ModifierKeys>) {
-        let pr = this.vci.getPresenter()
-        mouseCoords[0] = pr.trackMouse[0]
-        mouseCoords[1] = pr.trackMouse[1]
-        trackClick[0] = pr.trackLastClick[0]
-        trackClick[1] = pr.trackLastClick[1]
-        trackClick[2] = pr.trackLastClick[2]
-        buttons.val = pr.trackPressedBtns.slice()
-        mods.val = pr.trackMetaKeys
+    GetMouseAndKeyState(
+        mouseCoords: [number, number],
+        trackClick: [number, number, number],
+        buttons: ValHolder<boolean[]>,
+        mods: ValHolder<ModifierKeys>
+    ) {
+        let pr = this.vci.getPresenter();
+        mouseCoords[0] = pr.trackMouse[0];
+        mouseCoords[1] = pr.trackMouse[1];
+        trackClick[0] = pr.trackLastClick[0];
+        trackClick[1] = pr.trackLastClick[1];
+        trackClick[2] = pr.trackLastClick[2];
+        buttons.val = pr.trackPressedBtns.slice();
+        mods.val = pr.trackMetaKeys;
     }
 
     /**
@@ -527,26 +532,19 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         /* get a longer form of the id unless specifically said "short" */
         let frame = this.vci.findExecFrameStack()[1];
         let target = this.vci.getModel().findByIdUntyped(frame?.message?.targetId);
-        let compat = this.Model().stack.getB('compatibilitymode')
+        let compat = this.Model().stack.getB('compatibilitymode');
         checkThrow(target, 'UF|the target was not found');
 
         if (compat) {
-            return new VelRenderName(this.vci.getModel()).go(
-                target,
-                adjective,
-            );
+            return new VelRenderName(this.vci.getModel()).go(target, adjective);
         } else {
             /* we want as much info as possible, because although
                 we return a string, it will likely be parsed back into an object */
-                if (adjective !== PropAdjective.Short) {
-                    adjective = PropAdjective.LongForParse
-                }
+            if (adjective !== PropAdjective.Short) {
+                adjective = PropAdjective.LongForParse;
+            }
 
-            return new VelRenderId(this.vci.getModel()).go(
-                target,
-                adjective,
-                compat
-            );
+            return new VelRenderId(this.vci.getModel()).go(target, adjective, compat);
         }
     }
 
@@ -562,38 +560,26 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let owner = this.vci.getModel().getByIdUntyped(vel.parentIdInternal);
         if (vel.getType() === VpcElType.Card && this.Model().stack.getB('compatibilitymode')) {
             /* compat with original product */
-            return new VelRenderName(this.vci.getModel()).go(
-                owner,
-                adjective,
-            );
-        }
-        else if (vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length) {
+            return new VelRenderName(this.vci.getModel()).go(owner, adjective);
+        } else if (vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length) {
             /* it's a bg object, indicate this by returning in the form "cd x of bg y".
             the parent of a bg object is still the card, though. */
             let card = this.vci.getModel().getCardById(vel.parentIdInternal);
             let bg = this.vci.getModel().getById(VpcElBg, card.parentIdInternal);
-            adjective = PropAdjective.LongForParse /* don't use "short" */
-            return new VelRenderId(this.vci.getModel()).go(
-                card,
-                adjective,
-                this.Model().stack.getB('compatibilitymode')
-            ) + ' of ' + new VelRenderId(this.vci.getModel()).go(
-                bg,
-                adjective,
-                this.Model().stack.getB('compatibilitymode')
+            adjective = PropAdjective.LongForParse; /* don't use "short" */
+            return (
+                new VelRenderId(this.vci.getModel()).go(card, adjective, this.Model().stack.getB('compatibilitymode')) +
+                ' of ' +
+                new VelRenderId(this.vci.getModel()).go(bg, adjective, this.Model().stack.getB('compatibilitymode'))
             );
         } else {
             /* we want as much info as possible, because although
             we return a string, it will likely be parsed back into an object */
             if (adjective !== PropAdjective.Short) {
-                adjective = PropAdjective.LongForParse
+                adjective = PropAdjective.LongForParse;
             }
 
-            return new VelRenderId(this.vci.getModel()).go(
-                    owner,
-                    adjective,
-                    this.Model().stack.getB('compatibilitymode')
-                );
+            return new VelRenderId(this.vci.getModel()).go(owner, adjective, this.Model().stack.getB('compatibilitymode'));
         }
     }
 

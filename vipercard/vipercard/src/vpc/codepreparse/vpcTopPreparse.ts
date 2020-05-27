@@ -94,7 +94,7 @@ export const VpcTopPreparse = /* static class */ {
             let nextLines2 = this._stage2Process(line, rewrites, rw, compatMode) ?? [line];
             for (let line2 of nextLines2) {
                 VpcCurrentScriptStage.latestSrcLineSeen = line2[0].startLine;
-                let nextLines3 = this._stage3Process(line2, exp, rw, );
+                let nextLines3 = this._stage3Process(line2, exp, rw);
                 for (let line3 of nextLines3) {
                     VpcCurrentScriptStage.latestSrcLineSeen = line3[0].startLine;
                     /* make it lowercase again, just in case */

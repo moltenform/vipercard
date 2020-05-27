@@ -155,7 +155,7 @@ export class VpcElField extends VpcElSizable {
         setters['textstyle'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string, h: VpcHandleLinkedVels) => {
-                me.setProp('defaulttextstyle', VpcValS(s), h)
+                me.setProp('defaulttextstyle', VpcValS(s), h);
                 me.setEntireFontFromDefaultFont(h);
             }
         ];
@@ -190,8 +190,8 @@ export class VpcElField extends VpcElSizable {
         setters['defaulttextstyle'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string, h: VpcHandleLinkedVels) => {
-                let nextStyle = UI512ComplexFontChanges.setGeneralTextStyleAdvancedInt(me.getN('defaulttextstyle'), s)
-                me.setOnVel('defaulttextstyle', nextStyle, h)
+                let nextStyle = UI512ComplexFontChanges.setGeneralTextStyleAdvancedInt(me.getN('defaulttextstyle'), s);
+                me.setOnVel('defaulttextstyle', nextStyle, h);
             }
         ];
 
@@ -314,7 +314,7 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
     }
 
     getReadOnlyUI512(): UI512ElTextField {
-        return ensureDefined(this.el512, "");
+        return ensureDefined(this.el512, '');
     }
 
     getScrollAmt(): number {

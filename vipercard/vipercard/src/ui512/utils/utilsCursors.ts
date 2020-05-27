@@ -365,11 +365,11 @@ export class UI512CursorAccess {
             return;
         }
 
-        /* we're not using a css cursor - 
+        /* we're not using a css cursor -
         prevent there from being 2 cursors shown */
         let el = window.document.getElementById('mainDomCanvas');
         if (el) {
-            el.style.cursor = 'none'
+            el.style.cursor = 'none';
         }
 
         if (

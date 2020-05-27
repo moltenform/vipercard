@@ -102,7 +102,7 @@ export abstract class UI512CompBase {
     /**
      * create the UI of this composite
      */
-    create(pr: UI512PresenterBase, app: UI512Application, index=-1) {
+    create(pr: UI512PresenterBase, app: UI512Application, index = -1) {
         assertEq(
             0,
             this.children.length,

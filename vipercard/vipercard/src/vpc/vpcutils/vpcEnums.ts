@@ -36,7 +36,7 @@ export enum PropAdjective {
     Short,
     /* always use the long id style,
     even if we are in compatibility mode */
-    LongForParse, 
+    LongForParse,
     __AlternateForm__Abbreviated = Abbrev,
     __AlternateForm__Abbr = Abbrev
 }
@@ -67,8 +67,8 @@ export enum OrdinalOrPosition {
     __AlternateForm__Prev = Previous
 }
 
-export function ordinalOrPositionIsPosition(o:OrdinalOrPosition) {
-    return o > OrdinalOrPosition.Tenth 
+export function ordinalOrPositionIsPosition(o: OrdinalOrPosition) {
+    return o > OrdinalOrPosition.Tenth;
 }
 
 /**

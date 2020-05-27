@@ -15,7 +15,7 @@ export const VpcBuiltinFunctionsDateUtils = /* static class */ {
     /* render short date. */
     _getShortDate() {
         let [nDay, nDate, nMonth, nYear] = this._getDateCurrent();
-        Util512.unused(nDay)
+        Util512.unused(nDay);
         return `${nMonth + 1}/${nDate}/${nYear}`;
     },
 

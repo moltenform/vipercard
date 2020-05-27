@@ -69,7 +69,7 @@ function getBoldChars
     return ret
 end getBoldChars
     `;
-    h3.setScript(h3.ids.stack, helperCode)
+    h3.setScript(h3.ids.stack, helperCode);
     let b = new ScriptTestBatch();
     /* go to a cd with a field */
     b.t(`go to cd id ${h3.ids.cdBC}\\1`, '1');
@@ -137,7 +137,7 @@ end getBoldChars
     /* reset fld */
     b.t('put "" into cd fld 1\\1', '1');
     b.batchEvaluate(h3);
-    h3.setScript(h3.ids.stack, '')
+    h3.setScript(h3.ids.stack, '');
 });
 
 t.test('03chunkexpression_recursivescopes', () => {

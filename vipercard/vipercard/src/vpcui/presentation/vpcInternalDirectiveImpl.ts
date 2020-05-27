@@ -27,78 +27,78 @@
 /* Released under the GPLv3 license */
 
 /**
- * complete implementation of VpcExecInternalDirective 
+ * complete implementation of VpcExecInternalDirective
  */
 export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstract {
-    constructor(protected pr:VpcPresenterInterface, protected vci:VpcStateInterface) {
-        super()
+    constructor(protected pr: VpcPresenterInterface, protected vci: VpcStateInterface) {
+        super();
     }
 
     /**
      * set contents of global var
      */
-    setGlobal(key:string, v:VpcVal) {
-        this.vci.getCodeExec().globals.set(key, v)
+    setGlobal(key: string, v: VpcVal) {
+        this.vci.getCodeExec().globals.set(key, v);
     }
 
     /**
      * get contents of global var
      */
-    getGlobal(key:string):VpcVal {
-        return this.vci.getCodeExec().globals.getOrFallback(key, VpcValS(''))
+    getGlobal(key: string): VpcVal {
+        return this.vci.getCodeExec().globals.getOrFallback(key, VpcValS(''));
     }
 
     /**
      * access cardhistory array
      */
-    getCardHistory():RememberHistory {
-        return this.vci.getCodeExec().cardHistory
+    getCardHistory(): RememberHistory {
+        return this.vci.getCodeExec().cardHistory;
     }
-    
+
     /**
      * make a new vel, can't send messages like newButton
      */
-    goMakevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
-        let vel:VpcElBase
-        let isFromUI = false
+    goMakevelwithoutmsg(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]) {
+        let vel: VpcElBase;
+        let isFromUI = false;
         if (param.val.toLowerCase().endsWith('fromui')) {
-            isFromUI = true
-            param.val = param.val.replace(/fromui/i, '')
+            isFromUI = true;
+            param.val = param.val.replace(/fromui/i, '');
         }
 
-        if (param.val==='btn' || param.val==='button') {
-            vel = this.makeBtnFldWithoutMsg(VpcElType.Btn, isFromUI)
-        } else if (param.val==='fld' || param.val==='field') {
-            vel = this.makeBtnFldWithoutMsg(VpcElType.Fld, isFromUI)
-        } else if (param.val==='card' || param.val==='dupecardpaint') {
-            vel = this.makeCardWithoutMsg(cur, param.val==='dupecardpaint')
-        } else if (param.val==='bg' || param.val==='bkgnd') {
-            vel = this.makeBgWithoutMsg(cur)
+        if (param.val === 'btn' || param.val === 'button') {
+            vel = this.makeBtnFldWithoutMsg(VpcElType.Btn, isFromUI);
+        } else if (param.val === 'fld' || param.val === 'field') {
+            vel = this.makeBtnFldWithoutMsg(VpcElType.Fld, isFromUI);
+        } else if (param.val === 'card' || param.val === 'dupecardpaint') {
+            vel = this.makeCardWithoutMsg(cur, param.val === 'dupecardpaint');
+        } else if (param.val === 'bg' || param.val === 'bkgnd') {
+            vel = this.makeBgWithoutMsg(cur);
         } else {
-            checkThrowInternal(false, "cannot make this type")
+            checkThrowInternal(false, 'cannot make this type');
         }
 
-        param.val = vel.getUserFacingId()
-        return vel
+        param.val = vel.getUserFacingId();
+        return vel;
     }
 
     /**
      * paste a copied vel
      */
-    goPastecardorvel(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
+    goPastecardorvel(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]) {
         let id = this.vci.getOptionS('copiedVelId');
         let found = this.vci.getModel().findByIdUntyped(id);
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
-           checkThrow(!found.getS('is_bg_velement_id'), "bg elems not yet supported")
+            checkThrow(!found.getS('is_bg_velement_id'), 'bg elems not yet supported');
             let dupe = this.makeBtnFldWithoutMsg(found.getType(), true);
             let asObj = VpcGettableSerialization.serializeGettable(found);
-            let asNewObj = JSON.parse(JSON.stringify(asObj))
-            VpcGettableSerialization.deserializeSettable(dupe, asNewObj, this.outside.Model())
+            let asNewObj = JSON.parse(JSON.stringify(asObj));
+            VpcGettableSerialization.deserializeSettable(dupe, asNewObj, this.outside.Model());
 
             /* move it a bit */
             let amtToMove = Util512Higher.getRandIntInclusiveWeak(10, 50);
-            dupe.setOnVel('x', Math.min(ScreenConsts.xAreaWidth, dupe.getN('x') + amtToMove), this.vci.getModel())
-            dupe.setOnVel('y', Math.min(ScreenConsts.yAreaHeight, dupe.getN('y') + amtToMove), this.vci.getModel())
+            dupe.setOnVel('x', Math.min(ScreenConsts.xAreaWidth, dupe.getN('x') + amtToMove), this.vci.getModel());
+            dupe.setOnVel('y', Math.min(ScreenConsts.yAreaHeight, dupe.getN('y') + amtToMove), this.vci.getModel());
         } else if (id && id.length) {
             checkThrowNotifyMsg(false, 'U9|Pasting this type of element is not yet supported.');
         } else {
@@ -109,33 +109,33 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
     /**
      * remove a vel
      */
-    goRemovevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
-        let idInternal = param.val
-        let ref = new RequestedVelRef(VpcElType.Unknown)
-        ref.lookById = Util512.parseInt(idInternal) ?? 0
-        ref.partIsCdOrBg = true
-        let vel = this.outside.ResolveVelRef(ref)
+    goRemovevelwithoutmsg(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]) {
+        let idInternal = param.val;
+        let ref = new RequestedVelRef(VpcElType.Unknown);
+        ref.lookById = Util512.parseInt(idInternal) ?? 0;
+        ref.partIsCdOrBg = true;
+        let vel = this.outside.ResolveVelRef(ref);
         if (vel) {
             this.removeVel(vel);
-            param.val = vel.getUserFacingId()
+            param.val = vel.getUserFacingId();
         } else {
-            param.val = ''
+            param.val = '';
         }
     }
 
     /**
      * make a background
      */
-    protected makeBgWithoutMsg(cur:VpcElCard) { 
+    protected makeBgWithoutMsg(cur: VpcElCard) {
         let bg = this.rawCreateOneVelUseCarefully(this.vci.getModel().stack.idInternal, VpcElType.Bg, -1);
         this.rawCreateOneVelUseCarefully(bg.idInternal, VpcElType.Card, -1);
-        return bg
+        return bg;
     }
 
     /**
      * make a card
      */
-    protected makeCardWithoutMsg(cur:VpcElCard, isDupePaint:boolean) {
+    protected makeCardWithoutMsg(cur: VpcElCard, isDupePaint: boolean) {
         let paint = cur.getS('paint');
         let currentBg = this.vci.getModel().getById(VpcElBg, cur.parentIdInternal);
         let currentIndex = currentBg.cards.findIndex(cd => cd.idInternal === cur.idInternal);
@@ -146,13 +146,13 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
             /* use this workaround instead (only copies the paint) */
             vel.setOnVel('paint', paint, this.vci.getModel());
         }
-        return vel
+        return vel;
     }
 
     /**
      * make a btn or fld
      */
-    protected makeBtnFldWithoutMsg(type:VpcElType, fromui:boolean) {
+    protected makeBtnFldWithoutMsg(type: VpcElType, fromui: boolean) {
         /* make a button that is tall enough to show an icon, since
         in prev versions icon clipping didn't work well */
         const defaultBtnW = 100;
@@ -176,7 +176,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
         let currentCardId = this.vci.getOutside().GetOptionS('currentCardId');
         let vel = this.rawCreateOneVelUseCarefully(currentCardId, type, -1);
         assertTrue(vel instanceof VpcElSizable, '6u|not VpcElSizable');
-        vel.setDimensions(newX,newY, w, h, this.vci.getModel());
+        vel.setDimensions(newX, newY, w, h, this.vci.getModel());
         vel.setOnVel(
             'name',
             longstr(`my ${vpcElTypeShowInUI(vel.getType())}
@@ -200,7 +200,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
             vel.setFmTxt(newTxt, this.vci.getModel());
             vel.setProp('style', VpcValS('scrolling'), this.vci.getModel());
         } else {
-            checkThrowInternal(false, "btn or fld expected")
+            checkThrowInternal(false, 'btn or fld expected');
         }
 
         /* important: only mess with proppanels if not fromui!
@@ -216,11 +216,11 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
             this.pr.lyrPropPanel.updateUI512Els();
 
             /* change tool -- so we can see it selected  */
-            let needChangeTool = type === VpcElType.Btn ? VpcTool.Button : VpcTool.Field
-            this.setUpcomingTool(needChangeTool)
+            let needChangeTool = type === VpcElType.Btn ? VpcTool.Button : VpcTool.Field;
+            this.setUpcomingTool(needChangeTool);
         }
-        
-        return vel
+
+        return vel;
     }
 
     /**
@@ -228,20 +228,20 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
      */
     protected getUpcomingTool() {
         if (this.vci.getTool() === VpcTool.Browse) {
-            return this.vci.getCodeExec().silenceMessagesForUIAction.val ?? this.vci.getTool()
+            return this.vci.getCodeExec().silenceMessagesForUIAction.val ?? this.vci.getTool();
         } else {
-            return this.vci.getTool()
+            return this.vci.getTool();
         }
     }
 
     /**
      * in a menu action, set subsequent tool
      */
-    protected setUpcomingTool(t:VpcTool) {
+    protected setUpcomingTool(t: VpcTool) {
         if (this.vci.getTool() === VpcTool.Browse && this.vci.getCodeExec().silenceMessagesForUIAction.val) {
-            this.vci.getCodeExec().silenceMessagesForUIAction.val = t
+            this.vci.getCodeExec().silenceMessagesForUIAction.val = t;
         } else {
-            this.vci.setTool(t)
+            this.vci.setTool(t);
         }
     }
 
@@ -255,7 +255,7 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
 
         checkThrow(newId.match(/^[0-9]+$/), 'Ku|id should be purely numeric', newId);
         let cr = new UndoableActionCreateVel(newId, parentId, type, false, insertIndex);
-        this.vci.doChangeSeenCreationDeletion(cr)
+        this.vci.doChangeSeenCreationDeletion(cr);
         cr.do(this.vci);
         return this.vci.getModel().getByIdUntyped(newId);
     }
@@ -303,39 +303,38 @@ export class VpcExecInternalDirectiveFull extends VpcExecInternalDirectiveAbstra
      */
     protected removeElemImpl(vel: VpcElBase) {
         let action = new UndoableActionDeleteVel(vel, this.vci);
-        this.vci.doChangeSeenCreationDeletion(action)
+        this.vci.doChangeSeenCreationDeletion(action);
         action.do(this.vci);
     }
 
     /**
      * set the selected text
-     * we don't need to send a selected-field-changed event, it will 
+     * we don't need to send a selected-field-changed event, it will
      * be sent by the ui512 layer.
      */
-    setSelection(vel:O<VpcElField>, start:number, end:number):void {
-        this.vci.causeFullRedraw()
+    setSelection(vel: O<VpcElField>, start: number, end: number): void {
+        this.vci.causeFullRedraw();
         if (!vel) {
             /* clear the selection */
-            this.pr.setCurrentFocus(undefined, false /* skip sending event */)
-            return
+            this.pr.setCurrentFocus(undefined, false /* skip sending event */);
+            return;
         }
 
-        let elId = this.pr.lyrModelRender.velIdToElId(vel.idInternal)
-        let findEl = this.pr.app.findEl(elId)
+        let elId = this.pr.lyrModelRender.velIdToElId(vel.idInternal);
+        let findEl = this.pr.app.findEl(elId);
         if (findEl) {
-            vel.setOnVel('selcaret', start, this.outside.Model())
-            vel.setOnVel('selend', end, this.outside.Model())
+            vel.setOnVel('selcaret', start, this.outside.Model());
+            vel.setOnVel('selend', end, this.outside.Model());
             let generic = new VpcTextFieldAsGeneric(undefined, vel, this.outside.Model());
             let newbounds = TextSelModify.getSelectedTextBounds(generic);
             /* also checks if the field has lockedtext/can'tselect */
             if (newbounds) {
                 /* let's be kind and fix up the bounds so if you send it something
                 weird/negative/backwards, we'll repair it here  */
-                vel.setOnVel('selcaret', newbounds[0], this.outside.Model())
-                vel.setOnVel('selend', newbounds[1], this.outside.Model())
-                this.pr.setCurrentFocus(elId, false /* skip sending event */)
+                vel.setOnVel('selcaret', newbounds[0], this.outside.Model());
+                vel.setOnVel('selend', newbounds[1], this.outside.Model());
+                this.pr.setCurrentFocus(elId, false /* skip sending event */);
             }
         }
     }
 }
-

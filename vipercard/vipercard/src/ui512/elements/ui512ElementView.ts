@@ -144,11 +144,7 @@ export class UI512ViewDraw {
     /**
      * draw icon in a rectangle, no-op if rect isn't set
      */
-    drawIconIfDefined(
-        b: UI512ViewDrawBorders,
-        rect: O<number[]>,
-        iconInfo: IconInfo,
-    ) {
+    drawIconIfDefined(b: UI512ViewDrawBorders, rect: O<number[]>, iconInfo: IconInfo) {
         if (rect) {
             let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
             let icon = iconManager.findIcon(iconInfo.iconGroup, iconInfo.iconNumber);
@@ -212,24 +208,33 @@ export class UI512ViewDraw {
         );
 
         if (!rect || !iconSrcRect) {
-            return
+            return;
         }
-        
+
         let iconW = iconSrcRect[2] + iconInfo.adjustWidth;
         let iconH = iconSrcRect[3] + iconInfo.adjustHeight;
-        let iconAndTextH = iconH + marginBetweenIconAndTxt + assumeTxtHeight
-        let iconX = rect[0] + Math.trunc(rect[2]/2) - Math.trunc(iconW/2)
-        let iconY = rect[1] + Math.trunc(rect[3]/2) - Math.trunc(iconAndTextH/2)
-        
+        let iconAndTextH = iconH + marginBetweenIconAndTxt + assumeTxtHeight;
+        let iconX = rect[0] + Math.trunc(rect[2] / 2) - Math.trunc(iconW / 2);
+        let iconY = rect[1] + Math.trunc(rect[3] / 2) - Math.trunc(iconAndTextH / 2);
+
         let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
         let icon = iconManager.findIcon(iconInfo.iconGroup, iconInfo.iconNumber);
         if (!icon) {
             b.complete.complete = false;
-            return
+            return;
         }
-        
+
         /* draw the icon */
-        icon.drawAtLocationAndClipFromBox(b.canvas, iconInfo, iconX, iconY, rect[0], rect[1], rect[2], rect[3] )
+        icon.drawAtLocationAndClipFromBox(
+            b.canvas,
+            iconInfo,
+            iconX,
+            iconY,
+            rect[0],
+            rect[1],
+            rect[2],
+            rect[3]
+        );
 
         /* now draw the text */
         /* set the font to 9pt Geneva, unless it's already been set.
@@ -237,11 +242,18 @@ export class UI512ViewDraw {
         let style = styleEnabled ? 'biuosdce' : 'biuos+dce';
         let labelSmall = UI512DrawText.setFont(s, `geneva_9_${style}`);
         labelSmall = labelSmall.replace(/\r|\n/g, '');
-        let lowestY = rect[1] + rect[3]
-        let args = new DrawTextArgs(rect[0], iconY + iconH + marginBetweenIconAndTxt, rect[2], 0, true/*hAlign*/,
-            false/*vAlign*/, false/*wrap - always make false*/)
-        args.boxH = Math.max(0, lowestY-args.boxY)
-        this.drawText(b, labelSmall, args, styleEnabled)
+        let lowestY = rect[1] + rect[3];
+        let args = new DrawTextArgs(
+            rect[0],
+            iconY + iconH + marginBetweenIconAndTxt,
+            rect[2],
+            0,
+            true /*hAlign*/,
+            false /*vAlign*/,
+            false /*wrap - always make false*/
+        );
+        args.boxH = Math.max(0, lowestY - args.boxY);
+        this.drawText(b, labelSmall, args, styleEnabled);
     }
 
     /**

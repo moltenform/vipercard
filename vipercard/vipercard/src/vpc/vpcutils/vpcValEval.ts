@@ -258,11 +258,11 @@ export class VpcEvalHelpers {
     /**
      * from "a|b|c" to "a"&cr&"b"&cr&"c"
      */
-    static escapeWithinString(s:string, target=new RegExp(/\|/g), replacement='cr') {
-        assertWarn(s.startsWith('"'), '')
-        assertWarn(s.endsWith('"'), '')
-        let between = s.substring(1, s.length - 1)
-        between = between.replace(target, `"&${replacement}&"`)
-        return `"${between}"`
+    static escapeWithinString(s: string, target = new RegExp(/\|/g), replacement = 'cr') {
+        assertWarn(s.startsWith('"'), '');
+        assertWarn(s.endsWith('"'), '');
+        let between = s.substring(1, s.length - 1);
+        between = between.replace(target, `"&${replacement}&"`);
+        return `"${between}"`;
     }
 }

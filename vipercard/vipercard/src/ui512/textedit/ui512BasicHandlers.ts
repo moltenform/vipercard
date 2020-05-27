@@ -34,9 +34,9 @@ export class BasicHandlers {
         pr: UI512PresenterWithMenuInterface,
         d: MouseUpEventDetails
     ) {
-        pr.trackLastClick[0] = d.mouseX
-        pr.trackLastClick[1] = d.mouseY
-        pr.trackLastClick[2] += 1
+        pr.trackLastClick[0] = d.mouseX;
+        pr.trackLastClick[1] = d.mouseY;
+        pr.trackLastClick[2] += 1;
         if (d.button >= 0 && d.button < pr.trackPressedBtns.length) {
             pr.trackPressedBtns[d.button] = false;
         } else {
@@ -90,9 +90,9 @@ export class BasicHandlers {
         pr: UI512PresenterWithMenuInterface,
         d: MouseMoveEventDetails
     ) {
-        pr.trackMouse[0] = d.mouseX
-        pr.trackMouse[1] = d.mouseY
-        pr.trackMetaKeys = d.mods
+        pr.trackMouse[0] = d.mouseX;
+        pr.trackMouse[1] = d.mouseY;
+        pr.trackMetaKeys = d.mods;
         d.elNext = pr.app.coordsToElement(d.mouseX, d.mouseY);
         d.elPrev = pr.app.coordsToElement(d.prevMouseX, d.prevMouseY);
     }
@@ -178,11 +178,8 @@ export class BasicHandlers {
     /**
      * track keyup events
      */
-    static trackKeyUp(
-        pr: UI512PresenterWithMenuInterface,
-        d: KeyUpEventDetails
-    ) {
-        pr.trackMetaKeys = d.mods
+    static trackKeyUp(pr: UI512PresenterWithMenuInterface, d: KeyUpEventDetails) {
+        pr.trackMetaKeys = d.mods;
     }
 
     /**
@@ -192,7 +189,7 @@ export class BasicHandlers {
         pr: UI512PresenterWithMenuInterface,
         d: KeyDownEventDetails
     ) {
-        pr.trackMetaKeys = d.mods
+        pr.trackMetaKeys = d.mods;
         if (!d.repeated) {
             let wasShortcut = true;
             let runTestsShortcut = checkIsProductionBuild() ? 'Opt+Shift+T' : 'Opt+T';

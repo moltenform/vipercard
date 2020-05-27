@@ -38,10 +38,10 @@ export class VpcExecTop {
     check = new CheckReservedWords();
     runStatements = new ExecuteStatement();
     workQueue: VpcExecFrameStack[] = [];
-    cbOnScriptError: O<(err: VpcErr, msg:O<VpcScriptMessage>) => void>;
+    cbOnScriptError: O<(err: VpcErr, msg: O<VpcScriptMessage>) => void>;
     cbCauseUIRedraw: O<() => void>;
-    cbSetRealTool: (tl:VpcTool)=>void
-    directiveImpl: VpcExecInternalDirectiveAbstract
+    cbSetRealTool: (tl: VpcTool) => void;
+    directiveImpl: VpcExecInternalDirectiveAbstract;
     fieldsRecentlyEdited: ValHolder<{ [id: string]: boolean }> = new ValHolder({});
     silenceMessagesForUIAction: ValHolder<O<VpcTool>> = new ValHolder(undefined);
     protected justSawRepeatedMousedown = false;
@@ -68,7 +68,7 @@ export class VpcExecTop {
             !(msg instanceof VpcScriptMessageMsgBoxCode)
         ) {
             /* all messages are silenced  */
-            console.log("Message was muted.", msg.msgName)
+            console.log('Message was muted.', msg.msgName);
             return;
         }
 
@@ -208,7 +208,7 @@ export class VpcExecTop {
         this.globals.set('$currentVisEffect', VpcValS(''));
 
         if (this.silenceMessagesForUIAction.val) {
-            this.cbSetRealTool(this.silenceMessagesForUIAction.val)
+            this.cbSetRealTool(this.silenceMessagesForUIAction.val);
             this.silenceMessagesForUIAction.val = undefined;
         }
     }
@@ -270,7 +270,7 @@ export class VpcExecTop {
      */
     protected handleScriptException(e: Error, context: string) {
         let stackTrace = new GuessStackTrace(this, this.outside).go();
-        let msgObj = this.workQueue[0]?.originalMsg
+        let msgObj = this.workQueue[0]?.originalMsg;
         this.forceStopRunning();
 
         let scriptErr = Util512BaseErr.errIfExactCls<VpcErr>('VpcErr', e);

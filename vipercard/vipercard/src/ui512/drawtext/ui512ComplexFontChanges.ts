@@ -5,7 +5,6 @@
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { TextFontSpec, TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './ui512DrawTextClasses';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -136,7 +135,13 @@ export const UI512ComplexFontChanges = /* static class */ {
      * get attribute of a chunk of text
      * if it varies, we'll return "mixed".
      */
-    _getChunkTextAttribute(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, fn: (s: string) => string) {
+    _getChunkTextAttribute(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number,
+        fn: (s: string) => string
+    ) {
         if (txt.len() === 0 || inStart >= txt.len()) {
             return fn(defaultFont);
         }
@@ -158,7 +163,13 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * set attribute of a chunk of text
      */
-    _setChunkTextAttribute(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, fn: (s: string) => string) {
+    _setChunkTextAttribute(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number,
+        fn: (s: string) => string
+    ) {
         if (txt.len() === 0 || inStart >= txt.len()) {
             return;
         }
@@ -172,7 +183,12 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * get typeface of chunk, "courier" or "mixed" if there's more than one typeface
      */
-    getChunkTextFaceOrMixed(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): string {
+    getChunkTextFaceOrMixed(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number
+    ): string {
         let fn = (s: string) => TextFontSpec.getTypeface(s);
         return this._getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     },
@@ -180,7 +196,13 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * set typeface of chunk
      */
-    setChunkTextFace(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, sNext: string) {
+    setChunkTextFace(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number,
+        sNext: string
+    ) {
         let fn = (scurrent: string) => TextFontSpec.setTypeface(scurrent, sNext);
         return this._setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     },
@@ -188,7 +210,12 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * get point size of chunk, "12" or "mixed" if it varies
      */
-    getChunkTextSizeOrMixed(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): number | string {
+    getChunkTextSizeOrMixed(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number
+    ): number | string {
         let fn = (s: string) => TextFontSpec.getFontSize(s);
         let ret = this._getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
         let n = Util512.parseInt(ret);
@@ -198,7 +225,13 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * set point size of chunk
      */
-    setChunkTextSize(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, next: number) {
+    setChunkTextSize(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number,
+        next: number
+    ) {
         let ssize = next.toString();
         let fn = (scurrent: string) => TextFontSpec.setFontSize(scurrent, ssize);
         return this._setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
@@ -207,7 +240,12 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * get font style of chunk, ["bold", "italic"] or ["mixed"] if it varies
      */
-    getChunkTextStyleOrMixed(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): string[] {
+    getChunkTextStyleOrMixed(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number
+    ): string[] {
         let fn = (s: string) => TextFontSpec.getFontStyle(s);
         let ret = this._getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
         return ret === 'mixed' ? ['mixed'] : this.lowStringToStyleList(ret);
@@ -216,7 +254,13 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * set font style of chunk
      */
-    setChunkTextStyleSimple(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, list: string[]) {
+    setChunkTextStyleSimple(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number,
+        list: string[]
+    ) {
         let sNext = this.styleListToLowString(list);
         let fn = (scurrent: string) => TextFontSpec.setFontStyle(scurrent, sNext);
         return this._setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
@@ -225,110 +269,199 @@ export const UI512ComplexFontChanges = /* static class */ {
     /**
      * set font style of chunk. "add-bold" "subtract-italic"
      */
-    _setChunkTextStyleAddOrSub(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, spec:string) {
-        let isAdd:boolean
+    _setChunkTextStyleAddOrSub(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number,
+        spec: string
+    ) {
+        let isAdd: boolean;
         if (spec.startsWith('add-')) {
-            isAdd = true
-            spec = spec.substr('add-'.length)
+            isAdd = true;
+            spec = spec.substr('add-'.length);
         } else if (spec.startsWith('subtract-')) {
-            isAdd = false
-            spec = spec.substr('subtract-'.length)
+            isAdd = false;
+            spec = spec.substr('subtract-'.length);
         }
 
-        if (spec ==='plain') { return }
-        let bitToModify = this.styleListToInt([spec])
-        let f = (full:string) => {
-            let low = TextFontSpec.getFontStyle(full)
-            let n = stringToTextFontStyling(low)
+        if (spec === 'plain') {
+            return;
+        }
+        let bitToModify = this.styleListToInt([spec]);
+        let f = (full: string) => {
+            let low = TextFontSpec.getFontStyle(full);
+            let n = stringToTextFontStyling(low);
             if (isAdd) {
-                n |= bitToModify
+                n |= bitToModify;
             } else {
-                n &= ~bitToModify
+                n &= ~bitToModify;
             }
 
-            return TextFontSpec.setFontStyle(full, textFontStylingToString(n))
-        }
+            return TextFontSpec.setFontStyle(full, textFontStylingToString(n));
+        };
 
-        this._setChunkTextAttribute(txt, defaultFont, inStart, inLen, f)
+        this._setChunkTextAttribute(txt, defaultFont, inStart, inLen, f);
     },
 
     /**
      * return true if any characters have a style
      */
-    doAnyCharactersNotHaveThisStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, styleToCheck:string) {
-        checkThrow512(styleToCheck !=='plain', 'cannot ask if it contains plain')
-        let bitToCheck = this.styleListToInt([styleToCheck])
-        let sawOneWithoutIt = false
-        let f = (full:string) => {
-            let low = TextFontSpec.getFontStyle(full)
-            let n = stringToTextFontStyling(low)
+    doAnyCharactersNotHaveThisStyle(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number,
+        styleToCheck: string
+    ) {
+        checkThrow512(styleToCheck !== 'plain', 'cannot ask if it contains plain');
+        let bitToCheck = this.styleListToInt([styleToCheck]);
+        let sawOneWithoutIt = false;
+        let f = (full: string) => {
+            let low = TextFontSpec.getFontStyle(full);
+            let n = stringToTextFontStyling(low);
             if ((n & bitToCheck) === 0) {
-                sawOneWithoutIt = true
+                sawOneWithoutIt = true;
             }
 
-            return '_' 
-        }
+            return '_';
+        };
 
-        this._getChunkTextAttribute(txt, defaultFont, inStart, inLen, f)
-        return sawOneWithoutIt
+        this._getChunkTextAttribute(txt, defaultFont, inStart, inLen, f);
+        return sawOneWithoutIt;
     },
 
     /**
      * set font style of chunk. "toggle-outline"
      */
-    _setChunkTextStyleToggle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, spec:string) {
-        checkThrow512(spec.startsWith('toggle-'), '')
-        spec = spec.substr('toggle-'.length)
-        checkThrow512(spec !=='plain', 'cannot say toggle-plain')
+    _setChunkTextStyleToggle(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number,
+        spec: string
+    ) {
+        checkThrow512(spec.startsWith('toggle-'), '');
+        spec = spec.substr('toggle-'.length);
+        checkThrow512(spec !== 'plain', 'cannot say toggle-plain');
         if (spec === 'condense') {
-            this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, 'subtract-extend')
+            this._setChunkTextStyleAddOrSub(
+                txt,
+                defaultFont,
+                inStart,
+                inLen,
+                'subtract-extend'
+            );
         } else if (spec === 'extend') {
-            this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, 'subtract-condense')
+            this._setChunkTextStyleAddOrSub(
+                txt,
+                defaultFont,
+                inStart,
+                inLen,
+                'subtract-condense'
+            );
         }
 
-        let onesWithout = this.doAnyCharactersNotHaveThisStyle(txt, defaultFont, inStart, inLen, spec)
+        let onesWithout = this.doAnyCharactersNotHaveThisStyle(
+            txt,
+            defaultFont,
+            inStart,
+            inLen,
+            spec
+        );
         if (onesWithout) {
-            this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, 'add-' + spec)
+            this._setChunkTextStyleAddOrSub(
+                txt,
+                defaultFont,
+                inStart,
+                inLen,
+                'add-' + spec
+            );
         } else {
-            this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, 'subtract-' + spec)
+            this._setChunkTextStyleAddOrSub(
+                txt,
+                defaultFont,
+                inStart,
+                inLen,
+                'subtract-' + spec
+            );
         }
     },
 
     /**
      * set font style of chunk, supports "add-bold" "subtract-italic" "toggle-outline"
      */
-    setChunkTextStyleAdvanced(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, list: string[]) {
+    setChunkTextStyleAdvanced(
+        txt: FormattedText,
+        defaultFont: string,
+        inStart: number,
+        inLen: number,
+        list: string[]
+    ) {
         if (list.length === 1 && list[0].startsWith('add-')) {
-            return this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, list[0])
+            return this._setChunkTextStyleAddOrSub(
+                txt,
+                defaultFont,
+                inStart,
+                inLen,
+                list[0]
+            );
         } else if (list.length === 1 && list[0].startsWith('subtract-')) {
-            return this._setChunkTextStyleAddOrSub(txt, defaultFont, inStart, inLen, list[0])
+            return this._setChunkTextStyleAddOrSub(
+                txt,
+                defaultFont,
+                inStart,
+                inLen,
+                list[0]
+            );
         } else if (list.length === 1 && list[0].startsWith('toggle-')) {
-            return this._setChunkTextStyleToggle(txt, defaultFont, inStart, inLen, list[0])
+            return this._setChunkTextStyleToggle(
+                txt,
+                defaultFont,
+                inStart,
+                inLen,
+                list[0]
+            );
         }
 
-        checkThrow512(!list.some(item=> item.startsWith('add-')||item.startsWith('subtract-')||item.startsWith('toggle-')), "you can only say add- subtract- or toggle- if one style is given")
-        return this.setChunkTextStyleSimple(txt, defaultFont, inStart, inLen, list)
+        checkThrow512(
+            !list.some(
+                item =>
+                    item.startsWith('add-') ||
+                    item.startsWith('subtract-') ||
+                    item.startsWith('toggle-')
+            ),
+            'you can only say add- subtract- or toggle- if one style is given'
+        );
+        return this.setChunkTextStyleSimple(txt, defaultFont, inStart, inLen, list);
     },
 
     /**
      * go from ("add-bold", "biuosdce") to "+biuosdce"
      * do this by creating a temp string and calling setChunkTextStyleAdvanced
      */
-    setGeneralTextStyleAdvanced(low:string, spec:string) {
-        let txt = new FormattedText()
+    setGeneralTextStyleAdvanced(low: string, spec: string) {
+        let txt = new FormattedText();
         /* it doesn't matter what character is used */
-        txt.fromSerialized(' ')
-        let full = TextFontSpec.setFontStyle(UI512FontRequest.defaultFont, low)
-        txt.setFontAt(0, full)
-        this.setChunkTextStyleAdvanced(txt, UI512FontRequest.defaultFont, 0, 1, spec.split(','))
-        return TextFontSpec.getFontStyle(txt.fontAt(0))
+        txt.fromSerialized(' ');
+        let full = TextFontSpec.setFontStyle(UI512FontRequest.defaultFont, low);
+        txt.setFontAt(0, full);
+        this.setChunkTextStyleAdvanced(
+            txt,
+            UI512FontRequest.defaultFont,
+            0,
+            1,
+            spec.split(',')
+        );
+        return TextFontSpec.getFontStyle(txt.fontAt(0));
     },
 
     /**
      * go from ("add-bold", TextFontStyling.Italic) to TextFontStyling.Italic|Bold
      */
-    setGeneralTextStyleAdvancedInt(n:number, spec:string) {
-        return stringToTextFontStyling(this.setGeneralTextStyleAdvanced(textFontStylingToString(n), spec))
-    },
-}
-
+    setGeneralTextStyleAdvancedInt(n: number, spec: string) {
+        return stringToTextFontStyling(
+            this.setGeneralTextStyleAdvanced(textFontStylingToString(n), spec)
+        );
+    }
+};

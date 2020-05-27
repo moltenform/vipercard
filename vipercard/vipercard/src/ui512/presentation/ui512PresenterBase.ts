@@ -33,10 +33,10 @@ export abstract class UI512PresenterBase
     private currentFocus: O<string>;
     app: UI512Application;
     trackMouse = [-1, -1];
-    trackMetaKeys = ModifierKeys.None
+    trackMetaKeys = ModifierKeys.None;
     trackPressedBtns: boolean[] = Util512.repeat(this.maxMouseButtons, false);
     trackClickedIds: O<string>[] = Util512.repeat(this.maxMouseButtons, undefined);
-    trackLastClick:[number, number, number] = [0, 0, 0]
+    trackLastClick: [number, number, number] = [0, 0, 0];
     listeners: { [t: number]: FnEventCallback[] } = {};
     callbackQueueForIdle: O<VoidFn>[] = [];
     needRedraw = true;
@@ -58,7 +58,7 @@ export abstract class UI512PresenterBase
         if (other.trackMouse !== undefined) {
             this.trackMouse = other.trackMouse;
             this.trackPressedBtns = other.trackPressedBtns;
-            this.trackMetaKeys = other.trackMetaKeys
+            this.trackMetaKeys = other.trackMetaKeys;
         }
     }
 

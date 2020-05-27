@@ -86,8 +86,8 @@ export class VpcElStack extends VpcElBase {
     /**
      * get next number, when you create a button in the ui and it's called "my button 3"
      */
-    getNextNumberForElemName(h: VpcHandleLinkedVels, forBtn:boolean) {
-        let fld = forBtn ? 'increasingnumberforelemname' : 'increasingnumberforelemnamefld'
+    getNextNumberForElemName(h: VpcHandleLinkedVels, forBtn: boolean) {
+        let fld = forBtn ? 'increasingnumberforelemname' : 'increasingnumberforelemnamefld';
         let ret = this.getN(fld);
         this.setOnVel(fld, ret + 1, h);
         return ret.toString();

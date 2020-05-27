@@ -41,10 +41,10 @@ export class VpcLyrNonModalHolder extends VpcUILayer {
         }
 
         if (form && form instanceof VpcNonModalBase) {
-            let index = -1
+            let index = -1;
             if (form.y > this.vci.userBounds()[1] + 30) {
                 /* create it beneath the menubar! */
-                index=this.vci.UI512App().findIndex((grp)=>grp.id.includes('menu'))
+                index = this.vci.UI512App().findIndex(grp => grp.id.includes('menu'));
             }
 
             form.create(this.pr, this.vci.UI512App(), index);

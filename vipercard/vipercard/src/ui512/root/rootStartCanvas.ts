@@ -134,7 +134,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         prevMouseY: number,
         ctrlKey: boolean,
         altKey: boolean,
-        shiftKey: boolean,
+        shiftKey: boolean
     ) => {
         try {
             let details = new MouseMoveEventDetails(
@@ -151,7 +151,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
                 altKey,
                 false
             );
-            details.mods = mods
+            details.mods = mods;
             root.event(details);
             if (buttons !== root.mouseButtonsExpected) {
                 root.sendMissedEvents(buttons);

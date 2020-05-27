@@ -50,7 +50,7 @@ export class FormattedText {
 
     setCharAt(i: number, n: number) {
         assertTrue(!this.locked, '3o|locked');
-        FormattedText.throwIfContainsControlCharacters(String.fromCharCode(n))
+        FormattedText.throwIfContainsControlCharacters(String.fromCharCode(n));
         this.charArray[i] = n;
     }
 
@@ -78,21 +78,26 @@ export class FormattedText {
                 0
             )} in font description`
         );
-        FormattedText.throwIfContainsControlCharacters(String.fromCharCode(char))
+        FormattedText.throwIfContainsControlCharacters(String.fromCharCode(char));
         this.charArray.push(char);
         this.fontArray.push(font);
     }
 
-    slice(start:number, end:number) {
-        assertTrue(end >= start && start>=0 &&end>=0, "invalid slice bounds", start, end)
-        let newOne = new FormattedText()
-        for (let i=0; i<this.len(); i++) {
-            if (i>=start && i<end) {
-                newOne.push(this.charAt(i), this.fontAt(i))
+    slice(start: number, end: number) {
+        assertTrue(
+            end >= start && start >= 0 && end >= 0,
+            'invalid slice bounds',
+            start,
+            end
+        );
+        let newOne = new FormattedText();
+        for (let i = 0; i < this.len(); i++) {
+            if (i >= start && i < end) {
+                newOne.push(this.charAt(i), this.fontAt(i));
             }
         }
-        
-        return newOne
+
+        return newOne;
     }
 
     append(other: FormattedText) {
@@ -200,7 +205,7 @@ export class FormattedText {
      * from a plain-text string to formattedtext.
      */
     static newFromUnformatted(s: string) {
-        FormattedText.throwIfContainsControlCharacters(s)
+        FormattedText.throwIfContainsControlCharacters(s);
         s = FormattedText.filterAndConvertNewlines(s);
         return FormattedText.newFromSerialized(s);
     }
@@ -271,8 +276,8 @@ export class FormattedText {
                 currentFont = this.fontArray[i];
             }
 
-            let c = String.fromCharCode(this.charAt(i))
-            FormattedText.throwIfContainsControlCharacters(c)
+            let c = String.fromCharCode(this.charAt(i));
+            FormattedText.throwIfContainsControlCharacters(c);
             s += c;
         }
 
@@ -320,7 +325,7 @@ export class FormattedText {
     toUnformatted() {
         let ret = this.charArray.map(c => String.fromCharCode(c)).join('');
         assertEq(this.len(), ret.length, '3Y|');
-        FormattedText.throwIfContainsControlCharacters(ret)
+        FormattedText.throwIfContainsControlCharacters(ret);
         return ret;
     }
 
@@ -332,14 +337,17 @@ export class FormattedText {
             .slice(from, from + len)
             .map(c => String.fromCharCode(c))
             .join('');
-            FormattedText.throwIfContainsControlCharacters(ret)
-            return ret;
+        FormattedText.throwIfContainsControlCharacters(ret);
+        return ret;
     }
 
     /**
      * we shouldn't allow special characters most places
      */
-    static throwIfContainsControlCharacters(s:string) {
-        checkThrow512(!s.includes(specialCharFontChange), "Text cannot include this character.")
+    static throwIfContainsControlCharacters(s: string) {
+        checkThrow512(
+            !s.includes(specialCharFontChange),
+            'Text cannot include this character.'
+        );
     }
 }

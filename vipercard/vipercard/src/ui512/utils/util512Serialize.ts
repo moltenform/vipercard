@@ -117,14 +117,17 @@ export const Util512SerializableHelpers = /* static class */ {
         let objNew = new ctor();
         let prop = '';
         for (prop in objNew) {
-            if (this.shouldSerializeProperty(objNew, prop) && !prop.startsWith('optional_')) {
-                let onGot = incoming[prop]
-                checkThrow512(onGot !== null && onGot !== undefined, '')
+            if (
+                this.shouldSerializeProperty(objNew, prop) &&
+                !prop.startsWith('optional_')
+            ) {
+                let onGot = incoming[prop];
+                checkThrow512(onGot !== null && onGot !== undefined, '');
             }
         }
 
-        incoming['__isUtil512Serializable'] = true
-        return incoming as T
+        incoming['__isUtil512Serializable'] = true;
+        return incoming as T;
     },
 
     /**

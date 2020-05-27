@@ -66,35 +66,48 @@ export const VpcRewritesGlobal = /* static class */ {
         keychar: 1,
         version: 1,
         systemversion: 1,
-        tool: 1,
+        tool: 1
     },
 
-    _shouldOmit(line: ChvITk[], i:number) {
+    _shouldOmit(line: ChvITk[], i: number) {
         /* omit "the" if it is in "hilite of the target" */
         /* see "Pseudo-functions that refer to objects" in internaldocs.md */
-        if ( i >= 2 &&
+        if (
+            i >= 2 &&
             (line[i - 2].tokenType === tks.tkAllUnaryPropertiesIfNotAlready ||
                 line[i - 2].tokenType === tks.tkUnaryVipercardProperties ||
                 line[i - 2].tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready) &&
             line[i - 1].tokenType === tks.tkOfOnly &&
             line[i].tokenType === tks._the &&
-            line[i + 1].tokenType === tks._target) {
-                return true
-            }
-        
+            line[i + 1].tokenType === tks._target
+        ) {
+            return true;
+        }
+
         /* transform 'the clickloc()' into 'the clickloc' */
-        if (i >= 2 && line[i].tokenType === tks.tkLParen && this.fixOldSyntaxFor[line[i-1].image] && line[i-2].tokenType === tks._the) {
-            return true
-        } else if (i >= 3 && line[i].tokenType === tks.tkRParen && line[i-1].tokenType === tks.tkLParen && this.fixOldSyntaxFor[line[i-2].image] && line[i-3].tokenType === tks._the) {
-            return true
+        if (
+            i >= 2 &&
+            line[i].tokenType === tks.tkLParen &&
+            this.fixOldSyntaxFor[line[i - 1].image] &&
+            line[i - 2].tokenType === tks._the
+        ) {
+            return true;
+        } else if (
+            i >= 3 &&
+            line[i].tokenType === tks.tkRParen &&
+            line[i - 1].tokenType === tks.tkLParen &&
+            this.fixOldSyntaxFor[line[i - 2].image] &&
+            line[i - 3].tokenType === tks._the
+        ) {
+            return true;
         }
 
         /* transform 'the first' into 'first'. saves a parse rule and helps us for parsing 'the selection' */
-        if (line[i].tokenType === tks._the && line[i+1] && line[i+1].tokenType===tks.tkOrdinalOrPosition) {
-            return true
+        if (line[i].tokenType === tks._the && line[i + 1] && line[i + 1].tokenType === tks.tkOrdinalOrPosition) {
+            return true;
         }
 
-        return false
+        return false;
     },
 
     /**
@@ -109,20 +122,25 @@ export const VpcRewritesGlobal = /* static class */ {
         let ret: ChvITk[] = [];
         for (let i = 0; i < line.length - 1; i++) {
             /* omit certain symbols */
-            if (! this._shouldOmit(line, i)
-            ) {
+            if (!this._shouldOmit(line, i)) {
                 ret.push(line[i]);
             }
 
             /* btn 4 -> cd btn 4 */
-            if ((line[i + 1].tokenType === tks.tkBtn || line[i + 1].tokenType === tks.tkFld ||
-                line[i + 1].tokenType === tks.tkBtnPlural || line[i + 1].tokenType === tks.tkFldPlural) &&
-                line[i].image !== 'choose') {
+            if (
+                (line[i + 1].tokenType === tks.tkBtn ||
+                    line[i + 1].tokenType === tks.tkFld ||
+                    line[i + 1].tokenType === tks.tkBtnPlural ||
+                    line[i + 1].tokenType === tks.tkFldPlural) &&
+                line[i].image !== 'choose'
+            ) {
                 if (line[i].tokenType !== tks.tkCard && line[i].tokenType !== tks.tkBg) {
                     if (compatMode) {
                         /* insert a missing 'bg' or 'cd' */
-                        let s = (line[i + 1].tokenType === tks.tkFld ||
-                            line[i + 1].tokenType === tks.tkFldPlural) ? 'bg' : 'cd';
+                        let s =
+                            line[i + 1].tokenType === tks.tkFld || /* bool */ line[i + 1].tokenType === tks.tkFldPlural
+                                ? 'bg'
+                                : 'cd';
                         let newTk = rw.tokenFromEnglishTerm(s, line[i]);
                         ret.push(newTk);
                     } else {
@@ -160,7 +178,7 @@ export const VpcRewritesGlobal = /* static class */ {
         end if
         put x + 1 into x
     end repeat`
-    
+
  * it will build code and automatically use the correct tokens.
  */
 export class VpcSuperRewrite {
@@ -175,7 +193,7 @@ export class VpcSuperRewrite {
         let lines = s.replace(/\r\n/g, '\n').split('\n');
         for (let line of lines) {
             if (line.trim() === '%ARGMANY%' && argMany) {
-                ret = ret.concat(argMany)
+                ret = ret.concat(argMany);
             } else {
                 let terms = line.split(/\s+/);
                 ret.push([]);
@@ -198,7 +216,7 @@ export class VpcSuperRewrite {
             let sn = term.replace(/%ARG/g, '').replace(/%/g, '');
             let n = Util512.parseIntStrict(sn);
             checkThrow(typeof n === 'number' && n >= 0 && n < args.length, 'TJ|internal error in template');
-            ret[ret.length - 1] = ret[ret.length - 1].concat(args[n])
+            ret[ret.length - 1] = ret[ret.length - 1].concat(args[n]);
         } else if (term === '%INTO%' || term === '%BEFORE%' || term === '%AFTER%') {
             arLast(ret).push(BuildFakeTokens.makeSyntaxMarker(realTokenAsBasis));
             let newToken = this.tokenFromEnglishTerm(term.replace(/%/g, '').toLowerCase(), realTokenAsBasis);

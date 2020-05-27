@@ -66,7 +66,7 @@ export const UI512Patterns = /* static class */ {
     },
 
     defaultPatternData() {
-        return UI512Patterns.patterns[148]
+        return UI512Patterns.patterns[148];
     },
 
     defaultPattern: 'pattern148',
@@ -74,7 +74,7 @@ export const UI512Patterns = /* static class */ {
     defaultFillColor: -1,
     c0: '0'.charCodeAt(0),
     c1: '1'.charCodeAt(0)
-}
+};
 
 /**
  * paint utilities that are more complex than drawing a line or shape.

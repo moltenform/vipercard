@@ -19,27 +19,35 @@
  * fully implemented in a higher level.
  */
 export abstract class VpcExecInternalDirectiveAbstract {
-    outside: OutsideWorldReadWrite
-    abstract setGlobal(key:string, v:VpcVal):void;
-    abstract getGlobal(key:string):VpcVal;
-    abstract getCardHistory():RememberHistory;
-    abstract goMakevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]):VpcElBase
-    abstract goRemovevelwithoutmsg(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]):void
-    abstract rawCreateOneVelUseCarefully(parentId: string, type: VpcElType, insertIndex:number, newId: O<string>):VpcElBase
-    abstract setSelection(vel:O<VpcElField>, start:number, end:number):void
+    outside: OutsideWorldReadWrite;
+    abstract setGlobal(key: string, v: VpcVal): void;
+    abstract getGlobal(key: string): VpcVal;
+    abstract getCardHistory(): RememberHistory;
+    abstract goMakevelwithoutmsg(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]): VpcElBase;
+    abstract goRemovevelwithoutmsg(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]): void;
+    abstract rawCreateOneVelUseCarefully(parentId: string, type: VpcElType, insertIndex: number, newId: O<string>): VpcElBase;
+    abstract setSelection(vel: O<VpcElField>, start: number, end: number): void;
 
     /**
      * run a directive
      */
-    go(directive:string, param:ValHolder<string>, msg:[string,string]) {
-        let cur = this.outside.Model().getCurrentCard()
-        Util512.callAsMethodOnClass("VpcExecInternalDirectiveAbstract", this, 'go' + Util512.capitalizeFirst(directive), [param, cur, msg], false, '', true /*okIfOnParentClass*/)
+    go(directive: string, param: ValHolder<string>, msg: [string, string]) {
+        let cur = this.outside.Model().getCurrentCard();
+        Util512.callAsMethodOnClass(
+            'VpcExecInternalDirectiveAbstract',
+            this,
+            'go' + Util512.capitalizeFirst(directive),
+            [param, cur, msg],
+            false,
+            '',
+            true /*okIfOnParentClass*/
+        );
     }
 
     /**
      * sends either the closeField or exitField message
      */
-    goCloseorexitfield(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
+    goCloseorexitfield(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]) {
         let seld = this.outside.FindSelectedTextBounds()[0];
         if (seld && seld.parentIdInternal === cur.idInternal) {
             let fieldsRecent = this.outside.GetFieldsRecentlyEdited().val;
@@ -47,8 +55,7 @@ export abstract class VpcExecInternalDirectiveAbstract {
                 msg[0] = 'closefield';
                 msg[1] = seld.idInternal;
                 fieldsRecent[seld.idInternal] = false;
-            }
-            else {
+            } else {
                 msg[0] = 'exitfield';
                 msg[1] = seld.idInternal;
             }
@@ -60,49 +67,47 @@ export abstract class VpcExecInternalDirectiveAbstract {
     /**
      * sets current card
      */
-    goGotocardsendnomessages(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
-        let nextCardId = VpcValS(param.val)
-            checkThrow(nextCardId && nextCardId.isItInteger(), 'Rj|');
-            this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
+    goGotocardsendnomessages(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]) {
+        let nextCardId = VpcValS(param.val);
+        checkThrow(nextCardId && nextCardId.isItInteger(), 'Rj|');
+        this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
     }
 
     /**
      * starts visual effect
      */
-    goViseffect(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
-        let nextCardId = VpcValS(param.val)
+    goViseffect(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]) {
+        let nextCardId = VpcValS(param.val);
         let spec = this.getGlobal('$currentVisEffect').readAsString().split('|');
-            this.setGlobal('$currentVisEffect', VpcValS(''))
-            if (spec.length >= 4) {
-                let parsed = VpcVisualEffectSpec.getVisualEffect(spec);
-                console.log(nextCardId, parsed);
-            }
+        this.setGlobal('$currentVisEffect', VpcValS(''));
+        if (spec.length >= 4) {
+            let parsed = VpcVisualEffectSpec.getVisualEffect(spec);
+            console.log(nextCardId, parsed);
+        }
     }
 
     /**
      * return focus to messagebox
      */
-    goReturntomsgbox(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
+    goReturntomsgbox(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]) {
         this.outside.WriteToReplMessageBox('', true);
     }
 
     /**
      * implement 'go back' and 'go forth'
      */
-    goApplybackforth(param:ValHolder<string>, cur:VpcElCard, msg:[string,string]) {
+    goApplybackforth(param: ValHolder<string>, cur: VpcElCard, msg: [string, string]) {
         let fallback = () => cur.idInternal;
-            let cardExists = (s: string) => {
-                let ref = new RequestedVelRef(VpcElType.Card);
-                ref.lookById = Util512.parseInt(s);
-                return bool(this.outside.ElementExists(ref));
-            };
-            
-            if (param.val === 'back') {
-                this.getCardHistory().walkPreviousWhileAcceptible(fallback, cardExists);
-            }
-            else {
-                this.getCardHistory().walkNextWhileAcceptible(fallback, cardExists);
-            }
+        let cardExists = (s: string) => {
+            let ref = new RequestedVelRef(VpcElType.Card);
+            ref.lookById = Util512.parseInt(s);
+            return bool(this.outside.ElementExists(ref));
+        };
+
+        if (param.val === 'back') {
+            this.getCardHistory().walkPreviousWhileAcceptible(fallback, cardExists);
+        } else {
+            this.getCardHistory().walkNextWhileAcceptible(fallback, cardExists);
+        }
     }
 }
-

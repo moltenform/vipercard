@@ -179,7 +179,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * might be either a compile error
      * or a runtime error
      */
-    defaultShowScriptErr(scriptErr: VpcErr, msgObj:O<VpcScriptMessage>) {
+    defaultShowScriptErr(scriptErr: VpcErr, msgObj: O<VpcScriptMessage>) {
         this.vci.getCodeExec().forceStopRunning();
 
         this.vci.undoableAction(() => {
@@ -200,13 +200,17 @@ export class VpcPresenter extends VpcPresenterInit {
                 }
 
                 return;
-            } else if (msgObj && (msgObj instanceof VpcScriptMessageMsgBoxCode) && velId === this.vci.getModel().productOpts.idInternal) {
+            } else if (
+                msgObj &&
+                msgObj instanceof VpcScriptMessageMsgBoxCode &&
+                velId === this.vci.getModel().productOpts.idInternal
+            ) {
                 /* e.g. you go Edit->Delete Card for the only card in a stack.
                 there will be a script error, but don't open the script editor,
                 just show a dialog -- it's not even really a script error.
                 Only do this for productopts errors in case someone has overridden domenu */
                 this.answerMsg(msg);
-                return
+                return;
             }
 
             /* move to the card where the error happened. */
@@ -577,7 +581,7 @@ export class VpcPresenter extends VpcPresenterInit {
         if (method !== undefined) {
             method.apply(this.menuActions, [this.vci]);
         } else {
-            this.menuActions.fallbackToSetToolOrSetFont(s)
+            this.menuActions.fallbackToSetToolOrSetFont(s);
         }
     }
 

@@ -63,8 +63,8 @@ export interface OutsideWorldRead {
     /**
      * get selected field and bounds
      */
-    FindSelectedTextBounds(): [O<VpcElField>, number, number]
-    
+    FindSelectedTextBounds(): [O<VpcElField>, number, number];
+
     /**
      * get the current tool, specify the 'real' tool or the 'simulated' tool chosen by a script
      */
@@ -103,7 +103,12 @@ export interface OutsideWorldRead {
     /**
      * get information about mouse and keyboard state
      */
-    GetMouseAndKeyState(mouseCoords:[number, number], trackClick:[number, number, number], buttons:ValHolder<boolean[]>, mods:ValHolder<ModifierKeys>):void
+    GetMouseAndKeyState(
+        mouseCoords: [number, number],
+        trackClick: [number, number, number],
+        buttons: ValHolder<boolean[]>,
+        mods: ValHolder<ModifierKeys>
+    ): void;
 }
 
 /**

@@ -153,7 +153,7 @@ end if
 
     /* runs the test */
     async goImpl() {
-        h.setScript(h.ids.stack, this.helperCode)
+        h.setScript(h.ids.stack, this.helperCode);
         await this.testHelpers();
 
         /* it's ok to stop and re-start code execution each time */
@@ -191,7 +191,7 @@ end if
         }
 
         console.log(`ran verification for ${countTests} tests. ${failures} failures.`);
-        h.setScript(h.ids.stack, '')
+        h.setScript(h.ids.stack, '');
     }
 
     /* not for vipercard, but for the original project

@@ -437,30 +437,30 @@ export class RequestedChunk extends VpcIntermedValBase {
      * ->
      * RequestedChunk(char,3,7), "cd fld 4"
      */
-    static parseFromString(s:string):[O<RequestedChunk>, string] {
-        let words = s.split(' ')
-        let grn = findStrToEnum<VpcGranularity>(VpcGranularity, words[0])
-        let ret = new RequestedChunk(-1)
+    static parseFromString(s: string): [O<RequestedChunk>, string] {
+        let words = s.split(' ');
+        let grn = findStrToEnum<VpcGranularity>(VpcGranularity, words[0]);
+        let ret = new RequestedChunk(-1);
         if (grn) {
-            ret.granularity = grn
-            let b1 = Util512.parseInt(words[1])
+            ret.granularity = grn;
+            let b1 = Util512.parseInt(words[1]);
             if (b1 !== undefined) {
-                ret.first = b1
-                if (words[2]==='of') {
-                    return [ret, words.slice(3).join(' ')]
+                ret.first = b1;
+                if (words[2] === 'of') {
+                    return [ret, words.slice(3).join(' ')];
                 } else if (words[2] === 'to') {
-                    let b2 = Util512.parseInt(words[3])
+                    let b2 = Util512.parseInt(words[3]);
                     if (b2 !== undefined) {
-                        ret.last = b2
+                        ret.last = b2;
                         if (words[4] === 'of') {
-                            return [ret, words.slice(5).join(' ')]
+                            return [ret, words.slice(5).join(' ')];
                         }
                     }
                 }
             }
         }
 
-        return [undefined, s]
+        return [undefined, s];
     }
 }
 

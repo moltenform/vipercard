@@ -36,12 +36,12 @@ export class ExecuteStatement {
     outside: OutsideWorldReadWrite;
     pendingOps: VpcPendingAsyncOps;
     h = new VpcScriptExecuteStatementHelpers();
-    directiveImpl: VpcExecInternalDirectiveAbstract
+    directiveImpl: VpcExecInternalDirectiveAbstract;
 
     /**
      * execute a single line of code
      */
-    go(line: VpcCodeLine, visitResult: VpcIntermedValBase, blocked: ValHolder<AsyncCodeOpState>, msg:VpcScriptMessage) {
+    go(line: VpcCodeLine, visitResult: VpcIntermedValBase, blocked: ValHolder<AsyncCodeOpState>, msg: VpcScriptMessage) {
         checkThrowEq(VpcLineCategory.Statement, line.ctg, '7h|not a statement');
         let firstToken = line.firstToken;
         let method = 'go' + Util512.capitalizeFirst(firstToken.image);
@@ -142,7 +142,7 @@ export class ExecuteStatement {
      * click at {x}, {y}
      * Use the click command for programmatically drawing pictures.
      */
-    goClick(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>, msg:VpcScriptMessage) {
+    goClick(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>, msg: VpcScriptMessage) {
         return this.h.clickOrDrag(line, vals, 'at', msg);
     }
     /**
@@ -195,7 +195,7 @@ export class ExecuteStatement {
      * drag from {x1}, {y1} to {x2}, {y2}
      * Use the drag command for programmatically drawing pictures.
      */
-    goDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>, msg:VpcScriptMessage) {
+    goDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>, msg: VpcScriptMessage) {
         return this.h.clickOrDrag(line, vals, 'from', msg);
     }
     /**
@@ -243,18 +243,18 @@ export class ExecuteStatement {
      */
     goMark(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
-        let shouldMark = !bool(vals.vals[tkstr._not]?.length)
+        let shouldMark = !bool(vals.vals[tkstr._not]?.length);
         if (params[0] === 'all') {
-            for (let bg of this.outside.Model().stack.bgs){
+            for (let bg of this.outside.Model().stack.bgs) {
                 for (let cd of bg.cards) {
-                    cd.setOnVel('marked', shouldMark, this.outside.Model())
+                    cd.setOnVel('marked', shouldMark, this.outside.Model());
                 }
             }
         } else {
-            let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), "no object?");
-            let vel = ensureDefined(this.outside.ResolveVelRef(ref), "could not find card")
-            checkThrow(vel.getType() === VpcElType.Card, "you can only mark a card")
-            vel.setOnVel('marked', shouldMark, this.outside.Model())
+            let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), 'no object?');
+            let vel = ensureDefined(this.outside.ResolveVelRef(ref), 'could not find card');
+            checkThrow(vel.getType() === VpcElType.Card, 'you can only mark a card');
+            vel.setOnVel('marked', shouldMark, this.outside.Model());
         }
     }
     /**
@@ -338,25 +338,25 @@ export class ExecuteStatement {
     goSelect(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
         let params = this.h.getLiteralParams(vals);
         if (params[0] === 'empty') {
-            this.directiveImpl.setSelection(undefined, 0, 0)
+            this.directiveImpl.setSelection(undefined, 0, 0);
         } else {
-            let chunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk)
-            let velRef = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), '')  
-            let resolved = this.outside.ResolveVelRef(velRef)
-            checkThrow(resolved instanceof VpcElField, "expected a field")
+            let chunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk);
+            let velRef = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), '');
+            let resolved = this.outside.ResolveVelRef(velRef);
+            checkThrow(resolved instanceof VpcElField, 'expected a field');
             if (resolved.parentIdInternal !== this.outside.GetCurrentCardId()) {
                 /* trying to select something on another card is a no-op */
             } else {
-                let cont = new RWContainerField(resolved, this.outside.Model())
-                let bounds = ChunkResolution.applyRead(cont, chunk, this.outside.GetItemDelim())
+                let cont = new RWContainerField(resolved, this.outside.Model());
+                let bounds = ChunkResolution.applyRead(cont, chunk, this.outside.GetItemDelim());
                 if (bounds) {
                     if (params[0] === 'before') {
-                        bounds.endPos = bounds.startPos
+                        bounds.endPos = bounds.startPos;
                     } else if (params[0] === 'after') {
-                        bounds.startPos = bounds.endPos
+                        bounds.startPos = bounds.endPos;
                     }
 
-                    this.directiveImpl.setSelection(resolved, bounds.startPos, bounds.endPos)
+                    this.directiveImpl.setSelection(resolved, bounds.startPos, bounds.endPos);
                 }
             }
         }
@@ -365,8 +365,8 @@ export class ExecuteStatement {
      * set the {property} of {button|field} to {value}
      */
     goSet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
-        let velRef = this.h.findChildAndCast(RequestedVelRef, vals, "velRef");
-        let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, "chunk");
+        let velRef = this.h.findChildAndCast(RequestedVelRef, vals, 'velRef');
+        let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, 'chunk');
         let tk = ensureDefined(vals.vals[tkstr.RuleHCouldBeAPropertyToSet], 'R(|')[0];
         let propName = (tk as ChvITk).image;
 

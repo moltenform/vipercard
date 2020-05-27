@@ -100,7 +100,7 @@ export class VpcElButton extends VpcElSizable {
         setters['textstyle'] = [
             PrpTyp.Str,
             (me: VpcElButton, s: string, h: VpcHandleLinkedVels) => {
-                let next = UI512ComplexFontChanges.setGeneralTextStyleAdvancedInt(me.getN('textstyle'), s)
+                let next = UI512ComplexFontChanges.setGeneralTextStyleAdvancedInt(me.getN('textstyle'), s);
                 me.setOnVel('textstyle', next, h);
             }
         ];

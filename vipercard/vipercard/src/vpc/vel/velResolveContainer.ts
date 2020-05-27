@@ -79,7 +79,6 @@ export class RWContainerVar implements WritableContainer {
     }
 }
 
-
 /**
  * reading/writing content to a field
  */
@@ -128,7 +127,7 @@ export class RWContainerField implements WritableContainer {
  * reading/writing content to 'the selection'
  */
 export class RWContainerFldSelection implements WritableContainer {
-    constructor(protected fld: O<VpcElField>, protected h: VpcHandleLinkedVels, protected start:number, protected end:number) {}
+    constructor(protected fld: O<VpcElField>, protected h: VpcHandleLinkedVels, protected start: number, protected end: number) {}
     isDefined() {
         return true;
     }
@@ -141,29 +140,35 @@ export class RWContainerFldSelection implements WritableContainer {
         if (this.fld) {
             return this.fld.getFmTxt().toUnformatted().substring(this.start, this.end);
         } else {
-            return ""
+            return '';
         }
     }
 
     splice(insertion: number, lenToDelete: number, newstring: string) {
-        checkThrow(this.fld, "There isn't a selection")
+        checkThrow(this.fld, "There isn't a selection");
         let txt = this.fld.getFmTxt();
-        if (insertion === 0 && lenToDelete >= txt.len() && this.start === 0 && this.end >= txt.len()-1) {
+        if (insertion === 0 && lenToDelete >= txt.len() && this.start === 0 && this.end >= txt.len() - 1) {
             /* follow emulator, there is different behavior
             (lose formatting) when replacing all text */
             this.fld.setProp('alltext', VpcValS(newstring), this.h);
         } else {
-            let slice = txt.slice(this.start, this.end)
-            let trueInsert = insertion + this.start
+            let slice = txt.slice(this.start, this.end);
+            let trueInsert = insertion + this.start;
             let font = trueInsert >= 0 && trueInsert < txt.len() ? txt.fontAt(trueInsert) : this.fld.getDefaultFontAsUi512();
             let newSliceContents = FormattedText.byInsertion(slice, insertion, lenToDelete, newstring, font);
-            let newTxt = FormattedText.byInsertion(txt, this.start, this.end-this.start, newSliceContents.toUnformatted(), font)
+            let newTxt = FormattedText.byInsertion(
+                txt,
+                this.start,
+                this.end - this.start,
+                newSliceContents.toUnformatted(),
+                font
+            );
             this.fld.setFmTxt(newTxt, this.h);
         }
     }
 
     setAll(newText: string) {
-        this.splice(0, this.len(), newText)
+        this.splice(0, this.len(), newText);
     }
 
     replaceAll(search: string, replaceWith: string) {

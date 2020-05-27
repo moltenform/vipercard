@@ -15,12 +15,12 @@
 
 /**
  * test rewrites/preparse
- * 
- * remember to set 'compatibility mode', which can affect rewriting 
+ *
+ * remember to set 'compatibility mode', which can affect rewriting
  */
 let t = new SimpleUtil512TestCollection('testCollectionScriptRewrites');
 export let testCollectionScriptRewrites = t;
-let hardCodeCompatMode = true
+let hardCodeCompatMode = true;
 
 interface IVpcCacheParsedASTForTest {
     compareRewrittenCode(script: string, expected: string): void;
@@ -109,7 +109,7 @@ t.test('rewrites-make lowercase', () => {
 });
 t.test('rewrites-cd and bg part', () => {
     t.say(/*——————————*/ 'by default, throw an error if omitted');
-    hardCodeCompatMode = false
+    hardCodeCompatMode = false;
     let inp = `put the number of btns into x`;
     let expected = `ERR:mode`;
     h.compareRewrittenCode(inp, expected);
@@ -119,7 +119,7 @@ t.test('rewrites-cd and bg part', () => {
     inp = `put fld 2 into x`;
     expected = `ERR:mode`;
     h.compareRewrittenCode(inp, expected);
-    hardCodeCompatMode = true
+    hardCodeCompatMode = true;
     t.say(/*——————————*/ 'number of is also affected');
     inp = `put the number of btns into x`;
     expected = `put~the~number~of~cd~btns~^^~into~^^~x~`;

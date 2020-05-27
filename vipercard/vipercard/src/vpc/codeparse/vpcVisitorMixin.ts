@@ -38,11 +38,11 @@ type Constructor<T> = new (...args: any[]) => T;
 /**
  * create a mixin adding more methods to the visitor
  * this class contains the custom visitor logic not created by genparse.py
- * 
- * 
+ *
+ *
  * places where we don't use the normal visit() mechanism and traverse ourself (look for .children):
- * RuleHUnaryPropertyGet looks ahead for a ObjectInterpretedFromString to get 'char 2 of' phrases 
- * 
+ * RuleHUnaryPropertyGet looks ahead for a ObjectInterpretedFromString to get 'char 2 of' phrases
+ *
  */
 export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterface>>(Base: T) {
     return class extends Base {
@@ -88,11 +88,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
             ref.partIsBg = isBg;
             ref.partIsCd = !isBg;
-            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx);
             if (ordOrPos && ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 checkThrow(false, "SH|you can't say 'the first cd btn 1'");
             } else if (ordOrPos) {
-                ref.lookByRelative = ordOrPos
+                ref.lookByRelative = ordOrPos;
             } else if (ctx._id && ctx._id[0]) {
                 ref.lookById = this.Helper$ReadVpcVal(
                     ctx,
@@ -118,7 +118,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ref.cardLookAtMarkedOnly = true;
             }
 
-            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx);
             if (ctx._recent && ctx._recent[0]) {
                 ref.cardIsRecentHistory = 'recent';
             } else if (ctx._back && ctx._back[0]) {
@@ -150,13 +150,13 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
             }
 
-            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx);
             if (ctx._id && ctx._id[0]) {
                 ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.RuleObjectBg.name).readAsStrictNumeric(
                     this.tmpArr
                 );
             } else if (ordOrPos) {
-                ret.lookByRelative = ordOrPos
+                ret.lookByRelative = ordOrPos;
             } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
@@ -170,7 +170,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectStack(ctx: VisitingContext): RequestedVelRef {
             let ref = new RequestedVelRef(VpcElType.Stack);
-            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx);
             if (ctx._id && ctx._id[0]) {
                 ref.lookById = this.Helper$ReadVpcVal(
                     ctx,
@@ -224,22 +224,22 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 val = VpcValS(im.slice(1, -1));
             } else if (ctx.tkAllUnaryPropertiesIfNotAlready && ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
                 /* get the short id of the owner of cd btn 1 */
-                checkThrow(ctx.RuleObject && ctx.RuleObject[0], "RuleObject is undefined")
+                checkThrow(ctx.RuleObject && ctx.RuleObject[0], 'RuleObject is undefined');
                 let velRef = this.visit(ctx.RuleObject[0]);
                 checkThrow(velRef instanceof RequestedVelRef, `99|internal error, expected RuleObject to be a RequestedElRef`);
                 let adjective =
-                ctx.tkAdjective && ctx.tkAdjective[0]
-                    ? getStrToEnum<PropAdjective>(PropAdjective, 'PropAdjective', ctx.tkAdjective[0].image)
-                    : PropAdjective.Empty;
-                let propName = ctx.tkAllUnaryPropertiesIfNotAlready[0].image
+                    ctx.tkAdjective && ctx.tkAdjective[0]
+                        ? getStrToEnum<PropAdjective>(PropAdjective, 'PropAdjective', ctx.tkAdjective[0].image)
+                        : PropAdjective.Empty;
+                let propName = ctx.tkAllUnaryPropertiesIfNotAlready[0].image;
                 val = this.outside.GetProp(velRef, propName, adjective, undefined);
             } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
-                val = this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0])
+                val = this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]);
             } else {
                 checkThrow(false, 'SB|no branch');
             }
 
-            return val
+            return val;
         }
 
         RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef {
@@ -249,7 +249,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ref.isReferenceToTarget = true;
                 return ref;
             } else {
-                let val = this.Help$ObjectInterpretedFromString(ctx)
+                let val = this.Help$ObjectInterpretedFromString(ctx);
                 checkThrow(val instanceof VpcVal, 'SA|');
                 return VelRenderId.parseFromString(val.readAsString());
             }
@@ -267,16 +267,14 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             --- you have to use the presence of <sub2> or <sub3> to know which branch was taken. ---
             the rule results are pushed onto the array just from left to right as they come, they have no position information.
         */
-       protected helpFind$OrdinalOrPos(ctx: VisitingContext):O<OrdinalOrPosition> {
-            if (ctx.tkOrdinalOrPosition && ctx.tkOrdinalOrPosition[0])
-            {
+        protected helpFind$OrdinalOrPos(ctx: VisitingContext): O<OrdinalOrPosition> {
+            if (ctx.tkOrdinalOrPosition && ctx.tkOrdinalOrPosition[0]) {
                 let image = ctx.tkOrdinalOrPosition[0].image;
                 return getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, this.helpFind$OrdinalOrPos.name, image);
             } else {
-                return undefined
+                return undefined;
             }
         }
-        
 
         RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef {
             let ret = new RequestedContainerRef();
@@ -288,7 +286,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.vel = new RequestedVelRef(VpcElType.Unknown);
                 ret.vel.isReferenceToTarget = true;
             } else if (ctx._selection && ctx._selection[0]) {
-                ret.isJustSelection = true
+                ret.isJustSelection = true;
             } else if (ctx.RuleObjectBtn && ctx.RuleObjectBtn[0]) {
                 checkThrow(
                     false,
@@ -351,9 +349,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let ret = new RequestedChunk(-1);
             checkThrow(ctx.tkChunkGranularity && ctx.tkChunkGranularity[0], 'S3|RuleHChunk');
             ret.granularity = getStrToEnum<VpcGranularity>(VpcGranularity, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
-            let ordOrPos = this.helpFind$OrdinalOrPos(ctx)
+            let ordOrPos = this.helpFind$OrdinalOrPos(ctx);
             if (ordOrPos) {
-                ret.ordinal = ordOrPos
+                ret.ordinal = ordOrPos;
             } else {
                 ret.first = this.visit(ctx.RuleHChunkBound[0]).readAsStrictInteger(this.tmpArr);
                 if (ctx.RuleHChunkBound[1]) {
@@ -451,7 +449,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 /* indicate only counting marked */
                 parentRef.cardLookAtMarkedOnly = true;
             }
-            
+
             return VpcValN(this.outside.CountElements(VpcElType.Card, parentRef));
         }
 
@@ -523,7 +521,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             checkThrow(!ctx.RuleWindow || !ctx.RuleWindow[0], "R_|don't yet support looking up property on window");
             checkThrow(!ctx.RuleMenuItem || !ctx.RuleMenuItem[0], "R^|don't yet support looking up property on menuitem");
             checkThrow(!ctx.RuleMenu || !ctx.RuleMenu[0], "R]|don't yet support looking up property on menu");
-            let [velRef, chunk]= this.Helper$PropertyMightChunk(propName, ctx);
+            let [velRef, chunk] = this.Helper$PropertyMightChunk(propName, ctx);
             checkThrow(velRef instanceof RequestedVelRef, `99|internal error, expected RuleObject to be a RequestedElRef`);
             return this.outside.GetProp(velRef, propName, adjective, chunk);
         }
@@ -538,12 +536,19 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 let got = this.Helper$fieldChunkProp(ctx);
                 velRef = got[0];
                 chunk = got[1];
-            }
-            else {
+            } else {
                 /* put "char 4 to 7 of cd fld id 123" into x; get the textfont of x */
-                if (propName.startsWith('text') && ctx.RuleObject && ctx.RuleObject[0] && ctx.RuleObject[0].children.RuleObjectInterpretedFromString && ctx.RuleObject[0].children.RuleObjectInterpretedFromString[0]) {
-                    let val = this.Help$ObjectInterpretedFromString(ctx.RuleObject[0].children.RuleObjectInterpretedFromString[0].children);
-                    checkThrow(val.readAsString(), "Empty string given. Perhaps there is no selection.");
+                if (
+                    propName.startsWith('text') &&
+                    ctx.RuleObject &&
+                    ctx.RuleObject[0] &&
+                    ctx.RuleObject[0].children.RuleObjectInterpretedFromString &&
+                    ctx.RuleObject[0].children.RuleObjectInterpretedFromString[0]
+                ) {
+                    let val = this.Help$ObjectInterpretedFromString(
+                        ctx.RuleObject[0].children.RuleObjectInterpretedFromString[0].children
+                    );
+                    checkThrow(val.readAsString(), 'Empty string given. Perhaps there is no selection.');
                     let got = RequestedChunk.parseFromString(val.readAsString());
                     if (got[0]) {
                         chunk = got[0];
@@ -661,21 +666,21 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         /**
          * customize, for setting
          */
-        RuleBuiltinCmdSet(ctx: VisitingContext) : IntermedMapOfIntermedVals {
-            let ret = new IntermedMapOfIntermedVals()
-            let propName = this.visit(ctx.RuleHCouldBeAPropertyToSet[0])
-            ret.vals[tkstr.RuleHCouldBeAPropertyToSet] = [propName]
-            ret.vals[tkstr.RuleAnyPropertyVal] = [this.visit(ctx.RuleAnyPropertyVal[0])]
-            let sPropName = (propName as ChvITk).image
+        RuleBuiltinCmdSet(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            let ret = new IntermedMapOfIntermedVals();
+            let propName = this.visit(ctx.RuleHCouldBeAPropertyToSet[0]);
+            ret.vals[tkstr.RuleHCouldBeAPropertyToSet] = [propName];
+            ret.vals[tkstr.RuleAnyPropertyVal] = [this.visit(ctx.RuleAnyPropertyVal[0])];
+            let sPropName = (propName as ChvITk).image;
             checkThrow(typeof sPropName === 'string', `9C|internal error, expected AnyPropertyName to be a string`);
-            let [velRef, chunk]= this.Helper$PropertyMightChunk(sPropName, ctx);
+            let [velRef, chunk] = this.Helper$PropertyMightChunk(sPropName, ctx);
             if (velRef) {
-                ret.vals["velRef"] = [velRef]
+                ret.vals['velRef'] = [velRef];
             }
             if (chunk) {
-                ret.vals["chunk"] = [chunk]
+                ret.vals['chunk'] = [chunk];
             }
-           return ret
+            return ret;
         }
     };
 }

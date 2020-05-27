@@ -6,7 +6,6 @@
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -130,7 +129,10 @@ export const ChunkResolution = /* static class */ {
         }
 
         /* it gets thrown off because it won't see the inserted text */
-        checkThrow(cont['start'] === undefined && cont['end'] === undefined, "we don't yet support 'add 3 to item 1 of the selection' _RWContainerFldSelection_")
+        checkThrow(
+            cont['start'] === undefined && cont['end'] === undefined,
+            "we don't yet support 'add 3 to item 1 of the selection' _RWContainerFldSelection_"
+        );
 
         /* haven't tested this, note that newline is sometimes a special char even for items */
         checkThrow(itemDel !== '\n', "we haven't tested with an itemdel of newline");

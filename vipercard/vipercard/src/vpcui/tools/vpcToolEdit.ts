@@ -174,7 +174,12 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
         let selected = this.lyrPanels.selectedFldOrBtn();
         if (selected) {
             this.vci.setOption('selectedVelId', '');
-            this.vci.getCodeExec().directiveImpl.goRemovevelwithoutmsg(new ValHolder(selected.idInternal), this.vci.getModel().getCurrentCard(), ['', ''] )
+            this.vci
+                .getCodeExec()
+                .directiveImpl.goRemovevelwithoutmsg(new ValHolder(selected.idInternal), this.vci.getModel().getCurrentCard(), [
+                    '',
+                    ''
+                ]);
         }
     }
 }

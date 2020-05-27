@@ -1,9 +1,6 @@
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
-
 
 /**
  * some of ViperCard is implemented in ViperCard!

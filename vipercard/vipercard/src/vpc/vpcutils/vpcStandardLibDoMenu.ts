@@ -1,13 +1,11 @@
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * if code here needs special abilities, we'll call
  * internalvpcmessagesdirective, which can do anything.
- * 
+ *
  * in the same scope as vpcStandardLibScript and can call anything there.
  */
 export const VpcStandardLibDoMenu = /* static class */ {
@@ -147,7 +145,7 @@ on domenu_paintsetting key, pl, pb
         end if
     else if pl == "black lines" then
         -- DrawPatterns_clrBlack
-        set the linecolor to 0 
+        set the linecolor to 0
     else if pl == "white lines" then
         -- DrawPatterns_clrWhite
         set the linecolor to 1

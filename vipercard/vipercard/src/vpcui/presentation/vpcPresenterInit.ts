@@ -38,7 +38,6 @@
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -145,12 +144,12 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
 
         /* when a runtime option changes: */
         /* - set a flag in observeRuntimeOptChanges that we'll check during render */
-        this.vci.getCodeExec().directiveImpl = new VpcExecInternalDirectiveFull(this, this.vci)
-        this.vci.getCodeExec().directiveImpl.outside = this.vci.getOutside()
-        this.vci.getCodeExec().runStatements.directiveImpl = this.vci.getCodeExec().directiveImpl
+        this.vci.getCodeExec().directiveImpl = new VpcExecInternalDirectiveFull(this, this.vci);
+        this.vci.getCodeExec().directiveImpl.outside = this.vci.getOutside();
+        this.vci.getCodeExec().runStatements.directiveImpl = this.vci.getCodeExec().directiveImpl;
         this.vci.getCodeExec().cbOnScriptError = (scriptErr, msg) => this.defaultShowScriptErr(scriptErr, msg);
         this.vci.getCodeExec().cbCauseUIRedraw = () => this.lyrModelRender.uiRedrawNeeded();
-        this.vci.getCodeExec().cbSetRealTool = (tl:VpcTool) => this.vci.setTool(tl)
+        this.vci.getCodeExec().cbSetRealTool = (tl: VpcTool) => this.vci.setTool(tl);
         this.vci.getCodeExec().runStatements.cbAnswerMsg = (a, b, c, d, e) => this.answerMsg(a, b, c, d, e);
         this.vci.getCodeExec().runStatements.cbAskMsg = (a, b, c) => this.askMsg(a, b, c);
         this.vci.getCodeExec().runStatements.cbStopCodeRunning = () => {
@@ -310,4 +309,3 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
         window.onbeforeunload = () => {};
     }
 }
-

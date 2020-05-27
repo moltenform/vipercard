@@ -9,7 +9,7 @@ export const UI512DrawTextCharGrayed = /* static class */ {
     maxCharWidth: 64 as const,
     maxCharHeight: 64 as const,
     tempCanvas: undefined as O<CanvasWrapper>,
-    ensureTempCanvas():CanvasWrapper {
+    ensureTempCanvas(): CanvasWrapper {
         /* create the cached mem canvas if we don't have one */
         if (!this.tempCanvas) {
             this.tempCanvas = CanvasWrapper.createMemoryCanvas(
@@ -20,7 +20,7 @@ export const UI512DrawTextCharGrayed = /* static class */ {
 
         /* erase any previous contents */
         this.tempCanvas.clear();
-        return this.tempCanvas
+        return this.tempCanvas;
     },
     go(
         img: DrawableImage,
@@ -36,7 +36,7 @@ export const UI512DrawTextCharGrayed = /* static class */ {
         boxW: number,
         boxH: number
     ) {
-        let cnvs = this.ensureTempCanvas()
+        let cnvs = this.ensureTempCanvas();
         /* draw font character onto the temp canvas */
         cnvs.drawFromImage(
             img,

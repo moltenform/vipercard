@@ -73,7 +73,7 @@ export class MouseMoveEventDetails extends EventDetails {
     isMouseMoveEventDetails = true;
     elPrev: O<UI512Element>;
     elNext: O<UI512Element>;
-    mods: ModifierKeys
+    mods: ModifierKeys;
     constructor(
         public readonly timestamp: number,
         public mouseX: number,

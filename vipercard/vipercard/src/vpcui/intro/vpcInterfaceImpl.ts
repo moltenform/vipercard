@@ -139,7 +139,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     /**
      * perform a changeSeenCreationDeletion
      */
-    doChangeSeenCreationDeletion(action:UndoableActionCreateVel):void {
+    doChangeSeenCreationDeletion(action: UndoableActionCreateVel): void {
         this.vcstate.undoManager.changeSeenCreationDeletion(action);
     }
 

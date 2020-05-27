@@ -774,22 +774,22 @@ export class VpcExecFrameStack {
         checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1].tokenType, 'Rm|');
         let directive = curLine.excerptToParse[1].image.replace(/"/g, '').toLowerCase();
         let variable: O<string>;
-        let variableSend = new ValHolder('')
+        let variableSend = new ValHolder('');
         if (curLine.excerptToParse.length > 2) {
             checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2].tokenType, 'Rl|');
             variable = curLine.excerptToParse[2].image;
-            variableSend.val = curFrame.locals.get(ensureDefined(variable, 'Ri|')).readAsString()
+            variableSend.val = curFrame.locals.get(ensureDefined(variable, 'Ri|')).readAsString();
         }
 
-        let sendMsgParam:[string, string] = ['', '']
-        let valBefore = variableSend.val
-        this.directiveImpl.go(directive, variableSend, sendMsgParam)
+        let sendMsgParam: [string, string] = ['', ''];
+        let valBefore = variableSend.val;
+        this.directiveImpl.go(directive, variableSend, sendMsgParam);
         if (valBefore !== variableSend.val) {
-            curFrame.locals.set(ensureDefined(variable, 'Ri|'), VpcValS(variableSend.val))
+            curFrame.locals.set(ensureDefined(variable, 'Ri|'), VpcValS(variableSend.val));
         }
 
-        let sendMsg = sendMsgParam[0]
-        let sendMsgTarget = sendMsgParam[1]
+        let sendMsg = sendMsgParam[0];
+        let sendMsgTarget = sendMsgParam[1];
         if (slength(sendMsg)) {
             let theMsg = getStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, this.visitIsInternalvpcmessagesdirective.name, sendMsg);
             let found = this.getHandlerUpwardsOrThrow(

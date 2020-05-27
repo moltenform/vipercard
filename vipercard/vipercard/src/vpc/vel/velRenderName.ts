@@ -248,7 +248,7 @@ export class VelRenderId {
      */
     static parseFromString(s: string) {
         s = s.trim();
-        checkThrow(s, "Cannot parse from string. No such object or selection.")
+        checkThrow(s, 'Cannot parse from string. No such object or selection.');
 
         /* remove of this stack, of this bg */
         let sRemove = ' of this stack';
@@ -367,7 +367,7 @@ export class VelGetNumberProperty {
         if (vel instanceof VpcElStack) {
             /* emulator throws an error,
             but since we support 'stack 1' we may as well do this. */
-            return 1
+            return 1;
         } else if (vel instanceof VpcElProductOpts) {
             checkThrow(false, 'Tx|This type of object does not have a number.');
         } else {

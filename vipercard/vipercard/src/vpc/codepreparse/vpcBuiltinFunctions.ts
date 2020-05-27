@@ -162,13 +162,7 @@ export class VpcBuiltinFunctions {
 
             let [frameMsg, frameParams] = this.readoutside.GetFrameInfo();
             let method = 'call' + Util512.capitalizeFirst(name);
-            let ret = Util512.callAsMethodOnClass(
-                VpcBuiltinFunctions.name,
-                this,
-                method,
-                [args, frameMsg, frameParams],
-                false
-            )
+            let ret = Util512.callAsMethodOnClass(VpcBuiltinFunctions.name, this, method, [args, frameMsg, frameParams], false);
 
             assertTrue(ret instanceof VpcVal, '5l|did not return a vpcval');
             return ret;
@@ -420,10 +414,10 @@ export class VpcBuiltinFunctions {
         key is pressed.
      */
     callCmdkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let buttons = new ValHolder([false])
-        let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState([0,0], [0,0,0], buttons, mods)
-        return VpcValS((mods.val & ModifierKeys.Cmd)!==0 ? 'down' : 'up')
+        let buttons = new ValHolder([false]);
+        let mods = new ValHolder(ModifierKeys.None);
+        this.readoutside.GetMouseAndKeyState([0, 0], [0, 0, 0], buttons, mods);
+        return VpcValS((mods.val & ModifierKeys.Cmd) !== 0 ? 'down' : 'up');
     }
 
     /**
@@ -431,10 +425,10 @@ export class VpcBuiltinFunctions {
         key is pressed.
      */
     callOptionkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let buttons = new ValHolder([false])
-        let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState([0,0], [0,0,0], buttons, mods)
-        return VpcValS((mods.val & ModifierKeys.Opt)!==0 ? 'down' : 'up')
+        let buttons = new ValHolder([false]);
+        let mods = new ValHolder(ModifierKeys.None);
+        this.readoutside.GetMouseAndKeyState([0, 0], [0, 0, 0], buttons, mods);
+        return VpcValS((mods.val & ModifierKeys.Opt) !== 0 ? 'down' : 'up');
     }
 
     /**
@@ -442,10 +436,10 @@ export class VpcBuiltinFunctions {
         key is pressed.
      */
     callShiftkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let buttons = new ValHolder([false])
-        let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState([0,0], [0,0,0], buttons, mods)
-        return VpcValS((mods.val & ModifierKeys.Shift)!==0 ? 'down' : 'up')
+        let buttons = new ValHolder([false]);
+        let mods = new ValHolder(ModifierKeys.None);
+        this.readoutside.GetMouseAndKeyState([0, 0], [0, 0, 0], buttons, mods);
+        return VpcValS((mods.val & ModifierKeys.Shift) !== 0 ? 'down' : 'up');
     }
 
     /**
@@ -506,28 +500,28 @@ export class VpcBuiltinFunctions {
      * Is the mouse button currently down.
      */
     callMouse(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let buttons = new ValHolder([false])
-        let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState([0,0], [0,0,0], buttons, mods)
-        let isDown = buttons.val && buttons.val[0]
-        return VpcValS(isDown ? 'down' : 'up')
+        let buttons = new ValHolder([false]);
+        let mods = new ValHolder(ModifierKeys.None);
+        this.readoutside.GetMouseAndKeyState([0, 0], [0, 0, 0], buttons, mods);
+        let isDown = buttons.val && buttons.val[0];
+        return VpcValS(isDown ? 'down' : 'up');
     }
 
     /**
      * Was the mouse clicked?
      */
     callMouseclick(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let clicked:[number, number, number] = [0,0,0]
-        let buttons = new ValHolder([false])
-        let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState([0,0], clicked, buttons, mods)
-        let ret = false
+        let clicked: [number, number, number] = [0, 0, 0];
+        let buttons = new ValHolder([false]);
+        let mods = new ValHolder(ModifierKeys.None);
+        this.readoutside.GetMouseAndKeyState([0, 0], clicked, buttons, mods);
+        let ret = false;
         if (clicked[2] !== frmMsg.lastSeenClickId) {
-            ret = true
-            frmMsg.clickLoc[0] = clicked[0]
-            frmMsg.clickLoc[1] = clicked[1]    
+            ret = true;
+            frmMsg.clickLoc[0] = clicked[0];
+            frmMsg.clickLoc[1] = clicked[1];
             /* reset the mouseclick so subsequent calls return false */
-            frmMsg.lastSeenClickId = clicked[2]
+            frmMsg.lastSeenClickId = clicked[2];
         }
 
         return VpcValBool(ret);
@@ -537,10 +531,10 @@ export class VpcBuiltinFunctions {
      * The x coordinate of mouse location.
      */
     callMouseh(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let mouseCoords:[number, number] = [0,0]
-        let buttons = new ValHolder([false])
-        let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState(mouseCoords, [0,0,0], buttons, mods)
+        let mouseCoords: [number, number] = [0, 0];
+        let buttons = new ValHolder([false]);
+        let mods = new ValHolder(ModifierKeys.None);
+        this.readoutside.GetMouseAndKeyState(mouseCoords, [0, 0, 0], buttons, mods);
         return VpcValN(mouseCoords[0]);
     }
 
@@ -548,10 +542,10 @@ export class VpcBuiltinFunctions {
      * The y coordinate of mouse location.
      */
     callMousev(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let mouseCoords:[number, number] = [0,0]
-        let buttons = new ValHolder([false])
-        let mods = new ValHolder(ModifierKeys.None)
-        this.readoutside.GetMouseAndKeyState(mouseCoords, [0,0,0], buttons, mods)
+        let mouseCoords: [number, number] = [0, 0];
+        let buttons = new ValHolder([false]);
+        let mods = new ValHolder(ModifierKeys.None);
+        this.readoutside.GetMouseAndKeyState(mouseCoords, [0, 0, 0], buttons, mods);
         return VpcValN(mouseCoords[1]);
     }
 
@@ -559,8 +553,8 @@ export class VpcBuiltinFunctions {
      * The coordinates of mouse location.
      */
     callMouseloc(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let h = this.callMouseh(args, frmMsg, frmParams)
-        let v = this.callMousev(args, frmMsg, frmParams)
+        let h = this.callMouseh(args, frmMsg, frmParams);
+        let v = this.callMousev(args, frmMsg, frmParams);
         return VpcValS(`${h.readAsString()},${v.readAsString()}`);
     }
 
@@ -630,20 +624,20 @@ export class VpcBuiltinFunctions {
      * The value of the current selected text.
      */
     callSelectedtext(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        let ref = new RequestedContainerRef()
-        ref.isJustSelection = true
-        let resolved = this.readoutside.ResolveContainerReadable(ref)
-        return VpcValS(resolved.getRawString())
+        let ref = new RequestedContainerRef();
+        ref.isJustSelection = true;
+        let resolved = this.readoutside.ResolveContainerReadable(ref);
+        return VpcValS(resolved.getRawString());
     }
 
     /**
      * Are we in compatibility mode
      */
     protected getCompatMode() {
-        let ref = new RequestedVelRef(VpcElType.Stack)
-        ref.lookByRelative = OrdinalOrPosition.This
-        let read = this.readoutside.GetProp(ref, 'compatibilitymode', PropAdjective.Empty, undefined)
-        return read.readAsStrictBoolean()
+        let ref = new RequestedVelRef(VpcElType.Stack);
+        ref.lookByRelative = OrdinalOrPosition.This;
+        let read = this.readoutside.GetProp(ref, 'compatibilitymode', PropAdjective.Empty, undefined);
+        return read.readAsStrictBoolean();
     }
 
     /**
@@ -655,12 +649,12 @@ export class VpcBuiltinFunctions {
         if (selInfo && selInfo[0]) {
             let start = selInfo[1];
             let lines = new UI512Lines(selInfo[0].getFmTxt());
-            let whichLine = this.toOneBased(lines.indexToLineNumber(start))
+            let whichLine = this.toOneBased(lines.indexToLineNumber(start));
             if (this.getCompatMode()) {
-                let s = `line ${whichLine} of ${this.renderVelName(selInfo[0].idInternal)}`
-                return VpcValS(s)
+                let s = `line ${whichLine} of ${this.renderVelName(selInfo[0].idInternal)}`;
+                return VpcValS(s);
             } else {
-                return VpcValN(whichLine)
+                return VpcValN(whichLine);
             }
         } else {
             return VpcVal.Empty;
@@ -683,9 +677,9 @@ export class VpcBuiltinFunctions {
      */
     callObjectbyid(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let ref = new RequestedVelRef(VpcElType.Unknown);
-        ref.lookById = args[0].readAsStrictInteger()
-        ref.partIsCdOrBg = true
-        let s = this.readoutside.ElementExists(ref)
+        ref.lookById = args[0].readAsStrictInteger();
+        ref.partIsCdOrBg = true;
+        let s = this.readoutside.ElementExists(ref);
         return VpcValS(s ?? '');
     }
 
@@ -695,24 +689,24 @@ export class VpcBuiltinFunctions {
      * if non-compat mode, "card field id 234" or "bg field id 345 of cd id 567"
      * (i.e. non-compat mode can be parsed as string and points to the correct field.)
      */
-    protected renderVelName(idInternal: string):string {
+    protected renderVelName(idInternal: string): string {
         let ref = new RequestedVelRef(VpcElType.Unknown);
-        ref.partIsCdOrBg = true
-        ref.lookById = Util512.parseInt(idInternal)
-        checkThrow(ref.lookById, "id not a number")
-        let sInfo = this.readoutside.ElementExists(ref)
-        checkThrow(sInfo, "not found")
+        ref.partIsCdOrBg = true;
+        ref.lookById = Util512.parseInt(idInternal);
+        checkThrow(ref.lookById, 'id not a number');
+        let sInfo = this.readoutside.ElementExists(ref);
+        checkThrow(sInfo, 'not found');
         if (this.getCompatMode()) {
-            let words = sInfo.split(' ')
-            let objType = words[0]
+            let words = sInfo.split(' ');
+            let objType = words[0];
             if (words[1] === 'button' || words[1] === 'field') {
-                objType += ' ' + words[1]
+                objType += ' ' + words[1];
             }
-            
-            let objNumber = this.readoutside.GetProp(ref, 'number', PropAdjective.Long, undefined)
-            return `${objType} ${objNumber.readAsString()}`
+
+            let objNumber = this.readoutside.GetProp(ref, 'number', PropAdjective.Long, undefined);
+            return `${objType} ${objNumber.readAsString()}`;
         } else {
-            return sInfo
+            return sInfo;
         }
     }
 

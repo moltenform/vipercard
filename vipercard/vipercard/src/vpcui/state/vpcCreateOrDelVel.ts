@@ -66,14 +66,20 @@ export abstract class UndoableActionCreateOrDelVel {
     /**
      * create a new vel on its own
      */
-    protected static rawMakeVelInstanceAndAddToModelMap<T extends VpcElBase>(vci: VpcStateInterface, velId: string, parentId: string, ctr: { new (...args: any[]): T }, ob?:ElementObserver): T {
+    protected static rawMakeVelInstanceAndAddToModelMap<T extends VpcElBase>(
+        vci: VpcStateInterface,
+        velId: string,
+        parentId: string,
+        ctr: { new (...args: any[]): T },
+        ob?: ElementObserver
+    ): T {
         vci.causeFullRedraw();
         let vel = new ctr(velId, parentId);
         checkThrow(vel instanceof VpcElBase, `8*|must be a VpcElBase`);
         if (ob) {
-            vel.observer = ob
+            vel.observer = ob;
         } else {
-            vel.observer = vci.getModel().productOpts.observer
+            vel.observer = vci.getModel().productOpts.observer;
         }
 
         vci.getModel().addIdToMapOfElements(vel);
@@ -98,12 +104,12 @@ export abstract class UndoableActionCreateOrDelVel {
      * create a vel, supports creating a bg vel
      */
     protected create(vci: VpcStateInterface) {
-        if (this.isBg && (this.type === VpcElType.Btn||this.type === VpcElType.Fld)) {
-            let userFacingId = vci.getModel().stack.getNextId(vci.getModel())
-            console.log(userFacingId)
-            checkThrow(false, "not yet implemented")
+        if (this.isBg && (this.type === VpcElType.Btn || this.type === VpcElType.Fld)) {
+            let userFacingId = vci.getModel().stack.getNextId(vci.getModel());
+            console.log(userFacingId);
+            checkThrow(false, 'not yet implemented');
         } else {
-            return this.createImpl(vci)
+            return this.createImpl(vci);
         }
     }
 
@@ -150,7 +156,7 @@ export abstract class UndoableActionCreateOrDelVel {
         assertWarnEq(vel.idInternal, ar[this.insertIndex].idInternal, '6b|');
         assertWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
         /* for safety, delete by id */
-        let index = ar.findIndex(v=>v.idInternal === this.velId)
+        let index = ar.findIndex(v => v.idInternal === this.velId);
         if (index !== -1) {
             ar.splice(index, 1);
             vci.getModel().removeIdFromMapOfElements(vel.idInternal);
@@ -163,12 +169,13 @@ export abstract class UndoableActionCreateOrDelVel {
     /**
      * ensure model is not empty, create a productOpts and stack object if either is missing.
      */
-    static ensureModelNotEmpty(vci: VpcStateInterface, createFirstCard: boolean, ob:ElementObserver) {
+    static ensureModelNotEmpty(vci: VpcStateInterface, createFirstCard: boolean, ob: ElementObserver) {
         vci.causeFullRedraw();
         let model = vci.getModel();
         if (!model.productOpts) {
             vci.doWithoutAbilityToUndo(() => {
-                model.productOpts = UndoableActionCreateOrDelVel.rawMakeVelInstanceAndAddToModelMap(vci,
+                model.productOpts = UndoableActionCreateOrDelVel.rawMakeVelInstanceAndAddToModelMap(
+                    vci,
                     VpcElStack.initProductOptsId,
                     '(VpcElProductOpts has no parent)',
                     VpcElProductOpts,
@@ -180,17 +187,23 @@ export abstract class UndoableActionCreateOrDelVel {
         if (!model.stack) {
             vci.doWithoutAbilityToUndo(() => {
                 /* create a new stack */
-                model.stack = UndoableActionCreateOrDelVel.rawMakeVelInstanceAndAddToModelMap(vci, VpcElStack.initStackId, model.productOpts.idInternal, VpcElStack, ob);
+                model.stack = UndoableActionCreateOrDelVel.rawMakeVelInstanceAndAddToModelMap(
+                    vci,
+                    VpcElStack.initStackId,
+                    model.productOpts.idInternal,
+                    VpcElStack,
+                    ob
+                );
                 model.stack.setOnVel('name', 'my stack', model);
                 if (createFirstCard) {
-                    let creator = vci.getCodeExec().directiveImpl
+                    let creator = vci.getCodeExec().directiveImpl;
                     let firstBg = creator.rawCreateOneVelUseCarefully(model.stack.idInternal, VpcElType.Bg, -1, undefined);
                     creator.rawCreateOneVelUseCarefully(firstBg.idInternal, VpcElType.Card, -1, undefined);
                 }
             });
         }
 
-        model.productOpts.observer = ob
-        model.stack.observer = ob
+        model.productOpts.observer = ob;
+        model.stack.observer = ob;
     }
 }

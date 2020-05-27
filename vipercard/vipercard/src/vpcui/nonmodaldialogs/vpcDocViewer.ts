@@ -31,8 +31,8 @@
 export class VpcNonModalDocViewer extends VpcNonModalBase {
     compositeType = 'VpcNonModalDocViewer';
     hasCloseBtn = true;
-    adjustedStartVidBtn = false
-    cbShowVids:O<()=>void>
+    adjustedStartVidBtn = false;
+    cbShowVids: O<() => void>;
     constructor(protected vci: VpcStateInterface, public type: DialogDocsType) {
         super('VpcNonModalDocViewer' + Math.random());
 
@@ -66,7 +66,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         /* prettier-ignore */
         ["events", "lngEvent Handlers", ["afterKeyDown", "afterKeyUp", "closeBackground", "closeCard", "closeField", "exitField", "idle", "mouseDoubleClick", "mouseDown", "mouseEnter", "mouseLeave", "mouseUp", "mouseWithin", "openBackground", "openCard", "openField", "openStack"]],
         /* prettier-ignore */
-        ["compatibility", "lngCompatibility", ["(Compatibility)", "abbrev id", "abbrev name", "arrowKey", "bottom", "botright", "diskSpace", "environment", "errorDialog", "exp1", "freesize", "get", "heapSpace", "ln1", "long name", "mark", "marked", "on errorDialog", "right", "pop", "push", "size", "stacksInUse", "stackSpace", "suspended", "systemVersion", "trappable: on arrowKey", "trappable: on doMenu", "trappable: on help", "unmark", "version"]],
+        ["compatibility", "lngCompatibility", ["(Compatibility)", "abbrev id", "abbrev name", "arrowKey", "bottom", "botright", "diskSpace", "environment", "errorDialog", "exp1", "freesize", "get", "heapSpace", "ln1", "long name", "mark", "marked", "on errorDialog", "right", "pop", "push", "size", "stacksInUse", "stackSpace", "suspended", "systemVersion", "trappable: on arrowKey", "trappable: on doMenu", "trappable: on help", "unmark", "version"]]
     ];
 
     /**
@@ -206,16 +206,20 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             if (entryTitle) {
                 for (let i = 0, len = jsonData.entries.length; i < len; i++) {
                     let jsonEntry = jsonData.entries[i];
-                    if (jsonEntry.body && (jsonEntry.title.toLowerCase() === entryTitle.toLowerCase() || jsonEntry.title.split('(')[0].toLowerCase() === entryTitle.toLowerCase())) {
+                    if (
+                        jsonEntry.body &&
+                        (jsonEntry.title.toLowerCase() === entryTitle.toLowerCase() ||
+                            jsonEntry.title.split('(')[0].toLowerCase() === entryTitle.toLowerCase())
+                    ) {
                         let btnStartVid = grp.getEl(this.getElId('btnStartVid'));
                         if (entryTitle.toLowerCase() === 'introduction') {
                             btnStartVid.set('visible', true);
-                            btnStartVid.set('labeltext', "(Open a tutorial vid)");
+                            btnStartVid.set('labeltext', '(Open a tutorial vid)');
                             if (!this.adjustedStartVidBtn) {
-                                this.adjustedStartVidBtn = true
-                                btnStartVid.set('h', btnStartVid.getN('h') - 30)
-                                btnStartVid.set('y', btnStartVid.getN('y') + 50)
-                                btnStartVid.set('x', btnStartVid.getN('x') - 10)
+                                this.adjustedStartVidBtn = true;
+                                btnStartVid.set('h', btnStartVid.getN('h') - 30);
+                                btnStartVid.set('y', btnStartVid.getN('y') + 50);
+                                btnStartVid.set('x', btnStartVid.getN('x') - 10);
                             }
                         } else {
                             btnStartVid.set('visible', false);
@@ -391,7 +395,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         } else {
             /* close this and load the tutorial one */
             if (this.cbShowVids) {
-                this.cbShowVids()
+                this.cbShowVids();
             }
         }
     }

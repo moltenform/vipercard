@@ -521,9 +521,7 @@ export function addDefaultListeners(listeners: { [t: number]: FnEventCallback[] 
         editTextBehavior.onKeyDown.bind(editTextBehavior)
     ];
 
-    listeners[UI512EventType.KeyUp] = [
-        BasicHandlers.trackKeyUp,
-    ];
+    listeners[UI512EventType.KeyUp] = [BasicHandlers.trackKeyUp];
 
     listeners[UI512EventType.MouseDownDouble] = [
         BasicHandlers.trackMouseDoubleDown,

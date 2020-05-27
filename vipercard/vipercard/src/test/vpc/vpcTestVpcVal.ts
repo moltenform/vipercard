@@ -174,7 +174,11 @@ t.test('styleListToInt', () => {
         UI512ComplexFontChanges.styleListToInt(['plain']),
         'I!|'
     );
-    assertEq(TextFontStyling.Bold, UI512ComplexFontChanges.styleListToInt(['bold']), 'I |');
+    assertEq(
+        TextFontStyling.Bold,
+        UI512ComplexFontChanges.styleListToInt(['bold']),
+        'I |'
+    );
     assertEq(
         TextFontStyling.Bold | TextFontStyling.Italic,
         UI512ComplexFontChanges.styleListToInt(['bold', 'italic']),

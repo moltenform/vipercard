@@ -76,17 +76,17 @@ export const VpcStateSerialize = /* static class */ {
 
             building.getModel().uuid = incoming.uuid;
             checkThrow(incoming.elements && incoming.elements.length > 0, 'Ky|elements missing or empty');
-            let savedCardOrder = ''
+            let savedCardOrder = '';
             for (let i = 0; i < incoming.elements.length; i++) {
                 let vel = this.deserializeVel(building, incoming.elements[i], building.getModel());
                 if (vel && vel.getType() === VpcElType.Stack) {
-                    savedCardOrder = vel.getS('cardorder')
+                    savedCardOrder = vel.getS('cardorder');
                 }
             }
 
             /* we need to save and restore card order, or opening a stack will double it */
             if (savedCardOrder) {
-                building.getModel().stack.setOnVel('cardorder', savedCardOrder, building.getModel())
+                building.getModel().stack.setOnVel('cardorder', savedCardOrder, building.getModel());
             }
         });
     },
@@ -100,7 +100,7 @@ export const VpcStateSerialize = /* static class */ {
             incoming.parent_id = vci.getModel().productOpts.idInternal;
             /* don't create a new element, just copy over the attrs */
             VpcGettableSerialization.deserializeSettable(vci.getModel().stack, incoming.attrs, h);
-            return vci.getModel().stack
+            return vci.getModel().stack;
         } else if (
             incoming.type === VpcElType.Bg ||
             incoming.type === VpcElType.Card ||
@@ -112,13 +112,13 @@ export const VpcStateSerialize = /* static class */ {
                 incoming.parent_id = vci.getModel().stack.idInternal;
             }
 
-            let creator = vci.getCodeExec().directiveImpl
+            let creator = vci.getCodeExec().directiveImpl;
             let newVel = creator.rawCreateOneVelUseCarefully(incoming.parent_id, incoming.type, -1, incoming.id);
             VpcGettableSerialization.deserializeSettable(newVel, incoming.attrs, h);
-            return newVel
+            return newVel;
         } else {
             assertWarn(false, 'Kx|unsupported type', incoming.type);
-            return undefined
+            return undefined;
         }
     },
 
@@ -152,7 +152,7 @@ export const VpcStateSerialize = /* static class */ {
                 incoming.type
             );
 
-            let creator = vci.getCodeExec().directiveImpl
+            let creator = vci.getCodeExec().directiveImpl;
             let newVel = creator.rawCreateOneVelUseCarefully(incoming.parent_id, incoming.type, -1, incoming.id);
             VpcGettableSerialization.deserializeSettable(newVel, incoming.attrs, h);
         });

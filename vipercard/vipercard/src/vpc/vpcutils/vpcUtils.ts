@@ -35,8 +35,8 @@ export interface WritableContainer extends ReadableContainer {
  * includes both built-in messages "mouseUp" and custom messages "myHandler"
  */
 export class VpcScriptMessage {
-    clickLoc: [number, number] = [0,0];
-    lastSeenClickId = 0
+    clickLoc: [number, number] = [0, 0];
+    lastSeenClickId = 0;
     keyMods: O<ModifierKeys>;
     keyChar: O<string>;
     keyRepeated: O<boolean>;

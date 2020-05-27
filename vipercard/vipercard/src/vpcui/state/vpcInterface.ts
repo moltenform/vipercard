@@ -83,7 +83,7 @@ export interface VpcStateInterface {
     /**
      * perform a changeSeenCreationDeletion
      */
-    doChangeSeenCreationDeletion(action:UndoableActionPlaceholder):void
+    doChangeSeenCreationDeletion(action: UndoableActionPlaceholder): void;
 
     /**
      * don't record changes made for undo, and assert that no changes were made
@@ -237,8 +237,7 @@ export interface VpcStateInterface {
 /**
  * will become a UndoableActionCreateVel
  */
-export interface UndoableActionPlaceholder {
-}
+export interface UndoableActionPlaceholder {}
 
 /**
  * base class for layers in the Vpc UI

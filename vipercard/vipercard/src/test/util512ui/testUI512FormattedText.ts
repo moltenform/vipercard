@@ -83,10 +83,11 @@ t.test('FormattedTextNewFromUnformatted.EmptyStringIsOK', () => {
     assertEq(undefined, txt.fontAt(0), 'BT|');
 });
 t.test('FormattedTextNewFromUnformatted.ShouldStripSpecialCharFontChange', () => {
-    assertThrows('', 'cannot include', ()=>
-    FormattedText.newFromUnformatted(
-        `${specialCharFontChange}a${specialCharFontChange}`
-    ));
+    assertThrows('', 'cannot include', () =>
+        FormattedText.newFromUnformatted(
+            `${specialCharFontChange}a${specialCharFontChange}`
+        )
+    );
 });
 t.test('FormattedTextNewFromSerialized.Complex', () => {
     let ser = longstr(

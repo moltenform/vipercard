@@ -124,8 +124,7 @@ export const Util512 = /* static class */ {
     /**
      * for unused-variable warnings
      */
-    unused(...args: unknown[]) {
-    },
+    unused(...args: unknown[]) {},
 
     /**
      * useful for map/reduce
@@ -226,8 +225,10 @@ export const Util512 = /* static class */ {
         let method = me[s];
         assertTrue(args === undefined || Array.isArray(args), '4I|args not an array');
         if (method && typeof method === 'function') {
-            assertTrue(okIfOnParentClass ||
-                me.hasOwnProperty(s) || me.__proto__.hasOwnProperty(s),
+            assertTrue(
+                okIfOnParentClass ||
+                    me.hasOwnProperty(s) ||
+                    me.__proto__.hasOwnProperty(s),
                 '4H|cannot use parent classes',
                 clsname,
                 s
@@ -521,16 +522,16 @@ export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & {
  * list enum vals
  */
 export function listEnumValsIncludingAlternates<T>(Enm: T) {
-    let ret:string[] = []
+    let ret: string[] = [];
     for (let enumMember in Enm) {
         /* show possible values */
         if (
             typeof enumMember === 'string' &&
             !'0123456789'.includes(enumMember[0].toString())
         ) {
-            let s = enumMember.toString()
+            let s = enumMember.toString();
             if (s.startsWith('__AlternateForm__')) {
-                s = s.substr('__AlternateForm__'.length)
+                s = s.substr('__AlternateForm__'.length);
             }
 
             ret.push(s);

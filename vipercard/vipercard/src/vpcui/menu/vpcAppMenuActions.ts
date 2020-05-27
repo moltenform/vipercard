@@ -28,8 +28,7 @@ export class VpcMenuActions {
     msgBoxHistory = new RememberHistory();
     cbFindEditToolSelectedFldOrBtn: () => O<VpcElBase>;
     cbOnClearNonBrowseTool: () => void;
-    constructor(protected vci: VpcStateInterface) {
-    }
+    constructor(protected vci: VpcStateInterface) {}
 
     /**
      * let's implement a lot of our menu commands in vipercard itself!
@@ -39,8 +38,8 @@ export class VpcMenuActions {
      * a lot of code to run, so we use silenceMessagesForUIAction
      */
     runMenuActionCode(s: string) {
-        this.vci.getCodeExec().silenceMessagesForUIAction.val = this.vci.getTool()
-        this.vci.setTool(VpcTool.Browse)
+        this.vci.getCodeExec().silenceMessagesForUIAction.val = this.vci.getTool();
+        this.vci.setTool(VpcTool.Browse);
         this.vci.getCodeExec().runMsgBoxCodeOrThrow(s, this.vci.getCurrentCardId(), false /* add return */);
     }
 
@@ -217,14 +216,14 @@ export class VpcMenuActions {
      * create new card
      */
     goMnuNewCard() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Card"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Card"');
     }
 
     /**
      * duplicate current card
      */
     goMnuDupeCardPaint() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Duplicate Card Paint"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Duplicate Card Paint"');
     }
 
     /**
@@ -255,7 +254,7 @@ export class VpcMenuActions {
      * paste card or element
      */
     goMnuPasteCardOrVel() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Paste Card Or Vel"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Paste Card Or Vel"');
     }
 
     /**
@@ -271,56 +270,56 @@ export class VpcMenuActions {
      * note that we have to move away from this card first before deleting it
      */
     goMnuDelCard() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Delete Card"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Delete Card"');
     }
 
     /**
      * toggle wide lines option
      */
     goMnuPaintWideLines() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Wide Lines"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Wide Lines"');
     }
 
     /**
      * set black lines option
      */
     goMnuPaintBlackLines() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Black Lines"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Black Lines"');
     }
 
     /**
      * set white lines option
      */
     goMnuPaintWhiteLines() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "White Lines"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "White Lines"');
     }
 
     /**
      * set black fill option
      */
     goMnuPaintBlackFill() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Black Fill"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Black Fill"');
     }
 
     /**
      * set white fill option
      */
     goMnuPaintWhiteFill() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "White Fill"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "White Fill"');
     }
 
     /**
      * set no fill option
      */
     goMnuPaintNoFill() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "No Fill"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "No Fill"');
     }
 
     /**
      * set paint-multiple
      */
     goMnuPaintDrawMult() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Draw Multiple"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Draw Multiple"');
     }
 
     /**
@@ -363,56 +362,56 @@ export class VpcMenuActions {
      * go to first card
      */
     goMnuGoCardFirst() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "First"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "First"');
     }
 
     /**
      * go to last card
      */
     goMnuGoCardLast() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Last"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Last"');
     }
 
     /**
      * left arrow, usually go left but user can override
      */
     goMnuOnArrowLeft() {
-        this.runMenuActionCode('arrowkey "left"')
+        this.runMenuActionCode('arrowkey "left"');
     }
 
     /**
      * right arrow, usually go right but user can override
      */
     goMnuOnArrowRight() {
-        this.runMenuActionCode('arrowkey "right"')
+        this.runMenuActionCode('arrowkey "right"');
     }
 
     /**
      * up arrow, usually no-op but user can override
      */
     goMnuOnArrowUp() {
-        this.runMenuActionCode('arrowkey "up"')
+        this.runMenuActionCode('arrowkey "up"');
     }
 
     /**
      * down arrow, usually no-op but user can override
      */
     goMnuOnArrowDown() {
-        this.runMenuActionCode('arrowkey "down"')
+        this.runMenuActionCode('arrowkey "down"');
     }
 
     /**
      * go to previous card
      */
     goMnuGoCardPrev() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Prev", "FromUI"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Prev", "FromUI"');
     }
 
     /**
      * go to the next card
      */
     goMnuGoCardNext() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "Next", "FromUI"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "Next", "FromUI"');
     }
 
     /**
@@ -439,14 +438,14 @@ export class VpcMenuActions {
      * new button
      */
     goMnuObjectsNewBtn() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Button from ui"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Button from ui"');
     }
 
     /**
      * new field
      */
     goMnuObjectsNewFld() {
-        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Field from ui"')
+        this.runMenuActionCode('vpcinternaluntrappabledomenu "New Field from ui"');
     }
 
     /**
@@ -454,9 +453,9 @@ export class VpcMenuActions {
      */
     goMnuClear() {
         if (this.vci.getTool() === VpcTool.Browse) {
-            this.runMenuActionCode('vpcinternaluntrappabledomenu "Clear"')
+            this.runMenuActionCode('vpcinternaluntrappabledomenu "Clear"');
         } else {
-            this.cbOnClearNonBrowseTool()
+            this.cbOnClearNonBrowseTool();
         }
     }
 
@@ -472,9 +471,9 @@ export class VpcMenuActions {
      * show complete script reference
      */
     goMnuDlgHelpReference() {
-        let showVids = () => this.goMnuDlgHelpExamples()
+        let showVids = () => this.goMnuDlgHelpExamples();
         let dlg = new VpcNonModalDocViewer(this.vci, DialogDocsType.Reference);
-        dlg.cbShowVids = showVids
+        dlg.cbShowVids = showVids;
         this.vci.setNonModalDialog(dlg);
     }
 
@@ -488,16 +487,22 @@ export class VpcMenuActions {
             toolNumber = toolNumber ?? VpcTool.Browse;
             this.vci.setTool(toolNumber);
         } else if (s.startsWith('mnuItemSetFont')) {
-            let cmd = s.substr("mnuItemSetFont".length)
+            let cmd = s.substr('mnuItemSetFont'.length);
             if (this.vci.getTool() === VpcTool.Browse) {
-                this.runMenuActionCode(`doMenu "${cmd}"`)
+                this.runMenuActionCode(`doMenu "${cmd}"`);
             } else {
                 let vel = this.cbFindEditToolSelectedFldOrBtn();
-                let renderVel = vel ? new VelRenderId(this.vci.getModel()).go(vel, PropAdjective.LongForParse, this.vci.getModel().stack.getB('compatibilitymode')) : ''
-                this.runMenuActionCode(`doMenu "${cmd}", "setAll|${renderVel}" `)
+                let renderVel = vel
+                    ? new VelRenderId(this.vci.getModel()).go(
+                          vel,
+                          PropAdjective.LongForParse,
+                          this.vci.getModel().stack.getB('compatibilitymode')
+                      )
+                    : '';
+                this.runMenuActionCode(`doMenu "${cmd}", "setAll|${renderVel}" `);
             }
         } else {
-            console.error("Unknown menu item", s)
+            console.error('Unknown menu item', s);
         }
     }
 

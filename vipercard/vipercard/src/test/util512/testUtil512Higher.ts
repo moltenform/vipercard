@@ -143,13 +143,12 @@ t.test('serialize: getting extra data is fine', () => {
     assertEq('d', oGot.optional_f2, 'P)|');
     assertEq('not serialized', oGot.__private, 'P(|');
     t.say(/*——————————*/ 'test loose');
-    oGot = Util512SerializableHelpers.deserializeObjLoose(DemoSerializable, JSON.parse(s));
-    ks = sorted(Util512.getMapKeys(oGot)).join(',');
-    assertEq(
-        '__isUtil512Serializable,f1,f2,fld1,fld2,somethingelse',
-        ks,
-        'P-|'
+    oGot = Util512SerializableHelpers.deserializeObjLoose(
+        DemoSerializable,
+        JSON.parse(s)
     );
+    ks = sorted(Util512.getMapKeys(oGot)).join(',');
+    assertEq('__isUtil512Serializable,f1,f2,fld1,fld2,somethingelse', ks, 'P-|');
     assertEq('a', oGot.fld1, 'P,|');
     assertEq('b', oGot.fld2, 'P+|');
     assertEq('c', oGot['f1'], 'P*|');

@@ -232,43 +232,47 @@ t.test('03Identifier', () => {
  */
 export class TestVpc03 extends TestVpcScriptRunBase {
     populateModel() {
-        super.populateModel()
+        super.populateModel();
 
-        let makeVel = (typ:string) => {
-            let creator = this.vcstate.vci.getCodeExec().directiveImpl
-            return creator.goMakevelwithoutmsg(new ValHolder(typ), this.vcstate.model.getCurrentCard(), ['', ''])
-        }
+        let makeVel = (typ: string) => {
+            let creator = this.vcstate.vci.getCodeExec().directiveImpl;
+            return creator.goMakevelwithoutmsg(
+                new ValHolder(typ),
+                this.vcstate.model.getCurrentCard(),
+                ['', '']
+            );
+        };
 
         this.vcstate.vci.setCurCardNoOpenCardEvt(this.ids.cdCD);
-        let bgD = cast(VpcElBg, makeVel('bkgnd'))
-        let cdDD = bgD.cards[0]    
+        let bgD = cast(VpcElBg, makeVel('bkgnd'));
+        let cdDD = bgD.cards[0];
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdDD.idInternal);
-        let cdDE = makeVel('card')
+        let cdDE = makeVel('card');
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdDE.idInternal);
-        let cdDF = makeVel('card')       
+        let cdDF = makeVel('card');
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdDF.idInternal);
-        let cdDG = makeVel('card')       
+        let cdDG = makeVel('card');
         this.vcstate.vci.setCurCardNoOpenCardEvt(cdDG.idInternal);
-        let cdDH = makeVel('card')       
-        this.ids.bgD = bgD.idInternal
-        this.ids.cdDD = cdDD.idInternal
-        this.ids.cdDE = cdDE.idInternal
-        this.ids.cdDF = cdDF.idInternal
-        this.ids.cdDG = cdDG.idInternal
-        this.ids.cdDH = cdDH.idInternal
+        let cdDH = makeVel('card');
+        this.ids.bgD = bgD.idInternal;
+        this.ids.cdDD = cdDD.idInternal;
+        this.ids.cdDE = cdDE.idInternal;
+        this.ids.cdDF = cdDF.idInternal;
+        this.ids.cdDG = cdDG.idInternal;
+        this.ids.cdDH = cdDH.idInternal;
         this.vcstate.vci.setCurCardNoOpenCardEvt(this.ids.cdDE);
-        let bDE1 = makeVel('button')        
-        let fDE1 = makeVel('field')       
-        let bDE2 = makeVel('button')        
-        let fDE2 = makeVel('field') 
-        let bDE3 = makeVel('button')         
-        let fDE3 = makeVel('field')    
-        this.ids.bDE1 = bDE1.idInternal
-        this.ids.fDE1 = fDE1.idInternal
-        this.ids.bDE2 = bDE2.idInternal
-        this.ids.fDE2 = fDE2.idInternal
-        this.ids.bDE3 = bDE3.idInternal
-        this.ids.fDE3 = fDE3.idInternal
+        let bDE1 = makeVel('button');
+        let fDE1 = makeVel('field');
+        let bDE2 = makeVel('button');
+        let fDE2 = makeVel('field');
+        let bDE3 = makeVel('button');
+        let fDE3 = makeVel('field');
+        this.ids.bDE1 = bDE1.idInternal;
+        this.ids.fDE1 = fDE1.idInternal;
+        this.ids.bDE2 = bDE2.idInternal;
+        this.ids.fDE2 = fDE2.idInternal;
+        this.ids.bDE3 = bDE3.idInternal;
+        this.ids.fDE3 = fDE3.idInternal;
         this.vcstate.vci.setCurCardNoOpenCardEvt(this.ids.cdCD);
         bgD.setOnVel('name', 'd', this.vcstate.model);
         cdDD.setOnVel('name', 'd', this.vcstate.model);
@@ -282,6 +286,6 @@ export class TestVpc03 extends TestVpcScriptRunBase {
         fDE1.setOnVel('name', 'de1', this.vcstate.model);
         fDE2.setOnVel('name', 'de2', this.vcstate.model);
         fDE3.setOnVel('name', 'de3', this.vcstate.model);
-        this.vcstate.vci.getCodeExec().doMaintenance()
+        this.vcstate.vci.getCodeExec().doMaintenance();
     }
 }

@@ -45,10 +45,10 @@ export class VelResolveReference {
             return this.getFromCardRecentHistory(ref, cardHistory);
         }
 
-         /* some things should not be by position */
-         if (ref.type === VpcElType.Btn ||ref.type === VpcElType.Fld) {
-             checkThrow(!ref.lookByRelative || !ordinalOrPositionIsPosition(ref.lookByRelative), "cannot be by position")
-         }
+        /* some things should not be by position */
+        if (ref.type === VpcElType.Btn || ref.type === VpcElType.Fld) {
+            checkThrow(!ref.lookByRelative || !ordinalOrPositionIsPosition(ref.lookByRelative), 'cannot be by position');
+        }
 
         /* combine parents into one chain */
         this.combineParents(ref);
@@ -189,7 +189,7 @@ export class VelResolveReference {
             checkThrow(!ref.partIsBg, 'does not make sense to belong to bg');
             checkThrow(!ref.partIsCd, 'does not make sense to belong to cd');
         } else if (found) {
-            assertWarn(ref.partIsCd || ref.partIsBg || ref.partIsCdOrBg, "expect to look up by cd or by bg")
+            assertWarn(ref.partIsCd || ref.partIsBg || ref.partIsCdOrBg, 'expect to look up by cd or by bg');
         }
 
         if (ref.partIsCd) {
@@ -292,7 +292,7 @@ export class VelResolveReference {
         if (ref.lookByName !== undefined) {
             /* `the short id of stack "myStack"` */
             if (ref.lookByName.startsWith('Hard Drive:')) {
-                ref.lookByName = ref.lookByName.substr('Hard Drive:'.length)
+                ref.lookByName = ref.lookByName.substr('Hard Drive:'.length);
             }
 
             return ref.lookByName.toLowerCase() === this.model.stack.getS('name').toLowerCase() ? this.model.stack : undefined;
@@ -357,13 +357,13 @@ export class VelResolveReference {
             }
             /* `the short id of cd "theName"` */
             let curId = this.model.getCurrentCard().idInternal;
-            let pivot = arr.findIndex(vel=>vel.idInternal===curId)
+            let pivot = arr.findIndex(vel => vel.idInternal === curId);
             if (pivot !== -1) {
                 /* match product: start search from current card and wrap around */
                 /* this doesn't happen for bg names. */
-                let prevLen = arr.length
-                arr = arr.slice(pivot+1).concat(arr.slice(0, pivot+1))
-                assertWarnEq(prevLen, arr.length, '')
+                let prevLen = arr.length;
+                arr = arr.slice(pivot + 1).concat(arr.slice(0, pivot + 1));
+                assertWarnEq(prevLen, arr.length, '');
             }
             return arr.find(vel => vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase());
         } else if (ref.lookByAbsolute !== undefined) {
@@ -374,22 +374,28 @@ export class VelResolveReference {
             return arr[ref.lookByAbsolute - 1];
         } else if (ref.lookByRelative) {
             arr = this.model.stack.getCardOrder().map(item => this.model.getCardById(item));
-            let keepCurCd = ref.lookByRelative === OrdinalOrPosition.Previous || ref.lookByRelative === OrdinalOrPosition.Next
-            let justMe = [this.model.getCurrentCard()]
+            let keepCurCd =
+                ref.lookByRelative === OrdinalOrPosition.Previous || /* bool */ ref.lookByRelative === OrdinalOrPosition.Next;
+            let justMe = [this.model.getCurrentCard()];
             if (ref.cardLookAtMarkedOnly) {
-                arr = arr.filter(cd => cd.getB('marked') || (keepCurCd && cd.idInternal === currCdId));
+                arr = arr.filter(cd => cd.getB('marked') || /* bool */ (keepCurCd && cd.idInternal === currCdId));
                 justMe = justMe.filter(cd => cd.getB('marked'));
             }
             if (parentBg) {
-                arr = arr.filter(cd => cd.parentIdInternal === parentBg.idInternal || (keepCurCd && cd.idInternal === currCdId));
-                justMe = justMe.filter(cd => cd.parentIdInternal === parentBg.idInternal)
+                arr = arr.filter(
+                    cd => cd.parentIdInternal === parentBg.idInternal || /* bool */ (keepCurCd && cd.idInternal === currCdId)
+                );
+                justMe = justMe.filter(cd => cd.parentIdInternal === parentBg.idInternal);
             }
 
             let curIndex = arr.findIndex(item => item.idInternal === currCdId);
             /* confirmed in emulator: */
             /* `the short id of this marked cd` should fail if this cd is not marked */
             /* `the short id of this cd of bg 2` should fail if this cd is not in bg 2 */
-            checkThrow(!(keepCurCd && justMe.length===0 && arr.length === 1 && arr[0].idInternal === currCdId), "break, not found, this/next does not meet criteria")
+            checkThrow(
+                !(keepCurCd && justMe.length === 0 && arr.length === 1 && arr[0].idInternal === currCdId),
+                'break, not found, this/next does not meet criteria'
+            );
             checkThrow(
                 !(ref.lookByRelative === OrdinalOrPosition.This && curIndex === -1),
                 "break, not found, 'this' card does not meet criteria"

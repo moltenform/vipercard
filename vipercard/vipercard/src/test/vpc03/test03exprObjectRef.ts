@@ -81,7 +81,7 @@ t.test('03Object look by id', () => {
         `ERR:could not find`
     );
     b.t(
-         longstr(`the short id of cd fld id ${h3.ids.fBC1} of cd id
+        longstr(`the short id of cd fld id ${h3.ids.fBC1} of cd id
          ${h3.ids.cdBC} of bg id ${h3.ids.bgB} of stack 2`),
         `ERR:could not find`
     );
@@ -94,7 +94,7 @@ t.test('03Object look by id', () => {
         `ERR:could not find`
     );
     b.t(
-         longstr(`the short id of cd btn id ${h3.ids.bBC1} of cd id ${h3.ids.cdBC}
+        longstr(`the short id of cd btn id ${h3.ids.bBC1} of cd id ${h3.ids.cdBC}
          of bg id ${h3.ids.bgB} of stack 2`),
         `ERR:could not find`
     );
@@ -114,7 +114,7 @@ t.test('03Object look by id', () => {
     b.t(`the short id of cd id ${h3.ids.cdBC} of stack 1`, `${h3.ids.cdBC}`);
     b.t(`the short id of cd id ${h3.ids.cdBC} of bg id ${h3.ids.bgB}`, `${h3.ids.cdBC}`);
     b.t(
-         longstr(`the short id of cd fld id ${h3.ids.fBC1} of cd id ${h3.ids.cdBC}
+        longstr(`the short id of cd fld id ${h3.ids.fBC1} of cd id ${h3.ids.cdBC}
          of bg id ${h3.ids.bgB} of stack 1`),
         `${h3.ids.fBC1}`
     );
@@ -127,7 +127,7 @@ t.test('03Object look by id', () => {
         `${h3.ids.fBC1}`
     );
     b.t(
-         longstr(`the short id of cd btn id ${h3.ids.bBC1} of cd id ${h3.ids.cdBC}
+        longstr(`the short id of cd btn id ${h3.ids.bBC1} of cd id ${h3.ids.cdBC}
          of bg id ${h3.ids.bgB} of stack 1`),
         `${h3.ids.bBC1}`
     );
@@ -147,7 +147,10 @@ t.test('03Objects use a Lvl6Expression', () => {
     b.t(`put -1 into x\\the short id of cd -x`, `${h3.ids.cdA}`);
     b.t(`put "a b c" into x\\the short id of cd word 2 of x`, `${h3.ids.cdBB}`);
     b.t(`put "a b c" into x\\the short id of cd second word of x`, `${h3.ids.cdBB}`);
-    b.t(`put "a"&cr&"a b c"&"c" into x\\the short id of cd word 2 of line 2 of x`, `${h3.ids.cdBB}`);
+    b.t(
+        `put "a"&cr&"a b c"&"c" into x\\the short id of cd word 2 of line 2 of x`,
+        `${h3.ids.cdBB}`
+    );
     b.t(`put 1 into x\\the short id of cd x`, `${h3.ids.cdA}`);
     b.t(`put 1 into x\\the short id of cd (x+1)`, `${h3.ids.cdBB}`);
     b.t(`put 1 into x\\the short id of cd (char 1 of x)`, `${h3.ids.cdA}`);
@@ -157,7 +160,7 @@ t.test('03Objects use a Lvl6Expression', () => {
     b.t(`put 1 into x\\the short id of cd the short name of this cd`, `${h3.ids.cdA}`);
     b.t(`put 1 into x\\the short id of cd the number of cds`, `${h3.ids.cdDH}`);
     b.batchEvaluate(h3, [EvaluateThereIs]);
-})
+});
 t.test('03ObjectPart', () => {
     let b = new ScriptTestBatch();
     /* btns are valid parts */
@@ -270,11 +273,15 @@ t.test('03ObjectBg', () => {
     b.t(`get the short id of 1 bg\\it`, `ERR:parse`);
     b.t(`get the short id of bg\\it`, `${h3.ids.bgB}`);
 
-    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs, EvaluateAsParsedFromAString]);
+    b.batchEvaluate(h3, [
+        AppendOfThisStack,
+        EvaluateThereIs,
+        EvaluateAsParsedFromAString
+    ]);
 });
 t.test('03ObjectCard', () => {
     let b = new ScriptTestBatch();
-    /* if names are ambiguous, pick the first, even if closer to another. 
+    /* if names are ambiguous, pick the first, even if closer to another.
     confirmed in emulator. but if you're already at one, pick the other. */
     b.t(`go cd id ${h3.ids.cdBC}\\1`, `1`);
     b.t(`the short id of cd "d"`, `${h3.ids.cdBD}`);
@@ -359,7 +366,11 @@ t.test('03ObjectCard', () => {
     b.t(`put the short id of cd into x\\x`, `ERR:parse`);
     b.t(`get the short id of 1 cd\\it`, `ERR:parse`);
     b.t(`get the short id of cd\\it`, `${h3.ids.cdA}`);
-    b.batchEvaluate(h3, [AppendOfThisStack, EvaluateThereIs, EvaluateAsParsedFromAString]);
+    b.batchEvaluate(h3, [
+        AppendOfThisStack,
+        EvaluateThereIs,
+        EvaluateAsParsedFromAString
+    ]);
 });
 t.test('03ObjectCardMarked', () => {
     let b = new ScriptTestBatch();
@@ -529,8 +540,12 @@ t.test('03ObjectBtnAndField', () => {
     b.t(`the short id of first cd (typ) 1`, `ERR:parse err`);
     b.t(`the short id of cd (typ) (typ) 1`, `PREPARSEERR:mode`);
     b.t(`the short id of cd 1 of this cd`, `ERR:parse err`);
-    b.batchEvaluate(h3, [GoForBothFldAndBtn, EvaluateThereIs, EvaluateAsParsedFromAString]);
-})
+    b.batchEvaluate(h3, [
+        GoForBothFldAndBtn,
+        EvaluateThereIs,
+        EvaluateAsParsedFromAString
+    ]);
+});
 t.test('03exprNumberOfObjects', () => {
     let b = new ScriptTestBatch();
     b.t(`go cd id ${h3.ids.cdBB}\\1`, `1`);
@@ -571,7 +586,7 @@ t.test('03exprNumberOfObjects', () => {
     b.t(`the number of cards of (the owner of cd id ${h3.ids.cdBC})`, `3`);
     b.t(`the number of cards of the target`, `ERR:incorrect type`);
     b.batchEvaluate(h3, [EvaluateThereIs]);
-})
+});
 t.test('03Object Auto-insert scope for backwards compat', () => {
     /* tests rewriteSpecifyCdOrBgPart in vpcRewritesGlobal.ts */
     /* turn on compat mode */
@@ -613,22 +628,22 @@ t.test('03Object Auto-insert scope for backwards compat', () => {
     b.t(`the short id of fld "de2"`, `PREPARSEERR:compatibility mode`);
     b.t(`the short id of last fld`, `PREPARSEERR:compatibility mode`);
     b.batchEvaluate(h3, [EvaluateThereIs]);
-})
+});
 
 /* run the tests again, except for fld instead of btn */
 class GoForBothFldAndBtn extends TestMultiplier {
     firstTransformation(code: string, expected: string): O<[string, string]> {
-        code = code.replace(/\(typ\)/g, 'btn')
-        expected = expected.replace(/\(1\)/g, `${h3.ids.bDE1}`)
-        expected = expected.replace(/\(2\)/g, `${h3.ids.bDE2}`)
-        expected = expected.replace(/\(3\)/g, `${h3.ids.bDE3}`)
+        code = code.replace(/\(typ\)/g, 'btn');
+        expected = expected.replace(/\(1\)/g, `${h3.ids.bDE1}`);
+        expected = expected.replace(/\(2\)/g, `${h3.ids.bDE2}`);
+        expected = expected.replace(/\(3\)/g, `${h3.ids.bDE3}`);
         return [code, expected];
     }
     secondTransformation(code: string, expected: string): O<[string, string]> {
-        code = code.replace(/\(typ\)/g, 'fld')
-        expected = expected.replace(/\(1\)/g, `${h3.ids.fDE1}`)
-        expected = expected.replace(/\(2\)/g, `${h3.ids.fDE2}`)
-        expected = expected.replace(/\(3\)/g, `${h3.ids.fDE3}`)
+        code = code.replace(/\(typ\)/g, 'fld');
+        expected = expected.replace(/\(1\)/g, `${h3.ids.fDE1}`);
+        expected = expected.replace(/\(2\)/g, `${h3.ids.fDE2}`);
+        expected = expected.replace(/\(3\)/g, `${h3.ids.fDE3}`);
         return [code, expected];
     }
 }
@@ -640,7 +655,7 @@ class AppendOfThisStack extends TestMultiplier {
             code = code + ' of stack 1';
             return [code, expected];
         } else {
-            return undefined
+            return undefined;
         }
     }
 }
@@ -682,14 +697,21 @@ class EvaluateThereIs extends TestMultiplier {
  */
 export class EvaluateAsParsedFromAString extends TestMultiplier {
     secondTransformation(code: string, expected: string): O<[string, string]> {
-        if (!code.startsWith('the short id of ') || code.includes('\\') || code.includes('--[[noSParse]]')) {
+        if (
+            !code.startsWith('the short id of ') ||
+            code.includes('\\') ||
+            code.includes('--[[noSParse]]')
+        ) {
             /* might be testing a command, or going to a card */
             return undefined;
         } else {
             /* automatically skip "next", "third", etc */
             for (let key of listEnumValsIncludingAlternates(OrdinalOrPosition)) {
-                if (key.toLowerCase() !=='this' && new RegExp('(^|\\b)'+key+'(\\b|$)', 'i').exec(code)) {
-                    return undefined
+                if (
+                    key.toLowerCase() !== 'this' &&
+                    new RegExp('(^|\\b)' + key + '(\\b|$)', 'i').exec(code)
+                ) {
+                    return undefined;
                 }
             }
 
@@ -697,20 +719,19 @@ export class EvaluateAsParsedFromAString extends TestMultiplier {
             so look for either quotes or the string id.
             bg 4. automatically skip "bg 4" */
             for (let key of listEnumValsIncludingAlternates(VpcElType)) {
-                if (new RegExp('(^|\\b)'+key+'\\b [0-9]+(\\b|$)', 'i').exec(code)) {
-                    return undefined
+                if (new RegExp('(^|\\b)' + key + '\\b [0-9]+(\\b|$)', 'i').exec(code)) {
+                    return undefined;
                 }
             }
 
-            code = '"' + code.substr('the short id of '.length) + '"'
-            code = VpcEvalHelpers.escapeWithinString(code, /"/g, 'quote')
-            code = `put ${code} into x\\the short id of x --[[${code}]]`
+            code = '"' + code.substr('the short id of '.length) + '"';
+            code = VpcEvalHelpers.escapeWithinString(code, /"/g, 'quote');
+            code = `put ${code} into x\\the short id of x --[[${code}]]`;
             if (expected.startsWith('ERR:') || expected.startsWith('PREPARSEERR:')) {
-                expected = 'ERR:5:'
+                expected = 'ERR:5:';
             }
 
-            return [code, expected]
+            return [code, expected];
         }
     }
 }
-

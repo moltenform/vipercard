@@ -26,7 +26,6 @@ export class VpcState {
 
     /* (started in _VpcPresenter_ constructor) */
     vci: VpcStateInterface;
-
 }
 
 /**
