@@ -121,13 +121,14 @@ export const Util512SerializableHelpers = /* static class */ {
                 this.shouldSerializeProperty(objNew, prop) &&
                 !prop.startsWith('optional_')
             ) {
-                let onGot = incoming[prop];
-                checkThrow512(onGot !== null && onGot !== undefined, 'VB|');
+                //~ let onGot = incoming[prop];
+                //~ checkThrow512(onGot !== null && onGot !== undefined, 'VB|');
+                objNew[prop] = incoming[prop]
             }
         }
 
-        incoming['__isUtil512Serializable'] = true;
-        return incoming as T;
+        objNew['__isUtil512Serializable'] = true;
+        return objNew;
     },
 
     /**
