@@ -59,6 +59,7 @@ export class VpcElProductOpts extends VpcElBase {
     protected _viewingScriptVelId = '';
     protected _selectedVelId = '';
     protected _suggestedIdleRate = '';
+    protected _skipArrowkeyMessages = false;
 
     /* cached getters */
     static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
@@ -145,6 +146,7 @@ export class VpcElProductOpts extends VpcElBase {
         getters['multiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
         getters['pattern'] = [PrpTyp.Num, 'currentPattern'];
         getters['linecolor'] = [PrpTyp.Num, 'optPaintLineColor'];
+        getters['skiparrowkeymessages'] = [PrpTyp.Bool, 'skipArrowkeyMessages'];
     }
 
     /**
@@ -231,6 +233,7 @@ export class VpcElProductOpts extends VpcElBase {
         setters['multiple'] = [PrpTyp.Bool, 'optPaintDrawMult'];
         setters['pattern'] = [PrpTyp.Num, 'currentPattern'];
         setters['linecolor'] = [PrpTyp.Num, 'optPaintLineColor'];
+        setters['skiparrowkeymessages'] = [PrpTyp.Bool, 'skipArrowkeyMessages'];
     }
 
     /**
