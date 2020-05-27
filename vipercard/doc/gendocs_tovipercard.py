@@ -61,8 +61,8 @@ def goTsIndexSection(section, sectionfulltitle, outname):
         shortTitle, title, body = item
         entries.append(shortTitle)
     j = json.dumps(out)
-    assertTrue(not "'" in j, 'has single quote')
-    trace(j.replace('"', "'") + ',')
+    assertTrue(j.startswith('["'), j)
+    trace(j + ',')
     
 def goToVipercard(indir, outdir):
     data = parseAll(indir)

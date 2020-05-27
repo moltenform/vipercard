@@ -387,7 +387,13 @@ set the textstyle of cd fld &quot;myFld&quot; to &quot;plain&quot;
 put the textstyle of cd fld &quot;myFld&quot; into z</code></pre><p>We now support getting and setting by chunk!</p>
 <pre><code>set the textstyle of char 3 to 4 of cd fld &quot;myFld&quot; to &quot;bold&quot;
 put the textstyle of char 3 to 4 of cd fld &quot;myFld&quot; into z</code></pre><p>When querying for a property and there are multiple values, returns the string &quot;mixed&quot;.</p>
-<h2 id="fld-top">fld: top</h2>
+<p>You can also do the following:</p>
+<pre><code>set the textstyle of cd fld &quot;myFld&quot; to &quot;add-bold&quot;
+set the textstyle of cd fld &quot;myFld&quot; to &quot;subtract-italic&quot;
+set the textstyle of cd fld &quot;myFld&quot; to &quot;toggle-outline&quot;
+set the textstyle of line 2 of cd fld &quot;myFld&quot; to &quot;add-bold&quot;
+set the textstyle of line 2 of cd fld &quot;myFld&quot; to &quot;subtract-italic&quot;
+set the textstyle of line 2 of cd fld &quot;myFld&quot; to &quot;toggle-outline&quot;</code></pre><h2 id="fld-top">fld: top</h2>
 <p>The y coordinate of the top left corner of the object, in pixels. I.e. the distance from the top of the screen to the object.</p>
 <p>Examples:</p>
 <pre><code>

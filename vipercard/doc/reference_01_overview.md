@@ -419,7 +419,7 @@ set the left of cd btn "myBtn" to 2
 
 
 
-## New Functions
+## User Functions
 
 
 An example of how to define and call a custom function:
@@ -988,6 +988,37 @@ A few of the differences between ViperCard and HyperCard:
 * The `choose` command sets the emulated current tool, not the actual tool, and is limited to certain paint operations
 * The newline character is \n and not \r
 
+
+
+
+## What's New
+
+
+New in 0.24
+* Script stack trace
+* Use `get the shiftKey`, deprecate `get the shiftKey()`
+* You can say `the sin of 4`
+* You can say `sin of 4`, `sin of cd fld 1`
+* Continue lines with logical-not, press `Alt-Enter` in code editor
+* Block comments
+* You can use `select`, `mark`, `doMenu` commands
+* You can turn on compat mode to allow `put "a" into fld 1`
+* Everything is case insensitive, even `cd btn "aBcDe"`
+* Improvements to `send` and `do`, script error shown in more helpful line
+* Improvements to built in functions like `selectedText`
+* Improvements to click features like `wait until the mouseClick`
+* You can say `put "card id 2590" into xx; put the name of xx into y`
+* You can use values for coords, e.g. `put "3,4" into c; set the loc of cd btn 1 to c`
+* Better match subtle differences between `target` and `the target`
+* Single-line `if` statments
+* Call custom functions from anywhere
+* Better cursors, better rendering on different monitor resolutions
+* More fonts, all fonts have pixel-perfect spacing
+* You can use recursive chunks like `put "a" into char 7 of line 3 of x`
+* Improvements to load time by loading some libraries asynchronously
+* Common commands in script execution are faster
+* Scripts can dynamically create/delete objects, and set scripts
+* New features like `set the textstyle of line 3 of cd fld "myFld" to "toggle-bold"`
 
 
 

@@ -381,6 +381,32 @@ put &quot;-&quot; into search
 put &quot;_&quot; into replacement
 replace search with replacement in cd fld &quot;myFld&quot;
 
+</code></pre><h2 id="select">select</h2>
+<p>Set the selection in a field. For this to take effect, the field must be on the current card.</p>
+<p>Examples:</p>
+<pre><code>
+
+-- set the selection
+select char 2 to 4 of cd fld &quot;myFld&quot;
+select line 3 of cd fld &quot;myFld&quot;
+select item 2 to 3 of cd fld &quot;myFld&quot;
+
+-- set the caret position
+select before char 3 of cd fld &quot;myFld&quot;
+select before line 3 of cd fld &quot;myFld&quot;
+select after char 3 of cd fld &quot;myFld&quot;
+select before text of cd fld &quot;myFld&quot;
+select after text of cd fld &quot;myFld&quot;
+
+-- select all
+select text of cd fld &quot;myFld&quot;
+
+-- clear selection
+select empty
+
+-- look up field by string
+select char 1 of the selectedField
+
 </code></pre><h2 id="send">send</h2>
 <p>Take a string, and execute it as if it were a ViperCard script in the context of an object.</p>
 <p>Messages in ViperCard automatically travel upwards from button to card, background, and then stack.</p>

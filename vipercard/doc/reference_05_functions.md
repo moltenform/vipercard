@@ -872,15 +872,20 @@ put seconds() into x
 ## selectedChunk()
 
 
-Current selection, looks something like 'char 2 to 4 of cd fld id 1234'.
+A full description of the current selection, or "" if there is no selection.
+
+Returns a string that looks like this: `char 2 to 4 of cd fld id 567`.
 
 Examples:
 
 ```
 
 
-put selectedChunk() into x
-
+set the textSize of the selectedChunk to 24
+put the textFont of the selectedChunk into x
+put word 2 of the selectedChunk into selStart 
+put word 4 of the selectedChunk into selEnd 
+put the selectedChunk into x
 
 
 ```
@@ -890,7 +895,11 @@ put selectedChunk() into x
 ## selectedField()
 
 
-The field that contains current selected text, looks something like 'cd fld id 1234'.
+The field that contains current selected text, or "" if there is no selection.
+
+(If compatibility mode is enabled, not recommended for new code, uses HyperCard's formatting and returns a string like
+
+"card field 4".)
 
 Examples:
 
@@ -898,7 +907,8 @@ Examples:
 
 
 put selectedField() into x
-
+set the loc of the selectedField to 23, 45
+set the textalign of the selectedField to "center"
 
 
 ```
@@ -908,7 +918,11 @@ put selectedField() into x
 ## selectedLine()
 
 
-The number of the line of the current selected text.
+The number of the line of the current selected text, or "" if there is no selection.
+
+(If compatibility mode is enabled, not recommended for new code, uses HyperCard's formatting and returns a string like
+
+"line 3 of card field 4".)
 
 Examples:
 
@@ -926,7 +940,7 @@ put selectedLine() into x
 ## selectedText()
 
 
-The value of the current selected text.
+The value of the current selected text, or the empty string if there is no selection.
 
 Examples:
 
@@ -934,6 +948,39 @@ Examples:
 
 
 put selectedText() into x
+
+
+```
+
+
+
+## the selection
+
+
+Reading from `the selection` retrieves the value of the current selected text, or the empty string if there is no selection.
+
+Writing to `the selection` replaces the currently selected text with new text.
+
+Examples:
+
+```
+
+
+put the selection into x
+put "" into the selection
+put "abc" into the selection
+
+-- chunks are supported
+put char 2 to 3 of the selection into x
+put "" into char 2 to 3 of the selection
+put "abc" into char 3 of the selection
+put item 2 to 3 of the selection into x
+put "" into item 2 to 3 of the selection
+put "abc" into item 3 of the selection
+
+-- you can delete part of the selection
+delete char 2 to 4 of the selection
+delete item 3 of the selection
 
 
 ```

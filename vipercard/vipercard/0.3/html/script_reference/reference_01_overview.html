@@ -179,7 +179,7 @@ set the topleft of cd btn &quot;myBtn&quot; to &quot;1, 2&quot;
 -- or
 set the top of cd btn &quot;myBtn&quot; to 1
 set the left of cd btn &quot;myBtn&quot; to 2
-</code></pre><h2 id="new-functions">New Functions</h2>
+</code></pre><h2 id="user-functions">User Functions</h2>
 <p>An example of how to define and call a custom function:</p>
 <pre><code>function myAddition p1, p2
     return p1 + p2
@@ -559,6 +559,34 @@ end mouseUp
 <li>You can&#39;t have a variable named id, short, long, first, and so on.</li>
 <li>The <code>choose</code> command sets the emulated current tool, not the actual tool, and is limited to certain paint operations</li>
 <li>The newline character is \n and not \r</li>
+</ul>
+<h2 id="what-s-new">What&#39;s New</h2>
+<p>New in 0.24</p>
+<ul>
+<li>Script stack trace</li>
+<li>Use <code>get the shiftKey</code>, deprecate <code>get the shiftKey()</code></li>
+<li>You can say <code>the sin of 4</code></li>
+<li>You can say <code>sin of 4</code>, <code>sin of cd fld 1</code></li>
+<li>Continue lines with logical-not, press <code>Alt-Enter</code> in code editor</li>
+<li>Block comments</li>
+<li>You can use <code>select</code>, <code>mark</code>, <code>doMenu</code> commands</li>
+<li>You can turn on compat mode to allow <code>put &quot;a&quot; into fld 1</code></li>
+<li>Everything is case insensitive, even <code>cd btn &quot;aBcDe&quot;</code></li>
+<li>Improvements to <code>send</code> and <code>do</code>, script error shown in more helpful line</li>
+<li>Improvements to built in functions like <code>selectedText</code></li>
+<li>Improvements to click features like <code>wait until the mouseClick</code></li>
+<li>You can say <code>put &quot;card id 2590&quot; into xx; put the name of xx into y</code></li>
+<li>You can use values for coords, e.g. <code>put &quot;3,4&quot; into c; set the loc of cd btn 1 to c</code></li>
+<li>Better match subtle differences between <code>target</code> and <code>the target</code></li>
+<li>Single-line <code>if</code> statments</li>
+<li>Call custom functions from anywhere</li>
+<li>Better cursors, better rendering on different monitor resolutions</li>
+<li>More fonts, all fonts have pixel-perfect spacing</li>
+<li>You can use recursive chunks like <code>put &quot;a&quot; into char 7 of line 3 of x</code></li>
+<li>Improvements to load time by loading some libraries asynchronously</li>
+<li>Common commands in script execution are faster</li>
+<li>Scripts can dynamically create/delete objects, and set scripts</li>
+<li>New features like <code>set the textstyle of line 3 of cd fld &quot;myFld&quot; to &quot;toggle-bold&quot;</code></li>
 </ul>
 <h2 id="credits">Credits</h2>
 <p>ViperCard</p>

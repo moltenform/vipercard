@@ -829,6 +829,17 @@ put the textstyle of char 3 to 4 of cd fld "myFld" into z
 
 When querying for a property and there are multiple values, returns the string "mixed".
 
+You can also do the following:
+
+```
+set the textstyle of cd fld "myFld" to "add-bold"
+set the textstyle of cd fld "myFld" to "subtract-italic"
+set the textstyle of cd fld "myFld" to "toggle-outline"
+set the textstyle of line 2 of cd fld "myFld" to "add-bold"
+set the textstyle of line 2 of cd fld "myFld" to "subtract-italic"
+set the textstyle of line 2 of cd fld "myFld" to "toggle-outline"
+```
+
 
 
 ## fld: top

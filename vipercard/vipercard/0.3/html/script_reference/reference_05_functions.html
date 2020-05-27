@@ -462,23 +462,32 @@ put screenRect() into x
 put seconds() into x
 
 </code></pre><h2 id="selectedchunk-">selectedChunk()</h2>
-<p>Current selection, looks something like &#39;char 2 to 4 of cd fld id 1234&#39;.</p>
+<p>A full description of the current selection, or &quot;&quot; if there is no selection.</p>
+<p>Returns a string that looks like this: <code>char 2 to 4 of cd fld id 567</code>.</p>
 <p>Examples:</p>
 <pre><code>
 
-put selectedChunk() into x
-
+set the textSize of the selectedChunk to 24
+put the textFont of the selectedChunk into x
+put word 2 of the selectedChunk into selStart 
+put word 4 of the selectedChunk into selEnd 
+put the selectedChunk into x
 
 </code></pre><h2 id="selectedfield-">selectedField()</h2>
-<p>The field that contains current selected text, looks something like &#39;cd fld id 1234&#39;.</p>
+<p>The field that contains current selected text, or &quot;&quot; if there is no selection.</p>
+<p>(If compatibility mode is enabled, not recommended for new code, uses HyperCard&#39;s formatting and returns a string like</p>
+<p>&quot;card field 4&quot;.)</p>
 <p>Examples:</p>
 <pre><code>
 
 put selectedField() into x
-
+set the loc of the selectedField to 23, 45
+set the textalign of the selectedField to &quot;center&quot;
 
 </code></pre><h2 id="selectedline-">selectedLine()</h2>
-<p>The number of the line of the current selected text.</p>
+<p>The number of the line of the current selected text, or &quot;&quot; if there is no selection.</p>
+<p>(If compatibility mode is enabled, not recommended for new code, uses HyperCard&#39;s formatting and returns a string like</p>
+<p>&quot;line 3 of card field 4&quot;.)</p>
 <p>Examples:</p>
 <pre><code>
 
@@ -486,11 +495,33 @@ put selectedLine() into x
 
 
 </code></pre><h2 id="selectedtext-">selectedText()</h2>
-<p>The value of the current selected text.</p>
+<p>The value of the current selected text, or the empty string if there is no selection.</p>
 <p>Examples:</p>
 <pre><code>
 
 put selectedText() into x
+
+</code></pre><h2 id="the-selection">the selection</h2>
+<p>Reading from <code>the selection</code> retrieves the value of the current selected text, or the empty string if there is no selection.</p>
+<p>Writing to <code>the selection</code> replaces the currently selected text with new text.</p>
+<p>Examples:</p>
+<pre><code>
+
+put the selection into x
+put &quot;&quot; into the selection
+put &quot;abc&quot; into the selection
+
+-- chunks are supported
+put char 2 to 3 of the selection into x
+put &quot;&quot; into char 2 to 3 of the selection
+put &quot;abc&quot; into char 3 of the selection
+put item 2 to 3 of the selection into x
+put &quot;&quot; into item 2 to 3 of the selection
+put &quot;abc&quot; into item 3 of the selection
+
+-- you can delete part of the selection
+delete char 2 to 4 of the selection
+delete item 3 of the selection
 
 </code></pre><h2 id="shiftkey-">shiftKey()</h2>
 <p>Check if this modifier key is pressed.</p>

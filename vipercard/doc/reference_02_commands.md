@@ -584,6 +584,42 @@ replace search with replacement in cd fld "myFld"
 
 
 
+## select
+
+
+Set the selection in a field. For this to take effect, the field must be on the current card.
+
+Examples:
+
+```
+
+
+-- set the selection
+select char 2 to 4 of cd fld "myFld"
+select line 3 of cd fld "myFld"
+select item 2 to 3 of cd fld "myFld"
+
+-- set the caret position
+select before char 3 of cd fld "myFld"
+select before line 3 of cd fld "myFld"
+select after char 3 of cd fld "myFld"
+select before text of cd fld "myFld"
+select after text of cd fld "myFld"
+
+-- select all
+select text of cd fld "myFld"
+
+-- clear selection
+select empty
+
+-- look up field by string
+select char 1 of the selectedField
+
+
+```
+
+
+
 ## send
 
 

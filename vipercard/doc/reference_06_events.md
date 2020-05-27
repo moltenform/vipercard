@@ -285,7 +285,7 @@ end mouseUp
 ## mouseWithin
 
 
-Called repeatedly when the cursor is inside the object. You can use the mouseloc() function to get the position of the cursor. This can be used to create drag/drop effects.
+Called repeatedly when the cursor is inside the object. You can use the `mouseloc()` function to get the position of the cursor. This can be used to create drag/drop effects.
 
 (Note that to terminate a script that is being called repeatedly, you can change to the button or field tool.)
 
