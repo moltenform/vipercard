@@ -121,6 +121,15 @@ function goImpl() {
         document.getElementById("spcouldstart").style.display = "block";
         document.getElementById("spcouldnotstartmobile").style.display = "none";
     }
+    
+    goCanonicalUrl()
+}
+
+function goCanonicalUrl() {
+    /* don't send it into an infinite loop, though. */
+    if (window.location.href.indexOf('vipercard') != -1 && (window.location.href.indexOf('https') == -1 || window.location.href.indexOf('www') == -1 || window.location.href.indexOf('index') != -1)) {
+        location.href = 'https://www.vipercard.net'
+    }
 }
 
 function go() {
