@@ -5,26 +5,33 @@
 
 - download vipercard source
 
-- cd to vipercard/vipercard
+- cd to `vipercard/vipercard`
 
-- run npm install
+- run `npm install`
 
-- run npm run start
+- run `npm run start`
 
-- webpack will do its thing, and after ~30s of compiling, a browser and vipercard will open
+- webpack will do its thing, after ~30s of compiling, a browser and vipercard will open
 
 ### Running tests
 
-- open the JavaScript console. you may have to 'show development tools' in browser settings.
+- open the JavaScript console, usually in the brower's 'show development tools'
 
-- press Option+Shift+T
+- click on any button in ViperCard, then press Option+Shift+T
 
-- test status should be shown. eventually expected to see a message like "261/261. all tests pass."
+- the test status should be shown, and finally a message like '261/261. all tests pass.'
 
-### Production build
+### Build for production
 
-- run npm run build
+- Production builds have minified js and fewer breakpoints
 
-- output will be written to ./dist
+- cd to `vipercard/vipercard`
 
+- run `npm run build`
+
+- an output .js file will be written to `./dist`
+
+- make a copy of `index.dev.html` with a new `<script>` at the bottom pointing to the js file
+
+- run a server and open the new html file
 

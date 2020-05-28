@@ -1,6 +1,18 @@
-As seen in the headers, applies to all source code files
-besides those few named in LICENSE_util512:
+The following files are released under the MIT License:
+Copyright 2019 moltenform (Ben Fisher)
+  src/ui512/utils/util512.ts
+  src/ui512/utils/util512Base.ts
+  src/ui512/utils/util512Assert.ts
+  src/ui512/utils/util512Higher.ts
+  src/test/testUtils/testTop.ts
+  src/test/testUtils/testUtils.ts
+  src/test/util512/testUtil512.ts
+  src/test/util512/testUtil512Assert.ts
+  src/test/util512/testUtil512Class.ts
+  src/test/util512/testUtil512Higher.ts
 
+All other files are released under the GPLv3 license:
+Copyright 2019 moltenform (Ben Fisher)
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
