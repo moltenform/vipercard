@@ -315,16 +315,12 @@ export class ExecuteStatement {
         checkThrow(!theNotes, "notes not yet supported")
         checkThrow(!tempo, "tempo not yet supported")
 
-        try {
-            if (theSound) {
-                if (isLoad) {
-                    VpcAudio.preload(theSound);
-                } else {
-                    VpcAudio.play(theSound);
-                }
+        if (theSound) {
+            if (isLoad) {
+                VpcAudio.preloadNoThrow(theSound);
+            } else {
+                VpcAudio.play(theSound);
             }
-        } catch (e) {
-            console.error('audio encountered ' + e);
         }
     }
     /**
