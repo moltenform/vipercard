@@ -756,7 +756,7 @@ New in 0.24
 * You can say `the sin of 4`
 * You can say `sin of 4`, `sin of cd fld 1`
 * Continue lines with logical-not, press `Alt-Enter` in code editor
-* Block comments
+* Block comments `--[[a comment]]`
 * You can use `select`, `mark`, `doMenu` commands
 * You can turn on compat mode to allow `put "a" into fld 1`
 * Everything is case insensitive, even `cd btn "aBcDe"`
@@ -766,9 +766,9 @@ New in 0.24
 * You can say `put "card id 2590" into xx; put the name of xx into y`
 * You can use values for coords, e.g. `put "3,4" into c; set the loc of cd btn 1 to c`
 * Better match subtle differences between `target` and `the target`
-* Single-line `if` statments
+* Single-line `if` statements, fewer parentheses needed
 * Call custom functions from anywhere
-* Better cursors, better rendering on different monitor resolutions
+* Better cursors, better rendering on different screen resolutions
 * More fonts, all fonts have pixel-perfect spacing
 * You can use recursive chunks like `put "a" into char 7 of line 3 of x`
 * Improvements to load time by loading some libraries asynchronously
