@@ -1,7 +1,7 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
-/* auto */ import { ChvITk, tkstr } from './../codeparse/vpcTokens';
+/* auto */ import { ChvITk, tkstr, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { VpcExecInternalDirectiveAbstract } from './vpcScriptExecInternalDirective';
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
@@ -272,22 +272,59 @@ export class ExecuteStatement {
      *      play "mySound"
      */
     goPlay(line: VpcCodeLine, vals: IntermedMapOfIntermedVals) {
-        let args = this.h.getChildVpcVals(vals, tkstr.RuleExpr, true);
-        let whichSound = args[0].readAsString();
-        let isJustLoadIdentifier =
-            vals.vals[tkstr.tkIdentifier] && vals.vals[tkstr.tkIdentifier].length > 1
-                ? vals.vals[tkstr.tkIdentifier][1]
-                : undefined;
-        let justLoad = false;
-        if (isJustLoadIdentifier && typeof isJustLoadIdentifier === 'string') {
-            checkThrow(isJustLoadIdentifier === 'load', 'JQ|expected play "snd" load, but got', isJustLoadIdentifier);
-            justLoad = true;
+        /* this one's a little different.
+        original product supports play "mySound" "abc",
+        which is consecutive expressions which we don't want to support.
+        so 1) in rewrites, add a TkSyntaxMarker after each param
+        2) parser only accepts variables, num literals, or string literals
+        3) this way we can also get tempo, stop, load, etc. */
+        let ar = vals.vals[tkstr.RuleHBuiltinCmdPlay_1]
+        checkThrow(ar && ar.length, "no args given")
+        let tempo = 0
+        let isStop = false
+        let isLoad = false
+        let theSound:O<string>
+        let theNotes:O<string>
+        let isGettingTempo = false
+        for (let item of ar) {
+            let tk = item as ChvITk
+            let s = tk.tokenType === tks.tkStringLiteral ? tk.image.slice(1,-1) : tk.image
+            if (s === 'stop') {
+                isStop = true
+            } else if (s === 'load') {
+                isLoad = true
+            } else if (s === 'tempo') {
+                isGettingTempo = true
+            } else {
+                let val = this.h.getValAsLiteralOrVar(tk)
+                if (isGettingTempo) {
+                    tempo = VpcValS(val).readAsStrictNumeric()
+                    isGettingTempo = false
+                } else if (theSound === undefined) {
+                    theSound = val
+                } else if (theNotes === undefined) {
+                    theNotes = val
+                } else {
+                    checkThrow(false, "too many args to play", tk.image)
+                }
+            }
         }
 
-        if (justLoad) {
-            VpcAudio.preloadNoThrow(whichSound);
-        } else {
-            VpcAudio.play(whichSound);
+        checkThrow(isStop || theSound, "no sound specified")
+        checkThrow(!isStop, "stop not yet supported")
+        checkThrow(!theNotes, "notes not yet supported")
+        checkThrow(!tempo, "tempo not yet supported")
+
+        try {
+            if (theSound) {
+                if (isLoad) {
+                    VpcAudio.preload(theSound);
+                } else {
+                    VpcAudio.play(theSound);
+                }
+            }
+        } catch (e) {
+            console.error('audio encountered ' + e);
         }
     }
     /**

@@ -88,6 +88,7 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdMark(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdMultiply(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdPlay(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleHBuiltinCmdPlay_1(ctx: VisitingContext): ChvITk;
     RuleBuiltinCmdPut(ctx: VisitingContext): any;
     RuleBuiltinCmdReset(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdReplace(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -108,8 +109,8 @@ export interface VpcCompleteVisitor {
 
 /* for nicer auto-complete in a visitor implementation */
 export interface VisitingContext {
-    /* you can add something like [index: string]: any if you want to */
-    /* silence type errors during development */
+/* you can add something like [index: string]: any if you want to */
+/* silence type errors during development */
     RuleHAllPropertiesThatCouldBeUnary: any[];
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];
@@ -178,6 +179,7 @@ export interface VisitingContext {
     RuleBuiltinCmdMark: any[];
     RuleBuiltinCmdMultiply: any[];
     RuleBuiltinCmdPlay: any[];
+    RuleHBuiltinCmdPlay_1: any[];
     RuleBuiltinCmdPut: any[];
     RuleBuiltinCmdReset: any[];
     RuleBuiltinCmdReplace: any[];

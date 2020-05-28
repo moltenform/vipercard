@@ -97,9 +97,10 @@ BuiltinCmdMultiply:=...<HContainer> tkSyntaxMark <Lvl1Expression>
 // open. show NYI in rewrite
 // pop card. has a little stack to go to. implemented entirely in software
 // BuiltinCmdPop:=... into|before|after container 
-// play. "tempo" to tkSyntaxMark
-// currently there is a    tkIdentifier for "load"                                               
-BuiltinCmdPlay:=... <Expr> [tkIdentifier] [tkSyntaxMark <Expr>]
+// play: to get around consecutive Exprs, don't support full Exprs, only vars and literals, and insert tkSyntaxMark in rewrites
+// play "example" tempo 234 "a b c" or play "example" load
+BuiltinCmdPlay:=... MANY{{  <HBuiltinCmdPlay_1>   tkSyntaxMark }}ENDMANY
+HBuiltinCmdPlay_1:={ <HAnyAllowedVariableName> | tkStringLiteral | tkNumLiteral  }              --->ProcessOr--->IToken
 // push card. has a little stack to go to. implemented entirely in software
 // put variable in. in rewrite, reject if "menu" is mentioned.
 // tkIdentifier here is 'before' 'after' 'into'

@@ -1,7 +1,7 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
-/* auto */ import { tkstr } from './../codeparse/vpcTokens';
+/* auto */ import { tkstr, ChvITk, tks } from './../codeparse/vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { checkThrow, checkThrowEq, checkThrowInternal } from './../vpcutils/vpcEnums';
@@ -214,6 +214,19 @@ export class VpcScriptExecuteStatementHelpers {
             return gotAsT;
         } else {
             return undefined;
+        }
+    }
+
+    /**
+     * if a literal, return the literal, otherwise treat it as a variable
+     */
+    getValAsLiteralOrVar(tk: ChvITk):string {
+        if (tk.tokenType === tks.tkStringLiteral) {
+            return tk.image.slice(1, -1)
+        } else if (tk.tokenType === tks.tkNumLiteral) {
+            return tk.image
+        } else {
+            return this.outside.ReadVarContents(tk.image).readAsString()
         }
     }
 }

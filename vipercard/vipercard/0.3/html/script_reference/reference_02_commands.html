@@ -314,6 +314,7 @@ multiply cd fld 1 by 5
 <pre><code>play &quot;glider_1_Extra&quot; load
 wait 4 seconds
 play &quot;glider_1_Extra&quot;</code></pre><p>You should load the sounds you will use in advance, such as in a game initialize() routine, so that when you play them, there will not be a delay.</p>
+<p>You can&#39;t say <code>play (&quot;glider&quot; &amp; x)</code>, instead do the equivalent <code>put &quot;glider&quot; &amp; x into tmp; play tmp</code></p>
 <p>ViperCard can play the following sounds:</p>
 <pre><code>glider_1_Aww
 glider_1_Bass

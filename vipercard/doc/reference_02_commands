@@ -368,6 +368,8 @@ play "glider_1_Extra"`
 
 You should load the sounds you will use in advance, such as in a game initialize() routine, so that when you play them, there will not be a delay.
 
+You can't say `play ("glider" & x)`, instead do the equivalent `put "glider" & x into tmp; play tmp`
+
 ViperCard can play the following sounds:
 
 `glider_1_Aww

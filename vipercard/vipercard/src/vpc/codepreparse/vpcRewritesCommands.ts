@@ -323,8 +323,16 @@ put the result %ARG0%`;
         }
     }
     rewritePlay(line: ChvITk[]): ChvITk[][] {
-        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'tempo', false);
-        return [line];
+        /* everything must be a <HAnyAllowedVariableName> | tkStringLiteral | tkNumLiteral,
+        but we'll let the parser take care of that. put a tkSyntaxMarker between each.  */
+        let newLine:ChvITk[] = [line[0]]
+        for (let i=1; i< line.length; i++) {
+            checkThrow(line[i].tokenType !== tks.tkLParen && line[i].tokenType !== tks.tkRParen, "we don't support expressions here")
+            newLine.push(line[i])
+            newLine.push(BuildFakeTokens.makeSyntaxMarker(line[0]))
+        }
+
+        return [newLine];
     }
     rewritePush(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length === 2, 'S]|expect 2 args');
