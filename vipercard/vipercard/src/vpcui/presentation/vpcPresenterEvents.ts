@@ -272,8 +272,7 @@ export const VpcPresenterEvents = /* static class */ {
                 }
 
                 let isArrow = d.readableShortcut.startsWith('Arrow');
-                if (translated && !(isArrow && 
-                        pr.vci.getModel().productOpts.getB('skipArrowkeyMessages'))) {
+                if (translated && !(isArrow && pr.vci.getModel().productOpts.getB('skipArrowkeyMessages'))) {
                     pr.vci.performMenuAction(translated);
                     /* arrowkeys send both 'afterKeyDown' and 'arrowKey' */
                     if (!isArrow) {

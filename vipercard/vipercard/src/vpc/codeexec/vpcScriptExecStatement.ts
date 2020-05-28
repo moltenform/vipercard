@@ -1,7 +1,7 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
-/* auto */ import { ChvITk, tkstr, tks } from './../codeparse/vpcTokens';
+/* auto */ import { ChvITk, tks, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { VpcExecInternalDirectiveAbstract } from './vpcScriptExecInternalDirective';
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
@@ -278,42 +278,42 @@ export class ExecuteStatement {
         so 1) in rewrites, add a TkSyntaxMarker after each param
         2) parser only accepts variables, num literals, or string literals
         3) this way we can also get tempo, stop, load, etc. */
-        let ar = vals.vals[tkstr.RuleHBuiltinCmdPlay_1]
-        checkThrow(ar && ar.length, "no args given")
-        let tempo = 0
-        let isStop = false
-        let isLoad = false
-        let theSound:O<string>
-        let theNotes:O<string>
-        let isGettingTempo = false
+        let ar = vals.vals[tkstr.RuleHBuiltinCmdPlay_1];
+        checkThrow(ar && ar.length, 'no args given');
+        let tempo = 0;
+        let isStop = false;
+        let isLoad = false;
+        let theSound: O<string>;
+        let theNotes: O<string>;
+        let isGettingTempo = false;
         for (let item of ar) {
-            let tk = item as ChvITk
-            let s = tk.tokenType === tks.tkStringLiteral ? tk.image.slice(1,-1) : tk.image
+            let tk = item as ChvITk;
+            let s = tk.tokenType === tks.tkStringLiteral ? tk.image.slice(1, -1) : tk.image;
             if (s === 'stop') {
-                isStop = true
+                isStop = true;
             } else if (s === 'load') {
-                isLoad = true
+                isLoad = true;
             } else if (s === 'tempo') {
-                isGettingTempo = true
+                isGettingTempo = true;
             } else {
-                let val = this.h.getValAsLiteralOrVar(tk)
+                let val = this.h.getValAsLiteralOrVar(tk);
                 if (isGettingTempo) {
-                    tempo = VpcValS(val).readAsStrictNumeric()
-                    isGettingTempo = false
+                    tempo = VpcValS(val).readAsStrictNumeric();
+                    isGettingTempo = false;
                 } else if (theSound === undefined) {
-                    theSound = val
+                    theSound = val;
                 } else if (theNotes === undefined) {
-                    theNotes = val
+                    theNotes = val;
                 } else {
-                    checkThrow(false, "too many args to play", tk.image)
+                    checkThrow(false, 'too many args to play', tk.image);
                 }
             }
         }
 
-        checkThrow(isStop || theSound, "no sound specified")
-        checkThrow(!isStop, "stop not yet supported")
-        checkThrow(!theNotes, "notes not yet supported")
-        checkThrow(!tempo, "tempo not yet supported")
+        checkThrow(isStop || theSound, 'no sound specified');
+        checkThrow(!isStop, 'stop not yet supported');
+        checkThrow(!theNotes, 'notes not yet supported');
+        checkThrow(!tempo, 'tempo not yet supported');
 
         if (theSound) {
             if (isLoad) {
