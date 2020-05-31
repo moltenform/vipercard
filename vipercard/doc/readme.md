@@ -1,13 +1,11 @@
 
 Here's the ViperCard script reference, as it is shown within the application.
 
-* [01 Fundamentals](reference_01_fundamentals.md)
-
-* [02 Functions](reference_02_functions.md)
-
-* [03 Event Handlers](reference_03_events.md)
-
-* [04 Commands](reference_04_commands.md)
-
-* [05 Properties](reference_05_properties.md)
+* [01 Overview](reference_01_overview.md)
+* [02 Commands](reference_02_commands.md)
+* [03 Syntax](reference_03_syntax.md)
+* [04 Properties](reference_04_properties.md)
+* [05 Functions](reference_05_functions.md)
+* [06 Events](reference_06_events.md)
+* [07 Compatibility](reference_07_compatibility.md)
 
