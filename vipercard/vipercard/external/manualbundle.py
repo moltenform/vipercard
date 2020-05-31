@@ -19,6 +19,7 @@ def go(smaller):
 
     outname = './externalmanualbundlemin.js' if smaller else './externalmanualbundlebig.js'
     trace('writing to', outname)
+    out = tabsToSpaces(out)
     files.writeall(outname, out, encoding='utf-8')
     
     srcs = [
@@ -36,9 +37,11 @@ def go(smaller):
 
     outname = './externaldelaybundlemin.js' if smaller else './externaldelaybundlebig.js'
     trace('writing to', outname)
+    out = tabsToSpaces(out)
     files.writeall(outname, out, encoding='utf-8')
     
-    
+def tabsToSpaces(s):
+    return s.replace('\t', '    ')
 
 def goAll():
     go(True)
