@@ -94,7 +94,7 @@ def transformToHtml(indir, outdir):
     tmpdir = r'C:\b\devarchive\moltenform\static\page' + '\\TEMP'
     if not os.path.exists(tmpdir):
         os.mkdir(tmpdir)
-    files.ensure_empty_directory(tmpdir)
+    files.ensureEmptyDirectory(tmpdir)
     manifest = '''
 # These are temporary files belonging to vipercard
 

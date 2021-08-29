@@ -57,7 +57,7 @@ def goForFileProcess(f, previewOnly, state, marksAleadySeen, content):
             replWith = prefix+','.join(args)+suffix
             trace(f'\t{looksLike}\n\t{replWith}\n')
             assertTrueMsg(len(replWith) >= totalLength, 'making it shorter?', file=f)
-            content = splice(content, posStart, totalLength, replWith)
+            content = jslike.splice(content, posStart, totalLength, replWith)
     
     return content
 
@@ -89,7 +89,7 @@ def processOneCall(f, state, content, looksLike, marksAleadySeen, posStart, whic
                     newmarker = genNewMarker(state)
                     assertTrueMsg(2 == len(newmarker), len(newmarker), file=f)
                     marksAleadySeen[newmarker] = True
-                    args[narg] = splice(args[narg], fndMarker.start(1)+1, 2, newmarker)
+                    args[narg] = jslike.splice(args[narg], fndMarker.start(1)+1, 2, newmarker)
                     return True
             else:
                 # string with no marker. add a marker
@@ -98,7 +98,7 @@ def processOneCall(f, state, content, looksLike, marksAleadySeen, posStart, whic
                     newmarker = genNewMarker(state)
                     assertTrueMsg(2 == len(newmarker), len(newmarker), file=f)
                     marksAleadySeen[newmarker] = True
-                    args[narg] = splice(args[narg], ind, 0, newmarker + '|' )
+                    args[narg] = jslike.splice(args[narg], ind, 0, newmarker + '|' )
                     return True
     # no string literals found at all
     assertTrueMsg(False, 'no string literals found', looksLike, file=f, linenum=lineOffset(content, posStart))
