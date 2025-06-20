@@ -33,7 +33,7 @@ def go(f):
     return dir, desiredArgIndex, skipThese, skipFiles
 
 def readconfig():
-    assertTrueMsg(files.isfile('config.cfg'), "Could not find config.cfg")
+    assertTrueMsg(files.isFile('config.cfg'), "Could not find config.cfg")
     return go('config.cfg')
     
 if __name__=='__main__':

@@ -17,7 +17,7 @@ def getFileLines(f, tryToStripComments):
     assertTrue(tryToStripComments in (True,
         False, 'multilineonly', 'singlelineonly'))
 
-    text = files.readall(f, encoding='utf8')
+    text = files.readAll(f, encoding='utf8')
     if tryToStripComments and tryToStripComments != 'singlelineonly':
         text = simpleStripMultilineComments(text, '/*', '*/')
     lines = text.replace('\r\n', '\n').split('\n')
@@ -26,15 +26,15 @@ def getFileLines(f, tryToStripComments):
     return lines
 
 def searchForNearbyFile(srcdirectory, name):
-    if files.isfile(files.join(srcdirectory, f'{name}')):
+    if files.isFile(files.join(srcdirectory, f'{name}')):
         return files.join(srcdirectory, f'{name}')
-    if files.isfile(files.join(srcdirectory, f'src/{name}')):
+    if files.isFile(files.join(srcdirectory, f'src/{name}')):
         return files.join(srcdirectory, f'src/{name}')
-    if files.isfile(files.join(srcdirectory, f'../{name}')):
+    if files.isFile(files.join(srcdirectory, f'../{name}')):
         return files.join(srcdirectory, f'../{name}')
-    if files.isfile(files.join(srcdirectory, f'../src/{name}')):
+    if files.isFile(files.join(srcdirectory, f'../src/{name}')):
         return files.join(srcdirectory, f'../src/{name}')
-    if files.isfile(files.join(srcdirectory, f'../../{name}')):
+    if files.isFile(files.join(srcdirectory, f'../../{name}')):
         return files.join(srcdirectory, f'../../{name}')
     return None
 

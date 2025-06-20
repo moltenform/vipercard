@@ -15,12 +15,12 @@ def go(smaller):
     out = '\n// externalmanualbundle\n// changes here will be overwritten\n\n'
     for src in srcs:
         out += f'\n\n// begin:{src}\n'
-        out += files.readall(src, encoding='utf-8')
+        out += files.readAll(src, encoding='utf-8')
 
     outname = './externalmanualbundlemin.js' if smaller else './externalmanualbundlebig.js'
     trace('writing to', outname)
     out = tabsToSpaces(out)
-    files.writeall(outname, out, encoding='utf-8')
+    files.writeAll(outname, out, encoding='utf-8')
     
     srcs = [
         # in most cases we use the minification doesn't really matter, since it will be served over gzip it only saves a few kb
@@ -33,12 +33,12 @@ def go(smaller):
     out = '\n// externaldelaybundle\n// changes here will be overwritten\n\n'
     for src in srcs:
         out += f'\n\n// begin:{src}\n'
-        out += files.readall(src, encoding='utf-8')
+        out += files.readAll(src, encoding='utf-8')
 
     outname = './externaldelaybundlemin.js' if smaller else './externaldelaybundlebig.js'
     trace('writing to', outname)
     out = tabsToSpaces(out)
-    files.writeall(outname, out, encoding='utf-8')
+    files.writeAll(outname, out, encoding='utf-8')
     
 def tabsToSpaces(s):
     return s.replace('\t', '    ')

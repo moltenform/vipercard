@@ -21,7 +21,7 @@ def confirmExists(f, path, name):
         assertTrueMsg(False, f"in {f} you set {name} to '{path}' but that path does not exist", file=f)
 
 def readconfig():
-    assertTrueMsg(files.isfile('config.cfg'), "Could not find config.cfg")
+    assertTrueMsg(files.isFile('config.cfg'), "Could not find config.cfg")
     return go('config.cfg')
 
 if __name__=='__main__':

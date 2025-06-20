@@ -42,7 +42,7 @@ def confirmExists(f, path, name):
         assertTrueMsg(False, f"in {f} you set {name} to '{path}' but that path does not exist", file=f)
 
 def readconfig():
-    assertTrueMsg(files.isfile('config.cfg'), "Could not find config.cfg")
+    assertTrueMsg(files.isFile('config.cfg'), "Could not find config.cfg")
     return go('config.cfg')
 
 
@@ -61,7 +61,7 @@ def absPathToRelative(p):
     me = os.path.abspath(__file__).replace('\\', '/')
     common = os.path.commonpath([me, p])
     assertTrueMsg(common, "paths have nothing in common")
-    return os.path.relpath(p, files.getparent(me))
+    return os.path.relpath(p, files.getParent(me))
 
 def shouldAllowLongerLinesOn(p, allowLongerLinesOn):
     import fnmatch

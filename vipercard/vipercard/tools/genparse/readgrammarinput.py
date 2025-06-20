@@ -15,11 +15,11 @@ def readGrammarFiles(files, skipGenerated):
     return result
 
 def readGrammarFile(file, result, skipGenerated):
-    content = files.readall(file, encoding='utf-8')
+    content = files.readAll(file, encoding='utf-8')
     content = content.replace('\\\n', ' ') # continued lines
     if skipGenerated and gStart in content:
         content = content.split(gStart)[0] + '\n' + content.split(gEnd)[1]
-    if 'list-all' in files.getname(file):
+    if 'list-all' in files.getName(file):
         return readListFile(result, file, content.split('\n'))
     for line in content.split('\n'):
         line = line.strip()

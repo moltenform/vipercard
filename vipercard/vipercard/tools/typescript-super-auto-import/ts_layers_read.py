@@ -10,7 +10,7 @@ from ts_parsing import *
 
 def readLayersFile(dir):
     ret = None
-    for f, short in files.recursefiles(dir):
+    for f, short in files.recurseFiles(dir):
         if short == 'layers.cfg':
             if ret:
                 assertTrueMsg(False, 'more than one layers.cfg seen.', file=f)
@@ -41,7 +41,7 @@ def parseLayersFile(f, root):
         
         filesReferencedInLayers[fullpath] = 1
         state.count += 1
-        layers.append((fullpath, files.splitext(short)[0], state.count))
+        layers.append((fullpath, files.splitExt(short)[0], state.count))
         
     with open(f, 'r', encoding='utf-8') as fin:
         for line in fin:
@@ -60,14 +60,14 @@ def parseLayersFile(f, root):
 
 def confirmNoDuplicateFilenames(dir):
     filenamesSeen = {}
-    for f, short in files.recursefiles(dir, allowedexts=['ts']):
+    for f, short in files.recurseFiles(dir, allowedExts=['ts']):
         if not short.endswith('.d.ts'):
             if short.lower() in filenamesSeen:
                 warn('duplicate filename:', f, filenamesSeen[short.lower()])
             filenamesSeen[short.lower()] = f
 
 def confirmLayersIncludesFiles(layersCfg, dir, filenamesReferencedInLayers):
-    for f, short in files.recursefiles(dir, allowedexts=['ts']):
+    for f, short in files.recurseFiles(dir, allowedExts=['ts']):
         if not short.endswith('.d.ts'):
             if short.lower() not in filenamesReferencedInLayers:
                 showWarningGccStyle(layersCfg, 1, 'not seen in layers.cfg')

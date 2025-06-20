@@ -86,11 +86,11 @@ def autoAddImports(config, srcdirectory, layers, useSingleQuotes):
             if alltxtNew != '\n'.join(linesOrigFile):
                 print('Writing')
                 print('\n'.join(newLinesToAdd))
-                files.writeall(layerfullpath, alltxtNew, encoding='utf-8')
+                files.writeAll(layerfullpath, alltxtNew, encoding='utf-8')
 
 def getImportFromFile(config, srcdirectory, layerfullpath, srcfilename):
-    srcfilenameWithoutExt = files.splitext(srcfilename)[0]
-    startdir = files.getparent(layerfullpath)
+    srcfilenameWithoutExt = files.splitExt(srcfilename)[0]
+    startdir = files.getParent(layerfullpath)
     s = './' + os.path.relpath(srcfilenameWithoutExt, startdir).replace('\\', '/')
     s += config['main']['fileExtensionInImportStatement'].strip()
     return s

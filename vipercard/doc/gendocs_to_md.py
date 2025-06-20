@@ -51,7 +51,7 @@ this is a generated file, changes will be lost.
     
     
     trace('write to', outfile)
-    files.writeall(outfile, out, encoding='utf-8')
+    files.writeAll(outfile, out, encoding='utf-8')
     
 
 
@@ -110,32 +110,32 @@ header_generated_by_makelinkchain=<div class="smalltheme-uppernavbox"><span clas
 end_header_generated_by_makelinkchain=
     
     '''
-    files.writeall(f'{tmpdir}/mdnotjekyll_info.txt', manifest)
+    files.writeAll(f'{tmpdir}/mdnotjekyll_info.txt', manifest)
     
-    for f, short in files.listfiles(indir):
+    for f, short in files.listFiles(indir):
         if short.endswith('.md') and not 'readme' in short.lower() and not 'rationale' in short.lower():
             dest = files.join(tmpdir, short).replace('.md','.mdnotjekyll')
             files.copy(f, dest, False)
     prevpath = os.path.abspath('.')
     scr = r"C:\b\devarchive\moltenform\site-make-pages\markdown\goMarkdown.py"
-    os.chdir(files.getparent(scr))
+    os.chdir(files.getParent(scr))
     args = [r"C:\data\e5\unzipped\devkits\py_64_37\pythonw", scr]
     files.run(args)
     os.chdir(prevpath)
     
-    for f, short in files.listfiles(outdir):
+    for f, short in files.listFiles(outdir):
         if f.lower().endswith('.html'):
             files.delete(f)
             
-    headerfragment = files.readall(outdir+'/../noship_headerfragment.html', encoding='utf-8')
+    headerfragment = files.readAll(outdir+'/../noship_headerfragment.html', encoding='utf-8')
     
-    for f, short in files.listfiles(tmpdir):
+    for f, short in files.listFiles(tmpdir):
         if short.endswith('.html'):
             dest = files.join(outdir, short)
             files.move(f, dest, False)
-            alltxt = files.readall(dest, encoding='utf-8')
+            alltxt = files.readAll(dest, encoding='utf-8')
             alltxt = fixuphtml(short, alltxt, headerfragment)
-            files.writeall(dest, alltxt, encoding='utf-8')
+            files.writeAll(dest, alltxt, encoding='utf-8')
     
     import shutil
     shutil.rmtree(tmpdir)
@@ -220,14 +220,14 @@ def fixuphtmlpage(alltxt):
     return alltxt
 
 def movePagesUp(outdir):
-    for f, short in files.listfiles(outdir):
+    for f, short in files.listFiles(outdir):
         if short.startswith('page_'):
             dest = f'{outdir}/../{short.replace("page_", "")}'
             files.move(f, dest, True) # overwrite existing
             # fix html
-            alltxt = files.readall(dest, encoding='utf-8')
+            alltxt = files.readAll(dest, encoding='utf-8')
             alltxt = fixuphtmlpage(alltxt)
-            files.writeall(dest, alltxt, encoding='utf-8')
+            files.writeAll(dest, alltxt, encoding='utf-8')
 
 if __name__=='__main__':
     outdir = r'..\vipercard\0.3\html\script_reference'

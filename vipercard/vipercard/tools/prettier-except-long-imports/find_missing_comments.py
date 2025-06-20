@@ -6,7 +6,7 @@ from place_imports_one_line import *
 import re
 
 def go(srcdirectory):
-    for f, short in files.recursefiles(srcdirectory):
+    for f, short in files.recurseFiles(srcdirectory):
         f = f.replace('\\', '/')
         if short.endswith('.ts'):
             goPerFile(f)
@@ -15,7 +15,7 @@ def goPerFile(f):
     if '/bridge/' in f:
         return
     isTestCode = '/test/' in f  or '/ui512demo/' in f 
-    if files.getname(f).lower() in ('vpctokens.ts', 'vpcvisitor.ts','vpcparser.ts','vpcvisitormixin.ts'):
+    if files.getName(f).lower() in ('vpctokens.ts', 'vpcvisitor.ts','vpcparser.ts','vpcvisitormixin.ts'):
         isTestCode = True
         
     lines = getFileLines(f, 'singlelineonly')

@@ -48,7 +48,7 @@ def goSection(section, sectionfulltitle, outname, outfile):
         entries.append(goItem(item))
     alls = json.dumps(out)
     trace('write to ', outfile)
-    files.writeall(outfile, alls, encoding='utf-8')
+    files.writeAll(outfile, alls, encoding='utf-8')
 
 def goTsIndexSection(section, sectionfulltitle, outname):
     trace('/* prettier-ignore */')

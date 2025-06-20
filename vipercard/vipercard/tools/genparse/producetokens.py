@@ -247,7 +247,7 @@ def writePropertiesListIntoGrammar(infiles):
     
 def checkThatEveryTokensIsReferencedInARule(st, outfiles):
     trace('checking that every token is referenced in the parser...')
-    contents = files.readall(outfiles.parse, encoding = 'utf-8')
+    contents = files.readAll(outfiles.parse, encoding = 'utf-8')
     inside = contents.split(gStart)[1].split(gEnd)[0]
     namesOkIfNotSeen = dict(tkNewLine=True, tkSyntaxMark=True)
     for token in st.tokens:

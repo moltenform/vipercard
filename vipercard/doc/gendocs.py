@@ -59,10 +59,10 @@ def parseBody(txt, title):
 def parseAll(f):
     trace('parsing...')
     out = OrderedDict()
-    for f, short in files.listfiles(f):
+    for f, short in files.listFiles(f):
         if short.startswith('reference_') and not '.' in short:
             trace(f'{short}...')
-            section = parseSection(files.readall(f, encoding='utf-8'))
+            section = parseSection(files.readAll(f, encoding='utf-8'))
             out[short] = section
     return out
     

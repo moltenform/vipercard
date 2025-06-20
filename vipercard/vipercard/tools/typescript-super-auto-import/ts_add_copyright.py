@@ -10,7 +10,7 @@ def whichLicense(config, default, f):
             return None
     
     for key in config['copyrightOverrides']:
-        if files.getname(f).lower() == key.strip().lower():
+        if files.getName(f).lower() == key.strip().lower():
             return config['copyrightOverrides'][key].strip()
         
     return default

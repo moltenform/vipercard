@@ -53,13 +53,13 @@ def goPrettierAll(srcdirectory, prettierPath, prettierCfg):
     # allow long lines in certain files
     if allowLongerLinesOn:
         prettierCfgLonger = prettierCfg.replace('prettierrc', 'prettierrc_longer')
-        assertTrueMsg(files.isfile(prettierCfgLonger), f"file not found: '{prettierCfgLonger}'")
+        assertTrueMsg(files.isFile(prettierCfgLonger), f"file not found: '{prettierCfgLonger}'")
         for file in allowLongerLinesOn:
             args = ['node', prettierPath, '--config', prettierCfgLonger, '--write', file]
             runPrettier(args)
     
     # do other checks per file
-    for f, short in files.recursefiles(srcdirectory):
+    for f, short in files.recurseFiles(srcdirectory):
         f = f.replace('\\', '/')
         if short.endswith('.ts'):
             trace(f)
@@ -81,11 +81,11 @@ def doOperationsThatMightChangeFile(srcdirectory, f, prettierPath, prettierCfg):
     # we don't want the import to spill across multiple lines.
     # could maybe do this by passing a range-start to prettier, but let's write it ourselves.
     if not tasksDisabled.doPlaceImportsOnOneLine:
-        alltxt = files.readall(f, encoding='utf-8')
+        alltxt = files.readAll(f, encoding='utf-8')
         alltxtNew = placeImportsOnOneLine(alltxt)
         if alltxt != alltxtNew:
             print('placing import {} back all on one line')
-            files.writeall(f, alltxtNew, encoding='utf-8')
+            files.writeAll(f, alltxtNew, encoding='utf-8')
     
     # some simple formatting
     lines = getFileLines(f, False)
@@ -103,7 +103,7 @@ def doOperationsThatMightChangeFile(srcdirectory, f, prettierPath, prettierCfg):
         check_tests_referenced.autoHelpSetTestCollectionName(f, lines)
     
     if linesOrig != lines:
-        files.writeall(f, '\n'.join(lines), encoding='utf-8')
+        files.writeAll(f, '\n'.join(lines), encoding='utf-8')
     return lines
 
 def doOperationsThatAskQuestions(srcdirectory, f, lines, prettierPath, prettierCfg):

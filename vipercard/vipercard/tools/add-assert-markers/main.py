@@ -9,20 +9,20 @@ import readconfig
 # and it works across multiple lines
 
 def go(srcdirectory, previewOnly):
-    assertTrueMsg(files.isdir(srcdirectory), 'directory not found', srcdirectory)
+    assertTrueMsg(files.isDir(srcdirectory), 'directory not found', srcdirectory)
     currentSavedFile = './current_assert_id.txt'
-    firstNum = int(files.readall(currentSavedFile, encoding='utf-8').strip()) if files.exists(currentSavedFile) else 1
+    firstNum = int(files.readAll(currentSavedFile, encoding='utf-8').strip()) if files.exists(currentSavedFile) else 1
     state = Bucket(latestMarker = firstNum)
     marksAleadySeen = {}
     
     try:
-        for f, short in files.recursefiles(srcdirectory):
+        for f, short in files.recurseFiles(srcdirectory):
             if short.lower().endswith('.ts') and not short in skipFiles:
                 goForFile(f, previewOnly, state, marksAleadySeen)
     finally:
         if not previewOnly:
             trace(f'first={firstNum} last={state.latestMarker}')
-            files.writeall(currentSavedFile, f'{state.latestMarker}\n', encoding='utf-8')
+            files.writeAll(currentSavedFile, f'{state.latestMarker}\n', encoding='utf-8')
     
     for key in skipThese:
         if skipThese[key] != 'seen':
@@ -31,11 +31,11 @@ def go(srcdirectory, previewOnly):
 
 
 def goForFile(f, previewOnly, state, marksAleadySeen):
-    content = files.readall(f, encoding='utf-8')
+    content = files.readAll(f, encoding='utf-8')
     newcontent = goForFileProcess(f, previewOnly, state, marksAleadySeen, content)
     if newcontent != content: 
         if not previewOnly:
-            files.writeall(f, newcontent, encoding='utf-8')
+            files.writeAll(f, newcontent, encoding='utf-8')
 
 def goForFileProcess(f, previewOnly, state, marksAleadySeen, content):
     skipIfInGeneratedCode = GeneratedCodeDetector(content, f)

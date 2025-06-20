@@ -212,12 +212,12 @@ def addNumerals(lines):
 
 
 def writeIntoOutput(f, s):
-    content = files.readall(f, encoding='utf-8')
+    content = files.readAll(f, encoding='utf-8')
     assertEq(2, len(content.split(gStart)), 'must appear once', f, gStart)
     assertEq(2, len(content.split(gEnd)), 'must appear once', f, gEnd)
     before = content.split(gStart)[0]
     after = content.split(gEnd)[1]
     news = before + gStart + s + gEnd + after
-    files.writeall(f, news, encoding='utf-8')
+    files.writeAll(f, news, encoding='utf-8')
 
 

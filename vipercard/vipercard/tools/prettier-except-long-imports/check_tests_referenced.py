@@ -72,7 +72,7 @@ def autoHelpSetTestCollectionName(f, lines):
             state.alteredFile = True
 
 def getCollNameFromPath(f):
-    nameWithNoExt = files.splitext(files.getname(f))[0]
+    nameWithNoExt = files.splitExt(files.getName(f))[0]
     return 'testCollection' + nameWithNoExt.replace('test', '').replace('Test', '')
 
 def checkTestCollectionsReferenced():
